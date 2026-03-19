@@ -613,6 +613,70 @@ def has_pigeonhole_core(clauses: Iterable[Iterable[int]]) -> bool:
     return False
 
 
+def xor_system_unsat(num_vars: int, clauses: Iterable[Iterable[int]]) -> bool:
+    groups: dict[tuple[int, ...], set[int]] = {}
+
+    for clause in clauses:
+        literals = list(clause)
+        if len(literals) < 3 or len(literals) > 6:
+            continue
+
+        signs: dict[int, int] = {}
+        valid = True
+        for literal in literals:
+            variable = abs(literal)
+            if variable in signs:
+                valid = False
+                break
+            signs[variable] = 1 if literal < 0 else 0
+
+        if not valid:
+            continue
+
+        variables = tuple(sorted(signs))
+        pattern = 0
+        for index, variable in enumerate(variables):
+            pattern |= signs[variable] << index
+        groups.setdefault(variables, set()).add(pattern)
+
+    basis: dict[int, tuple[int, int]] = {}
+    equations: list[tuple[int, int]] = []
+
+    for variables, patterns in groups.items():
+        width = len(variables)
+        if len(patterns) != (1 << (width - 1)):
+            continue
+
+        parities = {pattern.bit_count() & 1 for pattern in patterns}
+        if len(parities) != 1:
+            continue
+
+        forbidden_parity = next(iter(parities))
+        rhs = forbidden_parity ^ 1
+        mask = 0
+        for variable in variables:
+            mask |= 1 << (variable - 1)
+        equations.append((mask, rhs))
+
+    for mask, rhs in equations:
+        current_mask = mask
+        current_rhs = rhs
+
+        while current_mask:
+            pivot = current_mask.bit_length() - 1
+            row = basis.get(pivot)
+            if row is None:
+                basis[pivot] = (current_mask, current_rhs)
+                break
+            current_mask ^= row[0]
+            current_rhs ^= row[1]
+        else:
+            if current_rhs:
+                return True
+
+    return False
+
+
 def format_model(model: list[int]) -> str:
     literals = [str(variable if model[variable] == TRUE else -variable) for variable in range(1, len(model))]
     return " ".join(literals) + " 0"
@@ -620,6 +684,8 @@ def format_model(model: list[int]) -> str:
 
 def solve_cnf(num_vars: int, clauses: list[list[int]]) -> Optional[list[int]]:
     if has_pigeonhole_core(clauses):
+        return None
+    if xor_system_unsat(num_vars, clauses):
         return None
 
     solver = Solver(num_vars)
@@ -642,7 +708,7 @@ def write_result(path: str, model: Optional[list[int]]) -> None:
 def main(argv: Optional[list[str]] = None) -> int:
     arguments = sys.argv[1:] if argv is None else argv
     if len(arguments) != 2:
-        print("Usage: python satsolver.py input.cnf output.txt", file=sys.stderr)
+        print("Usage: python satsolver_blaze.py input.cnf output.txt", file=sys.stderr)
         return 1
 
     input_path, output_path = arguments

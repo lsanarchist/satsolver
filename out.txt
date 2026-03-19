@@ -1,0 +1,60 @@
+[small]
+test_1.cnf: SAT ok=True vars=19 clauses=26 time=0.0004s
+test_10.cnf: UNSAT ok=True vars=22 clauses=174 time=0.0015s
+test_2.cnf: SAT ok=True vars=46 clauses=176 time=0.0014s
+test_3.cnf: SAT ok=True vars=41 clauses=150 time=0.0016s
+test_4.cnf: UNSAT ok=True vars=30 clauses=167 time=0.0016s
+test_5.cnf: SAT ok=True vars=20 clauses=40 time=0.0004s
+test_6.cnf: SAT ok=True vars=42 clauses=70 time=0.0007s
+test_7.cnf: SAT ok=True vars=49 clauses=167 time=0.0026s
+test_8.cnf: UNSAT ok=True vars=14 clauses=68 time=0.0008s
+test_9.cnf: SAT ok=True vars=40 clauses=100 time=0.0009s
+SUMMARY small: count=10 total=0.0118s avg=0.0012s median=0.0012s max=0.0026s
+
+[medium]
+test_1.cnf: UNSAT ok=True vars=63 clauses=835 time=0.0078s
+test_10.cnf: UNSAT ok=True vars=68 clauses=822 time=0.0069s
+test_2.cnf: UNSAT ok=True vars=69 clauses=352 time=0.0126s
+test_3.cnf: UNSAT ok=True vars=172 clauses=774 time=1.0327s
+test_4.cnf: UNSAT ok=True vars=191 clauses=886 time=2.8169s
+test_5.cnf: UNSAT ok=True vars=55 clauses=713 time=0.0052s
+test_6.cnf: UNSAT ok=True vars=61 clauses=512 time=0.0068s
+test_7.cnf: UNSAT ok=True vars=75 clauses=562 time=0.0056s
+test_8.cnf: SAT ok=True vars=130 clauses=333 time=0.0031s
+test_9.cnf: SAT ok=True vars=138 clauses=379 time=0.0036s
+SUMMARY medium: count=10 total=3.9011s avg=0.3901s median=0.0068s max=2.8169s
+
+[large]
+test_1.cnf: SAT ok=True vars=373 clauses=811 time=0.0183s
+test_10.cnf: UNSAT ok=True vars=229 clauses=1280 time=2.5163s
+test_2.cnf: SAT ok=True vars=319 clauses=573 time=0.0068s
+test_3.cnf: UNSAT ok=True vars=227 clauses=1460 time=0.3729s
+test_4.cnf: UNSAT ok=True vars=219 clauses=1363 time=0.3489s
+test_5.cnf: SAT ok=True vars=244 clauses=772 time=0.0051s
+test_6.cnf: UNSAT ok=True vars=271 clauses=1393 time=19.8229s
+test_7.cnf: SAT ok=True vars=389 clauses=863 time=0.0102s
+test_8.cnf: SAT ok=True vars=298 clauses=1210 time=5.5429s
+test_9.cnf: SAT ok=True vars=365 clauses=969 time=0.0076s
+SUMMARY large: count=10 total=28.6519s avg=2.8652s median=0.1836s max=19.8229s
+
+[special]
+dense.cnf: UNSAT ok=True vars=200 clauses=1500 time=0.1364s
+easy.cnf: SAT ok=True vars=200 clauses=400 time=0.0037s
+hard.cnf: UNSAT ok=True vars=200 clauses=850 time=13.0386s
+pigeonhole.cnf: UNSAT ok=True vars=90 clauses=415 time=0.0006s
+tseitin.cnf: UNSAT ok=True vars=40 clauses=160 time=10.9564s
+SUMMARY special: count=5 total=24.1356s avg=4.8271s median=0.1364s max=13.0386s
+
+[overall]
+total_cases=35 total=56.7004s avg=1.6200s median=0.0068s max=19.8229s
+slowest_cases:
+large/test_6.cnf: UNSAT ok=True vars=271 clauses=1393 time=19.8229s
+special/hard.cnf: UNSAT ok=True vars=200 clauses=850 time=13.0386s
+special/tseitin.cnf: UNSAT ok=True vars=40 clauses=160 time=10.9564s
+large/test_8.cnf: SAT ok=True vars=298 clauses=1210 time=5.5429s
+medium/test_4.cnf: UNSAT ok=True vars=191 clauses=886 time=2.8169s
+large/test_10.cnf: UNSAT ok=True vars=229 clauses=1280 time=2.5163s
+medium/test_3.cnf: UNSAT ok=True vars=172 clauses=774 time=1.0327s
+large/test_3.cnf: UNSAT ok=True vars=227 clauses=1460 time=0.3729s
+large/test_4.cnf: UNSAT ok=True vars=219 clauses=1363 time=0.3489s
+special/dense.cnf: UNSAT ok=True vars=200 clauses=1500 time=0.1364s
