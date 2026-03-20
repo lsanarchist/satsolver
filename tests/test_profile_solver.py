@@ -1,0 +1,601 @@
+from __future__ import annotations
+
+import tempfile
+import unittest
+from pathlib import Path
+
+from tools import profile_solver
+
+
+class ProfileSolverTests(unittest.TestCase):
+    def test_reason_size_bucket_boundaries(self) -> None:
+        self.assertEqual(profile_solver.reason_size_bucket(2), 0)
+        self.assertEqual(profile_solver.reason_size_bucket(3), 1)
+        self.assertEqual(profile_solver.reason_size_bucket(4), 2)
+        self.assertEqual(profile_solver.reason_size_bucket(9), 2)
+        self.assertEqual(profile_solver.reason_size_bucket(10), 3)
+
+    def test_large_watch_size_bucket_boundaries(self) -> None:
+        self.assertEqual(profile_solver.large_watch_size_bucket(4), 0)
+        self.assertEqual(profile_solver.large_watch_size_bucket(5), 1)
+        self.assertEqual(profile_solver.large_watch_size_bucket(9), 1)
+        self.assertEqual(profile_solver.large_watch_size_bucket(10), 2)
+
+    def test_large_probe_success_bucket_boundaries(self) -> None:
+        self.assertEqual(profile_solver.large_probe_success_bucket(1), 0)
+        self.assertEqual(profile_solver.large_probe_success_bucket(2), 1)
+        self.assertEqual(profile_solver.large_probe_success_bucket(3), 2)
+        self.assertEqual(profile_solver.large_probe_success_bucket(4), 2)
+        self.assertEqual(profile_solver.large_probe_success_bucket(5), 3)
+
+    def test_profile_solver_collects_ternary_watch_and_minimization_stats(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            case_path = Path(temp_dir) / "cube_unsat.cnf"
+            case_path.write_text(
+                (
+                    "p cnf 3 8\n"
+                    "1 2 3 0\n"
+                    "1 2 -3 0\n"
+                    "1 -2 3 0\n"
+                    "1 -2 -3 0\n"
+                    "-1 2 3 0\n"
+                    "-1 2 -3 0\n"
+                    "-1 -2 3 0\n"
+                    "-1 -2 -3 0\n"
+                ),
+                encoding="utf-8",
+            )
+
+            stats = profile_solver.solve_with_profile(
+                str(case_path),
+                restart_base=64,
+                next_reduce=256,
+                var_decay=0.95,
+                clause_decay=0.999,
+            )
+
+            self.assertFalse(stats.sat)
+            self.assertTrue(stats.ok)
+            self.assertGreater(stats.conflicts, 0)
+            self.assertEqual(stats.decision_trail_appends, stats.decisions)
+            self.assertEqual(stats.trail_limit_pushes, stats.decisions)
+            self.assertLessEqual(stats.trail_limit_pops, stats.trail_limit_pushes)
+            self.assertEqual(
+                stats.propagation_trail_appends,
+                stats.binary_units
+                + stats.problem_ternary_units
+                + stats.learnt_ternary_units
+                + stats.problem_large_units
+                + stats.learnt_large_units,
+            )
+            self.assertGreater(stats.watch_clause_visits, 0)
+            self.assertEqual(
+                stats.watch_clause_visits,
+                stats.deleted_watch_skips
+                + stats.satisfied_watch_skips
+                + stats.ternary_watch_visits
+                + stats.large_watch_visits,
+            )
+            self.assertEqual(stats.watcher_list_appends, stats.watch_relocations)
+            self.assertEqual(
+                stats.watcher_list_pops,
+                stats.watch_relocations + stats.deleted_watch_skips,
+            )
+            self.assertEqual(
+                stats.deleted_watch_skips,
+                stats.deleted_ternary_watch_pops + stats.deleted_large_watch_pops,
+            )
+            self.assertEqual(
+                stats.watcher_list_pops,
+                stats.deleted_ternary_watch_pops
+                + stats.deleted_large_watch_pops
+                + stats.problem_ternary_relocation_pops
+                + stats.learnt_ternary_relocation_pops
+                + stats.problem_large_relocation_pops
+                + stats.learnt_large_relocation_pops,
+            )
+            self.assertEqual(
+                stats.satisfied_watch_skips,
+                stats.problem_ternary_satisfied_skips
+                + stats.learnt_ternary_satisfied_skips
+                + stats.problem_large_satisfied_skips
+                + stats.learnt_large_satisfied_skips,
+            )
+            self.assertEqual(
+                stats.watch_slot_normalizations,
+                stats.ternary_slot_normalizations + stats.large_slot_normalizations,
+            )
+            self.assertLessEqual(stats.normalized_satisfied_skips, stats.satisfied_watch_skips)
+            self.assertGreater(stats.ternary_watch_visits, 0)
+            self.assertEqual(stats.large_watch_visits, 0)
+            self.assertEqual(
+                stats.ternary_watch_visits,
+                stats.problem_ternary_watch_visits + stats.learnt_ternary_watch_visits,
+            )
+            self.assertEqual(
+                stats.ternary_relocations,
+                stats.problem_ternary_true_relocations
+                + stats.problem_ternary_unassigned_relocations
+                + stats.learnt_ternary_true_relocations
+                + stats.learnt_ternary_unassigned_relocations,
+            )
+            self.assertEqual(
+                stats.ternary_relocations,
+                stats.problem_ternary_relocation_pops + stats.learnt_ternary_relocation_pops,
+            )
+            self.assertLessEqual(
+                stats.problem_ternary_normalized_relocations,
+                stats.problem_ternary_true_relocations + stats.problem_ternary_unassigned_relocations,
+            )
+            self.assertLessEqual(
+                stats.learnt_ternary_normalized_relocations,
+                stats.learnt_ternary_true_relocations + stats.learnt_ternary_unassigned_relocations,
+            )
+            self.assertEqual(
+                stats.ternary_units,
+                stats.problem_ternary_units + stats.learnt_ternary_units,
+            )
+            self.assertLessEqual(
+                stats.problem_ternary_normalized_units,
+                stats.problem_ternary_units,
+            )
+            self.assertLessEqual(
+                stats.learnt_ternary_normalized_units,
+                stats.learnt_ternary_units,
+            )
+            self.assertEqual(
+                stats.ternary_conflicts,
+                stats.problem_ternary_conflicts + stats.learnt_ternary_conflicts,
+            )
+            self.assertLessEqual(
+                stats.problem_ternary_normalized_conflicts,
+                stats.problem_ternary_conflicts,
+            )
+            self.assertLessEqual(
+                stats.learnt_ternary_normalized_conflicts,
+                stats.learnt_ternary_conflicts,
+            )
+            self.assertLessEqual(
+                stats.problem_ternary_normalized_relocations
+                + stats.learnt_ternary_normalized_relocations
+                + stats.problem_ternary_normalized_units
+                + stats.learnt_ternary_normalized_units
+                + stats.problem_ternary_normalized_conflicts
+                + stats.learnt_ternary_normalized_conflicts,
+                stats.ternary_slot_normalizations,
+            )
+            self.assertEqual(
+                stats.ternary_relocations,
+                stats.problem_ternary_false_other_relocations
+                + stats.problem_ternary_unassigned_other_relocations
+                + stats.learnt_ternary_false_other_relocations
+                + stats.learnt_ternary_unassigned_other_relocations,
+            )
+            self.assertEqual(stats.problem_ternary_clause_count, 8)
+            self.assertGreater(stats.problem_ternary_distinct_clauses_visited, 0)
+            self.assertLessEqual(
+                stats.problem_ternary_distinct_clauses_visited,
+                stats.problem_ternary_clause_count,
+            )
+            self.assertGreater(stats.max_problem_ternary_clause_visits, 0)
+            self.assertEqual(stats.problem_ternary_literal_count, 6)
+            self.assertGreater(stats.problem_ternary_distinct_trigger_literals, 0)
+            self.assertLessEqual(
+                stats.problem_ternary_distinct_trigger_literals,
+                stats.problem_ternary_literal_count,
+            )
+            self.assertGreater(stats.max_problem_ternary_trigger_literal_visits, 0)
+            self.assertGreater(stats.analyze_problem_reason_distinct_clauses, 0)
+            self.assertLessEqual(
+                stats.analyze_problem_reason_distinct_clauses,
+                stats.problem_ternary_clause_count,
+            )
+            self.assertGreater(stats.max_analyze_problem_reason_clause_traversals, 0)
+            self.assertEqual(
+                stats.large_watch_visits,
+                stats.problem_large_watch_visits + stats.learnt_large_watch_visits,
+            )
+            self.assertEqual(stats.large_slot_normalizations, 0)
+            self.assertEqual(stats.watch_relocations, stats.ternary_relocations + stats.large_relocations)
+            self.assertEqual(
+                stats.large_relocations,
+                stats.problem_large_relocations + stats.learnt_large_relocations,
+            )
+            self.assertEqual(
+                stats.large_relocations,
+                stats.problem_large_relocation_pops + stats.learnt_large_relocation_pops,
+            )
+            self.assertEqual(stats.watch_units, stats.ternary_units + stats.large_units)
+            self.assertEqual(
+                stats.large_units,
+                stats.problem_large_units + stats.learnt_large_units,
+            )
+            self.assertEqual(stats.watch_conflicts, stats.ternary_conflicts + stats.large_conflicts)
+            self.assertEqual(
+                stats.large_conflicts,
+                stats.problem_large_conflicts + stats.learnt_large_conflicts,
+            )
+            self.assertEqual(stats.large_probe_steps, 0)
+            self.assertEqual(stats.max_large_probe, 0)
+            self.assertEqual(stats.analyze_reason_traversals, sum(stats.analyze_reason_buckets))
+            self.assertEqual(
+                stats.analyze_reason_traversals,
+                stats.analyze_problem_reason_traversals + stats.analyze_learnt_reason_traversals,
+            )
+            self.assertEqual(
+                stats.minimize_reason_checks,
+                sum(stats.minimize_reason_kept_buckets) + sum(stats.minimize_reason_removed_buckets),
+            )
+            self.assertEqual(
+                stats.minimize_reason_checks,
+                stats.minimize_problem_reason_checks + stats.minimize_learnt_reason_checks,
+            )
+            self.assertEqual(
+                stats.analyze_learnt_literal_appends,
+                stats.learnt_literals_before_min - stats.learnts_added,
+            )
+            self.assertGreater(stats.analyze_reason_traversals, 0)
+            self.assertGreaterEqual(stats.learnt_literals_before_min, stats.learnt_literals_after_min)
+            self.assertEqual(
+                stats.minimize_removed_literals,
+                stats.learnt_literals_before_min - stats.learnt_literals_after_min,
+            )
+            self.assertGreater(stats.lbd_sum, 0)
+            self.assertLessEqual(stats.branch_multiway_best_ties, stats.decisions)
+            self.assertLessEqual(stats.branch_zero_activity_choices, stats.decisions)
+            self.assertLessEqual(stats.max_branch_best_tie, stats.max_branch_unassigned)
+
+    def test_profile_solver_collects_branch_frontier_stats(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            case_path = Path(temp_dir) / "empty.cnf"
+            case_path.write_text("p cnf 3 0\n", encoding="utf-8")
+
+            stats = profile_solver.solve_with_profile(
+                str(case_path),
+                restart_base=64,
+                next_reduce=256,
+                var_decay=0.95,
+                clause_decay=0.999,
+            )
+
+            self.assertTrue(stats.sat)
+            self.assertTrue(stats.ok)
+            self.assertEqual(stats.decisions, 3)
+            self.assertEqual(stats.decision_trail_appends, 3)
+            self.assertEqual(stats.propagation_trail_appends, 0)
+            self.assertEqual(stats.trail_limit_pushes, 3)
+            self.assertEqual(stats.trail_limit_pops, 0)
+            self.assertEqual(stats.branch_unassigned_sum, 6)
+            self.assertEqual(stats.branch_zero_activity_unassigned_sum, 6)
+            self.assertEqual(stats.branch_best_tie_sum, 6)
+            self.assertEqual(stats.branch_multiway_best_ties, 2)
+            self.assertEqual(stats.branch_zero_activity_choices, 3)
+            self.assertEqual(stats.max_branch_unassigned, 3)
+            self.assertEqual(stats.max_branch_best_tie, 3)
+
+    def test_profile_solver_splits_satisfied_watch_skips_by_clause_family(self) -> None:
+        solver = profile_solver.ProfiledSolver(
+            3,
+            restart_base=64,
+            next_reduce=256,
+            var_decay=0.95,
+            clause_decay=0.999,
+        )
+
+        for clause in ([1, 2, 3], [2], [-1]):
+            self.assertTrue(solver.add_problem_clause(clause))
+
+        model = solver.solve()
+
+        self.assertIsNotNone(model)
+        self.assertGreater(solver.problem_ternary_satisfied_skips, 0)
+        self.assertEqual(solver.learnt_ternary_satisfied_skips, 0)
+        self.assertEqual(solver.problem_large_satisfied_skips, 0)
+        self.assertEqual(solver.learnt_large_satisfied_skips, 0)
+        self.assertEqual(
+            solver.satisfied_watch_skips,
+            solver.problem_ternary_satisfied_skips
+            + solver.learnt_ternary_satisfied_skips
+            + solver.problem_large_satisfied_skips
+            + solver.learnt_large_satisfied_skips,
+        )
+        self.assertEqual(
+            solver.ternary_units,
+            solver.problem_ternary_units + solver.learnt_ternary_units,
+        )
+        self.assertEqual(
+            solver.ternary_conflicts,
+            solver.problem_ternary_conflicts + solver.learnt_ternary_conflicts,
+        )
+
+    def test_profile_solver_splits_ternary_relocations_by_candidate_value(self) -> None:
+        solver = profile_solver.ProfiledSolver(
+            7,
+            restart_base=64,
+            next_reduce=256,
+            var_decay=0.95,
+            clause_decay=0.999,
+        )
+        clauses = [
+            [1, 2, 3],
+            [5, 6, 7],
+            [3],
+            [-4, -1],
+            [-4, -2],
+            [-4, -5],
+            [4],
+        ]
+
+        for clause in clauses:
+            self.assertTrue(solver.add_problem_clause(clause))
+
+        model = solver.solve()
+
+        self.assertIsNotNone(model)
+        self.assertGreater(solver.problem_ternary_true_relocations, 0)
+        self.assertGreater(solver.problem_ternary_unassigned_relocations, 0)
+        self.assertGreater(solver.problem_ternary_false_other_relocations, 0)
+        self.assertGreater(solver.problem_ternary_unassigned_other_relocations, 0)
+        self.assertEqual(solver.learnt_ternary_true_relocations, 0)
+        self.assertEqual(solver.learnt_ternary_unassigned_relocations, 0)
+        self.assertEqual(solver.learnt_ternary_false_other_relocations, 0)
+        self.assertEqual(solver.learnt_ternary_unassigned_other_relocations, 0)
+        self.assertEqual(
+            solver.ternary_relocations,
+            solver.problem_ternary_true_relocations
+            + solver.problem_ternary_unassigned_relocations
+            + solver.learnt_ternary_true_relocations
+            + solver.learnt_ternary_unassigned_relocations,
+        )
+        self.assertLessEqual(
+            solver.problem_ternary_normalized_relocations,
+            solver.problem_ternary_true_relocations + solver.problem_ternary_unassigned_relocations,
+        )
+        self.assertLessEqual(
+            solver.problem_ternary_normalized_units,
+            solver.problem_ternary_units,
+        )
+        self.assertLessEqual(
+            solver.problem_ternary_normalized_conflicts,
+            solver.problem_ternary_conflicts,
+        )
+        self.assertEqual(
+            solver.ternary_relocations,
+            solver.problem_ternary_false_other_relocations
+            + solver.problem_ternary_unassigned_other_relocations
+            + solver.learnt_ternary_false_other_relocations
+            + solver.learnt_ternary_unassigned_other_relocations,
+        )
+
+    def test_profile_solver_collects_large_clause_probe_stats(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            case_path = Path(temp_dir) / "large_watch_unsat.cnf"
+            case_path.write_text(
+                (
+                    "p cnf 4 5\n"
+                    "1 2 3 4 0\n"
+                    "-1 0\n"
+                    "-2 0\n"
+                    "-3 0\n"
+                    "-4 0\n"
+                ),
+                encoding="utf-8",
+            )
+
+            stats = profile_solver.solve_with_profile(
+                str(case_path),
+                restart_base=64,
+                next_reduce=256,
+                var_decay=0.95,
+                clause_decay=0.999,
+            )
+
+            self.assertFalse(stats.sat)
+            self.assertTrue(stats.ok)
+            self.assertGreater(stats.watch_clause_visits, 0)
+            self.assertGreater(stats.large_watch_visits, 0)
+            self.assertEqual(stats.watcher_list_appends, stats.watch_relocations)
+            self.assertEqual(
+                stats.watcher_list_pops,
+                stats.watch_relocations + stats.deleted_watch_skips,
+            )
+            self.assertEqual(
+                stats.deleted_watch_skips,
+                stats.deleted_ternary_watch_pops + stats.deleted_large_watch_pops,
+            )
+            self.assertEqual(
+                stats.watcher_list_pops,
+                stats.deleted_ternary_watch_pops
+                + stats.deleted_large_watch_pops
+                + stats.problem_ternary_relocation_pops
+                + stats.learnt_ternary_relocation_pops
+                + stats.problem_large_relocation_pops
+                + stats.learnt_large_relocation_pops,
+            )
+            self.assertEqual(stats.problem_ternary_clause_count, 0)
+            self.assertEqual(stats.problem_ternary_distinct_clauses_visited, 0)
+            self.assertEqual(stats.max_problem_ternary_clause_visits, 0)
+            self.assertEqual(stats.problem_ternary_literal_count, 0)
+            self.assertEqual(stats.problem_ternary_distinct_trigger_literals, 0)
+            self.assertEqual(stats.max_problem_ternary_trigger_literal_visits, 0)
+            self.assertEqual(
+                stats.watch_slot_normalizations,
+                stats.ternary_slot_normalizations + stats.large_slot_normalizations,
+            )
+            self.assertLessEqual(stats.normalized_satisfied_skips, stats.satisfied_watch_skips)
+            self.assertEqual(stats.ternary_slot_normalizations, 0)
+            self.assertEqual(
+                stats.ternary_watch_visits,
+                stats.problem_ternary_watch_visits + stats.learnt_ternary_watch_visits,
+            )
+            self.assertEqual(
+                stats.ternary_relocations,
+                stats.problem_ternary_true_relocations
+                + stats.problem_ternary_unassigned_relocations
+                + stats.learnt_ternary_true_relocations
+                + stats.learnt_ternary_unassigned_relocations,
+            )
+            self.assertEqual(
+                stats.ternary_relocations,
+                stats.problem_ternary_false_other_relocations
+                + stats.problem_ternary_unassigned_other_relocations
+                + stats.learnt_ternary_false_other_relocations
+                + stats.learnt_ternary_unassigned_other_relocations,
+            )
+            self.assertEqual(
+                stats.large_watch_visits,
+                stats.problem_large_watch_visits + stats.learnt_large_watch_visits,
+            )
+            self.assertEqual(
+                stats.large_relocations,
+                stats.problem_large_relocations + stats.learnt_large_relocations,
+            )
+            self.assertEqual(
+                stats.large_relocations,
+                stats.problem_large_relocation_pops + stats.learnt_large_relocation_pops,
+            )
+            self.assertEqual(stats.problem_ternary_normalized_relocations, 0)
+            self.assertEqual(stats.learnt_ternary_normalized_relocations, 0)
+            self.assertEqual(stats.problem_ternary_normalized_units, 0)
+            self.assertEqual(stats.learnt_ternary_normalized_units, 0)
+            self.assertEqual(stats.problem_ternary_normalized_conflicts, 0)
+            self.assertEqual(stats.learnt_ternary_normalized_conflicts, 0)
+            self.assertEqual(
+                stats.large_units,
+                stats.problem_large_units + stats.learnt_large_units,
+            )
+            self.assertEqual(
+                stats.large_conflicts,
+                stats.problem_large_conflicts + stats.learnt_large_conflicts,
+            )
+            self.assertEqual(
+                stats.large_watch_visits,
+                stats.large_watch_len4_visits
+                + stats.large_watch_len5_9_visits
+                + stats.large_watch_len10_plus_visits,
+            )
+            self.assertGreater(stats.large_probe_steps, 0)
+            self.assertGreater(stats.max_large_probe, 0)
+            self.assertGreater(stats.large_watch_len4_visits, 0)
+            self.assertEqual(stats.large_watch_len5_9_visits, 0)
+            self.assertEqual(stats.large_watch_len10_plus_visits, 0)
+            self.assertEqual(
+                stats.large_probe_steps,
+                stats.large_probe_success_steps + stats.large_probe_failure_steps,
+            )
+            self.assertEqual(
+                stats.large_relocations,
+                stats.large_probe_success_step1
+                + stats.large_probe_success_step2
+                + stats.large_probe_success_step3_4
+                + stats.large_probe_success_step5_plus,
+            )
+            self.assertGreater(stats.large_relocations + stats.large_units + stats.large_conflicts, 0)
+            self.assertEqual(stats.watch_relocations, stats.ternary_relocations + stats.large_relocations)
+            self.assertEqual(stats.watch_units, stats.ternary_units + stats.large_units)
+            self.assertEqual(stats.watch_conflicts, stats.ternary_conflicts + stats.large_conflicts)
+            self.assertEqual(
+                stats.analyze_reason_traversals,
+                stats.analyze_problem_reason_traversals + stats.analyze_learnt_reason_traversals,
+            )
+            self.assertEqual(
+                stats.minimize_reason_checks,
+                stats.minimize_problem_reason_checks + stats.minimize_learnt_reason_checks,
+            )
+
+    def test_profile_solver_splits_large_watch_visits_by_clause_size(self) -> None:
+        solver = profile_solver.ProfiledSolver(
+            19,
+            restart_base=64,
+            next_reduce=256,
+            var_decay=0.95,
+            clause_decay=0.999,
+        )
+        clauses = [
+            [1, 2, 3, 4],
+            [-1],
+            [-2],
+            [-3],
+            [4],
+            [5, 6, 7, 8, 9],
+            [-5],
+            [-6],
+            [-7],
+            [-8],
+            [9],
+            [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+            [-10],
+            [-11],
+            [-12],
+            [-13],
+            [-14],
+            [-15],
+            [-16],
+            [-17],
+            [-18],
+            [19],
+        ]
+
+        for clause in clauses:
+            self.assertTrue(solver.add_problem_clause(clause))
+
+        model = solver.solve()
+
+        self.assertIsNotNone(model)
+        self.assertGreater(solver.large_watch_len4_visits, 0)
+        self.assertGreater(solver.large_watch_len5_9_visits, 0)
+        self.assertGreater(solver.large_watch_len10_plus_visits, 0)
+        self.assertEqual(
+            solver.large_watch_visits,
+            solver.large_watch_len4_visits
+            + solver.large_watch_len5_9_visits
+            + solver.large_watch_len10_plus_visits,
+        )
+
+    def test_profile_solver_splits_large_relocation_probe_depths(self) -> None:
+        solver = profile_solver.ProfiledSolver(
+            20,
+            restart_base=64,
+            next_reduce=256,
+            var_decay=0.95,
+            clause_decay=0.999,
+        )
+        clauses = [
+            [1, 2, 3, 4],
+            [-1],
+            [5, 6, -7, 8],
+            [-5],
+            [7],
+            [9, 10, -11, -12, 13],
+            [-9],
+            [11],
+            [12],
+            [14, 15, -16, -17, -18, -19, 20],
+            [-14],
+            [16],
+            [17],
+            [18],
+            [19],
+        ]
+
+        for clause in clauses:
+            self.assertTrue(solver.add_problem_clause(clause))
+
+        model = solver.solve()
+
+        self.assertIsNotNone(model)
+        self.assertGreater(solver.large_probe_success_step1, 0)
+        self.assertGreater(solver.large_probe_success_step2, 0)
+        self.assertGreater(solver.large_probe_success_step3_4, 0)
+        self.assertGreater(solver.large_probe_success_step5_plus, 0)
+        self.assertEqual(
+            solver.large_relocations,
+            solver.large_probe_success_step1
+            + solver.large_probe_success_step2
+            + solver.large_probe_success_step3_4
+            + solver.large_probe_success_step5_plus,
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()

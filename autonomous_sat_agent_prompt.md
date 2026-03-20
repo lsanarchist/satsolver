@@ -62,7 +62,7 @@ A meaningful improvement cycle should normally include:
 ### What to optimize for
 
 Optimize in this order:
-1. Time - the faster the better
+1. Time - the faster the better - try to improve it
 2. output correctness,
 3. DIMACS parser correctness and edge-case handling,
 4. SAT model correctness,

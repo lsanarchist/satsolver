@@ -1,13 +1,19 @@
 from __future__ import annotations
 
+import os
 import sys
-from dataclasses import dataclass
 from typing import Iterable, Optional
 
 
 TRUE = 1
 FALSE = -1
 UNASSIGNED = 0
+
+PORTFOLIO_DISABLE_ENV = "SATSOLVER_DISABLE_PORTFOLIO"
+PORTFOLIO_MIN_VARS = 250
+PORTFOLIO_MIN_CLAUSES = 1000
+PORTFOLIO_MAX_DENSITY = 4.2
+ROOT_PURE_LITERAL_MIN_ASSIGNMENTS = 2
 
 
 def luby(index: int) -> int:
@@ -29,13 +35,88 @@ def lit_index(literal: int) -> int:
     return variable * 2 if literal > 0 else variable * 2 + 1
 
 
-@dataclass(slots=True)
+def normalize_clause_literals(literals: Iterable[int]) -> Optional[list[int]]:
+    clause: list[int] = []
+    seen: set[int] = set()
+    for literal in literals:
+        if literal == 0:
+            continue
+        if -literal in seen:
+            return None
+        if literal not in seen:
+            seen.add(literal)
+            clause.append(literal)
+    return clause
+
+
+def find_iterative_root_pure_literals(
+    num_vars: int,
+    clauses: Iterable[Iterable[int]],
+) -> list[int]:
+    normalized_clauses: list[list[int]] = []
+    for clause in clauses:
+        normalized = normalize_clause_literals(clause)
+        if normalized is not None:
+            normalized_clauses.append(normalized)
+
+    active = [True] * len(normalized_clauses)
+    assignment = [UNASSIGNED] * (num_vars + 1)
+    pure_literals: list[int] = []
+
+    while True:
+        polarity = [0] * (num_vars + 1)
+
+        for clause_id, clause in enumerate(normalized_clauses):
+            if not active[clause_id]:
+                continue
+            for literal in clause:
+                variable = abs(literal)
+                if assignment[variable] != UNASSIGNED:
+                    continue
+                polarity[variable] |= 1 if literal > 0 else 2
+
+        round_pures: list[int] = []
+        for variable in range(1, num_vars + 1):
+            if assignment[variable] != UNASSIGNED:
+                continue
+            if polarity[variable] == 1:
+                assignment[variable] = TRUE
+                round_pures.append(variable)
+            elif polarity[variable] == 2:
+                assignment[variable] = FALSE
+                round_pures.append(-variable)
+
+        if not round_pures:
+            return pure_literals
+
+        pure_literals.extend(round_pures)
+
+        for clause_id, clause in enumerate(normalized_clauses):
+            if not active[clause_id]:
+                continue
+            for literal in clause:
+                value = assignment[abs(literal)]
+                if value != UNASSIGNED and value == (TRUE if literal > 0 else FALSE):
+                    active[clause_id] = False
+                    break
+
+
 class Clause:
-    lits: list[int]
-    learnt: bool = False
-    activity: float = 0.0
-    lbd: int = 0
-    deleted: bool = False
+    __slots__ = ("lits", "learnt", "activity", "lbd", "deleted")
+
+    def __init__(
+        self,
+        lits: list[int],
+        learnt: bool = False,
+        activity: float = 0.0,
+        lbd: int = 0,
+        deleted: bool = False,
+    ) -> None:
+        self.lits = lits
+        self.learnt = learnt
+        self.activity = activity
+        self.lbd = lbd
+        self.deleted = deleted
 
 
 class Solver:
@@ -47,6 +128,11 @@ class Solver:
         self.learnt_ids: list[int] = []
         self.binary_implications: list[list[tuple[int, int]]] = [[] for _ in range(2 * num_vars + 2)]
         self.watchers: list[list[int]] = [[] for _ in range(2 * num_vars + 2)]
+        self.literal_values = [UNASSIGNED] * (2 * num_vars + 1)
+        self.literal_var = [0] * (2 * num_vars + 1)
+        self.literal_sign = [0] * (2 * num_vars + 1)
+        self.literal_watch_index = [0] * (2 * num_vars + 1)
+        self.negated_watch_index = [0] * (2 * num_vars + 1)
 
         self.values = [UNASSIGNED] * (num_vars + 1)
         self.level = [0] * (num_vars + 1)
@@ -62,6 +148,7 @@ class Solver:
 
         self.trail: list[int] = []
         self.trail_limits: list[int] = []
+        self.decision_level = 0
         self.qhead = 0
 
         self.seen = [0] * (num_vars + 1)
@@ -75,49 +162,80 @@ class Solver:
 
         self.ok = True
 
+        literal_var = self.literal_var
+        literal_sign = self.literal_sign
+        literal_watch_index = self.literal_watch_index
+        negated_watch_index = self.negated_watch_index
+        for variable in range(1, num_vars + 1):
+            positive_watch_index = variable * 2
+            negative_watch_index = positive_watch_index + 1
+
+            literal_var[variable] = variable
+            literal_var[-variable] = variable
+            literal_sign[variable] = TRUE
+            literal_sign[-variable] = FALSE
+            literal_watch_index[variable] = positive_watch_index
+            literal_watch_index[-variable] = negative_watch_index
+            negated_watch_index[variable] = negative_watch_index
+            negated_watch_index[-variable] = positive_watch_index
+
     def current_level(self) -> int:
-        return len(self.trail_limits)
+        return self.decision_level
 
     def literal_value(self, literal: int) -> int:
-        value = self.values[abs(literal)]
-        if value == UNASSIGNED:
-            return UNASSIGNED
-        return value if literal > 0 else -value
+        return self.literal_values[literal]
 
     def enqueue(self, literal: int, reason: Optional[int]) -> bool:
-        variable = abs(literal)
-        value = TRUE if literal > 0 else FALSE
+        variable = self.literal_var[literal]
+        value = self.literal_sign[literal]
         current = self.values[variable]
         if current != UNASSIGNED:
             return current == value
 
         self.values[variable] = value
-        self.level[variable] = self.current_level()
+        self.literal_values[variable] = value
+        self.literal_values[-variable] = -value
+        self.level[variable] = self.decision_level
         self.reason[variable] = reason
         self.saved_phase[variable] = literal > 0
         self.trail.append(literal)
         return True
 
     def backtrack(self, level: int) -> None:
-        while self.current_level() > level:
-            start = self.trail_limits.pop()
-            while len(self.trail) > start:
-                literal = self.trail.pop()
-                variable = abs(literal)
-                self.values[variable] = UNASSIGNED
-                self.level[variable] = 0
-                self.reason[variable] = None
-        self.qhead = len(self.trail)
+        trail = self.trail
+        values = self.values
+        literal_values = self.literal_values
+        levels = self.level
+        reasons = self.reason
+        literal_var = self.literal_var
+        trail_limits = self.trail_limits
+        decision_level = self.decision_level
+
+        while decision_level > level:
+            start = trail_limits.pop()
+            decision_level -= 1
+            for index in range(len(trail) - 1, start - 1, -1):
+                literal = trail[index]
+                variable = literal_var[literal]
+                values[variable] = UNASSIGNED
+                literal_values[variable] = UNASSIGNED
+                literal_values[-variable] = UNASSIGNED
+                levels[variable] = 0
+                reasons[variable] = None
+            del trail[start:]
+
+        self.decision_level = decision_level
+        self.qhead = len(trail)
 
     def attach_clause(self, clause_id: int) -> None:
         clause = self.clauses[clause_id]
         if len(clause.lits) == 2:
             first, second = clause.lits
-            self.binary_implications[lit_index(-first)].append((second, clause_id))
-            self.binary_implications[lit_index(-second)].append((first, clause_id))
+            self.binary_implications[self.negated_watch_index[first]].append((second, clause_id))
+            self.binary_implications[self.negated_watch_index[second]].append((first, clause_id))
             return
-        self.watchers[lit_index(clause.lits[0])].append(clause_id)
-        self.watchers[lit_index(clause.lits[1])].append(clause_id)
+        self.watchers[self.literal_watch_index[clause.lits[0]]].append(clause_id)
+        self.watchers[self.literal_watch_index[clause.lits[1]]].append(clause_id)
 
     def bump_var_activity(self, variable: int) -> None:
         self.activity[variable] += self.var_inc
@@ -149,17 +267,7 @@ class Solver:
             self.phase_bias[variable] += 1 if literal > 0 else -1
 
     def normalize_clause(self, literals: Iterable[int]) -> Optional[list[int]]:
-        clause: list[int] = []
-        seen: set[int] = set()
-        for literal in literals:
-            if literal == 0:
-                continue
-            if -literal in seen:
-                return None
-            if literal not in seen:
-                seen.add(literal)
-                clause.append(literal)
-        return clause
+        return normalize_clause_literals(literals)
 
     def simplify_root_clause(self, literals: Iterable[int]) -> Optional[list[int]]:
         reduced: list[int] = []
@@ -214,37 +322,60 @@ class Solver:
         return clause_id
 
     def propagate(self) -> Optional[int]:
-        values = self.values
+        clauses = self.clauses
+        literal_values = self.literal_values
+        literal_var = self.literal_var
+        literal_sign = self.literal_sign
+        literal_watch_index = self.literal_watch_index
+        negated_watch_index = self.negated_watch_index
         binary_implications = self.binary_implications
         all_watchers = self.watchers
+        values = self.values
+        levels = self.level
+        reasons = self.reason
+        saved_phase = self.saved_phase
+        trail = self.trail
+        decision_level = self.decision_level
+        qhead = self.qhead
+        trail_len = len(trail)
 
-        while self.qhead < len(self.trail):
-            literal = self.trail[self.qhead]
-            self.qhead += 1
+        while qhead < trail_len:
+            literal = trail[qhead]
+            qhead += 1
 
-            for implied_literal, clause_id in binary_implications[lit_index(literal)]:
-                clause = self.clauses[clause_id]
+            for implied_literal, clause_id in binary_implications[literal_watch_index[literal]]:
+                clause = clauses[clause_id]
                 if clause.deleted:
                     continue
 
-                implied_value = values[abs(implied_literal)]
-                if implied_literal < 0:
-                    implied_value = -implied_value
+                implied_value = literal_values[implied_literal]
                 if implied_value == FALSE:
+                    self.qhead = qhead
                     return clause_id
-                if implied_value == UNASSIGNED and not self.enqueue(implied_literal, clause_id):
-                    return clause_id
+                if implied_value == UNASSIGNED:
+                    variable = literal_var[implied_literal]
+                    value = literal_sign[implied_literal]
+                    values[variable] = value
+                    literal_values[variable] = value
+                    literal_values[-variable] = -value
+                    levels[variable] = decision_level
+                    reasons[variable] = clause_id
+                    saved_phase[variable] = implied_literal > 0
+                    trail.append(implied_literal)
+                    trail_len += 1
 
             false_literal = -literal
-            watchers = all_watchers[lit_index(false_literal)]
+            watchers = all_watchers[negated_watch_index[literal]]
             index = 0
+            watchers_len = len(watchers)
 
-            while index < len(watchers):
+            while index < watchers_len:
                 clause_id = watchers[index]
-                clause = self.clauses[clause_id]
+                clause = clauses[clause_id]
 
-                if clause.deleted:
-                    watchers[index] = watchers[-1]
+                if clause.learnt and clause.deleted:
+                    watchers_len -= 1
+                    watchers[index] = watchers[watchers_len]
                     watchers.pop()
                     continue
 
@@ -253,24 +384,49 @@ class Solver:
                     lits[0], lits[1] = lits[1], lits[0]
 
                 other_literal = lits[0]
-                other_value = values[abs(other_literal)]
-                if other_literal < 0:
-                    other_value = -other_value
+                other_value = literal_values[other_literal]
 
                 if other_value == TRUE:
+                    index += 1
+                    continue
+
+                if len(lits) == 3:
+                    candidate_literal = lits[2]
+                    candidate_value = literal_values[candidate_literal]
+                    if candidate_value != FALSE:
+                        lits[1], lits[2] = lits[2], lits[1]
+                        all_watchers[literal_watch_index[lits[1]]].append(clause_id)
+                        watchers_len -= 1
+                        watchers[index] = watchers[watchers_len]
+                        watchers.pop()
+                        continue
+
+                    if other_value == FALSE:
+                        self.qhead = qhead
+                        return clause_id
+                    if other_value == UNASSIGNED:
+                        variable = literal_var[other_literal]
+                        value = literal_sign[other_literal]
+                        values[variable] = value
+                        literal_values[variable] = value
+                        literal_values[-variable] = -value
+                        levels[variable] = decision_level
+                        reasons[variable] = clause_id
+                        saved_phase[variable] = other_literal > 0
+                        trail.append(other_literal)
+                        trail_len += 1
                     index += 1
                     continue
 
                 found_replacement = False
                 for replacement in range(2, len(lits)):
                     candidate_literal = lits[replacement]
-                    candidate_value = values[abs(candidate_literal)]
-                    if candidate_literal < 0:
-                        candidate_value = -candidate_value
+                    candidate_value = literal_values[candidate_literal]
                     if candidate_value != FALSE:
                         lits[1], lits[replacement] = lits[replacement], lits[1]
-                        all_watchers[lit_index(lits[1])].append(clause_id)
-                        watchers[index] = watchers[-1]
+                        all_watchers[literal_watch_index[lits[1]]].append(clause_id)
+                        watchers_len -= 1
+                        watchers[index] = watchers[watchers_len]
                         watchers.pop()
                         found_replacement = True
                         break
@@ -279,46 +435,77 @@ class Solver:
                     continue
 
                 if other_value == FALSE:
+                    self.qhead = qhead
                     return clause_id
-                if other_value == UNASSIGNED and not self.enqueue(lits[0], clause_id):
-                    return clause_id
+                if other_value == UNASSIGNED:
+                    variable = literal_var[other_literal]
+                    value = literal_sign[other_literal]
+                    values[variable] = value
+                    literal_values[variable] = value
+                    literal_values[-variable] = -value
+                    levels[variable] = decision_level
+                    reasons[variable] = clause_id
+                    saved_phase[variable] = other_literal > 0
+                    trail.append(other_literal)
+                    trail_len += 1
                 index += 1
 
+        self.qhead = qhead
         return None
-
-    def compute_lbd(self, literals: Iterable[int]) -> int:
-        self.lbd_token += 1
-        token = self.lbd_token
-        marks = self.lbd_marks
-        levels = self.level
-        count = 0
-
-        for literal in literals:
-            decision_level = levels[abs(literal)]
-            if marks[decision_level] != token:
-                marks[decision_level] = token
-                count += 1
-
-        return count
 
     def minimize_learnt(self, learnt: list[int], token: int) -> list[int]:
         if len(learnt) <= 2:
             return learnt
 
-        minimized = [learnt[0]]
         levels = self.level
         reasons = self.reason
         seen = self.seen
+        clauses = self.clauses
+        write_index = 1
 
-        for literal in learnt[1:]:
+        for read_index in range(1, len(learnt)):
+            literal = learnt[read_index]
             reason_clause_id = reasons[abs(literal)]
             if reason_clause_id is None:
-                minimized.append(literal)
+                learnt[write_index] = literal
+                write_index += 1
+                continue
+
+            reason_lits = clauses[reason_clause_id].lits
+            neg_literal = -literal
+            reason_size = len(reason_lits)
+
+            if reason_size == 2:
+                first, second = reason_lits
+                other_variable = abs(second if first == neg_literal else first)
+                if levels[other_variable] != 0 and seen[other_variable] != token:
+                    learnt[write_index] = literal
+                    write_index += 1
+                continue
+
+            if reason_size == 3:
+                first, second, third = reason_lits
+                if first == neg_literal:
+                    first_variable = abs(second)
+                    second_variable = abs(third)
+                elif second == neg_literal:
+                    first_variable = abs(first)
+                    second_variable = abs(third)
+                else:
+                    first_variable = abs(first)
+                    second_variable = abs(second)
+
+                if (
+                    (levels[first_variable] != 0 and seen[first_variable] != token)
+                    or (levels[second_variable] != 0 and seen[second_variable] != token)
+                ):
+                    learnt[write_index] = literal
+                    write_index += 1
                 continue
 
             redundant = True
-            for reason_literal in self.clauses[reason_clause_id].lits:
-                if reason_literal == -literal:
+            for reason_literal in reason_lits:
+                if reason_literal == neg_literal:
                     continue
                 variable = abs(reason_literal)
                 if levels[variable] != 0 and seen[variable] != token:
@@ -326,22 +513,47 @@ class Solver:
                     break
 
             if not redundant:
-                minimized.append(literal)
+                learnt[write_index] = literal
+                write_index += 1
 
-        return minimized
+        del learnt[write_index:]
+        return learnt
+
+    def prepare_learnt_clause(self, learnt: list[int]) -> tuple[int, int]:
+        self.lbd_token += 1
+        token = self.lbd_token
+        marks = self.lbd_marks
+        levels = self.level
+        best_index = 1
+        best_level = levels[abs(learnt[1])]
+        lbd = 0
+
+        for index, literal in enumerate(learnt):
+            decision_level = levels[abs(literal)]
+            if marks[decision_level] != token:
+                marks[decision_level] = token
+                lbd += 1
+            if index != 0 and decision_level > best_level:
+                best_level = decision_level
+                best_index = index
+
+        learnt[1], learnt[best_index] = learnt[best_index], learnt[1]
+        return best_level, lbd
 
     def analyze(self, conflict_clause_id: int) -> tuple[list[int], int, int]:
         learnt = [0]
         self.seen_token += 1
         token = self.seen_token
-        touched: list[int] = []
 
         clauses = self.clauses
         levels = self.level
         reasons = self.reason
         seen = self.seen
         trail = self.trail
-        current_level = self.current_level()
+        current_level = self.decision_level
+        activity = self.activity
+        var_inc = self.var_inc
+        num_vars = self.num_vars
 
         current_clause_id = conflict_clause_id
         path_count = 0
@@ -361,8 +573,11 @@ class Solver:
                     continue
 
                 seen[variable] = token
-                touched.append(variable)
-                self.bump_var_activity(variable)
+                activity[variable] += var_inc
+                if activity[variable] > 1e100:
+                    for index in range(1, num_vars + 1):
+                        activity[index] *= 1e-100
+                    var_inc *= 1e-100
 
                 if levels[variable] == current_level:
                     path_count += 1
@@ -372,16 +587,17 @@ class Solver:
             while True:
                 pivot = trail[trail_index]
                 trail_index -= 1
-                if seen[abs(pivot)] == token:
+                pivot_variable = abs(pivot)
+                if seen[pivot_variable] == token:
                     break
 
-            seen[abs(pivot)] = 0
+            seen[pivot_variable] = 0
             path_count -= 1
             if path_count == 0:
                 learnt[0] = -pivot
                 break
 
-            reason_clause_id = reasons[abs(pivot)]
+            reason_clause_id = reasons[pivot_variable]
             if reason_clause_id is None:
                 learnt[0] = -pivot
                 break
@@ -389,22 +605,12 @@ class Solver:
 
         learnt = self.minimize_learnt(learnt, token)
 
-        for variable in touched:
-            seen[variable] = 0
-
+        self.var_inc = var_inc
         if len(learnt) == 1:
             return learnt, 0, 1
 
-        best_index = 1
-        best_level = levels[abs(learnt[1])]
-        for index in range(2, len(learnt)):
-            variable_level = levels[abs(learnt[index])]
-            if variable_level > best_level:
-                best_level = variable_level
-                best_index = index
-
-        learnt[1], learnt[best_index] = learnt[best_index], learnt[1]
-        return learnt, best_level, self.compute_lbd(learnt)
+        best_level, lbd = self.prepare_learnt_clause(learnt)
+        return learnt, best_level, lbd
 
     def pick_branch_literal(self) -> int:
         best_variable = 0
@@ -463,6 +669,15 @@ class Solver:
             model[variable] = value
         return model
 
+    def seed_saved_phases_from_bias(self) -> None:
+        values = self.values
+        saved_phase = self.saved_phase
+        phase_bias = self.phase_bias
+
+        for variable in range(1, self.num_vars + 1):
+            if values[variable] == UNASSIGNED:
+                saved_phase[variable] = phase_bias[variable] >= 0
+
     def solve(self) -> Optional[list[int]]:
         if not self.ok:
             return None
@@ -482,7 +697,7 @@ class Solver:
                 self.conflicts += 1
                 conflicts_since_restart += 1
 
-                if self.current_level() == 0:
+                if self.decision_level == 0:
                     self.ok = False
                     return None
 
@@ -510,6 +725,7 @@ class Solver:
                 return self.build_model()
 
             self.trail_limits.append(len(self.trail))
+            self.decision_level += 1
             self.enqueue(branch_literal, None)
 
 
@@ -518,6 +734,7 @@ def parse_dimacs(text: str) -> tuple[int, list[list[int]]]:
     num_clauses: Optional[int] = None
     clauses: list[list[int]] = []
     current: list[int] = []
+    header_seen = False
 
     for raw_line in text.splitlines():
         line = raw_line.strip()
@@ -526,12 +743,17 @@ def parse_dimacs(text: str) -> tuple[int, list[list[int]]]:
         if line.startswith("%"):
             break
         if line.startswith("p"):
+            if header_seen:
+                raise ValueError("Multiple DIMACS problem lines are not allowed")
             parts = line.split()
             if len(parts) != 4 or parts[1] != "cnf":
                 raise ValueError("Invalid DIMACS problem line")
             num_vars = int(parts[2])
             num_clauses = int(parts[3])
+            header_seen = True
             continue
+        if not header_seen:
+            raise ValueError("DIMACS clauses must appear after the problem line")
 
         for token in line.split():
             literal = int(token)
@@ -539,6 +761,10 @@ def parse_dimacs(text: str) -> tuple[int, list[list[int]]]:
                 clauses.append(current)
                 current = []
             else:
+                if abs(literal) > num_vars:
+                    raise ValueError(
+                        f"Literal {literal} exceeds declared variable range 1..{num_vars}"
+                    )
                 current.append(literal)
 
     if num_vars is None or num_clauses is None:
@@ -615,20 +841,162 @@ def has_pigeonhole_core(clauses: Iterable[Iterable[int]]) -> bool:
     return False
 
 
+def xor_system_unsat(num_vars: int, clauses: Iterable[Iterable[int]]) -> bool:
+    groups: dict[tuple[int, ...], set[int]] = {}
+
+    for clause in clauses:
+        literals = list(clause)
+        if len(literals) < 3 or len(literals) > 6:
+            continue
+
+        signs: dict[int, int] = {}
+        valid = True
+        for literal in literals:
+            variable = abs(literal)
+            if variable in signs:
+                valid = False
+                break
+            signs[variable] = 1 if literal < 0 else 0
+
+        if not valid:
+            continue
+
+        variables = tuple(sorted(signs))
+        pattern = 0
+        for index, variable in enumerate(variables):
+            pattern |= signs[variable] << index
+        groups.setdefault(variables, set()).add(pattern)
+
+    basis: dict[int, tuple[int, int]] = {}
+    equations: list[tuple[int, int]] = []
+
+    for variables, patterns in groups.items():
+        width = len(variables)
+        if len(patterns) != (1 << (width - 1)):
+            continue
+
+        parities = {pattern.bit_count() & 1 for pattern in patterns}
+        if len(parities) != 1:
+            continue
+
+        forbidden_parity = next(iter(parities))
+        rhs = forbidden_parity ^ 1
+        mask = 0
+        for variable in variables:
+            if variable > num_vars:
+                return False
+            mask |= 1 << (variable - 1)
+        equations.append((mask, rhs))
+
+    for mask, rhs in equations:
+        current_mask = mask
+        current_rhs = rhs
+
+        while current_mask:
+            pivot = current_mask.bit_length() - 1
+            row = basis.get(pivot)
+            if row is None:
+                basis[pivot] = (current_mask, current_rhs)
+                break
+            current_mask ^= row[0]
+            current_rhs ^= row[1]
+        else:
+            if current_rhs:
+                return True
+
+    return False
+
+
 def format_model(model: list[int]) -> str:
     literals = [str(variable if model[variable] == TRUE else -variable) for variable in range(1, len(model))]
     return " ".join(literals) + " 0"
 
 
-def solve_cnf(num_vars: int, clauses: list[list[int]]) -> Optional[list[int]]:
-    if has_pigeonhole_core(clauses):
-        return None
-
+def solve_cnf_serial(
+    num_vars: int,
+    clauses: list[list[int]],
+    *,
+    seed_phase_bias: bool = False,
+) -> Optional[list[int]]:
     solver = Solver(num_vars)
+    root_pure_literals = find_iterative_root_pure_literals(num_vars, clauses)
+    if len(root_pure_literals) >= ROOT_PURE_LITERAL_MIN_ASSIGNMENTS:
+        for literal in root_pure_literals:
+            if not solver.enqueue(literal, None):
+                return None
     for clause in clauses:
         if not solver.add_problem_clause(clause):
             return None
+    if seed_phase_bias:
+        solver.seed_saved_phases_from_bias()
     return solver.solve()
+
+
+def should_use_parallel_portfolio(num_vars: int, clauses: list[list[int]]) -> bool:
+    if os.environ.get(PORTFOLIO_DISABLE_ENV):
+        return False
+    if os.name != "posix":
+        return False
+    cpu_count = os.cpu_count() or 1
+    if cpu_count < 2:
+        return False
+    if num_vars < PORTFOLIO_MIN_VARS or len(clauses) < PORTFOLIO_MIN_CLAUSES:
+        return False
+    if not all(len(clause) == 3 for clause in clauses):
+        return False
+    return (len(clauses) / num_vars) <= PORTFOLIO_MAX_DENSITY
+
+
+def solve_cnf_portfolio(num_vars: int, clauses: list[list[int]]) -> Optional[list[int]]:
+    import multiprocessing as mp
+
+    def solve_portfolio_worker(seed_phase_bias: bool, result_queue) -> None:
+        try:
+            model = solve_cnf_serial(num_vars, clauses, seed_phase_bias=seed_phase_bias)
+            result_queue.put((True, model))
+        except BaseException as exc:
+            result_queue.put((False, f"{type(exc).__name__}: {exc}"))
+
+    context = mp.get_context("fork")
+    result_queue = context.Queue()
+    processes = [
+        context.Process(target=solve_portfolio_worker, args=(False, result_queue)),
+        context.Process(target=solve_portfolio_worker, args=(True, result_queue)),
+    ]
+
+    for process in processes:
+        process.start()
+
+    errors: list[str] = []
+
+    try:
+        remaining = len(processes)
+        while remaining > 0:
+            ok, payload = result_queue.get()
+            remaining -= 1
+            if ok:
+                return payload
+            errors.append(payload)
+    finally:
+        for process in processes:
+            if process.is_alive():
+                process.terminate()
+        for process in processes:
+            process.join()
+        result_queue.close()
+        result_queue.join_thread()
+
+    raise RuntimeError(f"Parallel portfolio failed: {'; '.join(errors)}")
+
+
+def solve_cnf(num_vars: int, clauses: list[list[int]]) -> Optional[list[int]]:
+    if has_pigeonhole_core(clauses):
+        return None
+    if xor_system_unsat(num_vars, clauses):
+        return None
+    if should_use_parallel_portfolio(num_vars, clauses):
+        return solve_cnf_portfolio(num_vars, clauses)
+    return solve_cnf_serial(num_vars, clauses)
 
 
 def write_result(path: str, model: Optional[list[int]]) -> None:
