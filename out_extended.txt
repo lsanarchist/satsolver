@@ -1,0 +1,92 @@
+solver=satsolver
+
+[small]
+test_1.cnf: SAT ok=True vars=19 clauses=26 time=0.0003s
+test_10.cnf: UNSAT ok=True vars=22 clauses=174 time=0.0012s
+test_2.cnf: SAT ok=True vars=46 clauses=176 time=0.0010s
+test_3.cnf: SAT ok=True vars=41 clauses=150 time=0.0013s
+test_4.cnf: UNSAT ok=True vars=30 clauses=167 time=0.0010s
+test_5.cnf: SAT ok=True vars=20 clauses=40 time=0.0003s
+test_6.cnf: SAT ok=True vars=42 clauses=70 time=0.0004s
+test_7.cnf: SAT ok=True vars=49 clauses=167 time=0.0017s
+test_8.cnf: UNSAT ok=True vars=14 clauses=68 time=0.0005s
+test_9.cnf: SAT ok=True vars=40 clauses=100 time=0.0005s
+SUMMARY small: count=10 total=0.0083s avg=0.0008s median=0.0008s max=0.0017s
+
+[medium]
+test_1.cnf: UNSAT ok=True vars=63 clauses=835 time=0.0053s
+test_10.cnf: UNSAT ok=True vars=68 clauses=822 time=0.0048s
+test_2.cnf: UNSAT ok=True vars=69 clauses=352 time=0.0081s
+test_3.cnf: UNSAT ok=True vars=172 clauses=774 time=0.8717s
+test_4.cnf: UNSAT ok=True vars=191 clauses=886 time=2.2214s
+test_5.cnf: UNSAT ok=True vars=55 clauses=713 time=0.0033s
+test_6.cnf: UNSAT ok=True vars=61 clauses=512 time=0.0043s
+test_7.cnf: UNSAT ok=True vars=75 clauses=562 time=0.0036s
+test_8.cnf: SAT ok=True vars=130 clauses=333 time=0.0019s
+test_9.cnf: SAT ok=True vars=138 clauses=379 time=0.0020s
+SUMMARY medium: count=10 total=3.1264s avg=0.3126s median=0.0046s max=2.2214s
+
+[large]
+test_1.cnf: SAT ok=True vars=373 clauses=811 time=0.0079s
+test_10.cnf: UNSAT ok=True vars=229 clauses=1280 time=2.1838s
+test_2.cnf: SAT ok=True vars=319 clauses=573 time=0.0057s
+test_3.cnf: UNSAT ok=True vars=227 clauses=1460 time=0.3389s
+test_4.cnf: UNSAT ok=True vars=219 clauses=1363 time=0.3292s
+test_5.cnf: SAT ok=True vars=244 clauses=772 time=0.0047s
+test_6.cnf: UNSAT ok=True vars=271 clauses=1393 time=16.7170s
+test_7.cnf: SAT ok=True vars=389 clauses=863 time=0.0092s
+test_8.cnf: SAT ok=True vars=298 clauses=1210 time=4.8243s
+test_9.cnf: SAT ok=True vars=365 clauses=969 time=0.0068s
+SUMMARY large: count=10 total=24.4275s avg=2.4427s median=0.1692s max=16.7170s
+
+[special]
+dense.cnf: UNSAT ok=True vars=200 clauses=1500 time=0.1239s
+easy.cnf: SAT ok=True vars=200 clauses=400 time=0.0030s
+hard.cnf: UNSAT ok=True vars=200 clauses=850 time=11.4701s
+pigeonhole.cnf: UNSAT ok=True vars=90 clauses=415 time=0.0004s
+tseitin.cnf: UNSAT ok=True vars=40 clauses=160 time=9.9430s
+SUMMARY special: count=5 total=21.5404s avg=4.3081s median=0.1239s max=11.4701s
+
+[satlib_subset]
+dubois20.cnf: UNSAT ok=True vars=60 clauses=160 time=0.0091s
+dubois21.cnf: UNSAT ok=True vars=63 clauses=168 time=0.0107s
+flat50-1.cnf: SAT ok=True vars=150 clauses=545 time=0.0030s
+flat50-10.cnf: SAT ok=True vars=150 clauses=545 time=0.0021s
+hole10.cnf: UNSAT ok=True vars=110 clauses=561 time=0.0006s
+hole8.cnf: UNSAT ok=True vars=72 clauses=297 time=0.0002s
+uf100-01.cnf: SAT ok=True vars=100 clauses=430 time=0.0232s
+uf100-010.cnf: SAT ok=True vars=100 clauses=430 time=0.0031s
+uuf100-01.cnf: UNSAT ok=True vars=100 clauses=430 time=0.0293s
+uuf100-010.cnf: UNSAT ok=True vars=100 clauses=430 time=0.0521s
+SUMMARY satlib_subset: count=10 total=0.1334s avg=0.0133s median=0.0061s max=0.0521s
+
+[satlib_more]
+aim-100-1_6-no-1.cnf: UNSAT ok=True vars=100 clauses=160 time=0.0023s
+aim-100-1_6-no-2.cnf: UNSAT ok=True vars=100 clauses=160 time=0.0037s
+aim-100-1_6-yes1-1.cnf: SAT ok=True vars=100 clauses=160 time=0.0031s
+aim-100-1_6-yes1-2.cnf: SAT ok=True vars=100 clauses=160 time=0.0052s
+flat75-1.cnf: SAT ok=True vars=225 clauses=840 time=0.0040s
+flat75-10.cnf: SAT ok=True vars=225 clauses=840 time=0.0097s
+jnh1.cnf: SAT ok=True vars=100 clauses=850 time=0.0105s
+jnh10.cnf: UNSAT ok=True vars=100 clauses=850 time=0.0074s
+uf125-01.cnf: SAT ok=True vars=125 clauses=538 time=0.0073s
+uf125-010.cnf: SAT ok=True vars=125 clauses=538 time=0.0269s
+uf150-01.cnf: SAT ok=True vars=150 clauses=645 time=0.0286s
+uuf125-01.cnf: UNSAT ok=True vars=125 clauses=538 time=0.1522s
+uuf125-010.cnf: UNSAT ok=True vars=125 clauses=538 time=0.1925s
+uuf150-01.cnf: UNSAT ok=True vars=150 clauses=645 time=0.5922s
+SUMMARY satlib_more: count=14 total=1.0455s avg=0.0747s median=0.0085s max=0.5922s
+
+[overall]
+total_cases=59 total=50.2815s avg=0.8522s median=0.0053s max=16.7170s wall_clock=50.3255s
+slowest_cases:
+large/test_6.cnf: UNSAT ok=True vars=271 clauses=1393 time=16.7170s
+special/hard.cnf: UNSAT ok=True vars=200 clauses=850 time=11.4701s
+special/tseitin.cnf: UNSAT ok=True vars=40 clauses=160 time=9.9430s
+large/test_8.cnf: SAT ok=True vars=298 clauses=1210 time=4.8243s
+medium/test_4.cnf: UNSAT ok=True vars=191 clauses=886 time=2.2214s
+large/test_10.cnf: UNSAT ok=True vars=229 clauses=1280 time=2.1838s
+medium/test_3.cnf: UNSAT ok=True vars=172 clauses=774 time=0.8717s
+satlib_more/uuf150-01.cnf: UNSAT ok=True vars=150 clauses=645 time=0.5922s
+large/test_3.cnf: UNSAT ok=True vars=227 clauses=1460 time=0.3389s
+large/test_4.cnf: UNSAT ok=True vars=219 clauses=1363 time=0.3292s
