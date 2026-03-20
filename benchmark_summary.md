@@ -1,6 +1,6 @@
 # Benchmark Summary
 
-Updated: `2026-03-20T23:06:07+01:00`
+Updated: `2026-03-20T23:13:51+01:00`
 
 Best-known submission configuration:
 - `satsolver.py`
@@ -85,9 +85,9 @@ Best single-run exact-CLI validated 59-case snapshot:
 - Worst-case runtime: `12.1124s` on `large/test_6.cnf`
 
 Latest cycle note:
-- This cycle ended as a measured reject, not a solver-core keep. I tested fixed-order problem ternary clauses with watched-position side arrays in an out-of-tree `OrientationSolver`, so the hot path could update watcher positions without mutating `clause.lits`.
-- The branch preserved exact conflict counts on all five hotspot cases in both orders and still lost clearly: forward regressed `35.4075s -> 38.7377s`, reverse regressed `33.8519s -> 37.5611s`, with the biggest loss on `large/test_6.cnf` (`15.3857s -> 18.0354s`). `large/test_8.cnf` helped once, but the broader slice still lost cleanly.
-- The production solver remains unchanged, and the new boundary is that replacing ternary literal-order mutation with watched-position side state is not enough by itself. Future propagation work still needs a broader simplification of the original-ternary relocation/unit path than another clause-local state representation.
+- This cycle ended as a measured reject, not a solver-core keep. I compared the retained solver directly against the repo's sibling solver, `satsolver_blaze.py`, to see whether it still offers a meaningful alternate-worker profile on the live hotspot slice.
+- The answer is no on the current landscape. Forward order finished `29.8179s` for the retained solver versus `35.5141s` for `satsolver_blaze.py`, with the retained solver winning four of five cases; reverse order widened that to `35.8424s` versus `43.0727s`, with the retained solver winning all five cases.
+- The production solver remains unchanged, and the new boundary is that the old `satsolver_blaze.py` benchmark note is not a current optimization lead anymore. Future portfolio or alternate-worker work needs a materially different and current search identity.
 
 Cumulative improvement since the first archived 59-case snapshot:
 - Full suite: `50.2815s -> 26.4178s` (`-47.46%`)
@@ -119,6 +119,7 @@ Profiling note:
 - The newest reject sharpens the branching side of that same lesson: even a modest local-alias cleanup in `pick_branch_literal()` can look positive on both hotspot slices and still lose the repeat-aware exact-CLI suite. So future branching work still needs a stronger structural win than loop-local caching or attribute-hoisting alone.
 - The newest reject extends that lesson to `solve()` bookkeeping too: even trimming three very frequent helper calls around decay and reduction can still wash out to a near-tie on the exact-CLI hotspot slice. Future helper-boundary work in the outer loop needs a cleaner signal than that before it earns a full-suite run.
 - The newest reject closes another clause-local-state direction on the propagation side: fixed-order problem ternary clauses plus watched-position side arrays preserved exact conflict counts on the five-case hotspot slice and still regressed in both orders. So future original-ternary work should be skeptical of replacing `clause.lits` mutation with extra watched-position side state unless it removes substantially more work than this branch did.
+- The newest cross-solver comparison closes another tempting portfolio lead too: on the current five-case hotspot slice, the retained solver now beats `satsolver_blaze.py` clearly in both forward and reverse order, with blaze only stealing one forward `large/test_10.cnf` run. So the old sibling-solver speed note is stale as a current alternate-worker lead; future portfolio work needs a more materially different search identity than simply reviving `satsolver_blaze.py`.
 - The latest rejected branching branch adds another rule: `pick_branch_literal()` may look tempting in `cProfile`, but cheap best-variable hint caches can still lose even when they preserve the exact same decisions/conflicts on the hotspot cases. If branching is revisited again, it needs a more substantive design than local memoization.
 - The newest keep adds a second positive pattern on the conflict-analysis side: token-scoped state can sometimes be left stale safely. `analyze()` was already using `seen_token` for membership tests, so removing the touched-list cleanup loop produced a cleaner win than several earlier clause-shape rewrites. Future bookkeeping work should prefer deleting redundant cleanup passes outright when token scoping already provides correctness.
 - The latest `maybe.md` parallelism revisit adds a caution flag on portfolio plumbing: even when a raw-`fork` rewrite makes the one gated case faster, that does not automatically translate into a better same-day exact-CLI suite. Future portfolio work should demand a broad exact-CLI win, not just a cleaner `large/test_8.cnf` microbenchmark.

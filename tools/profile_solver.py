@@ -59,6 +59,14 @@ class RunStats:
     learnt_ternary_watch_visits: int
     problem_large_watch_visits: int
     learnt_large_watch_visits: int
+    problem_ternary_watch_batches: int
+    problem_ternary_mixed_watch_batches: int
+    problem_ternary_batch_total_watchers: int
+    problem_ternary_batch_problem_ternary_watchers: int
+    problem_ternary_batch_learnt_ternary_watchers: int
+    problem_ternary_batch_problem_large_watchers: int
+    problem_ternary_batch_learnt_large_watchers: int
+    problem_ternary_batch_deleted_watchers: int
     problem_ternary_satisfied_skips: int
     learnt_ternary_satisfied_skips: int
     problem_large_satisfied_skips: int
@@ -220,6 +228,14 @@ class ProfiledSolver(satsolver.Solver):
         self.learnt_ternary_watch_visits = 0
         self.problem_large_watch_visits = 0
         self.learnt_large_watch_visits = 0
+        self.problem_ternary_watch_batches = 0
+        self.problem_ternary_mixed_watch_batches = 0
+        self.problem_ternary_batch_total_watchers = 0
+        self.problem_ternary_batch_problem_ternary_watchers = 0
+        self.problem_ternary_batch_learnt_ternary_watchers = 0
+        self.problem_ternary_batch_problem_large_watchers = 0
+        self.problem_ternary_batch_learnt_large_watchers = 0
+        self.problem_ternary_batch_deleted_watchers = 0
         self.problem_ternary_satisfied_skips = 0
         self.learnt_ternary_satisfied_skips = 0
         self.problem_large_satisfied_skips = 0
@@ -372,6 +388,40 @@ class ProfiledSolver(satsolver.Solver):
             watchers = all_watchers[negated_watch_index[literal]]
             index = 0
             watchers_len = len(watchers)
+
+            if watchers_len:
+                batch_problem_ternary = 0
+                batch_learnt_ternary = 0
+                batch_problem_large = 0
+                batch_learnt_large = 0
+                batch_deleted = 0
+
+                for batch_clause_id in watchers:
+                    batch_clause = clauses[batch_clause_id]
+                    if batch_clause.learnt and batch_clause.deleted:
+                        batch_deleted += 1
+                        continue
+
+                    if len(batch_clause.lits) == 3:
+                        if batch_clause.learnt:
+                            batch_learnt_ternary += 1
+                        else:
+                            batch_problem_ternary += 1
+                    elif batch_clause.learnt:
+                        batch_learnt_large += 1
+                    else:
+                        batch_problem_large += 1
+
+                if batch_problem_ternary:
+                    self.problem_ternary_watch_batches += 1
+                    self.problem_ternary_batch_total_watchers += watchers_len
+                    self.problem_ternary_batch_problem_ternary_watchers += batch_problem_ternary
+                    self.problem_ternary_batch_learnt_ternary_watchers += batch_learnt_ternary
+                    self.problem_ternary_batch_problem_large_watchers += batch_problem_large
+                    self.problem_ternary_batch_learnt_large_watchers += batch_learnt_large
+                    self.problem_ternary_batch_deleted_watchers += batch_deleted
+                    if batch_learnt_ternary or batch_problem_large or batch_learnt_large or batch_deleted:
+                        self.problem_ternary_mixed_watch_batches += 1
 
             while index < watchers_len:
                 self.watch_clause_visits += 1
@@ -941,6 +991,14 @@ def build_run_stats(
             learnt_ternary_watch_visits=0,
             problem_large_watch_visits=0,
             learnt_large_watch_visits=0,
+            problem_ternary_watch_batches=0,
+            problem_ternary_mixed_watch_batches=0,
+            problem_ternary_batch_total_watchers=0,
+            problem_ternary_batch_problem_ternary_watchers=0,
+            problem_ternary_batch_learnt_ternary_watchers=0,
+            problem_ternary_batch_problem_large_watchers=0,
+            problem_ternary_batch_learnt_large_watchers=0,
+            problem_ternary_batch_deleted_watchers=0,
             problem_ternary_satisfied_skips=0,
             learnt_ternary_satisfied_skips=0,
             problem_large_satisfied_skips=0,
@@ -1078,6 +1136,14 @@ def build_run_stats(
         learnt_ternary_watch_visits=solver.learnt_ternary_watch_visits,
         problem_large_watch_visits=solver.problem_large_watch_visits,
         learnt_large_watch_visits=solver.learnt_large_watch_visits,
+        problem_ternary_watch_batches=solver.problem_ternary_watch_batches,
+        problem_ternary_mixed_watch_batches=solver.problem_ternary_mixed_watch_batches,
+        problem_ternary_batch_total_watchers=solver.problem_ternary_batch_total_watchers,
+        problem_ternary_batch_problem_ternary_watchers=solver.problem_ternary_batch_problem_ternary_watchers,
+        problem_ternary_batch_learnt_ternary_watchers=solver.problem_ternary_batch_learnt_ternary_watchers,
+        problem_ternary_batch_problem_large_watchers=solver.problem_ternary_batch_problem_large_watchers,
+        problem_ternary_batch_learnt_large_watchers=solver.problem_ternary_batch_learnt_large_watchers,
+        problem_ternary_batch_deleted_watchers=solver.problem_ternary_batch_deleted_watchers,
         problem_ternary_satisfied_skips=solver.problem_ternary_satisfied_skips,
         learnt_ternary_satisfied_skips=solver.learnt_ternary_satisfied_skips,
         problem_large_satisfied_skips=solver.problem_large_satisfied_skips,
@@ -1472,6 +1538,31 @@ def main() -> int:
             if stats.problem_ternary_watch_visits
             else 0.0
         )
+        problem_ternary_mixed_batch_share = (
+            stats.problem_ternary_mixed_watch_batches / stats.problem_ternary_watch_batches
+            if stats.problem_ternary_watch_batches
+            else 0.0
+        )
+        avg_problem_ternary_batch_size = (
+            stats.problem_ternary_batch_total_watchers / stats.problem_ternary_watch_batches
+            if stats.problem_ternary_watch_batches
+            else 0.0
+        )
+        avg_problem_ternary_batch_other_watchers = (
+            (
+                stats.problem_ternary_batch_total_watchers
+                - stats.problem_ternary_batch_problem_ternary_watchers
+            )
+            / stats.problem_ternary_watch_batches
+            if stats.problem_ternary_watch_batches
+            else 0.0
+        )
+        problem_ternary_batch_learnt_large_share = (
+            stats.problem_ternary_batch_learnt_large_watchers
+            / stats.problem_ternary_batch_total_watchers
+            if stats.problem_ternary_batch_total_watchers
+            else 0.0
+        )
         total_ternary_relocations = (
             stats.problem_ternary_true_relocations
             + stats.problem_ternary_unassigned_relocations
@@ -1581,6 +1672,17 @@ def main() -> int:
                 f"problem_ternary_literal_coverage={problem_ternary_literal_coverage:.3f} "
                 f"max_problem_ternary_trigger_literal_visits={stats.max_problem_ternary_trigger_literal_visits} "
                 f"problem_ternary_trigger_hot_share={problem_ternary_trigger_hot_share:.4f} "
+                f"problem_ternary_watch_batches={stats.problem_ternary_watch_batches} "
+                f"problem_ternary_mixed_watch_batches={stats.problem_ternary_mixed_watch_batches} "
+                f"problem_ternary_mixed_batch_share={problem_ternary_mixed_batch_share:.4f} "
+                f"avg_problem_ternary_batch_size={avg_problem_ternary_batch_size:.2f} "
+                f"avg_problem_ternary_batch_other_watchers={avg_problem_ternary_batch_other_watchers:.2f} "
+                f"problem_ternary_batch_problem_watchers={stats.problem_ternary_batch_problem_ternary_watchers} "
+                f"problem_ternary_batch_learnt_ternary_watchers={stats.problem_ternary_batch_learnt_ternary_watchers} "
+                f"problem_ternary_batch_problem_large_watchers={stats.problem_ternary_batch_problem_large_watchers} "
+                f"problem_ternary_batch_learnt_large_watchers={stats.problem_ternary_batch_learnt_large_watchers} "
+                f"problem_ternary_batch_deleted_watchers={stats.problem_ternary_batch_deleted_watchers} "
+                f"problem_ternary_batch_learnt_large_share={problem_ternary_batch_learnt_large_share:.4f} "
                 f"deleted_watch_skips={stats.deleted_watch_skips} satisfied_skips={stats.satisfied_watch_skips} "
                 f"watch_normalizations={stats.watch_slot_normalizations} "
                 f"ternary_normalizations={stats.ternary_slot_normalizations} "

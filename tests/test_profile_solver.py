@@ -185,6 +185,27 @@ class ProfileSolverTests(unittest.TestCase):
                 stats.problem_ternary_literal_count,
             )
             self.assertGreater(stats.max_problem_ternary_trigger_literal_visits, 0)
+            self.assertGreater(stats.problem_ternary_watch_batches, 0)
+            self.assertLessEqual(
+                stats.problem_ternary_mixed_watch_batches,
+                stats.problem_ternary_watch_batches,
+            )
+            self.assertGreaterEqual(
+                stats.problem_ternary_batch_total_watchers,
+                stats.problem_ternary_watch_batches,
+            )
+            self.assertGreaterEqual(
+                stats.problem_ternary_batch_problem_ternary_watchers,
+                stats.problem_ternary_watch_batches,
+            )
+            self.assertEqual(
+                stats.problem_ternary_batch_total_watchers,
+                stats.problem_ternary_batch_problem_ternary_watchers
+                + stats.problem_ternary_batch_learnt_ternary_watchers
+                + stats.problem_ternary_batch_problem_large_watchers
+                + stats.problem_ternary_batch_learnt_large_watchers
+                + stats.problem_ternary_batch_deleted_watchers,
+            )
             self.assertGreater(stats.analyze_problem_reason_distinct_clauses, 0)
             self.assertLessEqual(
                 stats.analyze_problem_reason_distinct_clauses,
@@ -418,6 +439,14 @@ class ProfileSolverTests(unittest.TestCase):
             self.assertEqual(stats.problem_ternary_literal_count, 0)
             self.assertEqual(stats.problem_ternary_distinct_trigger_literals, 0)
             self.assertEqual(stats.max_problem_ternary_trigger_literal_visits, 0)
+            self.assertEqual(stats.problem_ternary_watch_batches, 0)
+            self.assertEqual(stats.problem_ternary_mixed_watch_batches, 0)
+            self.assertEqual(stats.problem_ternary_batch_total_watchers, 0)
+            self.assertEqual(stats.problem_ternary_batch_problem_ternary_watchers, 0)
+            self.assertEqual(stats.problem_ternary_batch_learnt_ternary_watchers, 0)
+            self.assertEqual(stats.problem_ternary_batch_problem_large_watchers, 0)
+            self.assertEqual(stats.problem_ternary_batch_learnt_large_watchers, 0)
+            self.assertEqual(stats.problem_ternary_batch_deleted_watchers, 0)
             self.assertEqual(
                 stats.watch_slot_normalizations,
                 stats.ternary_slot_normalizations + stats.large_slot_normalizations,
