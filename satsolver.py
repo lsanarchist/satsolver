@@ -523,6 +523,8 @@ def parse_dimacs(text: str) -> tuple[int, list[list[int]]]:
         line = raw_line.strip()
         if not line or line.startswith("c"):
             continue
+        if line.startswith("%"):
+            break
         if line.startswith("p"):
             parts = line.split()
             if len(parts) != 4 or parts[1] != "cnf":
