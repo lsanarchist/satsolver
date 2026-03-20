@@ -12,7 +12,6 @@ Implement a SAT solver in **Python** that:
 - writes `SAT` and a full model if satisfiable,
 - writes `UNSAT` otherwise,
 - is efficient enough to handle instances up to **500 variables** and **2000 clauses** within about **60 seconds per test**.
--Using any external packages outside the standard python library is forbiden.
 ## Required program interface
 The program must be runnable from the command line exactly as:
 
