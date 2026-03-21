@@ -1,46 +1,47 @@
 # Project Context
 
-This file is a single-file repository briefing for another AI assistant. It is intentionally exhaustive about the files that carry meaningful project context so a second-opinion model can reason about the codebase, benchmark setup, instructions, tests, datasets, and current decision history without needing separate file access.
+This file is a single-file repository briefing for another AI assistant. It is intentionally exhaustive about the files that carry meaningful project context so a second-opinion model can reason about the codebase, benchmark setup, instructions, tests, datasets, artifacts, and current decision history without needing separate file access.
 
 ## Snapshot
 
 - Generated from repository root: `/home/doomguy/Desktop/sat/satsolver`
-- Generation time: `2026-03-21T05:39:25+01:00`
+- Generation time: `2026-03-21T16:12:21+01:00`
 - Git branch: `main`
-- Git commit at generation time: `c6e5e20dd55b2482282a48c73351fbc592d75401`
+- Git commit at generation time: `944af8785708cc101dda5c6e06f22cfeefb66d64`
 - Primary project purpose: standard-library-only Python SAT solver for the TUKE LPI SAT assignment, optimized through repeated autonomous engineering cycles.
 - Required submission entrypoint: `python satsolver.py input.cnf output.txt`
-- Current main architecture: `satsolver.py` as the exact-CLI wrapper over `satsolver_core.py`, with `satsolver_fast.py` and `satsolver_blaze.py` retained as comparison/alternate wrappers.
+- Current main architecture: `satsolver.py` as the exact-CLI wrapper over `satsolver_core.py`, with `satsolver_fast.py` and `satsolver_blaze.py` retained as alternate/comparison wrappers.
 
 ## Inclusion Policy
 
-- Included in full: every tracked non-binary file in the repository, because the user explicitly asked for omission-resistant context and several “historical” artifacts materially affect current engineering decisions.
-- Also included in full: the currently significant local-but-untracked helper files `tools/hotspot_compare.py` and `tests/test_hotspot_compare.py`, because they influence the present optimization workflow even though they are not yet in git.
-- Included as metadata only: `formulae.zip`, because it is a binary archive whose semantic contents already exist as raw CNF files included below.
-- Included as metadata only: `=`, because it is a tracked zero-byte file with no executable logic or instructions.
-- Excluded from recursive inlining: `project_context.md` itself, because embedding the generated file into itself would be useless recursion.
+- Included in full: every tracked non-binary text file in the repository that can materially affect code understanding, optimization decisions, correctness validation, workflow interpretation, or benchmark interpretation.
+- This includes: solver code, wrappers, profiler and checker tools, tests, benchmark harnesses, instructions, planning/history docs, structured experiment logs, benchmark artifacts, and all tracked CNF benchmark inputs.
+- Included as metadata only: `formulae.zip`, because it is a binary archive whose semantic contents are already present as raw CNF files elsewhere in this file.
+- Included as metadata only: `=`, because it is a tracked zero-byte file with no executable logic or contextual meaning.
+- Excluded from recursive inlining: `project_context.md` itself, because embedding the generated context file into itself would be useless recursion.
+- Excluded from the handoff pack: untracked local-only notes such as `fast_idea.md`, because the user asked for the Git project context, not private working notes.
 
 ## Completeness Check
 
-- Tracked files in git: `90`
-- Tracked files included in full: `88`
+- Tracked files in git: `93`
+- Tracked files included in full: `90`
 - Metadata-only tracked exclusions: `2` -> `formulae.zip, =`
-- Significant local untracked files included in full: `2` -> `tools/hotspot_compare.py, tests/test_hotspot_compare.py`
-- Missing tracked significant files after applying the stated exclusion rules: `none`
+- Recursive self-exclusion: `1` -> `project_context.md`
+- Missing tracked significant files after applying the stated exclusions: `none`
 
 ## Working Tree Note
 
-`````text
-?? project_context.md
-?? tests/test_hotspot_compare.py
-?? tools/hotspot_compare.py
-`````
+The current working tree has the following untracked/local-only items at generation time:
+
+``````text
+?? fast_idea.md
+``````
 
 ## Metadata-Only / Explicit Exclusions
 
 ### `formulae.zip`
 
-- Why not inlined: binary ZIP archive; raw benchmark CNF contents already appear elsewhere in this file.
+- Why not inlined: binary ZIP archive; the raw benchmark CNF contents already appear elsewhere in this file.
 - Size: `122135` bytes
 - SHA-256: `60c5ee829f1b4d560d0bef3df869f59a654ead8041c5613bf3bc2407732aecb6`
 - ZIP entry count: `39`
@@ -48,13 +49,17 @@ This file is a single-file repository briefing for another AI assistant. It is i
 
 ### `=`
 
-- Why not inlined: tracked zero-byte file with no code, instructions, or data semantics.
+- Why not inlined: tracked zero-byte file with no code, instructions, or semantic data.
 - Size: `0` bytes
 - SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
 
 ### `project_context.md`
 
-- Why not recursively inlined: this is the generated briefing file itself.
+- Why not recursively inlined: this is the generated context file itself, so recursive inlining would be useless.
+
+### `fast_idea.md`
+
+- Why not included: local untracked note; not part of the tracked Git project requested for handoff.
 
 ## High-Level Repo Map
 
@@ -62,13 +67,13 @@ This file is a single-file repository briefing for another AI assistant. It is i
 | --- | --- | --- | ---: | ---: | --- |
 | `.gitignore` | Docs / instructions | tracked | 4 | 40 | Git ignore rules for local junk and generated artifacts. |
 | `README.md` | Docs / instructions | tracked | 1 | 10 | Minimal human-facing project label. |
-| `agent_log.md` | Project state / decision history | tracked | 1332 | 386407 | Chronological engineering journal of optimization cycles, keeps, rejects, and rationale. |
+| `agent_log.md` | Project state / decision history | tracked | 1692 | 489913 | Chronological engineering journal of optimization cycles, keeps, rejects, and rationale. |
 | `agent_task_sat_solver.md` | Docs / instructions | tracked | 206 | 6182 | Repository-local SAT assignment brief and compliance constraints. |
-| `autonomous_sat_agent_prompt.md` | Docs / instructions | tracked | 260 | 9058 | Primary autonomous engineering instructions that guided the iterative solver work. |
+| `autonomous_sat_agent_prompt.md` | Docs / instructions | tracked | 260 | 9058 | Primary autonomous engineering instructions that guided iterative solver work. |
 | `benchmark_suite.py` | Core runtime / benchmark code | tracked | 325 | 13028 | Benchmark harness for module-mode and exact-CLI validation/timing across benchmark sets. |
-| `benchmark_summary.md` | Project state / decision history | tracked | 214 | 49039 | Current benchmark snapshot, best-known configurations, and interpretive performance summary. |
-| `experiments.jsonl` | Project state / decision history | tracked | 140 | 469040 | Machine-readable experiment ledger with structured before/after metrics. |
-| `extra.md` | Docs / instructions | tracked | 69 | 2112 | Supplementary notes, especially benchmark-expansion and workflow context. |
+| `benchmark_summary.md` | Project state / decision history | tracked | 251 | 74070 | Current benchmark snapshot, best-known configurations, and interpretive performance summary. |
+| `experiments.jsonl` | Project state / decision history | tracked | 176 | 613241 | Machine-readable experiment ledger with structured before/after metrics. |
+| `extra.md` | Docs / instructions | tracked | 69 | 2112 | Supplementary workflow and optimization notes. |
 | `large/test_1.cnf` | CNF datasets / benchmark inputs | tracked | 819 | 12140 | Large benchmark CNF; this family contains the main performance hotspots. |
 | `large/test_10.cnf` | CNF datasets / benchmark inputs | tracked | 1288 | 18357 | Large benchmark CNF; this family contains the main performance hotspots. |
 | `large/test_2.cnf` | CNF datasets / benchmark inputs | tracked | 581 | 8617 | Large benchmark CNF; this family contains the main performance hotspots. |
@@ -79,7 +84,7 @@ This file is a single-file repository briefing for another AI assistant. It is i
 | `large/test_7.cnf` | CNF datasets / benchmark inputs | tracked | 871 | 12944 | Large benchmark CNF; this family contains the main performance hotspots. |
 | `large/test_8.cnf` | CNF datasets / benchmark inputs | tracked | 1218 | 17706 | Large benchmark CNF; this family contains the main performance hotspots. |
 | `large/test_9.cnf` | CNF datasets / benchmark inputs | tracked | 977 | 14457 | Large benchmark CNF; this family contains the main performance hotspots. |
-| `maybe.md` | Docs / instructions | tracked | 2 | 169 | Short idea note, mainly around legal standard-library-only parallelism/portfolio ideas. |
+| `maybe.md` | Docs / instructions | tracked | 2 | 169 | Short idea note, mainly around legal standard-library-only parallelism and other candidate directions. |
 | `medium/test_1.cnf` | CNF datasets / benchmark inputs | tracked | 843 | 10404 | Medium benchmark CNF used in broader correctness and performance gates. |
 | `medium/test_10.cnf` | CNF datasets / benchmark inputs | tracked | 830 | 10172 | Medium benchmark CNF used in broader correctness and performance gates. |
 | `medium/test_2.cnf` | CNF datasets / benchmark inputs | tracked | 360 | 4536 | Medium benchmark CNF used in broader correctness and performance gates. |
@@ -90,66 +95,66 @@ This file is a single-file repository briefing for another AI assistant. It is i
 | `medium/test_7.cnf` | CNF datasets / benchmark inputs | tracked | 570 | 7124 | Medium benchmark CNF used in broader correctness and performance gates. |
 | `medium/test_8.cnf` | CNF datasets / benchmark inputs | tracked | 341 | 4615 | Medium benchmark CNF used in broader correctness and performance gates. |
 | `medium/test_9.cnf` | CNF datasets / benchmark inputs | tracked | 387 | 5224 | Medium benchmark CNF used in broader correctness and performance gates. |
-| `next_steps.md` | Project state / decision history | tracked | 60 | 57409 | Prioritized backlog and accumulated caution list for future experiments. |
-| `out.txt` | Benchmark artifacts | tracked | 60 | 3179 | Older benchmark output snapshot for the main solver. |
-| `out_blaze.txt` | Benchmark artifacts | tracked | 60 | 3173 | Historical benchmark output snapshot for the blaze solver variant. |
-| `out_blaze_extended.txt` | Benchmark artifacts | tracked | 92 | 4932 | Extended benchmark artifact for the blaze solver variant. |
-| `out_cli_extended.txt` | Benchmark artifacts | tracked | 98 | 12996 | Current repeat-aware exact-CLI benchmark artifact for the main solver. |
-| `out_extended.txt` | Benchmark artifacts | tracked | 96 | 12905 | Current repeat-aware in-process benchmark artifact for the main solver. |
-| `out_fast_cli_extended.txt` | Benchmark artifacts | tracked | 98 | 13006 | Current repeat-aware exact-CLI benchmark artifact for the alternate fast wrapper. |
-| `out_old.txt` | Benchmark artifacts | tracked | 60 | 3177 | Another historical benchmark output snapshot for the main solver. |
-| `satlib_more/aim-100-1_6-no-1.cnf` | CNF datasets / benchmark inputs | tracked | 171 | 2273 | Additional SATLIB benchmark input used in the extended 59-case benchmark suite. |
-| `satlib_more/aim-100-1_6-no-2.cnf` | CNF datasets / benchmark inputs | tracked | 171 | 2258 | Additional SATLIB benchmark input used in the extended 59-case benchmark suite. |
-| `satlib_more/aim-100-1_6-yes1-1.cnf` | CNF datasets / benchmark inputs | tracked | 171 | 2259 | Additional SATLIB benchmark input used in the extended 59-case benchmark suite. |
-| `satlib_more/aim-100-1_6-yes1-2.cnf` | CNF datasets / benchmark inputs | tracked | 171 | 2258 | Additional SATLIB benchmark input used in the extended 59-case benchmark suite. |
-| `satlib_more/flat75-1.cnf` | CNF datasets / benchmark inputs | tracked | 857 | 9999 | Additional SATLIB benchmark input used in the extended 59-case benchmark suite. |
-| `satlib_more/flat75-10.cnf` | CNF datasets / benchmark inputs | tracked | 857 | 9969 | Additional SATLIB benchmark input used in the extended 59-case benchmark suite. |
-| `satlib_more/jnh1.cnf` | CNF datasets / benchmark inputs | tracked | 866 | 24913 | Additional SATLIB benchmark input used in the extended 59-case benchmark suite. |
-| `satlib_more/jnh10.cnf` | CNF datasets / benchmark inputs | tracked | 866 | 23778 | Additional SATLIB benchmark input used in the extended 59-case benchmark suite. |
-| `satlib_more/uf125-01.cnf` | CNF datasets / benchmark inputs | tracked | 549 | 7095 | Additional SATLIB benchmark input used in the extended 59-case benchmark suite. |
-| `satlib_more/uf125-010.cnf` | CNF datasets / benchmark inputs | tracked | 549 | 7047 | Additional SATLIB benchmark input used in the extended 59-case benchmark suite. |
-| `satlib_more/uf150-01.cnf` | CNF datasets / benchmark inputs | tracked | 656 | 8740 | Additional SATLIB benchmark input used in the extended 59-case benchmark suite. |
-| `satlib_more/uuf125-01.cnf` | CNF datasets / benchmark inputs | tracked | 549 | 7066 | Additional SATLIB benchmark input used in the extended 59-case benchmark suite. |
-| `satlib_more/uuf125-010.cnf` | CNF datasets / benchmark inputs | tracked | 549 | 7093 | Additional SATLIB benchmark input used in the extended 59-case benchmark suite. |
-| `satlib_more/uuf150-01.cnf` | CNF datasets / benchmark inputs | tracked | 656 | 8691 | Additional SATLIB benchmark input used in the extended 59-case benchmark suite. |
-| `satlib_subset/dubois20.cnf` | CNF datasets / benchmark inputs | tracked | 173 | 2603 | Curated SATLIB benchmark input included to widen the evaluation corpus. |
-| `satlib_subset/dubois21.cnf` | CNF datasets / benchmark inputs | tracked | 181 | 2723 | Curated SATLIB benchmark input included to widen the evaluation corpus. |
-| `satlib_subset/flat50-1.cnf` | CNF datasets / benchmark inputs | tracked | 558 | 6270 | Curated SATLIB benchmark input included to widen the evaluation corpus. |
-| `satlib_subset/flat50-10.cnf` | CNF datasets / benchmark inputs | tracked | 558 | 6273 | Curated SATLIB benchmark input included to widen the evaluation corpus. |
-| `satlib_subset/hole10.cnf` | CNF datasets / benchmark inputs | tracked | 574 | 6271 | Curated SATLIB benchmark input included to widen the evaluation corpus. |
-| `satlib_subset/hole8.cnf` | CNF datasets / benchmark inputs | tracked | 310 | 5217 | Curated SATLIB benchmark input included to widen the evaluation corpus. |
-| `satlib_subset/uf100-01.cnf` | CNF datasets / benchmark inputs | tracked | 441 | 5399 | Curated SATLIB benchmark input included to widen the evaluation corpus. |
-| `satlib_subset/uf100-010.cnf` | CNF datasets / benchmark inputs | tracked | 441 | 5348 | Curated SATLIB benchmark input included to widen the evaluation corpus. |
-| `satlib_subset/uuf100-01.cnf` | CNF datasets / benchmark inputs | tracked | 441 | 5443 | Curated SATLIB benchmark input included to widen the evaluation corpus. |
-| `satlib_subset/uuf100-010.cnf` | CNF datasets / benchmark inputs | tracked | 441 | 5408 | Curated SATLIB benchmark input included to widen the evaluation corpus. |
-| `satsolver.py` | Core runtime / benchmark code | tracked | 241 | 7987 | Current primary submission entrypoint and exact-CLI wrapper around the shared solver core. |
-| `satsolver_blaze.py` | Core runtime / benchmark code | tracked | 731 | 23818 | Older sibling solver kept as a comparison baseline and alternate search identity. |
-| `satsolver_core.py` | Core runtime / benchmark code | tracked | 1034 | 35483 | Shared CDCL solver core plus common parsing, presolve, and solve helpers. |
+| `next_steps.md` | Project state / decision history | tracked | 97 | 84262 | Prioritized backlog and accumulated cautions from previous cycles. |
+| `out.txt` | Benchmark artifacts | tracked | 60 | 3179 | Historical benchmark output artifact from earlier solver runs. |
+| `out_blaze.txt` | Benchmark artifacts | tracked | 60 | 3173 | Historical benchmark artifact for the blaze variant. |
+| `out_blaze_extended.txt` | Benchmark artifacts | tracked | 92 | 4932 | Extended benchmark artifact for the blaze variant. |
+| `out_cli_extended.txt` | Benchmark artifacts | tracked | 68 | 8400 | Current exact-CLI benchmark artifact for the main solver entrypoint. |
+| `out_extended.txt` | Benchmark artifacts | tracked | 96 | 12905 | Current module/in-process benchmark artifact for the main solver path. |
+| `out_fast_cli_extended.txt` | Benchmark artifacts | tracked | 98 | 13006 | Exact-CLI benchmark artifact for the fast alternate wrapper. |
+| `out_old.txt` | Benchmark artifacts | tracked | 60 | 3177 | Older retained benchmark artifact kept for comparison history. |
+| `satlib_more/aim-100-1_6-no-1.cnf` | CNF datasets / benchmark inputs | tracked | 171 | 2273 | Additional SATLIB benchmark CNF used in expanded suites and comparison runs. |
+| `satlib_more/aim-100-1_6-no-2.cnf` | CNF datasets / benchmark inputs | tracked | 171 | 2258 | Additional SATLIB benchmark CNF used in expanded suites and comparison runs. |
+| `satlib_more/aim-100-1_6-yes1-1.cnf` | CNF datasets / benchmark inputs | tracked | 171 | 2259 | Additional SATLIB benchmark CNF used in expanded suites and comparison runs. |
+| `satlib_more/aim-100-1_6-yes1-2.cnf` | CNF datasets / benchmark inputs | tracked | 171 | 2258 | Additional SATLIB benchmark CNF used in expanded suites and comparison runs. |
+| `satlib_more/flat75-1.cnf` | CNF datasets / benchmark inputs | tracked | 857 | 9999 | Additional SATLIB benchmark CNF used in expanded suites and comparison runs. |
+| `satlib_more/flat75-10.cnf` | CNF datasets / benchmark inputs | tracked | 857 | 9969 | Additional SATLIB benchmark CNF used in expanded suites and comparison runs. |
+| `satlib_more/jnh1.cnf` | CNF datasets / benchmark inputs | tracked | 866 | 24913 | Additional SATLIB benchmark CNF used in expanded suites and comparison runs. |
+| `satlib_more/jnh10.cnf` | CNF datasets / benchmark inputs | tracked | 866 | 23778 | Additional SATLIB benchmark CNF used in expanded suites and comparison runs. |
+| `satlib_more/uf125-01.cnf` | CNF datasets / benchmark inputs | tracked | 549 | 7095 | Additional SATLIB benchmark CNF used in expanded suites and comparison runs. |
+| `satlib_more/uf125-010.cnf` | CNF datasets / benchmark inputs | tracked | 549 | 7047 | Additional SATLIB benchmark CNF used in expanded suites and comparison runs. |
+| `satlib_more/uf150-01.cnf` | CNF datasets / benchmark inputs | tracked | 656 | 8740 | Additional SATLIB benchmark CNF used in expanded suites and comparison runs. |
+| `satlib_more/uuf125-01.cnf` | CNF datasets / benchmark inputs | tracked | 549 | 7066 | Additional SATLIB benchmark CNF used in expanded suites and comparison runs. |
+| `satlib_more/uuf125-010.cnf` | CNF datasets / benchmark inputs | tracked | 549 | 7093 | Additional SATLIB benchmark CNF used in expanded suites and comparison runs. |
+| `satlib_more/uuf150-01.cnf` | CNF datasets / benchmark inputs | tracked | 656 | 8691 | Additional SATLIB benchmark CNF used in expanded suites and comparison runs. |
+| `satlib_subset/dubois20.cnf` | CNF datasets / benchmark inputs | tracked | 173 | 2603 | Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set. |
+| `satlib_subset/dubois21.cnf` | CNF datasets / benchmark inputs | tracked | 181 | 2723 | Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set. |
+| `satlib_subset/flat50-1.cnf` | CNF datasets / benchmark inputs | tracked | 558 | 6270 | Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set. |
+| `satlib_subset/flat50-10.cnf` | CNF datasets / benchmark inputs | tracked | 558 | 6273 | Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set. |
+| `satlib_subset/hole10.cnf` | CNF datasets / benchmark inputs | tracked | 574 | 6271 | Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set. |
+| `satlib_subset/hole8.cnf` | CNF datasets / benchmark inputs | tracked | 310 | 5217 | Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set. |
+| `satlib_subset/uf100-01.cnf` | CNF datasets / benchmark inputs | tracked | 441 | 5399 | Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set. |
+| `satlib_subset/uf100-010.cnf` | CNF datasets / benchmark inputs | tracked | 441 | 5348 | Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set. |
+| `satlib_subset/uuf100-01.cnf` | CNF datasets / benchmark inputs | tracked | 441 | 5443 | Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set. |
+| `satlib_subset/uuf100-010.cnf` | CNF datasets / benchmark inputs | tracked | 441 | 5408 | Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set. |
+| `satsolver.py` | Core runtime / benchmark code | tracked | 225 | 7321 | Current required CLI entrypoint and wrapper around the shared solver core. |
+| `satsolver_blaze.py` | Core runtime / benchmark code | tracked | 731 | 23818 | Older alternate wrapper/solver variant retained for comparison. |
+| `satsolver_core.py` | Core runtime / benchmark code | tracked | 1040 | 35572 | Shared CDCL solver core plus parsing, presolve, and solve helpers. |
 | `satsolver_fast.py` | Core runtime / benchmark code | tracked | 190 | 6067 | Alternate wrapper/entrypoint retained for comparison and exact-CLI experimentation. |
-| `small/test_1.cnf` | CNF datasets / benchmark inputs | tracked | 34 | 567 | Small benchmark CNF used for quick correctness and performance smoke checks. |
-| `small/test_10.cnf` | CNF datasets / benchmark inputs | tracked | 182 | 2259 | Small benchmark CNF used for quick correctness and performance smoke checks. |
-| `small/test_2.cnf` | CNF datasets / benchmark inputs | tracked | 184 | 2389 | Small benchmark CNF used for quick correctness and performance smoke checks. |
-| `small/test_3.cnf` | CNF datasets / benchmark inputs | tracked | 158 | 2060 | Small benchmark CNF used for quick correctness and performance smoke checks. |
-| `small/test_4.cnf` | CNF datasets / benchmark inputs | tracked | 175 | 2204 | Small benchmark CNF used for quick correctness and performance smoke checks. |
-| `small/test_5.cnf` | CNF datasets / benchmark inputs | tracked | 48 | 729 | Small benchmark CNF used for quick correctness and performance smoke checks. |
-| `small/test_6.cnf` | CNF datasets / benchmark inputs | tracked | 78 | 1101 | Small benchmark CNF used for quick correctness and performance smoke checks. |
-| `small/test_7.cnf` | CNF datasets / benchmark inputs | tracked | 175 | 2255 | Small benchmark CNF used for quick correctness and performance smoke checks. |
-| `small/test_8.cnf` | CNF datasets / benchmark inputs | tracked | 76 | 1004 | Small benchmark CNF used for quick correctness and performance smoke checks. |
-| `small/test_9.cnf` | CNF datasets / benchmark inputs | tracked | 108 | 1441 | Small benchmark CNF used for quick correctness and performance smoke checks. |
+| `small/test_1.cnf` | CNF datasets / benchmark inputs | tracked | 34 | 567 | Small benchmark CNF used for quick correctness and smoke checks. |
+| `small/test_10.cnf` | CNF datasets / benchmark inputs | tracked | 182 | 2259 | Small benchmark CNF used for quick correctness and smoke checks. |
+| `small/test_2.cnf` | CNF datasets / benchmark inputs | tracked | 184 | 2389 | Small benchmark CNF used for quick correctness and smoke checks. |
+| `small/test_3.cnf` | CNF datasets / benchmark inputs | tracked | 158 | 2060 | Small benchmark CNF used for quick correctness and smoke checks. |
+| `small/test_4.cnf` | CNF datasets / benchmark inputs | tracked | 175 | 2204 | Small benchmark CNF used for quick correctness and smoke checks. |
+| `small/test_5.cnf` | CNF datasets / benchmark inputs | tracked | 48 | 729 | Small benchmark CNF used for quick correctness and smoke checks. |
+| `small/test_6.cnf` | CNF datasets / benchmark inputs | tracked | 78 | 1101 | Small benchmark CNF used for quick correctness and smoke checks. |
+| `small/test_7.cnf` | CNF datasets / benchmark inputs | tracked | 175 | 2255 | Small benchmark CNF used for quick correctness and smoke checks. |
+| `small/test_8.cnf` | CNF datasets / benchmark inputs | tracked | 76 | 1004 | Small benchmark CNF used for quick correctness and smoke checks. |
+| `small/test_9.cnf` | CNF datasets / benchmark inputs | tracked | 108 | 1441 | Small benchmark CNF used for quick correctness and smoke checks. |
 | `special/dense.cnf` | CNF datasets / benchmark inputs | tracked | 1508 | 21153 | Special-purpose benchmark CNF with structural, adversarial, or sanity-check behavior. |
 | `special/easy.cnf` | CNF datasets / benchmark inputs | tracked | 408 | 5809 | Special-purpose benchmark CNF with structural, adversarial, or sanity-check behavior. |
 | `special/hard.cnf` | CNF datasets / benchmark inputs | tracked | 858 | 12085 | Special-purpose benchmark CNF with structural, adversarial, or sanity-check behavior. |
 | `special/pigeonhole.cnf` | CNF datasets / benchmark inputs | tracked | 422 | 4504 | Special-purpose benchmark CNF with structural, adversarial, or sanity-check behavior. |
 | `special/tseitin.cnf` | CNF datasets / benchmark inputs | tracked | 167 | 2693 | Special-purpose benchmark CNF with structural, adversarial, or sanity-check behavior. |
 | `tests/test_benchmark_suite.py` | Regression tests | tracked | 86 | 3253 | Regression tests for the benchmark harness, especially repeat-aware and CLI paths. |
-| `tests/test_profile_solver.py` | Regression tests | tracked | 630 | 27210 | Regression tests for profiler counters and invariants so instrumentation remains trustworthy. |
+| `tests/test_hotspot_compare.py` | Regression tests | tracked | 69 | 2770 | Regression tests for the hotspot A/B comparison tool. |
+| `tests/test_profile_solver.py` | Regression tests | tracked | 712 | 30707 | Regression tests for profiler counters and invariants so instrumentation stays trustworthy. |
 | `tests/test_solver_fast.py` | Regression tests | tracked | 59 | 2203 | Regression tests for the alternate fast wrapper/parser behavior. |
-| `tests/test_solver_regressions.py` | Regression tests | tracked | 354 | 13355 | Regression tests for solver invariants and bugs found during optimization cycles. |
+| `tests/test_solver_regressions.py` | Regression tests | tracked | 377 | 14311 | Regression tests for solver invariants and bugs found during optimization cycles. |
 | `tests/test_validation_tools.py` | Regression tests | tracked | 60 | 2670 | Regression tests for DIMACS parsing and validation tooling. |
 | `tools/checker.py` | Support tooling | tracked | 148 | 4763 | Validator for output format, SAT assignments, and tiny-formula UNSAT claims. |
-| `tools/profile_solver.py` | Support tooling | tracked | 1756 | 80673 | Deep instrumentation/profiling harness used to understand solver internals and guide optimizations. |
-| `tools/hotspot_compare.py` | Support tooling | untracked but significant current working-tree file | 315 | 9777 | Local significant A/B comparison tool for forward/reverse hotspot timing with validation. |
-| `tests/test_hotspot_compare.py` | Regression tests | untracked but significant current working-tree file | 69 | 2770 | Local significant regression tests for the hotspot A/B comparison tool. |
+| `tools/hotspot_compare.py` | Support tooling | tracked | 315 | 9777 | Forward/reverse hotspot A/B timing helper with correctness validation. |
+| `tools/profile_solver.py` | Support tooling | tracked | 1912 | 88141 | Deep instrumentation/profiling harness used to understand solver internals and guide optimizations. |
 
 ## File Sections
 
@@ -165,13 +170,12 @@ Each section below explains why the file matters, then includes the raw content 
 
 Raw content:
 
-`````text
+``````text
 __pycache__/
 *.pyc
 *.pyo
 .pytest_cache/
-
-`````
+``````
 
 ### `README.md`
 
@@ -183,21 +187,21 @@ __pycache__/
 
 Raw content:
 
-`````md
+``````md
 sat solver
-`````
+``````
 
 ### `agent_log.md`
 
 - Category: Project state / decision history
 - Git status: tracked
-- Size: `386407` bytes
-- Line count: `1332`
+- Size: `489913` bytes
+- Line count: `1692`
 - Why it matters: Chronological engineering journal of optimization cycles, keeps, rejects, and rationale.
 
 Raw content:
 
-`````md
+``````md
 # Agent Log
 
 ## 2026-03-20T01:59:31+01:00 - XOR UNSAT presolver for Tseitin-style formulas
@@ -1531,7 +1535,366 @@ Raw content:
 - Decision taken: keep the low-density all-3-SAT root-pure gate on `solve_cnf_fast_serial()` in `satsolver.py`, keep the refreshed `out_cli_extended.txt`, and treat this as a cautious exact-CLI keep backed by same-day A/B rather than by the refreshed artifact alone.
 - Next recommended step: root-pure work is live again only when a cheap prefilter avoids the dense 3-SAT hotspots. Future presolve tuning should keep using broad exact-CLI baseline-vs-candidate comparisons as the real gate and should not trust one refreshed retained artifact by itself when the margin is sub-percent.
 
-`````
+## 2026-03-21T10:40:18+01:00 - Rejected parse-time `all_ternary` carry-forward in `satsolver.py`
+
+- Objective: test whether the promoted exact-CLI wrapper can recover a small solve-path win by carrying an `all_ternary` parse-time flag forward instead of rescanning clause lengths inside the low-density root-pure gate and portfolio gate.
+- Hypothesis: because `satsolver.py` already discovers whether every clause is length `3` while parsing DIMACS bytes, threading that flag into `should_try_fast_root_pure()` and the portfolio gate may shave wrapper-side overhead without changing solver semantics.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `next_steps.md`, `benchmark_summary.md`, and the current wrapper code; created scratch candidate `scratch_satsolver_parsestats.py`; patched the scratch file to return `(num_vars, clauses, all_ternary)` from an internal byte parser, thread `all_ternary` through the fast serial solve path and a scratch portfolio gate, and keep the public parse helpers behavior-compatible; `python -m py_compile scratch_satsolver_parsestats.py`; SAT/UNSAT smoke checks plus checker validation on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of retained `satsolver.py` vs the scratch candidate on the 12-case SAT-heavy root-hit slice via `tools/hotspot_compare.py --repeat 2`; exact-CLI A/B on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; deleted the scratch file after the mixed gate regressed.
+- Benchmark results: the startup-heavy root-hit slice improved on the two-order average from `0.4696s` to `0.4536s`, with forward `0.4627s -> 0.4664s` and reverse `0.4765s -> 0.4409s`. But the real mixed nine-case exact-CLI hotspot gate regressed from `28.1142s` to `28.6419s`, with forward `28.6650s -> 28.3190s` unable to offset reverse `27.5635s -> 28.9649s`. The main stable damage landed on `large/test_6.cnf`, which worsened in both orders (`13.6206s -> 14.0899s` forward, `13.2467s -> 14.9543s` reverse), while `large/test_8.cnf` also moved slightly the wrong way (`0.3548s -> 0.3946s` forward, `0.3168s -> 0.3218s` reverse).
+- Decision taken: discard the parse-stats carry-forward branch and keep the retained solver files unchanged.
+- Next recommended step: treat parse-time clause-shape metadata carry-forward as another wrapper-path dead end unless a future branch removes more than the current clause-length rescan. A root-hit startup win by itself is not enough if the dense mixed exact-CLI gate still regresses.
+
+## 2026-03-21T10:48:18+01:00 - Rejected tightening the fast root-pure density gate to `2.7`
+
+- Objective: test whether the only currently-live root-pure lane on the promoted exact-CLI wrapper can be improved by tightening the density cutoff from `3.2` to `2.7`, dropping the marginal current hit cases while preserving the obvious easy all-3-SAT wins.
+- Hypothesis: because the current kept gate still includes a few borderline low-pure-hit all-3-SAT cases above density `2.7`, lowering `FAST_ROOT_PURE_DENSITY_GATE` from `3.2` to `2.7` may keep the worthwhile root-pure wins while trimming enough front-loaded work to improve the exact-CLI slices and maybe the broad suite.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `next_steps.md`, `benchmark_summary.md`, and `satsolver.py`; scanned the benchmark corpus for all-3-SAT root-pure hit densities; created scratch candidate `scratch_satsolver_density27.py`; changed only `FAST_ROOT_PURE_DENSITY_GATE` from `3.2` to `2.7`; `python -m py_compile scratch_satsolver_density27.py`; SAT/UNSAT smoke checks plus checker validation on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of retained `satsolver.py` vs the scratch candidate on the 12-case SAT-heavy root-hit slice via `tools/hotspot_compare.py --repeat 2`; exact-CLI A/B on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; deleted the scratch file after both slices failed to justify a broader run.
+- Benchmark results: the root-hit exact-CLI slice already moved the wrong way, regressing on the two-order average from `0.5057s` to `0.5126s`. The mixed nine-case exact-CLI hotspot slice then also regressed overall from `33.6012s` to `34.4853s`: forward order improved (`33.1953s -> 32.3214s`), but reverse order lost hard (`34.0070s -> 36.6491s`). The main reverse-order damage landed on `large/test_6.cnf` (`17.6161s -> 19.0170s`) and `special/hard.cnf` (`10.4885s -> 11.6226s`), while `large/test_8.cnf` also got slightly worse in both orders (`0.3347s -> 0.3489s` forward, `0.3696s -> 0.3810s` reverse).
+- Decision taken: discard the tighter `2.7` density gate and keep the retained solver files unchanged.
+- Next recommended step: treat `3.2` as a tighter practical lower bound for the current root-pure gate unless a future branch introduces a better classifier than density alone. The `2.7` cutoff was too aggressive: it lost the root-hit slice and destabilized the mixed exact-CLI gate.
+
+## 2026-03-21T13:02:11+01:00 - Kept removing fast-path root-pure presolve from `satsolver.py`
+
+- Objective: test whether the promoted main exact-CLI wrapper should go back to the simpler no-root-pure fast solve path now that the current same-day alternate-file comparisons are favoring `satsolver_fast.py` again.
+- Hypothesis: because current `satsolver_fast.py` beat the retained `satsolver.py` on the same-day root-hit exact-CLI slice (`0.5025s -> 0.4947s`), the mixed nine-case hotspot slice (`32.7270s -> 32.5444s`), and the same-day repeat-aware exact-CLI 59-case suite (`39.8399s -> 39.1591s`), removing the fast-path root-pure presolve from the current import-gated main wrapper may recover that win while keeping the richer import-time compatibility surface and test API in `satsolver.py`.
+- Files changed: `satsolver.py`, `tests/test_solver_regressions.py`, `out_cli_extended.txt`, `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `next_steps.md`, `benchmark_summary.md`, `satsolver.py`, and `satsolver_fast.py`; exact-CLI A/B of retained `satsolver.py` vs current `satsolver_fast.py` on the 12-case SAT-heavy root-hit slice via `tools/hotspot_compare.py --repeat 2`; exact-CLI A/B on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; same-day repeat-aware exact-CLI 59-case runs for retained `satsolver.py` and current `satsolver_fast.py` via `benchmark_suite.py` to `/tmp/cycle_{baseline,fast}_cli_repeat2.txt`; created scratch candidate `scratch_satsolver_noroot.py`; removed only the fast-path root-pure block from `solve_cnf_fast_serial()`; `python -m py_compile scratch_satsolver_noroot.py`; SAT/UNSAT smoke checks plus checker validation on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of retained `satsolver.py` vs the scratch candidate on the 12-case SAT-heavy root-hit slice via `tools/hotspot_compare.py --repeat 2`; exact-CLI A/B on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; same-day repeat-aware exact-CLI 59-case candidate run via `benchmark_suite.py` to `/tmp/cycle_noroot_cli_repeat2.txt`; merged the change into tracked `satsolver.py`; replaced the old fast-root-pure regression with a direct “fast serial path skips root-pure presolve” regression in `tests/test_solver_regressions.py`; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py tests/test_solver_regressions.py`; `python -m unittest discover -s tests -v`; SAT/UNSAT checker smoke checks on the retained main wrapper; refreshed `out_cli_extended.txt` with `python benchmark_suite.py satsolver out_cli_extended.txt ... --cli-script satsolver.py --repeat 2`; deleted the scratch file after promotion.
+- Benchmark results: the current alternate file already pointed the lane in this direction: `satsolver_fast.py` beat retained `satsolver.py` on the same-day root-hit exact-CLI slice (`0.5025s -> 0.4947s`), the mixed nine-case hotspot slice (`32.7270s -> 32.5444s`), and the repeat-aware exact-CLI 59-case suite (`39.8399s -> 39.1591s`), all `59/59` correct. The scratch main-wrapper no-root-pure candidate then improved the root-hit slice from `0.4790s` to `0.4603s` and improved the mixed nine-case exact-CLI hotspot slice from `31.9046s` to `31.4055s`. On the same-day repeat-aware exact-CLI 59-case suite, it improved strongly from `39.8399s` to `36.6465s`, still `59/59` correct, and also beat the same-day `satsolver_fast.py` rerun (`39.1591s`). After promotion into tracked `satsolver.py`, the refreshed retained artifact in `out_cli_extended.txt` landed at `38.0602s` representative, `76.1203s` measured, `76.3611s` wall clock, also `59/59` correct. That refreshed artifact is not a new historical best against the retained `25.7027s`, but the same-day baseline-vs-candidate comparison is large enough to keep decisively.
+- Decision taken: keep the no-root-pure fast solve path in `satsolver.py`, update the regression to lock that fast-path policy directly, refresh `out_cli_extended.txt`, and treat this as the new exact-CLI baseline.
+- Next recommended step: root-pure work on the main exact-CLI path is back to “off by default” status. Future presolve tuning should treat the current no-root-pure fast path as the baseline again and only revisit root-pure on the submission path with a materially stronger classifier than density alone plus same-day broad-suite confirmation.
+
+## 2026-03-21T11:13:12+01:00 - Rejected `Clause.problem_ternary` fast branch in `propagate()`
+
+- Objective: test whether a second cheap immutable clause-family flag can extend the earlier `Clause.ternary` keep by letting `propagate()` recognize the dominant original-clause ternary path earlier and skip the learnt/deleted branching on that hot path.
+- Hypothesis: because original problem ternary traffic still dominates the watcher churn on the hard cases, adding immutable `Clause.problem_ternary` metadata and a dedicated fast branch ahead of the generic watched-clause flow may shave enough branch and attribute overhead inside `propagate()` to improve the mixed exact-CLI hotspot slice without changing solver semantics.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `next_steps.md`, `benchmark_summary.md`, `satsolver.py`, and `satsolver_core.py`; created a frozen `HEAD` baseline in `/tmp/satsolver_familyflag_baseline/`; temporarily patched `satsolver_core.py` to add immutable `Clause.problem_ternary` metadata and a dedicated original-ternary fast branch inside `propagate()`; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; SAT/UNSAT smoke checks plus checker validation on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of frozen-`HEAD` baseline vs candidate on the 12-case SAT-heavy root-hit slice via `tools/hotspot_compare.py --repeat 2`; exact-CLI A/B on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; reverted the core patch after the mixed gate regressed.
+- Benchmark results: the startup-heavy root-hit exact-CLI slice improved modestly on the two-order average from `0.5028s` to `0.4952s`, with forward `0.4947s -> 0.4772s` and reverse `0.5109s -> 0.5132s`. But the real mixed nine-case exact-CLI hotspot gate regressed hard from `32.7926s` to `34.1993s`, with forward `32.0837s -> 33.1709s` and reverse `33.5015s -> 35.2277s`. The main stable damage landed on `large/test_6.cnf` (`15.5899s -> 16.3647s` forward, `17.4372s -> 18.3817s` reverse) and `special/hard.cnf` (`10.4294s -> 10.8470s` forward, `10.3249s -> 11.1183s` reverse), while `large/test_10.cnf` also moved the wrong way in both orders.
+- Decision taken: discard the `Clause.problem_ternary` fast-branch experiment and keep the retained solver files unchanged.
+- Next recommended step: treat “cheap immutable metadata” and “family-specific branch hoisting” as separate lanes. `Clause.ternary` paid off as a local shape-test replacement, but this broader original-ternary branch hoist did not. Future propagation metadata work should require a stronger dense mixed-slice win than a small root-hit improvement before it earns a broader run.
+
+## 2026-03-21T11:21:39+01:00 - Rejected lazy heap-based branch picking in `satsolver_core.py`
+
+- Objective: test whether `pick_branch_literal()` can stop rescanning all variables each decision by switching to a lazy max-heap of branch candidates while preserving the same best-activity semantics through stale-entry cleanup and reinsertion on backtrack.
+- Hypothesis: because `pick_branch_literal()` still takes about `1.9s` in the current `large/test_6.cnf` profile, a heap-backed branch frontier may cut decision selection cost enough to help the mixed exact-CLI hotspot slice, even after paying for stale-entry cleanup and backtrack reinsertion.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `benchmark_summary.md`, `next_steps.md`, and the current `large/test_6.cnf` `cProfile` output; created a frozen `HEAD` baseline in `/tmp/satsolver_heapbranch_baseline/`; temporarily patched `satsolver_core.py` to add a lazy `heapq`-based branch heap, populate it after root propagation, push refreshed activity entries during `analyze()`, and reinsert unassigned variables on `backtrack()`; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; SAT/UNSAT smoke checks plus checker validation on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of frozen-`HEAD` baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; reverted the heap branch after the mixed gate failed decisively.
+- Benchmark results: the mixed nine-case exact-CLI hotspot gate regressed catastrophically from `38.5681s` to `55.0274s` on the two-order average, with forward `36.2510s -> 54.8019s` and reverse `40.8852s -> 55.2530s`. The damage was broad, not isolated: `large/test_6.cnf` regressed from `16.3472s -> 26.6500s` forward and `20.8493s -> 26.6526s` reverse, `special/hard.cnf` regressed from `13.3576s -> 19.0475s` forward and `13.0566s -> 18.9846s` reverse, `medium/test_4.cnf` regressed from `2.3822s -> 3.3410s` forward and `2.6403s -> 3.4498s` reverse, and even SAT-like `large/test_8.cnf` got worse in both orders (`0.4813s -> 0.7321s` forward, `0.4739s -> 0.6466s` reverse).
+- Decision taken: discard the heap-based branch queue and keep the retained solver files unchanged.
+- Next recommended step: treat heap-style branch-frontier maintenance as another branching dead end in this Python solver unless a future design can preserve search behavior with far less churn than pushing activity updates and reinserting unassigned variables on backtrack. The current read-only scan is still safer than lazy mutable frontier state.
+
+## 2026-03-21T11:27:31+01:00 - Rejected reviving `satsolver_fast.py` as the better alternate exact-CLI path
+
+- Objective: re-check whether the existing alternate wrapper `satsolver_fast.py` has become the better exact-CLI submission path again after the recent main-wrapper changes and rejected core branches.
+- Hypothesis: because `satsolver_fast.py` is still structurally leaner than the promoted main wrapper, it may have regained an edge on the current same-day exact-CLI slices and be a better place to focus alternate-file work than `satsolver.py`.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, `benchmark_summary.md`, and `satsolver_fast.py`; ran a fresh `cProfile` pass on `satsolver.py large/test_6.cnf`; exact-CLI A/B of current `satsolver.py` vs current `satsolver_fast.py` on the 12-case SAT-heavy root-hit slice via `tools/hotspot_compare.py --repeat 2`; exact-CLI A/B on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; no full-suite rerun because the alternate file failed to beat the current mainline on the decisive slice.
+- Benchmark results: the root-hit exact-CLI slice was effectively a tie, with `satsolver.py` at `0.5198s` and `satsolver_fast.py` at `0.5205s` on the two-order average. The real mixed nine-case exact-CLI hotspot slice still favored the current main wrapper overall: `36.5697s` for `satsolver.py` vs `36.9565s` for `satsolver_fast.py`. Forward order slightly favored the alternate (`36.7266s -> 36.6320s`), but reverse order lost clearly (`36.4127s -> 37.2809s`), mainly through `special/hard.cnf` (`11.7144s -> 12.2073s`) and `large/test_6.cnf` (`18.2376s -> 18.9720s`), while the small `large/test_8.cnf` gain did not survive both orders.
+- Decision taken: keep `satsolver_fast.py` as a valid alternate wrapper, but reject it as the new preferred exact-CLI path for the current repo state.
+- Next recommended step: future alternate-file work should now treat the promoted `satsolver.py` wrapper as the stronger exact-CLI baseline again unless a materially different alternate file beats it on the mixed slice, not just on isolated startup-heavy cases.
+
+## 2026-03-21T11:35:55+01:00 - Rejected disabling the narrow portfolio path in the main exact-CLI wrapper
+
+- Objective: test whether the current main wrapper should stop using the narrow parallel portfolio path entirely now that only one benchmark case still triggers it.
+- Hypothesis: because only `large/test_8.cnf` currently satisfies the portfolio gate, removing the portfolio handoff from the exact-CLI wrapper may shave enough startup and process-launch overhead to improve the broad exact-CLI slices overall.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `benchmark_summary.md`, `next_steps.md`, and `satsolver.py`; scanned the benchmark corpus with `satsolver.should_use_parallel_portfolio(...)` to confirm that only `large/test_8.cnf` still triggers the gate; created `scratch_satsolver_noportfolio.py`; `python -m py_compile scratch_satsolver_noportfolio.py`; SAT/UNSAT smoke checks plus checker validation on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of retained `satsolver.py` vs the scratch candidate on the 12-case SAT-heavy root-hit slice via `tools/hotspot_compare.py --repeat 2`; exact-CLI A/B on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; deleted the scratch file after the mixed gate failed.
+- Benchmark results: the root-hit exact-CLI slice did improve on the two-order average from `0.4724s` to `0.4478s`, with forward `0.4607s -> 0.4377s` and reverse `0.4840s -> 0.4580s`. But the real mixed nine-case exact-CLI hotspot slice regressed badly from `30.3681s` to `34.0072s`, with forward `30.2344s -> 33.3600s` and reverse `30.5018s -> 34.6544s`. The decisive damage was exactly the one remaining portfolio-triggered case: `large/test_8.cnf` blew up from `0.3372s -> 3.8820s` forward and `0.3526s -> 4.1060s` reverse. `large/test_6.cnf` improved in one order (`15.2115s -> 14.7751s`) but regressed in the other (`15.0935s -> 15.8286s`), and `special/hard.cnf` only moved within noise by comparison.
+- Decision taken: discard the no-portfolio wrapper experiment and keep the retained main solver files unchanged.
+- Next recommended step: treat the current narrow portfolio gate as still required behavior on the exact-CLI path unless a future single-case accelerator for `large/test_8.cnf` can beat the current forked portfolio without giving its gain back on the mixed slice.
+
+## 2026-03-21T11:50:12+01:00 - Rejected replacing the narrow portfolio gate with serial phase-bias solve
+
+- Objective: test whether the current one-case portfolio path can be replaced with the cheaper serial `seed_phase_bias=True` fast solve now that only `large/test_8.cnf` still triggers the gate.
+- Hypothesis: because direct same-day measurement on `large/test_8.cnf` shows the current serial phase-bias path around `0.21s` while the forked portfolio path is around `0.28s`, replacing the narrow portfolio handoff with the phase-bias serial solve may improve the broad exact-CLI runtime enough to keep.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `next_steps.md`, `benchmark_summary.md`, `fast_idea.md`, `satsolver.py`, and `satsolver_core.py`; direct same-process timing on `large/test_8.cnf` for `solve_cnf_fast_serial(seed_phase_bias=False)`, `solve_cnf_fast_serial(seed_phase_bias=True)`, and `solve_cnf(...)`; created `scratch_satsolver_phasebias_gate.py`; `python -m py_compile scratch_satsolver_phasebias_gate.py`; SAT/UNSAT smoke checks plus checker validation on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of retained `satsolver.py` vs the scratch candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; same-day repeat-aware exact-CLI 59-case runs for retained `satsolver.py` and the scratch candidate via `benchmark_suite.py` to `/tmp/cycle_{baseline,candidate}_phasebias_gate_cli_repeat2.txt`; deleted the scratch file after the broad suite came back slightly worse overall.
+- Benchmark results: the direct `large/test_8.cnf` timings were genuinely favorable to the proposed replacement: default serial `4.2218s / 4.1424s / 4.0848s`, serial phase-bias `0.2122s / 0.2084s / 0.2412s`, current portfolio `0.2800s / 0.2808s / 0.2704s`. On the mixed nine-case exact-CLI hotspot slice, the scratch candidate improved the two-order average from `30.7417s` to `30.3299s`, with forward `31.4071s -> 30.2937s` and reverse `30.0763s -> 30.3661s`; `large/test_8.cnf` improved in both orders (`0.3409s -> 0.2796s` forward, `0.3331s -> 0.2967s` reverse). But the same-day repeat-aware exact-CLI 59-case suite came back effectively flat and slightly worse overall: retained baseline `35.2571s`, candidate `35.2674s`, both `59/59` correct. The candidate did improve `large/test_8.cnf` there (`0.3611s -> 0.3217s`) and `large/test_6.cnf` (`16.0903s -> 15.9060s`), but gave enough back on cases like `special/hard.cnf` (`10.0978s -> 10.2287s`) and `medium/test_3.cnf` (`0.8047s -> 0.8621s`) to lose the broad suite by `0.0103s`.
+- Decision taken: discard the serial phase-bias replacement and keep the retained main solver files unchanged.
+- Next recommended step: treat “serial phase-bias instead of portfolio for the one remaining gate case” as another too-small exact-CLI wrapper idea. If portfolio is revisited again, it needs a stronger replacement for `large/test_8.cnf` than “just run the fast phase-bias worker alone.”
+
+## 2026-03-21T11:53:41+01:00 - Rejected skipping ternary learnt minimization
+
+- Objective: test whether conflict analysis can be made cheaper by skipping `minimize_learnt()` when the learnt clause is already ternary, while leaving all larger learnt-clause minimization unchanged.
+- Hypothesis: because `minimize_learnt()` still costs around `0.82s` in the current `large/test_6.cnf` profile and ternary learnt clauses have very little room left to shrink, changing its early return from `len(learnt) <= 2` to `<= 3` may cut conflict-analysis overhead enough to help the mixed exact-CLI hotspot slice without paying much search-quality cost.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, `satsolver_core.py`, and the current `large/test_6.cnf` `cProfile` output; created a frozen `HEAD` baseline in `/tmp/satsolver_skipternmin_baseline/`; temporarily patched `satsolver_core.py` so `minimize_learnt()` returns immediately for learnt clauses of length `3`; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; SAT/UNSAT smoke checks plus checker validation on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of frozen-`HEAD` baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; reverted the core patch after the mixed gate regressed.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice regressed from `30.4068s` to `30.5538s` on the two-order average, with forward `30.3753s -> 30.4375s` and reverse `30.4383s -> 30.6701s`. `special/hard.cnf` improved in both orders (`9.7911s -> 9.2958s` forward, `9.9774s -> 9.7349s` reverse), but `large/test_6.cnf` regressed in both (`15.1699s -> 15.7710s` forward, `15.3032s -> 15.4892s` reverse), and `large/test_10.cnf` also moved the wrong way in both orders (`1.9947s -> 2.0165s` forward, `1.7849s -> 2.0572s` reverse). `large/test_8.cnf` improved slightly in both orders (`0.3610s -> 0.3474s`, `0.3310s -> 0.3278s`), but not enough to carry the slice.
+- Decision taken: discard the ternary learnt-minimization skip and keep the retained solver files unchanged.
+- Next recommended step: treat “skip work in `minimize_learnt()` for already-small learnt clauses” as another conflict-analysis dead end unless a future branch comes with a much stronger dense UNSAT story than this one.
+
+## 2026-03-21T12:00:06+01:00 - Rejected watch-indexed literal-truth cache
+
+- Objective: test whether the hot literal-truth reads in `enqueue()`, `backtrack()`, and `propagate()` can be made cheaper by storing truth values in positive watch-index space instead of using signed-list indexing with negative Python indices.
+- Hypothesis: because `propagate()` still dominates runtime and literal truth is read or written on nearly every hot-path step, changing `literal_values` from signed-index access (`literal_values[literal]`, `literal_values[-variable]`) to watch-index access (`literal_values[literal_watch_index[literal]]`) might cut enough indexing overhead to help the mixed exact-CLI hotspot slice.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, `satsolver_core.py`, and the current `large/test_6.cnf` `cProfile` output; created a frozen `HEAD` baseline in `/tmp/satsolver_watchvalue_baseline/`; temporarily patched `satsolver_core.py` so `literal_values` lives in positive watch-index space and all truth reads/writes in `literal_value()`, `enqueue()`, `backtrack()`, and `propagate()` use that mapping; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; SAT/UNSAT smoke checks plus checker validation on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of frozen-`HEAD` baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; reverted the patch after the mixed gate regressed decisively.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice regressed heavily from `31.0231s` to `32.7078s` on the two-order average, with forward `31.0070s -> 32.3361s` and reverse `31.0393s -> 33.0795s`. The main damage was broad on the dense UNSAT cases: `large/test_6.cnf` regressed from `15.3921s -> 16.0680s` forward and `15.1555s -> 16.8912s` reverse, while `special/hard.cnf` regressed from `10.0445s -> 10.6671s` forward and `10.2325s -> 10.2890s` reverse. `large/test_10.cnf` also worsened in both orders (`2.0104s -> 2.1026s`, `2.0675s -> 2.1534s`). `large/test_8.cnf` only split direction (`0.3414s -> 0.3592s` forward, `0.3924s -> 0.3375s` reverse), which was nowhere near enough to matter.
+- Decision taken: discard the watch-indexed truth-cache rewrite and keep the retained solver files unchanged.
+- Next recommended step: treat “replace signed literal indexing with positive watch-index truth caching” as another propagation micro-optimization dead end. Future `propagate()` work should aim to remove more real watcher traversal work, not just re-encode the same truth lookups through a different index scheme.
+
+## 2026-03-21T12:11:12+01:00 - Kept removing the zero-activity phase-bias fallback in branching
+
+- Objective: test whether `pick_branch_literal()` can be simplified by removing the zero-activity polarity fallback and always trusting `saved_phase` for the chosen branch variable.
+- Hypothesis: because earlier branch-frontier profiling showed zero-activity branch choices were absent on the main hotspot cases, the `if self.activity[best_variable] == 0.0: positive = self.phase_bias[best_variable] >= 0` fallback is likely dead or low-value overhead on the current exact-CLI path, and removing it may yield a small same-search win.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`, `out_cli_extended.txt`, `satsolver_core.py`, `tests/test_solver_regressions.py`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, and `benchmark_summary.md`; `python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/current_cycle_large6_profile.txt | head -n 35`; direct same-process timing on `large/test_8.cnf` for default serial, serial `seed_phase_bias=True`, and portfolio solves plus a direct conflict-count comparison for default-vs-phase-bias serial on `large/test_8.cnf`; same-process seeded-vs-default sweep over `small/test_1.cnf`, `small/test_5.cnf`, `small/test_6.cnf`, `small/test_9.cnf`, `medium/test_8.cnf`, `medium/test_9.cnf`, `large/test_1.cnf`, `large/test_2.cnf`, `large/test_5.cnf`, `large/test_7.cnf`, `large/test_8.cnf`, `large/test_9.cnf`, and `special/easy.cnf`; created a frozen `HEAD` baseline in `/tmp/satsolver_nozerophase_baseline/`; temporarily patched `satsolver_core.py` so `pick_branch_literal()` always uses `saved_phase[best_variable]`; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; SAT/UNSAT smoke checks plus checker validation on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; same-day repeat-aware exact-CLI 59-case baseline-vs-candidate runs via `benchmark_suite.py` to `/tmp/cycle_{baseline,candidate}_nozerophase_cli_repeat2.txt`; `python -m unittest discover -s tests -v`; refreshed `out_cli_extended.txt` from the retained candidate run.
+- Benchmark results: the fresh `large/test_6.cnf` `cProfile` pass still showed `pick_branch_literal()` as a real cost center at `1.546s` tottime, but the zero-activity phase-policy sweeps again said only `large/test_8.cnf` is a strong phase-bias case. The actual branch fallback removal stayed positive on the real gates: the mixed nine-case exact-CLI hotspot slice improved from `32.6520s` to `32.5010s`, with forward `33.2466s -> 33.0447s` and reverse `32.0575s -> 31.9573s`. The same-day repeat-aware exact-CLI 59-case suite also improved from `38.1276s` to `37.8494s`, still `59/59` correct, with `large/test_6.cnf` improving from `17.4301s` to `16.8850s` and `special/hard.cnf` improving slightly from `11.4124s` to `11.3692s`; `large/test_8.cnf` regressed slightly there from `0.3861s` to `0.4012s`, but not enough to overturn the broad-suite gain.
+- Decision taken: keep the branch-picker simplification. `pick_branch_literal()` now always follows `saved_phase` for the selected variable, and the regression suite now explicitly locks that zero-activity behavior.
+- Next recommended step: treat dead zero-activity polarity fallback as removable baggage, but keep the broader branching warning intact. The kept change is much narrower than the already-rejected heap/frontier or active-set ideas, so the next meaningful solver-core win is still more likely in `propagate()` or conflict analysis than in another heavy branching-data-structure rewrite.
+
+## 2026-03-21T12:19:55+01:00 - Rejected skipping propagated phase-saving updates
+
+- Objective: test whether the hot propagation path can be shortened by stopping `saved_phase` updates on implied unit assignments, while keeping phase saving for explicit `enqueue()` calls and decision seeding intact.
+- Hypothesis: because `propagate()` still dominates runtime and every implied assignment currently writes `saved_phase[variable]`, removing those writes may trim enough overhead to help the mixed exact-CLI hotspot slice without materially hurting search quality.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, and a fresh `large/test_6.cnf` `cProfile` pass (`propagate()` `18.179s`, `analyze()` `3.014s`, `pick_branch_literal()` `1.748s`); created a frozen `HEAD` baseline in `/tmp/satsolver_nosavedphaseprop_baseline/`; temporarily patched `satsolver_core.py` so the three inlined propagated-unit assignment sites no longer update `saved_phase`; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; SAT/UNSAT smoke checks plus checker validation on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; reverted the patch after the mixed gate failed catastrophically.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice blew up from `30.5205s` to `56.9678s` on the two-order average, with forward `30.6543s -> 56.4923s` and reverse `30.3866s -> 57.4433s`. The decisive failure was `large/test_8.cnf`, which exploded from `0.3345s -> 24.7775s` forward and `0.3393s -> 25.8776s` reverse while still producing valid SAT output. The dense UNSAT cases also moved the wrong way overall: `large/test_6.cnf` regressed from `15.1367s -> 17.0311s` forward and `15.1390s -> 16.7994s` reverse, and `medium/test_4.cnf` plus `large/test_10.cnf` both worsened in both orders. `special/hard.cnf` improved in both orders (`10.0116s -> 9.2372s`, `9.8714s -> 9.2636s`), but nowhere near enough to matter.
+- Decision taken: discard the “no propagated phase saving” branch and keep the retained solver files unchanged.
+- Next recommended step: treat propagated `saved_phase` updates as essential current behavior, especially for the SAT-like `large/test_8.cnf` family. Future `propagate()` work should keep searching for real watcher-traversal simplifications rather than removing phase-saving state updates that materially change the search path.
+
+## 2026-03-21T12:26:53+01:00 - Rejected lazy phase-bias recomputation
+
+- Objective: test whether exact-CLI startup can be trimmed by stopping per-literal `phase_bias` maintenance during clause ingest and recomputing phase bias only when a seeded solve path explicitly requests it.
+- Hypothesis: because the current mainline almost never uses the phase-biased worker and `observe_clause()` still updates both initial activity and `phase_bias` on every literal, keeping the activity seeding but moving `phase_bias` recomputation to the rare `seed_phase_bias=True` path may improve startup-heavy exact-CLI slices without changing mainline search behavior.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, and the current `phase_bias` references; collected a fresh `large/test_6.cnf` `cProfile` pass (`propagate()` `16.060s`, `analyze()` `2.737s`, `pick_branch_literal()` `1.580s`, `observe_clause()` `0.002s`); temporarily patched `satsolver_core.py`, `satsolver.py`, and `satsolver_fast.py` so clause ingest no longer updates `phase_bias` and seeded solve paths recompute bias from clauses on demand; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; SAT/UNSAT smoke checks plus checker validation on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of frozen-`HEAD` baseline vs candidate on the 12-case SAT-heavy root-hit slice via `tools/hotspot_compare.py --repeat 2`; reverted the patch after the first gate regressed.
+- Benchmark results: the startup-heavy 12-case SAT-heavy exact-CLI root-hit slice regressed from `0.4780s` to `0.4922s` on the two-order average, with forward `0.4725s -> 0.4931s` and reverse `0.4835s -> 0.4914s`. The losses were broad rather than concentrated in one case: `large/test_5.cnf` worsened from `0.0377s -> 0.0577s` forward, `large/test_7.cnf` from `0.0512s -> 0.0603s` forward, `medium/test_9.cnf` from `0.0271s -> 0.0415s` reverse, and several other small/medium SAT cases drifted the wrong way too. A few cases improved, but not enough to recover the slice.
+- Decision taken: discard the lazy phase-bias recomputation branch and keep the retained solver files unchanged.
+- Next recommended step: treat eager `phase_bias` maintenance as another startup-path cost that is too small or too entangled to win back cleanly by itself. Future exact-CLI wrapper/ingest work should demand a stronger signal than “one less per-literal side update during clause ingest.”
+
+## 2026-03-21T12:36:08+01:00 - Rejected literal_var-for-abs conflict-analysis rewrite
+
+- Objective: test whether conflict analysis can be shortened by replacing hot `abs(...)` calls with the existing `literal_var[...]` lookup in `analyze()`, `minimize_learnt()`, and `prepare_learnt_clause()` without changing the search policy.
+- Hypothesis: because fresh exact-CLI `cProfile` runs still show `abs` as a visible cost center (`1.115s` on `large/test_6.cnf`, `0.800s` on `special/hard.cnf`), reusing the solver's precomputed literal-to-variable lookup may trim conflict-analysis overhead enough to help the mixed exact-CLI hotspot slice while preserving search behavior.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, `benchmark_summary.md`, and the current conflict-analysis hot paths in `satsolver_core.py`; collected fresh `cProfile` passes on `large/test_6.cnf` (`propagate()` `15.983s`, `analyze()` `2.755s`, `abs` `1.115s`) and `special/hard.cnf` (`propagate()` `11.001s`, `analyze()` `1.943s`, `abs` `0.800s`); created a frozen `HEAD` baseline in `/tmp/satsolver_absvar_baseline/`; temporarily patched `satsolver_core.py` so `analyze()`, `minimize_learnt()`, and `prepare_learnt_clause()` use `literal_var[...]` instead of `abs(...)`; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; SAT/UNSAT smoke checks plus checker validation on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; reverted the patch after the mixed gate regressed.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice regressed from `30.3393s` to `30.9773s` on the two-order average, with forward `31.0800s -> 31.3153s` and reverse `29.5986s -> 30.6392s`. The dense UNSAT damage was stable enough to reject immediately: `large/test_6.cnf` regressed from `15.2590s -> 15.6328s` forward and `14.5444s -> 15.4005s` reverse. `special/hard.cnf` split direction but still failed to rescue the branch overall (`10.1619s -> 10.2898s` forward, `9.8891s -> 9.8490s` reverse). A few cases improved, including `large/test_10.cnf` in both orders and `large/test_8.cnf` forward, but the broad slice still lost.
+- Decision taken: discard the literal-var conflict-analysis rewrite and keep the retained solver files unchanged.
+- Next recommended step: treat direct `literal_var[...]` substitution for hot `abs(...)` calls inside conflict analysis as another pure-overhead dead end unless a future branch removes more real work than this one did. The next serious speed attempt should keep targeting structural `propagate()` or conflict-analysis simplification rather than swapping one low-level lookup primitive for another.
+
+## 2026-03-21T12:43:32+01:00 - Rejected keeping ternary learnt clauses with LBD <= 3
+
+- Objective: test whether the learnt database can keep more useful dense-UNSAT guidance by preserving ternary learnt clauses up through `LBD == 3`, while still deleting larger or weaker learnt clauses as before.
+- Hypothesis: because the workload is heavily ternary and conflict analysis frequently encounters small reasons, treating ternary `LBD <= 3` learnt clauses as keepers in `reduce_database()` may help dense pure-3-SAT UNSAT families enough to outweigh the extra database size.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `next_steps.md`, `benchmark_summary.md`, and the current `reduce_database()` path; created a frozen `HEAD` baseline in `/tmp/satsolver_keepternlbd3_baseline/`; temporarily patched `satsolver_core.py` so `reduce_database()` keeps ternary learnt clauses when `clause.lbd <= 3`; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; SAT/UNSAT smoke checks plus checker validation on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; reverted the patch after the mixed gate failed decisively.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice blew up from `31.1445s` to `54.9538s` on the two-order average, with forward `31.3888s -> 55.7422s` and reverse `30.9002s -> 54.1655s`. The decisive failure was SAT-like `large/test_8.cnf`, which exploded from `0.3193s -> 25.6356s` forward and `0.3519s -> 24.9397s` reverse while still remaining checker-valid. The intended dense-UNSAT upside was real but nowhere near enough: `special/hard.cnf` improved in both orders (`10.1341s -> 7.6952s`, `9.7290s -> 7.4674s`), and `large/test_10.cnf` improved in both too, but `large/test_6.cnf` still regressed in both orders (`15.8934s -> 17.3294s`, `15.8162s -> 16.3344s`) and the SAT-family collapse dominated everything.
+- Decision taken: discard the ternary-`LBD<=3` retention branch and keep the retained solver files unchanged.
+- Next recommended step: treat “keep ternary learnt clauses with `LBD <= 3`” as another learnt-database dead end. Future database work should stay skeptical of retention broadening, especially anything that can destabilize the `large/test_8.cnf` family while chasing dense-UNSAT gains.
+
+## 2026-03-21T12:49:31+01:00 - Rejected skipping clause-activity bumps for always-kept learnt clauses
+
+- Objective: test whether conflict-analysis overhead can be reduced by skipping `bump_clause_activity()` for learnt clauses that are effectively always kept anyway, namely binaries and `LBD <= 2` learnt clauses.
+- Hypothesis: because clause activity only matters for ranking deletable learnt clauses in `reduce_database()`, avoiding bumps on learnt clauses that are already guaranteed to survive may trim analysis overhead without materially changing learnt-database decisions.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `next_steps.md`, `benchmark_summary.md`, and the current `analyze()` / `reduce_database()` interaction; created a frozen `HEAD` baseline in `/tmp/satsolver_skipkeptclausebump_baseline/`; temporarily patched `satsolver_core.py` so `analyze()` only calls `bump_clause_activity()` when the current learnt clause has `lbd > 2` and length greater than `2`; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; SAT/UNSAT smoke checks plus checker validation on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; reverted the patch after the mixed gate came back slightly negative overall.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice split by order and still regressed on the two-order average from `32.6181s` to `32.8545s`. Forward order improved slightly (`32.3114s -> 32.1107s`), helped by `special/hard.cnf` (`10.7750s -> 10.4010s`) and several smaller cases. But reverse order regressed harder (`32.9248s -> 33.5983s`), mainly because `large/test_6.cnf` worsened from `16.0836s` to `17.4529s`. `large/test_8.cnf` improved a little in both orders and `special/hard.cnf` improved in both, but not enough to offset the dense-UNSAT loss on `large/test_6.cnf`.
+- Decision taken: discard the “skip bumps for always-kept learnt clauses” branch and keep the retained solver files unchanged.
+- Next recommended step: treat selective clause-activity bump skipping as another likely learnt-database dead end unless a future branch brings a materially stronger dense-UNSAT win. For now, future work should keep focusing on real `propagate()` simplification or stronger conflict-analysis changes rather than trying to shave clause-bump overhead.
+
+## 2026-03-21T12:58:38+01:00 - Rejected deferred watcher-list shrink in propagate
+
+- Objective: test whether the dominant watcher-pop hotspot can be reduced by keeping the current swap-remove semantics in `propagate()` but deferring actual watcher-list shrink to one tail deletion per watcher list, instead of calling `pop()` on every deleted or relocated watcher.
+- Hypothesis: because prior profiling showed watcher-list pops overwhelmingly dominate explicit pop traffic, replacing repeated per-removal `pop()` calls with a logical `watchers_end` pointer plus one final `del watchers[watchers_end:]` should lower propagation overhead without changing search behavior.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, and the current watcher-pop notes; created a frozen `HEAD` baseline in `/tmp/satsolver_watchcompact_baseline/`; temporarily patched `satsolver_core.py` so the non-binary watcher loop uses a logical end pointer and one final tail delete per watcher list; added then validated a focused regression in `tests/test_solver_regressions.py` for the “one clause relocates, next clause conflicts” cleanup path; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py tests/test_solver_regressions.py`; focused regression run; SAT/UNSAT smoke checks plus checker validation on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; reverted the patch and removed the temporary regression after the mixed gate regressed cleanly.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice regressed from `30.6616s` to `31.6370s` on the two-order average, with forward `30.3996s -> 31.4947s` and reverse `30.9236s -> 31.7792s`. The damage was broad rather than one isolated outlier: `special/hard.cnf` regressed in both orders (`9.9840s -> 10.5435s`, `9.7723s -> 10.1833s`), `large/test_6.cnf` regressed in both (`14.9381s -> 15.2874s`, `15.6433s -> 16.0219s`), and both `medium/test_4.cnf` and `large/test_10.cnf` also moved the wrong way. SAT-family cases stayed close enough that this was a pure overhead reject rather than a search-policy change.
+- Decision taken: discard the deferred watcher-shrink branch and keep the retained solver files unchanged.
+- Next recommended step: treat “remove per-removal watcher `pop()` calls via deferred shrink” as another propagation micro-optimization dead end unless a future branch removes more than the current list-shrink overhead. The next serious propagation win still needs a larger structural reduction in watcher traversal work, not just a different way of shrinking the current lists.
+
+## 2026-03-21T13:10:18+01:00 - Kept local alias cleanup in `pick_branch_literal()`
+
+- Objective: test whether the still-visible branch-selection hotspot can be trimmed without changing branching policy by hoisting the current read-only scan state into locals inside `pick_branch_literal()`.
+- Hypothesis: because fresh `large/test_6.cnf` profiling still showed `pick_branch_literal()` at `1.626s` tottime, replacing repeated `self.values`, `self.activity`, `self.saved_phase`, and `self.num_vars` attribute lookups with locals may produce a small same-search win that survives the exact-CLI mixed slice and the repeat-aware full suite.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`, `out_cli_extended.txt`, `satsolver_core.py`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, `satsolver_core.py`, and the current wrapper/core state; `python -m unittest discover -s tests -v`; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; fresh `large/test_6.cnf` `cProfile` pass before the patch (`pick_branch_literal()` `1.626s`, `propagate()` `17.053s`); froze a `HEAD` baseline in `/tmp/satsolver_pickbranchlocals_baseline/`; temporarily patched only `pick_branch_literal()` in `satsolver_core.py`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case slice (`small/test_1.cnf`, `special/tseitin.cnf`, `medium/test_3.cnf`, `medium/test_4.cnf`, `medium/test_9.cnf`, `large/test_6.cnf`, `large/test_8.cnf`, `large/test_10.cnf`, `special/hard.cnf`) via `tools/hotspot_compare.py`; repeat-aware exact-CLI full-suite runs for baseline and candidate via `benchmark_suite.py ... small medium large special --repeat 2`; CLI SAT/UNSAT smoke checks plus checker validation on `small/test_1.cnf` and `special/tseitin.cnf`; fresh `large/test_6.cnf` `cProfile` pass after the patch (`pick_branch_literal()` `1.388s`, `propagate()` `16.370s`); refreshed `out_cli_extended.txt` from the retained candidate run.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice improved slightly but cleanly on the two-order average from `31.0625s` to `30.9412s`, with forward `31.3587s -> 31.2829s` and reverse `30.7663s -> 30.5995s`. The branch did not help every dense case on that slice (`large/test_6.cnf` regressed slightly in both orders), but it improved `special/hard.cnf` in both orders (`10.5238s -> 10.2044s`, `10.1026s -> 9.8102s`) and helped the SAT side too (`large/test_8.cnf` `0.3897s -> 0.3215s` forward, `0.3726s -> 0.3687s` reverse). More importantly, the same-day repeat-aware exact-CLI 35-case suite improved from `32.7030s` to `31.6015s`, still `35/35` correct, with `large/test_6.cnf` improving there from `15.4449s` to `14.7695s` and `special/hard.cnf` from `10.0763s` to `9.7189s`. The fresh post-keep `cProfile` run on `large/test_6.cnf` also cut `pick_branch_literal()` tottime from `1.626s` to `1.388s`.
+- Decision taken: keep the local alias cleanup in `pick_branch_literal()` and update the retained exact-CLI artifact.
+- Next recommended step: treat tiny read-only branch-scan cleanup as a still-live narrow lane, but keep the broader branching warning intact. The next bigger win is still more likely in `propagate()` or conflict analysis than in mutable branching data structures.
+
+## 2026-03-21T13:19:22+01:00 - Rejected inline activity-decay updates in `solve()`
+
+- Objective: test whether the main conflict loop can be trimmed by inlining the per-conflict variable and clause activity decay updates instead of calling `decay_var_activity()` and `decay_clause_activity()` on every conflict.
+- Hypothesis: because the current solver still executes those two tiny helper calls on every learnt conflict, replacing them with direct `self.var_inc /= self.var_decay` and `self.clause_inc /= self.clause_decay` assignments may yield a small same-search exact-CLI win if the helper-boundary overhead is still large enough.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, `agent_log.md`, and a fresh `large/test_6.cnf` `cProfile` pass after the latest branching keep; created a frozen `HEAD` baseline in `/tmp/satsolver_inline_decay_baseline/`; temporarily patched `satsolver_core.py` so `solve()` updates `var_inc` and `clause_inc` inline after learning instead of calling the two helper methods; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; `python -m unittest discover -s tests -v`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; same-day repeat-aware exact-CLI 35-case baseline-vs-candidate runs via `benchmark_suite.py ... small medium large special --repeat 2`; reverted the patch after the broad suite came back slightly worse overall; reran `py_compile`, the full unit suite, and SAT/UNSAT checker smoke checks on `small/test_1.cnf` and `special/tseitin.cnf`.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice looked clearly positive, improving from `30.7973s` to `30.4203s` on the two-order average, with `large/test_6.cnf` improving in both orders (`15.2374s -> 14.4010s` forward, `15.4625s -> 15.1773s` reverse). But the repeat-aware exact-CLI 35-case suite lost overall: baseline `33.4842s`, candidate `33.6295s`, still `35/35` correct. The broad-suite failure was mainly that the dense UNSAT and SAT-family gains on the hotspot slice did not hold consistently enough across the rest of the corpus: `large/test_6.cnf` worsened there from `15.4237s` to `15.8732s`, `large/test_10.cnf` from `2.0974s` to `2.1967s`, and several smaller cases drifted the wrong way even though `special/hard.cnf` improved from `10.9702s` to `10.4972s`.
+- Decision taken: discard the inline-decay branch and keep the retained solver files unchanged.
+- Next recommended step: treat inline `solve()` helper cleanup around activity decay as another hotspot-only mirage unless a future branch shows the same gain on the repeat-aware exact-CLI suite, not just on the mixed slice. Future helper-boundary work should stay skeptical unless the broad suite confirms it.
+
+## 2026-03-21T13:24:57+01:00 - Rejected local method binding inside `solve()`
+
+- Objective: test whether the top-level CDCL loop can be shortened by binding its hot helper methods once per call, rather than resolving them through `self` on every conflict or decision.
+- Hypothesis: because fresh `large/test_6.cnf` profiling still showed a substantial amount of time sitting under `solve()` while repeatedly dispatching `propagate()`, `analyze()`, `add_learnt_clause()`, `enqueue()`, `reduce_database()`, `pick_branch_literal()`, and the decay helpers, hoisting those bound methods into locals might yield a small same-search win without changing solver behavior.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, `agent_log.md`, and a fresh `large/test_6.cnf` `cProfile` pass after the last reject; created a frozen `HEAD` baseline in `/tmp/satsolver_solve_alias_baseline/`; temporarily patched `satsolver_core.py` so `solve()` binds its hot helper methods and `trail_limits` once into locals before entering the CDCL loop; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; `python -m unittest discover -s tests -v`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; reverted the patch immediately after the mixed gate failed; reran `py_compile`, the full unit suite, and SAT/UNSAT checker smoke checks on `small/test_1.cnf` and `special/tseitin.cnf`.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice regressed decisively from `29.4850s` to `31.0535s` on the two-order average. Forward order already lost (`29.1647s -> 29.8406s`), mainly through `large/test_6.cnf` (`14.0961s -> 14.7106s`) and `large/test_10.cnf` (`1.8989s -> 2.0099s`). Reverse order was much worse (`29.8053s -> 32.2663s`), with the main damage on `large/test_6.cnf` (`14.6849s -> 16.9758s`) plus a meaningful loss on `special/hard.cnf` (`9.6092s -> 10.0131s`). `large/test_8.cnf` improved in forward order and `large/test_10.cnf` improved in reverse, but nowhere near enough to repay the dense UNSAT losses.
+- Decision taken: discard the local-method-binding branch and keep the retained solver files unchanged.
+- Next recommended step: treat broad local method binding in `solve()` as another helper-boundary dead end unless a future branch proves a materially different broad-suite gain. The safer remaining lane is still narrow same-search cleanup like the kept `pick_branch_literal()` scan tweak, or a more structural `propagate()` / conflict-analysis simplification.
+
+## 2026-03-21T13:33:47+01:00 - Rejected local `abs` binding in conflict analysis
+
+- Objective: test whether conflict analysis can be shortened by binding `abs` into locals inside `analyze()`, `minimize_learnt()`, and `prepare_learnt_clause()` rather than resolving the builtin repeatedly in their hot loops.
+- Hypothesis: because fresh exact-CLI `cProfile` runs still show `abs` as a visible cost center (`1.194s` on `large/test_6.cnf`, `0.788s` on `special/hard.cnf`), local-binding that builtin may recover a small same-search win without adding side state or changing solver behavior the way the earlier `literal_var[...]` rewrite did.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, and the current core hotspots in `satsolver_core.py`; collected fresh `cProfile` passes on `large/test_6.cnf` (`propagate()` `18.560s`, `analyze()` `3.079s`, `pick_branch_literal()` `1.544s`, `abs` `1.194s`) and `special/hard.cnf` (`propagate()` `10.929s`, `analyze()` `1.958s`, `pick_branch_literal()` `0.748s`, `abs` `0.788s`); froze a baseline copy in `/tmp/satsolver_abslocal_baseline.QdUJFU/`; temporarily patched `satsolver_core.py` so `analyze()`, `minimize_learnt()`, and `prepare_learnt_clause()` bind `abs` into locals; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; `python -m unittest discover -s tests -v`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; reverted the patch after the mixed gate regressed; reran `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks on `small/test_1.cnf` and `special/tseitin.cnf`.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice regressed from `31.4277s` to `32.1594s` on the two-order average, with forward `32.3663s -> 33.0372s` and reverse `30.4891s -> 31.2816s`. The dense UNSAT damage was stable enough to reject immediately: `large/test_6.cnf` worsened from `16.3400s -> 16.5961s` forward and `15.3030s -> 15.4358s` reverse, while `special/hard.cnf` worsened from `10.4151s -> 10.8689s` forward and `9.6581s -> 10.3215s` reverse. A few cases improved (`large/test_10.cnf` and `large/test_8.cnf` in both orders, plus `medium/test_3.cnf` reverse), but not enough to recover the broad slice.
+- Decision taken: discard the local-`abs` branch and keep the retained solver files unchanged.
+- Next recommended step: treat local builtin binding around conflict-analysis `abs(...)` calls as another low-level dead end unless a future branch removes more actual reasoning work than builtin lookup overhead alone. The next serious speed attempt should keep targeting structural `propagate()` or conflict-analysis simplification rather than another tiny primitive-binding rewrite.
+
+## 2026-03-21T13:42:17+01:00 - Rejected fixed-size fast path in `prepare_learnt_clause()`
+
+- Objective: test whether small-learnt conflict-analysis overhead can be reduced by special-casing binary and ternary learnt clauses in `prepare_learnt_clause()` instead of always running the generic LBD-token loop and best-level scan.
+- Hypothesis: because the solver learns many short clauses and `prepare_learnt_clause()` still shows up as a visible conflict-analysis cost, directly computing best backtrack level and LBD for `len(learnt) == 2` and `len(learnt) == 3` may yield a same-search exact-CLI win without changing solver policy.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, and the current conflict-analysis path in `satsolver_core.py`; froze a `HEAD` baseline in `/tmp/satsolver_preparelearnt_baseline.Es2D5k/`; temporarily patched `prepare_learnt_clause()` with dedicated binary and ternary fast paths while leaving the generic path unchanged for larger learnt clauses; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; `python -m unittest discover -s tests -v`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; reverted the patch immediately after the mixed gate regressed; reran `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks on `small/test_1.cnf` and `special/tseitin.cnf`.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice regressed strongly from `32.1394s` to `34.0749s` on the two-order average, with forward `32.1665s -> 34.5739s` and reverse `32.1123s -> 33.5760s`. The decisive failure was dense UNSAT: `large/test_6.cnf` worsened from `15.9523s -> 18.1880s` forward and `14.9877s -> 16.9680s` reverse. `special/hard.cnf` split direction (`10.8156s -> 11.0575s` forward, `11.0351s -> 10.6748s` reverse), but nowhere near enough to offset the `large/test_6.cnf` loss. A few smaller and SAT-like cases improved, but this remained a clear overall reject.
+- Decision taken: discard the fixed-size `prepare_learnt_clause()` fast path and keep the retained solver files unchanged.
+- Next recommended step: treat fixed-size learnt-clause preparation fast paths as another conflict-analysis specialization lane that looks plausible but still loses on the dense UNSAT gate. The next serious speed attempt should go back to a more structural `propagate()` or conflict-analysis simplification rather than another small fixed-size conflict helper rewrite.
+
+## 2026-03-21T13:48:28+01:00 - Rejected flat binary implication payloads
+
+- Objective: test whether the binary side of `propagate()` can be shortened by storing each watched binary implication as flat integer pairs instead of Python tuples, so the hot loop walks plain ints rather than unpacking `(implied_literal, clause_id)` pairs.
+- Hypothesis: because `propagate()` still dominates fresh profiles and the binary implication loop is one of the few hot-path structures that still carries tuple-unpacking overhead, flattening those payloads may reduce same-search propagation cost without changing solver behavior.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, and the current binary implication path in `satsolver_core.py`; froze a `HEAD` baseline in `/tmp/satsolver_binaryflat_baseline.TPfZD0/`; temporarily patched `satsolver_core.py` so `binary_implications` stores alternating `implied_literal, clause_id` integers and `propagate()` iterates them by step `2`; updated `tools/profile_solver.py` to mirror the candidate layout so tests and profiler tooling remained valid during measurement; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py tools/profile_solver.py`; `python -m unittest discover -s tests -v`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; reverted both the core patch and the profiler mirror after the mixed gate came back negative; reran `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks on `small/test_1.cnf` and `special/tseitin.cnf`.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice regressed from `35.0798s` to `36.0096s` on the two-order average. Forward order improved slightly (`35.8088s -> 35.5085s`), helped mainly by `large/test_6.cnf` (`18.5623s -> 17.4797s`) and `large/test_10.cnf` (`2.3252s -> 2.2217s`), but reverse order lost more strongly (`34.3507s -> 36.5107s`), with `large/test_6.cnf` worsening from `16.9915s -> 18.9111s`, `large/test_10.cnf` from `2.2495s -> 2.4885s`, and `special/hard.cnf` slightly worse overall too. SAT-family cases stayed close, so this was another same-search overhead reject rather than a search-policy change.
+- Decision taken: discard the flat binary-implication payload branch and keep the retained solver files unchanged.
+- Next recommended step: treat binary implication payload flattening as another propagation micro-optimization dead end unless a future branch removes more than tuple-unpacking overhead alone. The next serious propagation win still needs to cut larger watcher/ternary traversal work, not just re-encode the binary side of the same current logic.
+
+## 2026-03-21T14:01:47+01:00 - Rejected one-pass tail backtracking
+
+- Objective: test whether `backtrack()` can be shortened further by computing the cut point once, clearing the whole trail tail in a single pass, and slicing `trail_limits` once instead of deleting one decision level at a time.
+- Hypothesis: because fresh `large/test_6.cnf` profiling still shows `backtrack()` at `0.971s` tottime even after the earlier kept cleanup, collapsing the remaining per-level tail-delete loop into one pass may give a behavior-preserving win that survives the mixed exact-CLI gate and possibly the repeat-aware 35-case suite.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`, `tests/test_solver_regressions.py`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, and the current `backtrack()` implementation; collected a fresh `large/test_6.cnf` `cProfile` pass on the retained baseline (`propagate()` `20.287s`, `analyze()` `3.328s`, `pick_branch_literal()` `1.657s`, `backtrack()` `0.971s`); froze a `HEAD` baseline in `/tmp/satsolver_backtrackslice_baseline.KCqpxd/`; temporarily patched `satsolver_core.py` so `backtrack()` computes one start index and clears the trail tail in one pass; added a regression in `tests/test_solver_regressions.py` covering backtrack-to-nonzero-level behavior; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py tests/test_solver_regressions.py`; `python -m unittest discover -s tests -v`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; repeat-aware exact-CLI 35-case baseline-vs-candidate runs via `benchmark_suite.py ... small medium large special --repeat 2`; reverted the core patch after the broad suite came back worse overall while keeping the new regression because it documents existing behavior.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice improved from `38.9067s` to `38.1503s` on the two-order average, helped mostly by `large/test_6.cnf` (`19.4168s -> 18.7084s` forward, `19.6450s -> 18.9964s` reverse) plus smaller wins on `medium/test_3.cnf`, `medium/test_4.cnf`, and startup-sensitive SAT cases. But the repeat-aware exact-CLI 35-case suite regressed overall from `39.2286s` to `39.7958s`, still `35/35` correct. The broad-suite loss came mainly from `special/hard.cnf` (`11.8325s -> 12.8074s`) and `medium/test_4.cnf` (`2.4703s -> 2.6679s`), which outweighed the `large/test_6.cnf` gain (`18.9120s -> 18.4629s`) and the smaller `large/test_10.cnf` gain (`2.4416s -> 2.3904s`).
+- Decision taken: discard the one-pass `backtrack()` rewrite, keep the retained solver logic unchanged, and keep the new nonzero-level backtrack regression test.
+- Next recommended step: treat one-pass full-tail `backtrack()` rewriting as another hotspot-only mirage unless a future branch survives the repeat-aware exact-CLI suite. The next serious win still looks more likely in `propagate()` or a stronger conflict-analysis change than in more backtrack mechanics cleanup.
+
+## 2026-03-21T14:10:29+01:00 - Rejected tuned portfolio second worker
+
+- Objective: test whether the one remaining exact-CLI portfolio gate can be improved by tuning the second worker specifically for that family instead of using the current plain phase-bias worker.
+- Hypothesis: because the portfolio gate is now extremely narrow and mainly protects `large/test_8.cnf`-like formulas, replacing the second worker with a more aggressive phase-biased restart schedule (`seed_phase_bias=True`, `restart_base=32`) might speed that one family enough to beat the current wrapper on its own gate case.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, `satsolver.py`, and the current portfolio gate in `satsolver_core.py`; created `scratch_satsolver_portfolio32.py` as a temporary wrapper over the retained mainline with a tuned second portfolio worker (`False/64` plus `True/32`); `python -m py_compile scratch_satsolver_portfolio32.py`; checker-backed SAT smoke on `large/test_8.cnf`; exact-CLI A/B of retained `satsolver.py` vs the scratch wrapper on `large/test_8.cnf` via `tools/hotspot_compare.py --repeat 2`; deleted the scratch wrapper immediately after the one-case gate failed; reran `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py` and `python -m unittest discover -s tests -v` on the retained baseline.
+- Benchmark results: the tuned worker was catastrophically wrong for the very case it was supposed to help. On exact-CLI `large/test_8.cnf`, the two-order average regressed from `0.4129s` to `5.5657s`, with forward `0.3952s -> 5.6692s` and reverse `0.4307s -> 5.4622s`, all still SAT-correct. That was bad enough to reject before any mixed-slice or full-suite run.
+- Decision taken: discard the tuned-portfolio scratch wrapper and keep the retained solver files unchanged.
+- Next recommended step: treat “more aggressive restart schedule for the phase-biased portfolio worker” as another portfolio dead end unless a future design comes with much stronger one-case evidence than this. The next serious speed attempt should go back to solver-core propagation or conflict analysis rather than more portfolio-worker retuning.
+
+## 2026-03-21T14:22:22+01:00 - Rejected merged root propagation in `solve()`
+
+- Objective: test whether exact-CLI startup can be shortened by removing the standalone pre-loop `propagate()` call in `solve()` and letting the main CDCL loop handle the first propagation pass itself.
+- Hypothesis: because the current solver performs one root `propagate()` before entering a loop that immediately calls `propagate()` again, deleting that separate pre-loop call may shave startup-path overhead without changing the real search on larger cases.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, and the current `solve()` path in `satsolver_core.py`; collected a fresh retained-baseline `large/test_6.cnf` `cProfile` pass (`propagate()` `19.301s`, `analyze()` `3.188s`, `pick_branch_literal()` `1.578s`, `backtrack()` `0.936s`); froze a `HEAD` baseline in `/tmp/satsolver_rootprop_baseline/`; temporarily removed the standalone root `propagate()` call from `solve()`; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; exact-CLI A/B of frozen baseline vs candidate on the 12-case SAT-heavy root-hit slice via `tools/hotspot_compare.py --repeat 2`; exact-CLI A/B on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; reverted the patch immediately after the mixed gate regressed; reran `py_compile`, `python -m unittest discover -s tests -v`, and checker-backed SAT/UNSAT smoke checks on `small/test_1.cnf` and `special/tseitin.cnf`.
+- Benchmark results: the startup-heavy exact-CLI root-hit slice improved slightly on the two-order average from `0.5092s` to `0.5010s`, with forward regressing `0.5225s -> 0.5270s` and reverse improving `0.4959s -> 0.4750s`. But the real mixed nine-case exact-CLI hotspot slice regressed from `36.2592s` to `36.5577s`, with forward `36.4923s -> 36.9874s` and reverse `36.0261s -> 36.1280s`. The main damage was dense UNSAT: `large/test_6.cnf` worsened in both orders (`18.3900s -> 18.8554s`, `18.1681s -> 18.6613s`). `large/test_8.cnf` improved in both orders and `special/hard.cnf` improved in reverse, but not enough to recover the mixed-slice loss.
+- Decision taken: discard the merged-root-propagation branch and keep the retained solver files unchanged.
+- Next recommended step: treat “merge the standalone root propagation into the main `solve()` loop” as another startup-only mirage unless a future branch also helps the dense exact-CLI gate. The next serious speed attempt should go back to a more structural `propagate()` or conflict-analysis simplification rather than more tiny outer-loop cleanup.
+
+## 2026-03-21T14:36:37+01:00 - Profiled restart and reduction cadence
+
+- Objective: bring `tools/profile_solver.py` back into exact behavioral sync with the retained solver and measure restart/reduction cadence directly, so the next optimization cycle can target real search-policy leverage instead of guessing from time profiles alone.
+- Hypothesis: if the profiler mirrors the kept zero-activity branching rule and exposes restart/reduction sizes, it can tell us whether more effort should go into `reduce_database()` / restart bookkeeping or whether those paths are already too small for another micro-optimization to matter.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`, `tests/test_profile_solver.py`, `tools/profile_solver.py`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, and the current `pick_branch_literal()` / `reduce_database()` logic in `satsolver_core.py`; patched `tools/profile_solver.py` so zero-activity branch choices still count but now always follow `saved_phase`, added explicit restart/reduction counters plus reporting, mirrored the current `reduce_database()` implementation inside the profiler wrapper, added regressions in `tests/test_profile_solver.py` for zero-activity polarity, forced restart stats, and reduction stats; `python -m py_compile tools/profile_solver.py tests/test_profile_solver.py`; `python -m unittest discover -s tests -v`; `python tools/profile_solver.py large/test_6.cnf special/hard.cnf medium/test_4.cnf large/test_8.cnf`.
+- Benchmark results: the retained solver is unchanged, but the new counters sharpen the backlog. On `large/test_6.cnf`, the profiler now reports `253` restarts at `226.40` average conflicts per restart, `10.16` average restart decision level, and `33.50` average restart trail, plus `260` reductions with `550.25` average live learnt clauses, only `23.94` average locked clauses, `447.42` average reduction candidates, and `223.96` average deletions. `special/hard.cnf` shows the same shape (`218` restarts, `204.04` conflicts per restart, `186` reductions, `24.69` average locked clauses vs `469.92` candidates), as does `medium/test_4.cnf` (`61` restarts, `66` reductions, `22.73` locked vs `320.55` candidates) and `large/test_8.cnf` (`92` restarts, deeper average restart state at `16.30` decision level / `51.83` trail, `102` reductions, `33.07` locked vs `315.26` candidates). So reductions are mostly operating on a few hundred deletable candidates while only a few dozen learnt clauses are actually locked.
+- Decision taken: keep the profiler/testing upgrade, keep the production solver unchanged, and use the new cadence numbers to de-prioritize more `reduce_database()` bookkeeping cleanup without a stronger search-policy story.
+- Next recommended step: treat locked-clause/reduction bookkeeping as even lower priority unless a future branch changes the classifier or restart/search behavior itself. The next serious solver-core attempt should still go back to `propagate()` or a more structural conflict-analysis simplification rather than another reduction/restart micro-tweak.
+
+## 2026-03-21T14:44:43+01:00 - Rejected `while`-loop branch scan rewrite
+
+- Objective: test whether the newly live read-only branching lane extends one step further if `pick_branch_literal()` swaps its `for range(...)` scan for a manual `while` loop while preserving the same policy and tie behavior.
+- Hypothesis: because the last kept branch-scan cleanup came from removing repeated attribute lookups, replacing the remaining `range(...)` loop machinery with a tight `while` loop may trim branch-selection overhead enough to survive the mixed exact-CLI gate without changing solver behavior.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, and the current `pick_branch_literal()` implementation; collected a fresh retained-baseline `large/test_6.cnf` profile (`propagate()` `15.213s`, `analyze()` `2.652s`, `pick_branch_literal()` `1.292s`); froze a `HEAD` baseline in `/tmp/satsolver_pickbranchwhile_baseline/`; temporarily patched `satsolver_core.py` so `pick_branch_literal()` used a manual `while variable <= num_vars` scan with the same `>` tie policy; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; `python -m unittest discover -s tests -v`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; reverted the patch immediately after the mixed gate failed; reran `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks on `small/test_1.cnf` and `special/tseitin.cnf`.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice regressed decisively from `28.0431s` to `29.6058s` on the two-order average. Forward order regressed `28.0849s -> 29.5404s`, with the main losses on `large/test_6.cnf` (`13.9161s -> 14.4373s`), `special/hard.cnf` (`9.2612s -> 9.8463s`), and `medium/test_4.cnf` (`1.9543s -> 2.0481s`). Reverse order regressed similarly, `28.0013s -> 29.6711s`, with `large/test_6.cnf` (`13.9364s -> 14.5136s`), `special/hard.cnf` (`9.1085s -> 9.9682s`), and `medium/test_4.cnf` (`1.8855s -> 2.1457s`) all worse again. A few tiny SAT cases moved around, but the dense UNSAT losses were too broad and too stable to justify any broader suite run.
+- Decision taken: discard the `while`-scan rewrite and keep the retained solver files unchanged.
+- Next recommended step: narrow the surviving branch-scan lane further. The previous local-alias keep in `pick_branch_literal()` was real, but simply swapping `for range(...)` for `while` is another dead end. The next serious speed attempt should go back to `propagate()` or a more structural conflict-analysis simplification rather than more loop-shape cleanup in branch selection.
+
+## 2026-03-21T14:55:03+01:00 - Rejected ternary `TRUE`-candidate hold path
+
+- Objective: test whether ternary propagation can avoid part of the minority relocation path by not relocating a false watch when the third literal is already `TRUE`, leaving the clause satisfied in place instead of swapping the watched slot.
+- Hypothesis: because only about `13.5%..17.2%` of ternary relocations go to already-`TRUE` candidate literals, skipping those relocations might shave some watcher churn without touching the dominant `candidate=UNASSIGNED` path, and the clause would remain satisfied anyway.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, and the current ternary branch in `propagate()`; froze a `HEAD` baseline in `/tmp/satsolver_ternarytruehold_baseline/`; temporarily patched `satsolver_core.py` so ternary clauses with `candidate_value == TRUE` stayed satisfied in place instead of relocating the watch; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; `python -m unittest discover -s tests -v`; checker-backed SAT/UNSAT smoke checks on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; reverted the patch immediately after the mixed gate failed catastrophically; reran `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks on the retained baseline.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice exploded from `34.2608s` to `55.5632s` on the two-order average. Forward order regressed `35.1672s -> 57.8010s`, with `large/test_6.cnf` worsening `16.8833s -> 25.7924s`, `large/test_8.cnf` exploding `0.3514s -> 12.0130s`, and `special/hard.cnf` worsening `11.8450s -> 14.0072s`. Reverse order still regressed badly, `33.3543s -> 53.3254s`, with `large/test_6.cnf` `16.9439s -> 23.3024s`, `large/test_8.cnf` `0.3674s -> 11.9362s`, and `special/hard.cnf` `10.8565s -> 13.1154s`. `large/test_10.cnf` improved in both orders, but nowhere near enough to repay the SAT-family and dense-UNSAT damage.
+- Decision taken: discard the ternary `TRUE`-candidate hold path and keep the retained solver files unchanged.
+- Next recommended step: tighten the ternary backlog again. Leaving a false watch in place just because an unwatched ternary literal is already `TRUE` is now another strong dead end, especially because it destroys `large/test_8.cnf`. Future original-ternary work should keep targeting the dominant relocation/unit path, not minority satisfied-candidate shortcuts.
+
+## 2026-03-21T18:05:00+01:00 - Rejected bundled `reason` sentinel plus `propagate()` tail cleanup
+
+- Objective: test whether two tiny same-search core cleanups could combine into a real exact-CLI win: making `reason` an integer-only hot array with `NO_REASON = -1`, and deleting the redundant `other_value == UNASSIGNED` checks after the two no-replacement tails in `propagate()`.
+- Hypothesis: together they might trim mixed-type overhead across `enqueue()`, `backtrack()`, `minimize_learnt()`, `analyze()`, and `reduce_database()` while also shaving a little logic from the dominant ternary no-replacement unit/conflict tail, giving a broader same-search win than recent primitive-binding rejects.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, and `next_steps.md`; collected a fresh retained-baseline `large/test_6.cnf` profile (`propagate()` `16.097s`, `analyze()` `2.804s`, `pick_branch_literal()` `1.373s`, `minimize_learnt()` `0.864s`, `backtrack()` `0.826s`); froze a baseline in `/tmp/satsolver_reasonsentinel_baseline.nViK3a/`; temporarily patched the bundled branch across `satsolver_core.py`, `satsolver.py`, `satsolver_fast.py`, `tools/profile_solver.py`, and `tests/test_solver_regressions.py`; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py tools/profile_solver.py tests/test_solver_regressions.py tests/test_profile_solver.py`; `python -m unittest discover -s tests -v`; checker-backed SAT/UNSAT smoke checks on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; repeat-aware exact-CLI 35-case suites for baseline and candidate via `benchmark_suite.py ... small medium large special --cli-script ... --repeat 2`; reverted the bundled branch after the broader suite failed; restored the retained solver/artifact files; reran `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks on the retained baseline.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice looked mildly positive overall, improving from `38.0602s` to `37.6673s` on the two-order average (`39.6473s -> 39.4773s` forward, `36.4732s -> 35.8573s` reverse). But the broader repeat-aware exact-CLI 35-case suite regressed hard from `40.3613s` to `43.3099s`, still `35/35` correct. The decisive broad-suite losses were `large/test_6.cnf` (`18.3887s -> 19.5514s`), `special/hard.cnf` (`13.6687s -> 14.4636s`), `large/test_10.cnf` (`2.1764s -> 2.7222s`), and `large/test_8.cnf` (`0.4560s -> 0.5581s`).
+- Decision taken: discard the bundled branch, keep the retained solver files unchanged, and treat neither subchange as independently validated.
+- Next recommended step: if either lane is revisited, isolate it and require the same repeat-aware exact-CLI suite confirmation on its own. Bundled hotspot wins are not strong enough evidence for cross-cutting cleanup work.
+
+## 2026-03-21T15:32:37+01:00 - Rejected second isolated `propagate()` no-replacement-tail cleanup
+
+- Objective: re-test the no-replacement watched-clause tail cleanup in fully isolated form on the retained baseline, with no bundled `reason` sentinel or profiler/test mirror changes, to see whether that branch-shape simplification can survive the broader exact-CLI suite on its own.
+- Hypothesis: because both no-replacement tails in `propagate()` already know `other_value != TRUE`, collapsing them from `if other_value == FALSE: conflict; if other_value == UNASSIGNED: unit` to `if other_value == FALSE: conflict; else: unit` might shave a small amount of hot-path overhead in the dominant watched-clause unit/conflict path while preserving exact search behavior closely enough to survive the repeat-aware exact-CLI gate.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `next_steps.md`, `benchmark_summary.md`, and `fast_idea.md`; collected a fresh retained-baseline `large/test_6.cnf` profile (`propagate()` `20.330s`, `analyze()` `3.348s`, `pick_branch_literal()` `1.658s`, `minimize_learnt()` `1.034s`, `backtrack()` `0.988s`); searched the current code and backlog for remaining `len(...)`/metadata lanes; froze a `HEAD` baseline in `/tmp/satsolver_else_tail_baseline/`; temporarily patched only the two no-replacement tails in `satsolver_core.py`; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; `python -m unittest discover -s tests -v`; checker-backed SAT/UNSAT smoke checks on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; repeat-aware exact-CLI 35-case suites for baseline and candidate via `benchmark_suite.py ... small medium large special --cli-script ... --repeat 2`; reverted the solver patch after the broader suite regressed; removed the stale untracked scratch reason-sentinel helper files; reran retained-baseline `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice improved strongly from `32.5969s` to `31.1921s` on the two-order average. Forward order improved `32.5612s -> 31.6352s`, mainly from `large/test_6.cnf` (`16.9554s -> 15.5115s`) and `special/hard.cnf` (`10.3557s -> 10.2410s`) despite losses on `medium/test_4.cnf` (`2.2867s -> 2.6042s`) and `large/test_10.cnf` (`2.4016s -> 2.7315s`). Reverse order improved more strongly `32.6325s -> 30.7490s`, again led by `large/test_6.cnf` (`16.5424s -> 15.0097s`) and `special/hard.cnf` (`10.6083s -> 10.2296s`). But the broader repeat-aware exact-CLI 35-case suite regressed hard from `33.6532s` to `38.5035`, still `35/35` correct. The decisive broad-suite losses were `large/test_6.cnf` (`15.2192s -> 17.5894s`), `special/hard.cnf` (`11.2203s -> 12.6692s`), `medium/test_4.cnf` (`2.1749s -> 2.4914s`), and `large/test_10.cnf` (`1.9581s -> 2.3852s`), while `large/test_8.cnf` only improved slightly (`0.3826s -> 0.3731s`).
+- Decision taken: discard the isolated tail cleanup again and keep the retained solver files unchanged.
+- Next recommended step: treat watched-clause tail branch-shape cleanup as another hotspot-only mirage unless a future branch comes with materially stronger broad-suite evidence. Even when the local mixed exact-CLI slice looks convincingly positive, the repeat-aware exact-CLI 35-case suite is still the gate that matters.
+
+## 2026-03-21T15:27:08+01:00 - Rejected isolated `propagate()` no-replacement-tail `else` cleanup
+
+- Objective: test whether the no-replacement tails in `propagate()` can be made slightly cheaper by deleting the redundant `other_value == UNASSIGNED` check after the earlier satisfied-skip guard, leaving the tail as `if other_value == FALSE: conflict else: unit`.
+- Hypothesis: because those tails already know `other_value != TRUE`, collapsing the second branch might shave a small amount of hot-path overhead in the dominant watched-clause unit/conflict path without changing search behavior.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, `next_steps.md`, and the current `propagate()` path; collected a fresh retained-baseline `large/test_6.cnf` profile (`propagate()` `20.209s`, `analyze()` `3.341s`, `pick_branch_literal()` `1.660s`, `minimize_learnt()` `1.044s`, `backtrack()` `0.979s`); froze a `HEAD` baseline in `/tmp/satsolver_else_tail_baseline/`; temporarily patched only the two no-replacement tails in `satsolver_core.py`; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; `python -m unittest discover -s tests -v`; checker-backed SAT/UNSAT smoke checks on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; repeat-aware exact-CLI 35-case suites for baseline and candidate via `benchmark_suite.py ... small medium large special --cli-script ... --repeat 2`; reverted the solver patch after the broader suite failed; removed the stale scratch reason-sentinel helper files; reran retained-baseline validation.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice improved strongly from `32.5969s` to `31.1921s` on the two-order average. Forward order improved `32.5612s -> 31.6352s`, helped mainly by `large/test_6.cnf` (`16.9554s -> 15.5115s`) and `special/hard.cnf` (`10.3557s -> 10.2410s`) despite losses on `medium/test_4.cnf` (`2.2867s -> 2.6042s`) and `large/test_10.cnf` (`2.4016s -> 2.7315s`). Reverse order improved more strongly `32.6325s -> 30.7490s`, again led by `large/test_6.cnf` (`16.5424s -> 15.0097s`) and `special/hard.cnf` (`10.6083s -> 10.2296s`). But the broader repeat-aware exact-CLI 35-case suite regressed hard from `33.6532s` to `38.5035`, still `35/35` correct. The decisive broad-suite losses were `large/test_6.cnf` (`15.2192s -> 17.5894s`), `special/hard.cnf` (`11.2203s -> 12.6692s`), `medium/test_4.cnf` (`2.1749s -> 2.4914s`), and `large/test_10.cnf` (`1.9581s -> 2.3852s`), while `large/test_8.cnf` only improved slightly (`0.3826s -> 0.3731s`).
+- Decision taken: discard the isolated tail cleanup and keep the retained solver files unchanged.
+- Next recommended step: treat this as another hotspot-only mirage inside `propagate()`. Even when the logic is identical and the mixed slice looks convincingly positive, broad repeat-aware exact-CLI confirmation is still required before keeping tiny branch-shape cleanups in the watched-clause hot path.
+
+## 2026-03-21T15:43:50+01:00 - Rejected array-backed core state layout
+
+- Objective: finish and adjudicate the unfinished array-backed core-state experiment that was left in the worktree, replacing several integer-heavy solver lists with `array(...)` or `bytearray` storage to see whether a denser data layout could reduce exact-CLI overhead without changing solver behavior.
+- Hypothesis: because `values`, `level`, `literal_values`, watch-index helpers, `phase_bias`, `saved_phase`, `seen`, and `lbd_marks` are hot integer-ish containers, replacing Python lists with compact array-backed storage might reduce memory traffic enough to help the dense exact-CLI gate even if the surrounding solver logic stays unchanged.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, checked `git status` and the lingering `satsolver_core.py` diff, verified the frozen retained baseline in `/tmp/satsolver_arraystate_baseline/`, ran `python -m unittest discover -s tests -v` on the candidate, benchmarked frozen baseline vs candidate on the mixed nine-case exact-CLI hotspot slice via `tools/hotspot_compare.py`, reverted `satsolver_core.py` back to the retained list-backed state, ran `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`, reran the full unit suite, and reran checker-backed SAT/UNSAT smoke checks on `small/test_1.cnf` and `special/tseitin.cnf`.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice regressed hard from `25.5674s` to `31.1749s` on the two-order average. Forward order worsened from `24.8951s` to `30.3363s`, driven mainly by `large/test_6.cnf` (`11.9928s -> 16.2617s`), `special/hard.cnf` (`9.1823s -> 9.6518s`), `medium/test_4.cnf` (`1.6622s -> 2.0213s`), and `large/test_10.cnf` (`1.6529s -> 1.9810s`). Reverse order also regressed from `26.2398s` to `32.0135s`, again led by `large/test_6.cnf` (`13.8218s -> 16.3599s`), `special/hard.cnf` (`8.4612s -> 11.0078s`), `medium/test_4.cnf` (`1.7945s -> 2.1286s`), and `large/test_10.cnf` (`1.7926s -> 2.0830s`). SAT-side cases stayed checker-valid but did not compensate, with `large/test_8.cnf` also slightly worse in both orders.
+- Decision taken: discard the array-backed state-layout rewrite and keep the retained solver files unchanged.
+- Next recommended step: treat one-for-one container replacement with `array`/`bytearray` as another dead data-layout lane unless a future branch removes materially more Python object traffic than simply swapping storage types. The next real speed attempt should go back to structural `propagate()` or conflict-analysis work instead.
+
+## 2026-03-21T15:53:51+01:00 - Rejected isolated integer-only `reason` sentinel storage
+
+- Objective: isolate the previously bundled `reason`-sentinel idea and test whether switching solver `reason` storage from `None`/clause-id to an integer-only sentinel representation can produce a real exact-CLI win on its own.
+- Hypothesis: because `reason` is read and written across `enqueue()`, `backtrack()`, `minimize_learnt()`, `analyze()`, `reduce_database()`, and the profiled solver, replacing `None` with `NO_REASON = -1` might remove enough mixed-type overhead to help the core path without changing search behavior.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `fast_idea.md`, and `next_steps.md`; collected a fresh retained-baseline `large/test_6.cnf` profile (`propagate()` `12.337s`, `analyze()` `2.352s`, list `append` `1.971s`, list `pop` `1.162s`, `pick_branch_literal()` `1.112s`, `abs` `0.961s`, `len` `0.765s`, `minimize_learnt()` `0.711s`, `backtrack()` `0.679s`); froze a `HEAD` baseline in `/tmp/satsolver_reasonsolo_baseline/`; temporarily patched `satsolver_core.py`, `satsolver.py`, `tools/profile_solver.py`, and `tests/test_solver_regressions.py` so the solver and profiled solver use `NO_REASON = -1` internally; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py tools/profile_solver.py tests/test_solver_regressions.py`; `python -m unittest discover -s tests -v`; checker-backed SAT/UNSAT smoke checks on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; repeat-aware exact-CLI 35-case suites for baseline and candidate via `benchmark_suite.py ... small medium large special --cli-script ... --repeat 2`; reverted the sentinel patch after the broader suite regressed; reran retained-baseline `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice improved slightly from `24.3347s` to `24.1806s` on the two-order average. Forward order regressed `23.9083s -> 24.2229s`, with losses on `large/test_6.cnf` (`12.1152s -> 12.3073s`), `medium/test_4.cnf` (`1.6995s -> 1.8452s`), `large/test_8.cnf` (`0.3096s -> 0.3236s`), and `small/test_5.cnf` (`0.0297s -> 0.0414s`), partly offset by `special/hard.cnf` (`8.0233s -> 8.0001s`) and `large/test_10.cnf` (`1.6362s -> 1.6197s`). Reverse order improved more clearly `24.7612s -> 24.1384s`, led by `large/test_6.cnf` (`13.1493s -> 12.5207s`) and `medium/test_4.cnf` (`1.9074s -> 1.6660s`) despite losses on `special/hard.cnf` (`7.7028s -> 7.8271s`), `large/test_10.cnf` (`1.6033s -> 1.7157s`), and `large/test_8.cnf` (`0.2704s -> 0.2805s`). But the broader repeat-aware exact-CLI 35-case suite regressed from `25.4875s` to `25.9045s`, still `35/35` correct. The broad loss came mainly from `large/test_6.cnf` (`11.6523s -> 11.8537s`), `special/hard.cnf` (`7.8904s -> 8.0711s`), `medium/test_4.cnf` (`1.7178s -> 1.7716s`), `large/test_8.cnf` (`0.2732s -> 0.2928s`), and several small/medium SAT cases.
+- Decision taken: discard the isolated integer-only `reason` sentinel rewrite and keep the retained solver files unchanged.
+- Next recommended step: treat `reason` sentinel storage as another hotspot-only mirage unless a future branch removes materially more conflict-analysis or reduction work than this representation swap did. The next real speed attempt should go back to structural `propagate()` or conflict-analysis simplification instead of swapping `None` for an int sentinel.
+
+## 2026-03-21T16:01:21+01:00 - Rejected global phase-bias seeding on the main exact-CLI fast path
+
+- Objective: test whether seeding `saved_phase` from the already-maintained `phase_bias` on the main exact-CLI fast path can turn the old narrow phase-bias signal into a broader search win, instead of leaving that heuristic confined to the special portfolio worker.
+- Hypothesis: because `phase_bias` is already accumulated during problem-clause ingest and the current solver now always branches from `saved_phase`, turning on `seed_phase_bias=True` for the default `solve_cnf_fast_serial()` path might improve startup polarity enough to help the mixed exact-CLI gate beyond the old `large/test_8.cnf` niche.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `next_steps.md`, and `fast_idea.md`; collected a fresh retained-baseline `large/test_6.cnf` profile (`propagate()` `20.285s`, `analyze()` `3.275s`, list `append` `2.883s`, `pick_branch_literal()` `1.648s`, list `pop` `1.625s`, `abs` `1.297s`, `len` `1.058s`, `minimize_learnt()` `1.023s`, `backtrack()` `0.957s`); froze a `HEAD` baseline in `/tmp/satsolver_phasebiasmain_baseline/`; temporarily patched `satsolver.py` so the default `solve_cnf()` path calls `solve_cnf_fast_serial(..., seed_phase_bias=True)`; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; `python -m unittest discover -s tests -v`; checker-backed SAT/UNSAT smoke checks on `small/test_1.cnf` and `special/tseitin.cnf`; exact-CLI A/B of frozen baseline vs candidate on the mixed nine-case hotspot slice via `tools/hotspot_compare.py`; reverted the wrapper patch after the mixed gate regressed; reran retained-baseline `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks.
+- Benchmark results: the mixed nine-case exact-CLI hotspot slice regressed strongly from `31.7103s` to `37.6381s` on the two-order average. Forward order regressed `32.3513s -> 36.0224s`: `large/test_6.cnf` improved a bit (`18.1239s -> 17.5613s`), but `special/hard.cnf` blew up (`9.6094s -> 13.4149s`), `medium/test_4.cnf` regressed (`2.0895s -> 2.4407s`), `large/test_10.cnf` regressed (`2.0593s -> 2.1127s`), and several SAT-side startup cases got slightly worse. Reverse order was much worse overall `31.0694s -> 39.2538s`, led by `special/hard.cnf` (`9.9988s -> 14.9598s`), `large/test_6.cnf` (`16.6386s -> 19.2728s`), and `medium/test_4.cnf` (`1.9949s -> 2.6837s`), while `large/test_10.cnf` was only mildly better (`1.9324s -> 1.8062s`). So the old phase-bias signal is still not broad enough to justify turning it on for the main exact-CLI path.
+- Decision taken: discard global phase-bias seeding on the main exact-CLI fast path and keep the retained solver files unchanged.
+- Next recommended step: treat phase-bias seeding as another narrow specialist heuristic unless a future branch comes with a much stronger classifier than “turn it on globally.” The next real speed attempt should go back to structural `propagate()` or conflict-analysis changes, not broader polarity-seeding policy.
+
+## 2026-03-21T16:07:23+01:00 - Rejected portfolio-worker switch to `solve_cnf_fast_serial()`
+
+- Objective: test whether the current narrow portfolio path can be made slightly cheaper by having both workers use the lighter `solve_cnf_fast_serial()` path instead of the heavier `solve_cnf_serial()` path, which still carries root-pure presolve machinery the gated all-3-SAT case is unlikely to need.
+- Hypothesis: because the current portfolio gate effectively only fires on `large/test_8.cnf`, and because that family already lives on the no-root-pure exact-CLI fast path outside the worker wrapper, switching the portfolio workers from `solve_cnf_serial()` to `solve_cnf_fast_serial()` may cut enough wrapper overhead to improve the one remaining gated case and maybe the broader exact-CLI total.
+- Files changed: `agent_log.md`, `benchmark_summary.md`, `experiments.jsonl`, `next_steps.md`
+- Tests executed: reread `autonomous_sat_agent_prompt.md`, `next_steps.md`, `fast_idea.md`, and the current portfolio gate in `satsolver_core.py`; temporarily patched `solve_cnf_portfolio()` so both workers call `solve_cnf_fast_serial()`; `python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py`; `python -m unittest discover -s tests -v`; checker-backed SAT smoke on `large/test_8.cnf`; exact-CLI A/B of frozen retained baseline vs candidate on `large/test_8.cnf` via `tools/hotspot_compare.py --repeat 2`; reverted the worker patch immediately after the one-case gate failed; reran retained-baseline `py_compile`, the full unit suite, and checker-backed SAT smoke on `large/test_8.cnf`.
+- Benchmark results: the exact gated case still regressed slightly overall. On `large/test_8.cnf`, the two-order average moved from `0.2924s` to `0.2950s`. Forward order regressed `0.2772s -> 0.3008s`, while reverse order improved `0.3075s -> 0.2892s`, so the candidate was simply noisier and slightly worse overall. Since the current portfolio gate now effectively matches only this one case, there was no reason to spend a broader mixed-slice or full-suite run on a one-case regression.
+- Decision taken: discard the portfolio-worker switch to `solve_cnf_fast_serial()` and keep the retained solver files unchanged.
+- Next recommended step: treat portfolio-worker wrapper churn as another nearly-exhausted lane unless a future branch brings a materially stronger one-case improvement than this. The next serious speed attempt should go back to solver-core `propagate()` or conflict-analysis work rather than more tweaks to the already-narrow portfolio plumbing.
+``````
 
 ### `agent_task_sat_solver.md`
 
@@ -1543,7 +1906,7 @@ Raw content:
 
 Raw content:
 
-`````md
+``````md
 # Agent Task: SAT Solver for LPI Assignment 02
 
 ## Source
@@ -1750,8 +2113,7 @@ Implement the solver and optimize it within the assignment constraints. Prioriti
 1. strict output correctness,
 2. standard-library-only compliance,
 3. runtime improvements that remain self-implemented.
-
-`````
+``````
 
 ### `autonomous_sat_agent_prompt.md`
 
@@ -1759,11 +2121,11 @@ Implement the solver and optimize it within the assignment constraints. Prioriti
 - Git status: tracked
 - Size: `9058` bytes
 - Line count: `260`
-- Why it matters: Primary autonomous engineering instructions that guided the iterative solver work.
+- Why it matters: Primary autonomous engineering instructions that guided iterative solver work.
 
 Raw content:
 
-`````md
+``````md
 # Autonomous SAT Solver Engineering Prompt
 
 Use this as the main task prompt for a coding agent that should repeatedly work on the same SAT solver repository, continue from previous progress, run experiments, and optimize the solver without needing constant human steering.
@@ -2024,8 +2386,7 @@ Good names for this file:
 - `AUTONOMOUS_PROMPT.md`
 
 If your agent supports repository-level instructions, `AGENT.md` is usually the most natural choice.
-
-`````
+``````
 
 ### `benchmark_suite.py`
 
@@ -2037,7 +2398,7 @@ If your agent supports repository-level instructions, `AGENT.md` is usually the 
 
 Raw content:
 
-`````python
+``````python
 from __future__ import annotations
 
 import argparse
@@ -2363,30 +2724,29 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
-`````
+``````
 
 ### `benchmark_summary.md`
 
 - Category: Project state / decision history
 - Git status: tracked
-- Size: `49039` bytes
-- Line count: `214`
+- Size: `74070` bytes
+- Line count: `251`
 - Why it matters: Current benchmark snapshot, best-known configurations, and interpretive performance summary.
 
 Raw content:
 
-`````md
+``````md
 # Benchmark Summary
 
-Updated: `2026-03-21T05:30:38+01:00`
+Updated: `2026-03-21T16:07:23+01:00`
 
 Best-known submission configuration:
 - `satsolver.py`
 - Exact-CLI wrapper over `satsolver_core.py`
 - Import-gated main wrapper surface: CLI mode uses `satsolver_core` symbols directly, while import mode still exposes the broader compatibility aliases and helper entrypoints used by tests/tooling
 - Byte-level DIMACS parse/write path on the required submission command
-- Density-gated iterative root pure-literal presolve on `solve_cnf_fast_serial()` only for low-density all-3-SAT formulas on the main `solve_cnf()` submission path
+- No root pure-literal presolve on the main `solve_cnf_fast_serial()` submission path
 - Root-pure-enabled `solve_cnf_serial()` compatibility path still exposed for tests and tooling
 - CDCL core in `satsolver_core.py` with watched literals, VSIDS-style activity, Luby restarts, clause database reduction
 - Structural UNSAT presolvers for pigeonhole cores and XOR contradictions
@@ -2440,9 +2800,10 @@ Best repeat-aware exact-CLI 59-case snapshot:
 - Worst-case representative runtime: `11.4367s` on `large/test_6.cnf`
 
 Latest repeat-aware exact-CLI reruns this cycle:
-- Same-day baseline before the low-density root-pure keep: `26.1422s` representative, `59/59` correct
-- Same-day scratch low-density root-pure candidate before merge: `25.9837s` representative, `59/59` correct
-- Refreshed retained artifact in `out_cli_extended.txt`: `26.1805s` representative, `52.3610s` measured, `52.5982s` wall clock, `59/59` correct
+- Same-day retained promoted-main baseline before removing fast-path root-pure: `39.8399s` representative, `59/59` correct
+- Same-day current `satsolver_fast.py` alternate rerun: `39.1591s` representative, `59/59` correct
+- Same-day scratch promoted-main no-root-pure candidate before merge: `36.6465s` representative, `59/59` correct
+- Refreshed retained artifact in `out_cli_extended.txt`: `38.0602s` representative, `76.1203s` measured, `76.3611s` wall clock, `59/59` correct
 
 Current alternate exact-CLI candidate (`satsolver_fast.py`):
 - Historical best repeat-aware snapshot: `27.3829s` representative, `54.7658s` measured, `59/59` correct
@@ -2450,10 +2811,10 @@ Current alternate exact-CLI candidate (`satsolver_fast.py`):
 - Same-day scratch bytes-parser branch before merge: `27.4523s` representative, `54.9045s` measured, `59/59` correct
 - Refreshed merged artifact in `out_fast_cli_extended.txt`: `27.5074s` representative, `55.0148s` measured, `55.2459s` wall clock, `59/59` correct
 
-Latest promoted-main exact-CLI artifact (`satsolver.py` after helper split + import gating + CLI-local aliases):
-- Same-day baseline before the low-density root-pure keep: `26.1422s` representative, `59/59` correct
-- Same-day scratch candidate before merge: `25.9837s` representative, `59/59` correct
-- Current retained wrapper artifact in `out_cli_extended.txt`: `26.1805s` representative, `52.3610s` measured, `52.5982s` wall clock, `59/59` correct
+Latest promoted-main exact-CLI artifact (`satsolver.py` after helper split + import gating + no fast-path root-pure):
+- Same-day baseline before removing fast-path root-pure: `39.8399s` representative, `59/59` correct
+- Same-day scratch candidate before merge: `36.6465s` representative, `59/59` correct
+- Current retained wrapper artifact in `out_cli_extended.txt`: `38.0602s` representative, `76.1203s` measured, `76.3611s` wall clock, `59/59` correct
 
 Latest promoted-main in-process artifact (`satsolver.py` after helper split):
 - Current promoted wrapper artifact in `out_extended.txt`: `27.6294s` representative, `55.2588s` measured, `55.4222s` wall clock, `59/59` correct
@@ -2568,6 +2929,9 @@ Current bottlenecks:
 - `medium/test_3.cnf`: `0.6483s`
 
 Latest cycle note:
+- The newest ternary propagation reject closes another tempting minority-path idea very hard: in ternary clauses, leaving the watch in place when the third literal is already `TRUE` looked like a cheap way to skip some relocation churn, but it detonated the mixed nine-case exact-CLI hotspot slice from `34.2608s` to `55.5632s`. The worst damage was `large/test_8.cnf` exploding from about `0.35s` to about `12s`, with `large/test_6.cnf` and `special/hard.cnf` also much worse in both orders. So future original-ternary work should not assume that “the clause is already satisfied, so keep the false watch” is a safe shortcut; that minority path is now another strong dead end.
+- The newest branch-scan reject narrows the remaining branching lane further: a scratch `pick_branch_literal()` rewrite that changed only the loop shape from `for range(...)` to a manual `while` scan regressed the mixed nine-case exact-CLI hotspot slice from `28.0431s` to `29.6058s`, with `large/test_6.cnf`, `special/hard.cnf`, and `medium/test_4.cnf` worse in both orders. So the kept local-alias cleanup in the branch scan was real, but “same logic, different loop primitive” is not a safe extension of that lane.
+- The newest profiler keep tightened the restart/reduction boundary instead of changing solver code. `tools/profile_solver.py` now mirrors the retained zero-activity branching rule and records restart plus reduction cadence directly. On the main hotspots, reductions only see about `22.73..33.07` locked clauses against `315.26..469.92` candidates while deleting about half of those candidates each time, and restarts already happen every `166.82..226.40` conflicts at average decision level `8.21..16.30`. So future `reduce_database()` or restart work should not chase more bookkeeping cleanup by itself; the next real win there would need a stronger search-policy/classifier change, not another locked-set or cadence micro-tweak.
 - The newest `reduce_database()` schedule reject closes another tempting learnt-large door: even keeping the same ranking and top-half retention policy, lowering the post-reduction `next_reduce` growth factor from `1.5` to `1.25` regressed the mixed nine-case exact-CLI hotspot slice from `24.4791s` to `30.9079s`. The damage was broad, not just one family: `large/test_8.cnf` jumped from about `0.29s` to about `2.32s`, `large/test_6.cnf` regressed by about `1.14s`, and `special/hard.cnf` regressed by about `2.29s`. So future learnt-database work should not assume that reducing earlier with the same classifier is any safer than keeping a smaller fraction.
 - The newest learnt-ranking reject closes the companion classifier door too: even keeping the same top-half retention and the same reduction schedule, changing the sort from `(lbd, -activity, len)` to `(lbd, len, -activity)` regressed the mixed nine-case exact-CLI hotspot slice from `24.9575s` to `30.6752s`. The biggest damage landed on `large/test_6.cnf` and `large/test_8.cnf`, so future learnt-database work should not assume that preferring shorter clauses earlier within the same LBD bucket is a safe secondary tie-break.
 - The newest alternate-file reject closes a tempting hybrid exact-CLI idea too: a scratch wrapper that kept `satsolver_fast.py` as the default path but routed one dense pure-3-SAT band back to the main solver still regressed the mixed nine-case exact-CLI hotspot slice from `24.6659s` to `25.0305s`. The target `large/test_6.cnf` only improved in one order and lost in the other, while `special/hard.cnf`, `large/test_10.cnf`, and some small startup-sensitive cases gave the gain back. So future hybrid exact-CLI selectors need a much stronger classifier than “large dense all-3-SAT.”
@@ -2591,20 +2955,52 @@ Latest cycle note:
 - The newest core-surface reject tightens that startup-path boundary again: even when the dead standalone parser/solver/writer/main surface in `satsolver_core.py` is removed only from imported mode, leaving the real wrapper solve path and search logic untouched, the root-hit exact-CLI slice still regressed (`0.3984s -> 0.4108s`) and the mixed exact-CLI hotspot slice regressed much more strongly (`24.5731s -> 26.5896s`). So future startup-path work should treat the kept main-wrapper import gating as the useful side of this idea, and treat trimming imported `satsolver_core.py` surface itself as another dead end unless a future branch changes something materially different.
 - The newest keep adds a more nuanced wrapper-side positive case: a tiny CLI-local alias set for `Solver`, `model_satisfies`, `has_pigeonhole_core`, `xor_system_unsat`, `format_model`, and `should_use_parallel_portfolio` regressed the startup-heavy root-hit slice (`0.3878s -> 0.3997s`) but still improved the mixed nine-case exact-CLI hotspot slice (`23.4102s -> 23.2025`) and the same-day repeat-aware exact-CLI full-suite comparison (`27.2824s -> 27.0228`), with the refreshed retained artifact landing at `25.7027`. So future wrapper work can still consider tiny CLI-only local aliasing for genuinely hot core symbols, but only if the same-day repeat-aware full suite stays positive; root-hit SAT slices are no longer a reliable proxy for broad exact-CLI wins.
 - The newest keep reopens a narrower root-pure lane on the promoted exact-CLI wrapper: enabling iterative root-pure presolve only when the formula is all-3-SAT and clause density is at most `3.2` improved the 12-case root-hit exact-CLI slice (`0.3794s -> 0.3674`), improved the mixed nine-case exact-CLI hotspot slice (`23.5744s -> 23.0621`), and improved the same-day repeat-aware baseline-vs-candidate full-suite comparison (`26.1422s -> 25.9837`), all `59/59` correct. But the refreshed retained artifact landed at `26.1805`, which is still slower than the retained historical best `25.7027`. So future root-pure work should treat cheap density/shape prefilters as a live direction, while still requiring same-day broad-suite A/B and not over-trusting a single refreshed retained artifact when the margin is small.
-
-`````
+- The newest wrapper-metadata reject narrows that surviving startup lane again: carrying parse-time `all_ternary` metadata forward so the wrapper could skip repeated clause-shape rescans did improve the 12-case SAT-heavy root-hit exact-CLI slice (`0.4696s -> 0.4536s`), but it still regressed the mixed nine-case exact-CLI hotspot slice (`28.1142s -> 28.6419s`). The stable damage landed on `large/test_6.cnf` in both orders (`13.6206s -> 14.0899s` forward, `13.2467s -> 14.9543s` reverse). So future wrapper work should not assume that semantically neutral parse-time shape carry-forward is enough by itself; even this small bookkeeping change still has to beat the dense mixed gate, not just the startup-heavy slice.
+- The newest root-pure-threshold reject tightens that lane again from the other side: lowering `FAST_ROOT_PURE_DENSITY_GATE` from `3.2` to `2.7` regressed the 12-case SAT-heavy root-hit exact-CLI slice (`0.5057s -> 0.5126s`) and also regressed the mixed nine-case exact-CLI hotspot slice on the two-order average (`33.6012s -> 34.4853s`). The damage was mostly reverse-order on `large/test_6.cnf` (`17.6161s -> 19.0170s`) and `special/hard.cnf` (`10.4885s -> 11.6226s`). So future root-pure tuning should not assume that simply tightening the density cutoff below `3.2` is safer; the current live lane now looks like it needs a better classifier than density alone, not just a smaller threshold.
+- The newest keep reopens the opposite side of that root-pure story and is strong enough to reset the main exact-CLI baseline: removing fast-path root-pure presolve entirely from the promoted main wrapper improved the same-day root-hit exact-CLI slice (`0.4790s -> 0.4603s`), improved the mixed nine-case exact-CLI hotspot slice (`31.9046s -> 31.4055s`), and improved the same-day repeat-aware exact-CLI 59-case suite from `39.8399s` to `36.6465s`, all `59/59` correct. It also beat the same-day `satsolver_fast.py` alternate rerun (`39.1591s`). The refreshed retained artifact in `out_cli_extended.txt` only landed at `38.0602s`, so this is another case where the same-day baseline-vs-candidate comparison matters more than the absolute refreshed snapshot under changing machine conditions. Future presolve tuning should therefore treat the no-root-pure main fast path as the new exact-CLI baseline again unless a materially stronger classifier than density alone clears the same-day broad-suite gate.
+- The newest reject tightens the surviving immutable-metadata lane inside `propagate()`: extending the cheap clause-shape idea to a dedicated immutable `Clause.problem_ternary` fast branch improved the 12-case SAT-heavy root-hit exact-CLI slice (`0.5028s -> 0.4952s`) but regressed the mixed nine-case exact-CLI hotspot slice from `32.7926s` to `34.1993s`, with `large/test_6.cnf` and `special/hard.cnf` both worse in both orders. So future propagation metadata work should not assume that every cheap immutable family flag generalizes the earlier `Clause.ternary` keep; original-ternary branch hoisting still needs the same broad same-day confirmation as other core micro-optimizations.
+- The newest reject closes another tempting branching lane in a much stronger way: replacing the read-only `pick_branch_literal()` scan with a lazy heap of branch candidates regressed the mixed nine-case exact-CLI hotspot slice from `38.5681s` to `55.0274s`, with heavy losses on `large/test_6.cnf`, `special/hard.cnf`, `medium/test_4.cnf`, and even SAT-like `large/test_8.cnf`. So future branching work should be even more skeptical of mutable frontier structures than before; in this solver, the churn from activity pushes plus backtrack reinsertion is much worse than the current full scan.
+- The newest alternate-path recheck closes the immediate `satsolver_fast.py` revival lane too: on fresh same-day exact-CLI A/B, the SAT-heavy root-hit slice was effectively tied (`0.5198s` for `satsolver.py` vs `0.5205s` for `satsolver_fast.py`), and the real mixed nine-case hotspot slice still favored the promoted main wrapper overall (`36.5697s` vs `36.9565s`). So future alternate-file work should now treat current `satsolver.py` as the stronger exact-CLI baseline again unless a materially different wrapper beats it on the mixed slice, not just on startup-heavy cases.
+- The newest no-portfolio reject sharpens the remaining wrapper-policy boundary: only `large/test_8.cnf` still triggers the current portfolio gate, and disabling that handoff did improve the 12-case SAT-heavy exact-CLI slice (`0.4724s -> 0.4478s`), but it made the mixed nine-case exact-CLI hotspot slice much worse (`30.3681s -> 34.0072s`) because `large/test_8.cnf` exploded from `0.3372s -> 3.8820s` forward and `0.3526s -> 4.1060s` reverse. So future exact-CLI wrapper work should treat the narrow portfolio path as still required until a materially different single-case accelerator beats it on the mixed gate.
+- The newest phase-bias-gate reject closes the obvious one-case replacement for that portfolio path too: directly on `large/test_8.cnf`, serial `seed_phase_bias=True` was faster than the current portfolio (`~0.21s` vs `~0.28s`), and the mixed nine-case exact-CLI hotspot slice even improved (`30.7417s -> 30.3299s`). But the same-day repeat-aware exact-CLI 59-case suite came back effectively flat and slightly worse overall (`35.2571s -> 35.2674`), so that gain is still too small and noisy to keep. Future portfolio work therefore needs a replacement that survives the broad suite, not just a clever single-case shortcut.
+- The newest ternary-minimization reject closes another conflict-analysis shortcut that looked attractive from the profile but failed on the real gate: skipping `minimize_learnt()` for ternary learnt clauses regressed the mixed nine-case exact-CLI hotspot slice from `30.4068s` to `30.5538s`. `special/hard.cnf` improved, but `large/test_6.cnf` and `large/test_10.cnf` both regressed in both orders, so future conflict-analysis work should not assume that “already small learnt clauses have little left to minimize” translates into an end-to-end speed win.
+- The newest truth-cache rewrite reject closes another attractive-looking propagation micro-lane: moving literal truth from signed-list indexing into positive watch-index space regressed the mixed nine-case exact-CLI hotspot slice from `31.0231s` to `32.7078s`, with broad dense-case damage on `large/test_6.cnf`, `special/hard.cnf`, and `large/test_10.cnf`. So future propagation work should not assume that a different indexing scheme for the same truth-cache reads is enough; the next real win still needs to remove more watcher traversal work, not just re-encode it.
+- The newest keep reopens a very narrow branching-policy lane without contradicting the broader branching warnings: removing the zero-activity `phase_bias` fallback from `pick_branch_literal()` and always trusting `saved_phase` improved the mixed nine-case exact-CLI hotspot slice from `32.6520s` to `32.5010s` and improved the same-day repeat-aware exact-CLI 59-case baseline-vs-candidate suite from `38.1276s` to `37.8494s`, still `59/59` correct. The broad gain mostly came from `large/test_6.cnf` (`17.4301s -> 16.8850s`) with a smaller help on `special/hard.cnf` (`11.4124s -> 11.3692s`), while `large/test_8.cnf` got slightly worse (`0.3861s -> 0.4012s`). So future branching work should distinguish dead zero-activity polarity fallback from richer branching-policy machinery: the fallback can still be removed cleanly, but mutable frontier structures and heavier branch-selection helpers remain unattractive.
+- The newest reject closes the obvious “maybe propagated phase saving is just hot-path overhead now” lane very hard: removing `saved_phase` updates from propagated unit assignments regressed the mixed nine-case exact-CLI hotspot slice from `30.5205s` to `56.9678s`, almost entirely because `large/test_8.cnf` exploded from about `0.34s` to about `25s` in both orders while still remaining checker-valid. `special/hard.cnf` did improve, but the broad result says propagated phase saving is still essential current search state, not dead bookkeeping. So future `propagate()` work should not try to trim phase-saving writes out of implied assignments unless a much stronger compensating branching story comes with it.
+- The newest startup-path reject closes a nearby clause-ingest bookkeeping lane too: keeping initial activity seeding but deferring `phase_bias` recomputation to only the rare seeded solve path still regressed the 12-case SAT-heavy exact-CLI root-hit slice from `0.4780s` to `0.4922s`. The losses were broad across the small and medium SAT cases rather than concentrated in a single family. So future exact-CLI startup work should not assume that eager `phase_bias` maintenance is easy overhead to recover by itself; this part of clause-ingest bookkeeping now looks too small or too intertwined to yield a clean win alone.
+- The newest conflict-analysis micro-reject closes another tempting low-level lane: replacing hot `abs(...)` calls with the solver's existing `literal_var[...]` lookup inside `analyze()`, `minimize_learnt()`, and `prepare_learnt_clause()` regressed the mixed nine-case exact-CLI hotspot slice from `30.3393s` to `30.9773s`. The main dense-case damage was stable on `large/test_6.cnf` in both orders (`15.2590s -> 15.6328s` forward, `14.5444s -> 15.4005s` reverse), while `special/hard.cnf` only split direction and `large/test_10.cnf` plus `large/test_8.cnf` were not enough to recover the loss. So future conflict-analysis work should not assume that profiler-visible `abs` cost is recoverable just by swapping it for another lookup primitive; the next real win still needs to remove more actual analysis work, not just rephrase variable extraction.
+- The newest learnt-retention reject closes a plausible dense-UNSAT classifier tweak in a very strong way: keeping ternary learnt clauses with `LBD <= 3` in `reduce_database()` did improve `special/hard.cnf` and `large/test_10.cnf`, but it catastrophically destabilized SAT-like `large/test_8.cnf`, which exploded from `0.3193s -> 25.6356s` forward and `0.3519s -> 24.9397s` reverse. That pushed the mixed nine-case exact-CLI hotspot slice from `31.1445s` to `54.9538s` on the two-order average despite the intended UNSAT-family gains. So future learnt-database work should stay very skeptical of broadening retention heuristics for small ternary learnt clauses; the current solver is much more sensitive to that extra clause load on the SAT-like family than the dense-UNSAT wins can repay.
+- The newest selective-bump reject tightens that learnt-database boundary again: skipping `bump_clause_activity()` for binary and `LBD <= 2` learnt clauses looked plausible because those clauses are effectively always kept, but the mixed nine-case exact-CLI hotspot slice still regressed from `32.6181s` to `32.8545s` on the two-order average. `special/hard.cnf` improved in both orders and `large/test_8.cnf` improved a bit too, but `large/test_6.cnf` regressed enough in reverse (`16.0836s -> 17.4529s`) to sink the branch. So future learnt-database work should not assume that trimming clause-activity bumps on “already safe” learnt clauses is a free overhead win; the current reduction/search interaction is still sensitive enough that even this narrower bump skip loses overall.
+- The newest watcher-compaction reject closes a tempting list-churn idea too: keeping the current swap-remove semantics in `propagate()` but deferring actual watcher-list shrink to one tail deletion per list regressed the mixed nine-case exact-CLI hotspot slice from `30.6616s` to `31.6370s`. The losses were broad on the dense families rather than concentrated in one SAT outlier: `special/hard.cnf` regressed in both orders (`9.9840s -> 10.5435s`, `9.7723s -> 10.1833s`), `large/test_6.cnf` regressed in both (`14.9381s -> 15.2874s`, `15.6433s -> 16.0219s`), and the medium/large UNSAT side generally moved the wrong way. So future propagation work should not assume that the watcher-pop hotspot can be recovered just by changing how current lists are shrunk; the next real win still needs to remove more actual watcher traversal or relocation work.
+- The newest keep reopens a very narrow branching lane without reviving any of the already-rejected mutable frontier ideas. Hoisting `self.values`, `self.activity`, `self.saved_phase`, and `self.num_vars` into locals inside the existing read-only `pick_branch_literal()` scan improved the mixed nine-case exact-CLI hotspot slice from `31.0625s` to `30.9412s` and improved the same-day repeat-aware exact-CLI 35-case suite from `32.7030s` to `31.6015s`, still `35/35` correct. The fresh `large/test_6.cnf` `cProfile` pass also cut `pick_branch_literal()` tottime from `1.626s` to `1.388s`. So future branching work can still consider tiny same-search scan cleanups, but the larger warning remains: heavier mutable frontiers and heap-based branching are still dead ends, and the next substantial win is still more likely in `propagate()` or conflict analysis.
+- The newest helper-boundary reject adds another caution flag in `solve()`: inlining the two per-conflict activity decay helpers looked convincingly positive on the mixed nine-case exact-CLI hotspot slice (`30.7973s -> 30.4203s`) and still lost the broader repeat-aware exact-CLI 35-case suite (`33.4842s -> 33.6295`). The main broad-suite reversal was `large/test_6.cnf`, which worsened from `15.4237s` to `15.8732s` there even though it improved on the hotspot A/B. So future small `solve()`-loop cleanups should require the same broad-suite confirmation as other helper-boundary ideas; hotspot-only gains are not enough.
+- The newest reject tightens that same warning even further: binding the hot `solve()` helpers (`propagate`, `analyze`, `add_learnt_clause`, `enqueue`, `reduce_database`, `pick_branch_literal`, and the decay helpers) into locals once per call regressed the mixed nine-case exact-CLI hotspot slice outright from `29.4850s` to `31.0535s`. The reverse-order `large/test_6.cnf` loss was especially bad (`14.6849s -> 16.9758s`), with `special/hard.cnf` also worse. So future helper-boundary cleanup in the main CDCL loop should stay very skeptical of broad local method binding; the kept branching scan cleanup does not generalize to “bind everything in `solve()`.”
+- The newest conflict-analysis micro-reject closes a nearby low-level lane too: binding `abs` into locals inside `analyze()`, `minimize_learnt()`, and `prepare_learnt_clause()` still regressed the mixed nine-case exact-CLI hotspot slice from `31.4277s` to `32.1594s`, with `large/test_6.cnf` and `special/hard.cnf` worse in both orders. That means the visible `abs` cost in the profile is not recoverable by builtin-binding alone. So future conflict-analysis work should not assume that shaving builtin lookup from `abs(...)` is enough; the next win still needs to remove more actual reasoning work than this tiny primitive-binding rewrite did.
+- The newest fixed-size conflict-analysis reject closes another tempting specialization lane: even a dedicated binary/ternary fast path in `prepare_learnt_clause()` regressed the mixed nine-case exact-CLI hotspot slice from `32.1394s` to `34.0749s`, mainly because `large/test_6.cnf` blew up from `15.9523s -> 18.1880s` forward and `14.9877s -> 16.9680s` reverse. So future conflict-analysis work should not assume that short learnt-clause postprocessing is a safe place for hand-specialized fast paths; the next real win still needs a stronger structural story than “avoid the generic loop for tiny learnt clauses.”
+- The newest propagation-layout reject closes another tempting data-layout lane on the binary side: flattening `binary_implications` into alternating integer pairs instead of tuple payloads still regressed the mixed nine-case exact-CLI hotspot slice from `35.0798s` to `36.0096s`. Forward order improved slightly, but reverse order lost much harder, with `large/test_6.cnf` worsening from `16.9915s` to `18.9111s` and `large/test_10.cnf` from `2.2495s` to `2.4885s`. So future propagation work should not assume that re-encoding binary implication payloads is enough by itself; the next real win still needs to remove more watcher and ternary traversal work than this payload rewrite did.
+- The newest backtrack rewrite reject closes another tempting “same logic, fewer list ops” lane: rewriting `backtrack()` to compute one tail start, clear the entire trail tail in one pass, and slice `trail_limits` once improved the mixed nine-case exact-CLI hotspot slice (`38.9067s -> 38.1503s`) but still regressed the repeat-aware exact-CLI 35-case suite (`39.2286s -> 39.7958`). The candidate did help `large/test_6.cnf`, but broader losses on `special/hard.cnf` and `medium/test_4.cnf` outweighed that. So future backtrack work should require broad-suite confirmation rather than trusting hotspot wins alone.
+- The newest tuned-portfolio reject closes a tempting one-case wrapper lane too: replacing the current phase-biased portfolio worker with a more aggressive `restart_base=32` variant did not just fail to help `large/test_8.cnf`, it blew that exact gate case up from `0.4129s` to `5.5657s` on the two-order average while staying SAT-correct. So future portfolio work should not assume that “the gate is narrow now” makes worker retuning safe; even the one remaining case is still extremely sensitive to restart-policy changes.
+- The newest `solve()` startup-path reject closes another tempting outer-loop cleanup lane: removing the standalone root `propagate()` call and letting the main CDCL loop own the first propagation pass did improve the 12-case SAT-heavy exact-CLI root-hit slice slightly (`0.5092s -> 0.5010s`), but it still regressed the real mixed nine-case exact-CLI hotspot slice from `36.2592s` to `36.5577s`. The decisive loss was `large/test_6.cnf`, which worsened in both orders (`18.3900s -> 18.8554s`, `18.1681s -> 18.6613s`). So future outer-loop cleanup should not assume that deleting one apparently redundant top-level `propagate()` call is a free win; the next real speed gain still needs to survive the dense exact-CLI gate, not just the startup-heavy slice.
+- The newest bundled cross-cutting cleanup reject is a good reminder to isolate tiny core changes before trusting hotspot wins. A branch that combined integer-only `reason` sentinel storage with a redundant no-replacement-tail cleanup in `propagate()` did look slightly positive on the mixed nine-case exact-CLI hotspot slice (`38.0602s -> 37.6673s`), but the repeat-aware exact-CLI 35-case suite regressed badly from `40.3613s` to `43.3099s`, with `large/test_6.cnf`, `special/hard.cnf`, `large/test_10.cnf`, and `large/test_8.cnf` all worse. So future cross-cutting cleanup work should be isolated one change at a time and still require broad exact-CLI confirmation; bundled hotspot wins are not enough.
+- The newest isolated tail-cleanup reject proves that warning still holds even after unbundling the tempting propagation side. Changing the two no-replacement tails in `propagate()` from `if other_value == FALSE ... if other_value == UNASSIGNED ...` to `if other_value == FALSE ... else ...` improved the mixed nine-case exact-CLI hotspot slice clearly (`32.5969s -> 31.1921s`), mainly by helping `large/test_6.cnf` and `special/hard.cnf` in both orders. But the repeat-aware exact-CLI 35-case suite still regressed badly from `33.6532s` to `38.5035`, with `large/test_6.cnf`, `special/hard.cnf`, `medium/test_4.cnf`, and `large/test_10.cnf` all worse. So future watched-clause branch-shape cleanup should still demand broad-suite confirmation; even logic-identical tail simplifications can be hotspot mirages.
+- The newest rerun closes that lane even harder: retesting the same isolated no-replacement-tail simplification on the current retained baseline again produced the same shape, a strong mixed exact-CLI hotspot win (`32.5969s -> 31.1921s`) followed by a hard repeat-aware exact-CLI 35-case suite loss (`33.6532s -> 38.5035`). So this is no longer just a one-off cautionary result; watched-clause tail branch-shape cleanup should now be treated as an actively misleading hotspot lane unless a future branch also changes something materially larger than the branch itself.
+- The newest core-layout reject closes another tempting “same search, denser storage” lane: replacing several hot integer state lists with `array(...)` / `bytearray` storage in `satsolver_core.py` regressed the mixed nine-case exact-CLI hotspot slice from `25.5674s` to `31.1749s`, with heavy losses on `large/test_6.cnf` (`11.9928s -> 16.2617s` forward, `13.8218s -> 16.3599s` reverse), `special/hard.cnf` (`9.1823s -> 9.6518s` forward, `8.4612s -> 11.0078s` reverse), `medium/test_4.cnf`, and `large/test_10.cnf`. So future pure-Python data-layout work should stay skeptical of stdlib typed arrays unless the branch removes much more actual solver work than a container swap by itself.
+- The newest isolated `reason`-sentinel reject closes the remaining half of that earlier bundled cleanup lane: replacing `None` decision/unassigned reasons with `NO_REASON = -1` was mildly positive on the mixed nine-case exact-CLI hotspot slice (`24.3347s -> 24.1806s`), but still regressed the repeat-aware exact-CLI 35-case suite from `25.4875s` to `25.9045s`, with broad losses on `large/test_6.cnf`, `special/hard.cnf`, `medium/test_4.cnf`, and `large/test_8.cnf`. So future core cleanup should stop treating integer-only `reason` storage as a live micro-optimization target by itself; the next real speed win still needs to remove more actual solver work than a representation swap.
+- The newest phase-policy reject says the old phase-bias signal is still too narrow to promote into the main exact-CLI path. A scratch wrapper branch that turned on `seed_phase_bias=True` for every default `solve_cnf_fast_serial()` call regressed the mixed nine-case exact-CLI hotspot slice from `31.7103s` to `37.6381s`, even though one forward `large/test_6.cnf` run improved slightly. The real damage was broad and stable on `special/hard.cnf` (`9.6094s -> 13.4149s` forward, `9.9988s -> 14.9598s` reverse), `large/test_6.cnf` reverse (`16.6386s -> 19.2728s`), and `medium/test_4.cnf`. So future phase work should keep treating phase-bias seeding as a narrow specialist heuristic unless a materially stronger classifier appears.
+- The newest portfolio-worker reject says that even this remaining wrapper lane is close to exhausted. A scratch branch that kept the current narrow portfolio gate but switched both workers from `solve_cnf_serial()` to `solve_cnf_fast_serial()` still lost on the only gated case, nudging the repeat-2 exact-CLI `large/test_8.cnf` two-order average from `0.2924s` to `0.2950s`. Forward order regressed more than reverse improved, so even the one-case gate was not strong enough to justify broader benchmarking. Future portfolio work should demand a materially stronger one-case improvement than this before spending more time on worker-plumbing tweaks.
+``````
 
 ### `experiments.jsonl`
 
 - Category: Project state / decision history
 - Git status: tracked
-- Size: `469040` bytes
-- Line count: `140`
+- Size: `613241` bytes
+- Line count: `176`
 - Why it matters: Machine-readable experiment ledger with structured before/after metrics.
 
 Raw content:
 
-`````json
+``````json
 {"timestamp":"2026-03-20T01:59:31+01:00","experiment_id":"2026-03-20-xor-unsat-presolver","hypothesis":"Detecting XOR equations encoded in CNF will short-circuit Tseitin-style contradictions and lower total benchmark runtime without breaking satisfiable instances.","change_summary":"Ported an XOR contradiction detector into solve_cnf before the CDCL search and added brute-force regression tests for consistent and inconsistent XOR systems.","files_changed":["satsolver.py","tests/test_solver_regressions.py","out_extended.txt","agent_log.md","experiments.jsonl","benchmark_summary.md","next_steps.md"],"datasets":["special/tseitin.cnf","special/hard.cnf","large/test_6.cnf","large/test_8.cnf","medium/test_4.cnf","small","medium","large","special","satlib_subset","satlib_more"],"commands":["python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/satsolver_cli_sat.txt","python satsolver.py special/tseitin.cnf /tmp/satsolver_cli_unsat.txt","python benchmark_suite.py satsolver out_extended.txt small medium large special satlib_subset satlib_more"],"metrics_before":{"focused_cases_total_runtime_s":43.3847,"full_suite_total_runtime_s":50.2815,"special_suite_total_runtime_s":21.5404,"special_tseitin_runtime_s":9.9430},"metrics_after":{"focused_cases_total_runtime_s":35.6815,"full_suite_total_runtime_s":40.8923,"special_suite_total_runtime_s":11.3451,"special_tseitin_runtime_s":0.0004},"correctness_status":"passed regression tests, CLI spot checks, and 59/59 benchmark semantic checks","decision":"keep","notes":"The detector only fires when a clause family cleanly implies XOR parity constraints of width 3..6, then uses GF(2) elimination to prove inconsistency."}
 {"timestamp":"2026-03-20T02:15:24+01:00","experiment_id":"2026-03-20-propagation-hot-path","hypothesis":"If watched-literal propagation uses precomputed literal lookup tables instead of repeated abs()/lit_index() calls, the solver will keep the same search behavior but spend less time per propagated literal.","change_summary":"Added a profiling helper under tools/, profiled the hard cases, rejected restart_base and next_reduce tuning after measured sweeps, then rewrote the propagation hot path to use precomputed per-literal variable/sign/watch-index tables.","files_changed":["satsolver.py","tools/profile_solver.py","out_extended.txt","agent_log.md","experiments.jsonl","benchmark_summary.md","next_steps.md"],"datasets":["large/test_6.cnf","special/hard.cnf","large/test_8.cnf","medium/test_4.cnf","small","medium","large","special","satlib_subset","satlib_more"],"commands":["python tools/profile_solver.py large/test_6.cnf special/hard.cnf large/test_8.cnf medium/test_4.cnf","python -m unittest discover -s tests -v","python satsolver.py special/tseitin.cnf /tmp/satsolver_hot_unsat.txt","python benchmark_suite.py satsolver out_extended.txt small medium large special satlib_subset satlib_more"],"metrics_before":{"focused_cases_total_runtime_s":35.6815,"full_suite_total_runtime_s":40.8923,"medium_suite_total_runtime_s":3.2377,"large_suite_total_runtime_s":25.2193,"special_suite_total_runtime_s":11.3451,"large_test_6_runtime_s":17.0858,"special_hard_runtime_s":11.2043,"large_test_8_runtime_s":4.8993,"medium_test_4_runtime_s":2.3157},"metrics_after":{"focused_cases_total_runtime_s":32.7784,"full_suite_total_runtime_s":38.6404,"medium_suite_total_runtime_s":3.1531,"large_suite_total_runtime_s":23.6089,"special_suite_total_runtime_s":10.7629,"large_test_6_runtime_s":16.2129,"special_hard_runtime_s":10.6399,"large_test_8_runtime_s":4.4817,"medium_test_4_runtime_s":2.2794},"correctness_status":"passed regression tests, CLI UNSAT spot check, and 59/59 benchmark semantic checks","decision":"keep","notes":"Profile counters for conflicts, decisions, processed literals, propagations, restarts, and reductions stayed unchanged on the bottleneck cases, indicating the speedup came from cheaper propagation rather than heuristic drift. Restart-base and next-reduce sweeps did not beat the 64/256 defaults on the dominant cases."}
 {"timestamp":"2026-03-20T02:21:23+01:00","experiment_id":"2026-03-20-ternary-propagation-fast-path","hypothesis":"Because 83.62% of the local benchmark clauses are ternary, a dedicated ternary watched-literal path should reduce propagation cost without changing the CDCL search path.","change_summary":"Measured clause-length distribution across the benchmark suite, confirmed the main bottlenecks are pure 3-SAT, and added a specialized ternary branch in propagate to avoid the generic replacement loop for length-3 clauses.","files_changed":["satsolver.py","out_extended.txt","agent_log.md","experiments.jsonl","benchmark_summary.md","next_steps.md"],"datasets":["small","medium","large","special","satlib_subset","satlib_more","large/test_6.cnf","special/hard.cnf","large/test_8.cnf","medium/test_4.cnf"],"commands":["python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/satsolver_ternary_sat.txt","python satsolver.py special/tseitin.cnf /tmp/satsolver_ternary_unsat.txt","python tools/profile_solver.py large/test_6.cnf special/hard.cnf large/test_8.cnf medium/test_4.cnf","python benchmark_suite.py satsolver out_extended.txt small medium large special satlib_subset satlib_more"],"metrics_before":{"focused_cases_total_runtime_s":32.7784,"full_suite_total_runtime_s":38.6404,"medium_suite_total_runtime_s":3.1531,"large_suite_total_runtime_s":23.6089,"special_suite_total_runtime_s":10.7629,"large_test_6_runtime_s":16.2129,"special_hard_runtime_s":10.6399,"large_test_8_runtime_s":4.4817,"medium_test_4_runtime_s":2.2794},"metrics_after":{"focused_cases_total_runtime_s":31.3878,"full_suite_total_runtime_s":35.9565,"medium_suite_total_runtime_s":3.0701,"large_suite_total_runtime_s":22.0496,"special_suite_total_runtime_s":9.8684,"large_test_6_runtime_s":15.3465,"special_hard_runtime_s":9.7430,"large_test_8_runtime_s":4.0927,"medium_test_4_runtime_s":2.2056},"correctness_status":"passed regression tests, SAT/UNSAT CLI spot checks, and 59/59 benchmark semantic checks","decision":"keep","notes":"The profiler still reported the same decisions, conflicts, processed literals, propagations, restarts, and reductions on the bottleneck cases after the patch, supporting the conclusion that the gain came from cheaper ternary propagation. Cumulative full-suite improvement from the first archived snapshot is now 50.2815s -> 35.9565s."}
@@ -2745,8 +3141,43 @@ Raw content:
 {"timestamp":"2026-03-21T05:03:29+01:00","experiment_id":"2026-03-21-reject-core-no-cli-surface","hypothesis":"Because the real `satsolver.py` submission path never calls the standalone text parser, standalone solve helpers, standalone write path, or `main()` in `satsolver_core.py`, skipping that dead surface when the core is imported by the wrappers may cut startup overhead without touching solver logic.","change_summary":"Created scratch candidates `scratch_satsolver_core_noclisurface.py` and `scratch_satsolver_noclisurface.py`, made imported core mode omit the standalone parser/solver/writer/main surface while leaving the real wrapper solve path unchanged, validated SAT and UNSAT smoke cases, benchmarked the branch against retained `satsolver.py` on the 12-case SAT-heavy root-hit exact-CLI slice and the mixed nine-case exact-CLI hotspot slice, then deleted the scratch files after both gates failed overall.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["small/test_1.cnf","special/tseitin.cnf","small/test_5.cnf","small/test_6.cnf","small/test_9.cnf","medium/test_8.cnf","medium/test_9.cnf","large/test_1.cnf","large/test_2.cnf","large/test_5.cnf","large/test_7.cnf","large/test_9.cnf","special/easy.cnf","small/test_10.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_6.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf"],"commands":["cp satsolver_core.py scratch_satsolver_core_noclisurface.py","cp satsolver.py scratch_satsolver_noclisurface.py","python -m py_compile scratch_satsolver_core_noclisurface.py scratch_satsolver_noclisurface.py","python scratch_satsolver_noclisurface.py small/test_1.cnf /tmp/noclisurface_sat.txt","python tools/checker.py small/test_1.cnf /tmp/noclisurface_sat.txt","python scratch_satsolver_noclisurface.py special/tseitin.cnf /tmp/noclisurface_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/noclisurface_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script scratch_satsolver_noclisurface.py --repeat 2 small/test_1.cnf small/test_5.cnf small/test_6.cnf small/test_9.cnf medium/test_8.cnf medium/test_9.cnf large/test_1.cnf large/test_2.cnf large/test_5.cnf large/test_7.cnf large/test_9.cnf special/easy.cnf","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script scratch_satsolver_noclisurface.py small/test_1.cnf small/test_10.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/tseitin.cnf"],"metrics_before":{"root_hit_two_order_avg_baseline_s":0.3984,"root_hit_forward_baseline_s":0.3762,"root_hit_reverse_baseline_s":0.4207,"mixed_slice_two_order_avg_baseline_s":24.5731,"mixed_slice_forward_baseline_s":23.7285,"mixed_slice_reverse_baseline_s":25.4178},"metrics_after":{"root_hit_two_order_avg_candidate_s":0.4108,"root_hit_forward_candidate_s":0.4028,"root_hit_reverse_candidate_s":0.4188,"mixed_slice_two_order_avg_candidate_s":26.5896,"mixed_slice_forward_candidate_s":23.5264,"mixed_slice_reverse_candidate_s":29.6529,"large_test_6_reverse_baseline_s":11.8065,"large_test_6_reverse_candidate_s":15.7812},"correctness_status":"the scratch candidate compiled cleanly, stayed checker-valid on SAT and UNSAT smoke cases, and was deleted after both exact-CLI slice gates regressed overall","decision":"discard","notes":"This branch changed imported core surface only, not search logic, yet still moved the exact-CLI gates the wrong way. That makes dead standalone helper definitions in imported `satsolver_core.py` look like another unreliable startup lever, even though the kept main-wrapper import gating remains valuable."}
 {"timestamp":"2026-03-21T05:14:03+01:00","experiment_id":"2026-03-21-keep-cli-local-wrapper-aliases","hypothesis":"Because the current main wrapper now beats `satsolver_fast.py` on the startup-heavy exact-CLI root-hit slice but still trails slightly on the mixed exact-CLI hotspot slice, binding a very small set of hot `satsolver_core` symbols to CLI-local names inside `satsolver.py` may cut enough `base.*` lookup overhead on the real solve path to improve the broad exact-CLI suite without reintroducing the old broad alias surface.","change_summary":"Compared the retained main wrapper against `satsolver_fast.py` on the root-hit and mixed exact-CLI slices, profiled the retained solver on `large/test_6.cnf`, created `scratch_satsolver_clialias.py`, added a tiny CLI-only alias set for `Solver`, `model_satisfies`, `has_pigeonhole_core`, `xor_system_unsat`, `format_model`, and `should_use_parallel_portfolio`, validated SAT and UNSAT smoke cases, benchmarked the scratch candidate against retained `satsolver.py` on the root-hit slice, mixed hotspot slice, and a same-day repeat-aware exact-CLI full-suite baseline-vs-candidate comparison, then merged the change into tracked `satsolver.py`, refreshed `out_cli_extended.txt`, and deleted the scratch file.","files_changed":["satsolver.py","out_cli_extended.txt","agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_6.cnf","small/test_1.cnf","special/tseitin.cnf","small/test_5.cnf","small/test_6.cnf","small/test_9.cnf","medium/test_8.cnf","medium/test_9.cnf","large/test_1.cnf","large/test_2.cnf","large/test_5.cnf","large/test_7.cnf","large/test_9.cnf","special/easy.cnf","small/test_10.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf","small","medium","large","special","satlib_subset","satlib_more"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/current_cycle_large6_profile.txt","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script satsolver_fast.py --repeat 2 small/test_1.cnf small/test_5.cnf small/test_6.cnf small/test_9.cnf medium/test_8.cnf medium/test_9.cnf large/test_1.cnf large/test_2.cnf large/test_5.cnf large/test_7.cnf large/test_9.cnf special/easy.cnf","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script satsolver_fast.py small/test_1.cnf small/test_10.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/tseitin.cnf","cp satsolver.py scratch_satsolver_clialias.py","python -m py_compile scratch_satsolver_clialias.py","python scratch_satsolver_clialias.py small/test_1.cnf /tmp/clialias_sat.txt","python tools/checker.py small/test_1.cnf /tmp/clialias_sat.txt","python scratch_satsolver_clialias.py special/tseitin.cnf /tmp/clialias_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/clialias_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script scratch_satsolver_clialias.py --repeat 2 small/test_1.cnf small/test_5.cnf small/test_6.cnf small/test_9.cnf medium/test_8.cnf medium/test_9.cnf large/test_1.cnf large/test_2.cnf large/test_5.cnf large/test_7.cnf large/test_9.cnf special/easy.cnf","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script scratch_satsolver_clialias.py small/test_1.cnf small/test_10.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/tseitin.cnf","python benchmark_suite.py satsolver /tmp/clialias_baseline_cli_repeat2.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script satsolver.py --repeat 2","python benchmark_suite.py scratch_satsolver_clialias /tmp/clialias_candidate_cli_repeat2.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script scratch_satsolver_clialias.py --repeat 2","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/kept_clialias_sat.txt","python tools/checker.py small/test_1.cnf /tmp/kept_clialias_sat.txt","python satsolver.py special/tseitin.cnf /tmp/kept_clialias_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/kept_clialias_unsat.txt --bruteforce-var-limit 0","python benchmark_suite.py satsolver out_cli_extended.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script satsolver.py --repeat 2"],"metrics_before":{"root_hit_two_order_avg_baseline_s":0.3878,"mixed_slice_two_order_avg_baseline_s":23.4102,"full_exact_cli_repeat2_baseline_s":27.2824,"refreshed_retained_exact_cli_repeat2_previous_s":26.4762},"metrics_after":{"root_hit_two_order_avg_candidate_s":0.3997,"mixed_slice_two_order_avg_candidate_s":23.2025,"full_exact_cli_repeat2_candidate_s":27.0228,"refreshed_retained_exact_cli_repeat2_s":25.7027,"refreshed_retained_exact_cli_repeat2_measured_s":51.4054},"correctness_status":"the scratch candidate stayed checker-valid on SAT and UNSAT smoke cases, the retained repo passed all 49 tests after merge, and both the temp full-suite comparison and the refreshed retained artifact stayed 59/59 correct","decision":"keep","notes":"This is a wrapper-path keep with split slice behavior. The startup-heavy SAT slice regressed, but the mixed hotspot slice and the same-day repeat-aware exact-CLI full suite improved, and the refreshed retained artifact dropped sharply to `25.7027s`. Future wrapper work should therefore trust the broad suite over SAT-heavy startup slices when those signals disagree."}
 {"timestamp":"2026-03-21T05:30:38+01:00","experiment_id":"2026-03-21-keep-density-gated-fast-root-pure","hypothesis":"Because the current benchmark corpus only shows iterative root-pure wins on low-density all-3-SAT formulas, reintroducing root-pure presolve only when all clauses are length `3` and clause density is at most `3.2` may recover the easy-case gains without reintroducing the dense pure-3-SAT overhead that broke earlier root-pure gates.","change_summary":"Scanned the current benchmark corpus for root-pure hits and density patterns, created `scratch_satsolver_densityroot.py`, added a low-density all-3-SAT gate around iterative root-pure presolve on the fast exact-CLI solve path, validated SAT and UNSAT smoke cases, benchmarked the scratch candidate against retained `satsolver.py` on the 12-case root-hit slice, the mixed nine-case exact-CLI hotspot slice, and a same-day repeat-aware exact-CLI full-suite baseline-vs-candidate comparison, then merged the gate into tracked `satsolver.py`, added a regression covering the gate, refreshed `out_cli_extended.txt`, and deleted the scratch file.","files_changed":["satsolver.py","tests/test_solver_regressions.py","out_cli_extended.txt","agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["small/test_1.cnf","special/tseitin.cnf","small/test_5.cnf","small/test_6.cnf","small/test_9.cnf","medium/test_8.cnf","medium/test_9.cnf","large/test_1.cnf","large/test_2.cnf","large/test_5.cnf","large/test_7.cnf","large/test_9.cnf","special/easy.cnf","small/test_10.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_6.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf","small","medium","large","special","satlib_subset","satlib_more"],"commands":["python - <<'PY' ... corpus root-pure density scan ... PY","python -m py_compile scratch_satsolver_densityroot.py","python scratch_satsolver_densityroot.py small/test_1.cnf /tmp/densityroot_sat.txt","python tools/checker.py small/test_1.cnf /tmp/densityroot_sat.txt","python scratch_satsolver_densityroot.py special/tseitin.cnf /tmp/densityroot_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/densityroot_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script scratch_satsolver_densityroot.py --repeat 2 small/test_1.cnf small/test_5.cnf small/test_6.cnf small/test_9.cnf medium/test_8.cnf medium/test_9.cnf large/test_1.cnf large/test_2.cnf large/test_5.cnf large/test_7.cnf large/test_9.cnf special/easy.cnf","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script scratch_satsolver_densityroot.py small/test_1.cnf small/test_10.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/tseitin.cnf","python benchmark_suite.py satsolver /tmp/densityroot_baseline_cli_repeat2.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script satsolver.py --repeat 2","python benchmark_suite.py satsolver /tmp/densityroot_candidate_cli_repeat2.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script scratch_satsolver_densityroot.py --repeat 2","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py tests/test_solver_regressions.py scratch_satsolver_densityroot.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/kept_densityroot_sat.txt","python tools/checker.py small/test_1.cnf /tmp/kept_densityroot_sat.txt","python satsolver.py special/tseitin.cnf /tmp/kept_densityroot_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/kept_densityroot_unsat.txt --bruteforce-var-limit 0","python benchmark_suite.py satsolver out_cli_extended.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script satsolver.py --repeat 2"],"metrics_before":{"root_hit_two_order_avg_baseline_s":0.3794,"mixed_slice_two_order_avg_baseline_s":23.5744,"full_exact_cli_repeat2_baseline_s":26.1422,"best_repeat_aware_exact_cli_s":25.7027},"metrics_after":{"root_hit_two_order_avg_candidate_s":0.3674,"mixed_slice_two_order_avg_candidate_s":23.0621,"full_exact_cli_repeat2_candidate_s":25.9837,"refreshed_retained_exact_cli_repeat2_s":26.1805,"refreshed_retained_exact_cli_repeat2_measured_s":52.3610},"correctness_status":"the scratch candidate stayed checker-valid on SAT and UNSAT smoke cases, the retained repo passed all 50 tests after merge, and both the temp full-suite comparison and the refreshed retained artifact stayed 59/59 correct","decision":"keep","notes":"This is a cautious exact-CLI keep. The cheap density/shape prefilter made root-pure live again on the same-day A/B gates, but the refreshed retained artifact did not beat the historical best exact-CLI snapshot. Future root-pure work should therefore trust broad same-day baseline-vs-candidate comparisons more than a single refreshed artifact when the margin is sub-percent."}
-
-`````
+{"timestamp":"2026-03-21T10:40:18+01:00","experiment_id":"2026-03-21-reject-parse-time-all-ternary-carry-forward","hypothesis":"Because `satsolver.py` already learns whether every clause is length `3` while parsing DIMACS bytes, carrying an `all_ternary` flag forward into the low-density root-pure gate and portfolio gate may shave wrapper-side clause-shape rescans without changing solver semantics.","change_summary":"Created `scratch_satsolver_parsestats.py`, added an internal byte parser that returns `(num_vars, clauses, all_ternary)`, threaded `all_ternary` through the fast serial solve path and a scratch portfolio gate, validated SAT and UNSAT smoke cases, benchmarked the scratch candidate against retained `satsolver.py` on the 12-case SAT-heavy root-hit slice and the mixed nine-case exact-CLI hotspot slice, then deleted the scratch file after the mixed gate regressed.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["small/test_1.cnf","special/tseitin.cnf","small/test_5.cnf","small/test_6.cnf","small/test_9.cnf","medium/test_8.cnf","medium/test_9.cnf","large/test_1.cnf","large/test_2.cnf","large/test_5.cnf","large/test_7.cnf","large/test_9.cnf","special/easy.cnf","small/test_10.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_6.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf"],"commands":["cp satsolver.py scratch_satsolver_parsestats.py","python -m py_compile scratch_satsolver_parsestats.py","python scratch_satsolver_parsestats.py small/test_1.cnf /tmp/parsestats_sat.txt","python tools/checker.py small/test_1.cnf /tmp/parsestats_sat.txt","python scratch_satsolver_parsestats.py special/tseitin.cnf /tmp/parsestats_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/parsestats_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script scratch_satsolver_parsestats.py --repeat 2 small/test_1.cnf small/test_5.cnf small/test_6.cnf small/test_9.cnf medium/test_8.cnf medium/test_9.cnf large/test_1.cnf large/test_2.cnf large/test_5.cnf large/test_7.cnf large/test_9.cnf special/easy.cnf","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script scratch_satsolver_parsestats.py small/test_1.cnf small/test_10.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/tseitin.cnf"],"metrics_before":{"root_hit_two_order_avg_baseline_s":0.4696,"root_hit_forward_baseline_s":0.4627,"root_hit_reverse_baseline_s":0.4765,"mixed_slice_two_order_avg_baseline_s":28.1142,"mixed_slice_forward_baseline_s":28.6650,"mixed_slice_reverse_baseline_s":27.5635},"metrics_after":{"root_hit_two_order_avg_candidate_s":0.4536,"root_hit_forward_candidate_s":0.4664,"root_hit_reverse_candidate_s":0.4409,"mixed_slice_two_order_avg_candidate_s":28.6419,"mixed_slice_forward_candidate_s":28.3190,"mixed_slice_reverse_candidate_s":28.9649,"large_test_6_forward_baseline_s":13.6206,"large_test_6_forward_candidate_s":14.0899,"large_test_6_reverse_baseline_s":13.2467,"large_test_6_reverse_candidate_s":14.9543,"large_test_8_forward_baseline_s":0.3548,"large_test_8_forward_candidate_s":0.3946,"large_test_8_reverse_baseline_s":0.3168,"large_test_8_reverse_candidate_s":0.3218},"correctness_status":"the scratch candidate compiled cleanly, stayed checker-valid on SAT and UNSAT smoke cases, and was deleted after the startup-heavy root-hit slice improved but the mixed exact-CLI hotspot gate regressed on the two-order average","decision":"discard","notes":"This is a wrapper-metadata reject. Reusing parse-time clause-shape information was not enough to generalize beyond the startup-heavy slice; the dense mixed gate still lost, mainly through stable regressions on `large/test_6.cnf`."}
+{"timestamp":"2026-03-21T10:48:18+01:00","experiment_id":"2026-03-21-reject-tighten-fast-root-pure-density-gate-27","hypothesis":"Because the current kept low-density all-3-SAT root-pure gate may still admit a few marginal cases, lowering `FAST_ROOT_PURE_DENSITY_GATE` from `3.2` to `2.7` may preserve the easy root-pure wins while trimming enough front-loaded work to improve exact-CLI runtime.","change_summary":"Scanned the benchmark corpus for all-3-SAT root-pure hit densities, created `scratch_satsolver_density27.py`, changed only `FAST_ROOT_PURE_DENSITY_GATE` from `3.2` to `2.7`, validated SAT and UNSAT smoke cases, benchmarked the scratch candidate against retained `satsolver.py` on the 12-case SAT-heavy root-hit slice and the mixed nine-case exact-CLI hotspot slice, then deleted the scratch file after both gates regressed overall.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["small/test_1.cnf","special/tseitin.cnf","small/test_5.cnf","small/test_6.cnf","small/test_9.cnf","medium/test_8.cnf","medium/test_9.cnf","large/test_1.cnf","large/test_2.cnf","large/test_5.cnf","large/test_7.cnf","large/test_9.cnf","special/easy.cnf","small/test_10.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_6.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf"],"commands":["python - <<'PY' ... root-pure density scan ... PY","cp satsolver.py scratch_satsolver_density27.py","python -m py_compile scratch_satsolver_density27.py","python scratch_satsolver_density27.py small/test_1.cnf /tmp/density27_sat.txt","python tools/checker.py small/test_1.cnf /tmp/density27_sat.txt","python scratch_satsolver_density27.py special/tseitin.cnf /tmp/density27_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/density27_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script scratch_satsolver_density27.py --repeat 2 small/test_1.cnf small/test_5.cnf small/test_6.cnf small/test_9.cnf medium/test_8.cnf medium/test_9.cnf large/test_1.cnf large/test_2.cnf large/test_5.cnf large/test_7.cnf large/test_9.cnf special/easy.cnf","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script scratch_satsolver_density27.py small/test_1.cnf small/test_10.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/tseitin.cnf"],"metrics_before":{"root_hit_two_order_avg_baseline_s":0.5057,"mixed_slice_two_order_avg_baseline_s":33.6012,"mixed_slice_forward_baseline_s":33.1953,"mixed_slice_reverse_baseline_s":34.0070},"metrics_after":{"root_hit_two_order_avg_candidate_s":0.5126,"mixed_slice_two_order_avg_candidate_s":34.4853,"mixed_slice_forward_candidate_s":32.3214,"mixed_slice_reverse_candidate_s":36.6491,"large_test_6_forward_baseline_s":17.0557,"large_test_6_forward_candidate_s":16.6018,"large_test_6_reverse_baseline_s":17.6161,"large_test_6_reverse_candidate_s":19.0170,"special_hard_forward_baseline_s":10.2257,"special_hard_forward_candidate_s":9.8360,"special_hard_reverse_baseline_s":10.4885,"special_hard_reverse_candidate_s":11.6226,"large_test_8_forward_baseline_s":0.3347,"large_test_8_forward_candidate_s":0.3489,"large_test_8_reverse_baseline_s":0.3696,"large_test_8_reverse_candidate_s":0.3810},"correctness_status":"the scratch candidate compiled cleanly, stayed checker-valid on SAT and UNSAT smoke cases, and was deleted after both the root-hit slice and the mixed exact-CLI two-order average regressed overall","decision":"discard","notes":"This is a root-pure-threshold reject. Tightening the density cutoff alone was too aggressive: it lost the startup-heavy root-hit slice and destabilized the mixed exact-CLI gate, especially on reverse-order `large/test_6.cnf` and `special/hard.cnf`."}
+{"timestamp":"2026-03-21T13:02:11+01:00","experiment_id":"2026-03-21-keep-remove-fast-path-root-pure-from-main-wrapper","hypothesis":"Because current `satsolver_fast.py` again beats retained `satsolver.py` on same-day exact-CLI slices and on the same-day repeat-aware full suite, removing fast-path root-pure presolve from the promoted main wrapper may recover that win while preserving the richer import-time compatibility surface in `satsolver.py`.","change_summary":"Benchmarked retained `satsolver.py` against current `satsolver_fast.py` on the root-hit exact-CLI slice, the mixed nine-case exact-CLI hotspot slice, and the repeat-aware exact-CLI 59-case suite; created `scratch_satsolver_noroot.py`; removed only the fast-path root-pure block from `solve_cnf_fast_serial()`; validated SAT and UNSAT smoke cases; benchmarked the scratch candidate against retained `satsolver.py` on both exact-CLI slices and the repeat-aware full suite; then merged the change into tracked `satsolver.py`, updated the fast-path regression in `tests/test_solver_regressions.py`, refreshed `out_cli_extended.txt`, and deleted the scratch file.","files_changed":["satsolver.py","tests/test_solver_regressions.py","out_cli_extended.txt","agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["small/test_1.cnf","special/tseitin.cnf","small/test_5.cnf","small/test_6.cnf","small/test_9.cnf","medium/test_8.cnf","medium/test_9.cnf","large/test_1.cnf","large/test_2.cnf","large/test_5.cnf","large/test_7.cnf","large/test_9.cnf","special/easy.cnf","small/test_10.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_6.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf","small","medium","large","special","satlib_subset","satlib_more"],"commands":["python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script satsolver_fast.py --repeat 2 small/test_1.cnf small/test_5.cnf small/test_6.cnf small/test_9.cnf medium/test_8.cnf medium/test_9.cnf large/test_1.cnf large/test_2.cnf large/test_5.cnf large/test_7.cnf large/test_9.cnf special/easy.cnf","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script satsolver_fast.py small/test_1.cnf small/test_10.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/tseitin.cnf","python benchmark_suite.py satsolver /tmp/cycle_baseline_cli_repeat2.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script satsolver.py --repeat 2","python benchmark_suite.py satsolver_fast /tmp/cycle_fast_cli_repeat2.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script satsolver_fast.py --repeat 2","cp satsolver.py scratch_satsolver_noroot.py","python -m py_compile scratch_satsolver_noroot.py","python scratch_satsolver_noroot.py small/test_1.cnf /tmp/noroot_sat.txt","python tools/checker.py small/test_1.cnf /tmp/noroot_sat.txt","python scratch_satsolver_noroot.py special/tseitin.cnf /tmp/noroot_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/noroot_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script scratch_satsolver_noroot.py --repeat 2 small/test_1.cnf small/test_5.cnf small/test_6.cnf small/test_9.cnf medium/test_8.cnf medium/test_9.cnf large/test_1.cnf large/test_2.cnf large/test_5.cnf large/test_7.cnf large/test_9.cnf special/easy.cnf","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script scratch_satsolver_noroot.py small/test_1.cnf small/test_10.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/tseitin.cnf","python benchmark_suite.py scratch_satsolver_noroot /tmp/cycle_noroot_cli_repeat2.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script scratch_satsolver_noroot.py --repeat 2","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py tests/test_solver_regressions.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/kept_noroot_sat.txt","python tools/checker.py small/test_1.cnf /tmp/kept_noroot_sat.txt","python satsolver.py special/tseitin.cnf /tmp/kept_noroot_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/kept_noroot_unsat.txt --bruteforce-var-limit 0","python benchmark_suite.py satsolver out_cli_extended.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script satsolver.py --repeat 2"],"metrics_before":{"fast_root_hit_two_order_avg_baseline_s":0.5025,"fast_root_hit_two_order_avg_alternate_s":0.4947,"fast_mixed_slice_two_order_avg_baseline_s":32.7270,"fast_mixed_slice_two_order_avg_alternate_s":32.5444,"full_exact_cli_repeat2_baseline_s":39.8399,"full_exact_cli_repeat2_alternate_s":39.1591,"root_hit_two_order_avg_baseline_s":0.4790,"mixed_slice_two_order_avg_baseline_s":31.9046,"best_repeat_aware_exact_cli_s":25.7027},"metrics_after":{"root_hit_two_order_avg_candidate_s":0.4603,"mixed_slice_two_order_avg_candidate_s":31.4055,"full_exact_cli_repeat2_candidate_s":36.6465,"full_exact_cli_repeat2_refreshed_retained_s":38.0602,"full_exact_cli_repeat2_refreshed_retained_measured_s":76.1203,"large_test_6_candidate_repeat2_s":17.3420,"special_hard_candidate_repeat2_s":10.1976,"large_test_10_candidate_repeat2_s":2.0082,"large_test_8_candidate_repeat2_s":0.3689},"correctness_status":"the scratch candidate compiled cleanly, stayed checker-valid on SAT and UNSAT smoke cases, passed all 50 regression tests after merge, and all exact-CLI suite comparisons stayed 59/59 correct","decision":"keep","notes":"This keep is justified by the same-day baseline-vs-candidate comparisons, not by the refreshed retained artifact alone. Machine conditions were much slower than the historical `25.7027s` snapshot, but the no-root-pure main wrapper still beat both the retained baseline and the same-day `satsolver_fast.py` rerun decisively on the repeat-aware exact-CLI suite."}
+{"timestamp":"2026-03-21T11:13:12+01:00","experiment_id":"2026-03-21-reject-problem-ternary-family-flag","hypothesis":"Because original problem ternary traffic still dominates watcher churn on the hard cases, adding immutable `Clause.problem_ternary` metadata and hoisting that family into its own `propagate()` fast branch may extend the earlier `Clause.ternary` keep without changing solver semantics.","change_summary":"Created a frozen `HEAD` baseline in `/tmp/satsolver_familyflag_baseline/`, temporarily patched `satsolver_core.py` to add immutable `Clause.problem_ternary` metadata and a dedicated original-ternary fast branch inside `propagate()`, validated SAT and UNSAT smoke cases, benchmarked the candidate against the frozen baseline on the 12-case SAT-heavy exact-CLI root-hit slice and the mixed nine-case exact-CLI hotspot slice, then reverted the core patch after the mixed gate regressed.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["small/test_1.cnf","special/tseitin.cnf","small/test_5.cnf","small/test_6.cnf","small/test_9.cnf","medium/test_8.cnf","medium/test_9.cnf","large/test_1.cnf","large/test_2.cnf","large/test_5.cnf","large/test_7.cnf","large/test_9.cnf","special/easy.cnf","small/test_10.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_6.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf"],"commands":["mkdir -p /tmp/satsolver_familyflag_baseline && git show HEAD:satsolver.py > /tmp/satsolver_familyflag_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_familyflag_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_familyflag_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python satsolver.py small/test_1.cnf /tmp/familyflag_sat.txt","python tools/checker.py small/test_1.cnf /tmp/familyflag_sat.txt","python satsolver.py special/tseitin.cnf /tmp/familyflag_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/familyflag_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_familyflag_baseline/satsolver.py --candidate-cli-script satsolver.py --repeat 2 small/test_1.cnf small/test_5.cnf small/test_6.cnf small/test_9.cnf medium/test_8.cnf medium/test_9.cnf large/test_1.cnf large/test_2.cnf large/test_5.cnf large/test_7.cnf large/test_9.cnf special/easy.cnf","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_familyflag_baseline/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf small/test_10.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/tseitin.cnf"],"metrics_before":{"root_hit_two_order_avg_baseline_s":0.5028,"mixed_slice_two_order_avg_baseline_s":32.7926,"mixed_slice_forward_baseline_s":32.0837,"mixed_slice_reverse_baseline_s":33.5015,"large_test_6_forward_baseline_s":15.5899,"large_test_6_reverse_baseline_s":17.4372,"special_hard_forward_baseline_s":10.4294,"special_hard_reverse_baseline_s":10.3249},"metrics_after":{"root_hit_two_order_avg_candidate_s":0.4952,"mixed_slice_two_order_avg_candidate_s":34.1993,"mixed_slice_forward_candidate_s":33.1709,"mixed_slice_reverse_candidate_s":35.2277,"large_test_6_forward_candidate_s":16.3647,"large_test_6_reverse_candidate_s":18.3817,"special_hard_forward_candidate_s":10.8470,"special_hard_reverse_candidate_s":11.1183},"correctness_status":"the temporary branch compiled cleanly and stayed checker-valid on SAT and UNSAT smoke cases, but it was reverted after the mixed exact-CLI hotspot gate regressed; the retained repository returned to the committed solver baseline before final validation","decision":"discard","notes":"This is a propagation-family reject. A small root-hit win was not enough: hoisting the dominant original-ternary family into its own branch still made the dense mixed gate materially worse, especially on `large/test_6.cnf` and `special/hard.cnf`."}
+{"timestamp":"2026-03-21T11:21:39+01:00","experiment_id":"2026-03-21-reject-heap-branch-frontier","hypothesis":"Because `pick_branch_literal()` still consumes noticeable time in the current hard-case profile, replacing the full variable scan with a lazy `heapq` frontier of branch candidates may reduce branching overhead enough to help the mixed exact-CLI hotspot slice.","change_summary":"Created a frozen `HEAD` baseline in `/tmp/satsolver_heapbranch_baseline/`, temporarily patched `satsolver_core.py` to add a lazy branch heap populated after root propagation, push refreshed activity entries during `analyze()`, and reinsert variables on `backtrack()`, validated SAT and UNSAT smoke cases, benchmarked the candidate against the frozen baseline on the mixed nine-case exact-CLI hotspot slice, then reverted the heap branch after the slice regressed catastrophically.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["small/test_1.cnf","special/tseitin.cnf","small/test_10.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_6.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/current_cycle_large6_profile.txt","mkdir -p /tmp/satsolver_heapbranch_baseline && git show HEAD:satsolver.py > /tmp/satsolver_heapbranch_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_heapbranch_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_heapbranch_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python satsolver.py small/test_1.cnf /tmp/heapbranch_sat.txt","python tools/checker.py small/test_1.cnf /tmp/heapbranch_sat.txt","python satsolver.py special/tseitin.cnf /tmp/heapbranch_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/heapbranch_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_heapbranch_baseline/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf small/test_10.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/tseitin.cnf"],"metrics_before":{"mixed_slice_two_order_avg_baseline_s":38.5681,"mixed_slice_forward_baseline_s":36.2510,"mixed_slice_reverse_baseline_s":40.8852,"large_test_6_forward_baseline_s":16.3472,"large_test_6_reverse_baseline_s":20.8493,"special_hard_forward_baseline_s":13.3576,"special_hard_reverse_baseline_s":13.0566},"metrics_after":{"mixed_slice_two_order_avg_candidate_s":55.0274,"mixed_slice_forward_candidate_s":54.8019,"mixed_slice_reverse_candidate_s":55.2530,"large_test_6_forward_candidate_s":26.6500,"large_test_6_reverse_candidate_s":26.6526,"special_hard_forward_candidate_s":19.0475,"special_hard_reverse_candidate_s":18.9846,"large_test_8_forward_candidate_s":0.7321,"large_test_8_reverse_candidate_s":0.6466},"correctness_status":"the temporary branch compiled cleanly and stayed checker-valid on SAT and UNSAT smoke cases, but it was reverted after the mixed exact-CLI hotspot gate regressed by a wide margin; the retained repository returned to the committed solver baseline before final validation","decision":"discard","notes":"This is a branching-data-structure reject. The lazy heap did not act like a cheap drop-in replacement for the current scan; the extra push/reinsert churn, and possibly search perturbation, made every important hotspot family worse."}
+{"timestamp":"2026-03-21T11:27:31+01:00","experiment_id":"2026-03-21-reject-satsolver-fast-revival","hypothesis":"Because `satsolver_fast.py` is still structurally leaner than the promoted main wrapper, it may have regained an edge on the current same-day exact-CLI slices and be a better alternate-file focus than `satsolver.py`.","change_summary":"Reread the current wrapper files and local speed note, collected a fresh `cProfile` pass on `satsolver.py large/test_6.cnf`, then benchmarked current `satsolver.py` against current `satsolver_fast.py` on the 12-case SAT-heavy exact-CLI root-hit slice and the mixed nine-case exact-CLI hotspot slice. The alternate file failed to beat the promoted main wrapper on the decisive mixed slice, so the cycle ended as a measurement-only reject with no code changes.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_6.cnf","small/test_1.cnf","small/test_5.cnf","small/test_6.cnf","small/test_9.cnf","medium/test_8.cnf","medium/test_9.cnf","large/test_1.cnf","large/test_2.cnf","large/test_5.cnf","large/test_7.cnf","large/test_9.cnf","special/easy.cnf","small/test_10.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf","special/tseitin.cnf"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/current_cycle_large6_profile.txt | head -n 40","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script satsolver_fast.py --repeat 2 small/test_1.cnf small/test_5.cnf small/test_6.cnf small/test_9.cnf medium/test_8.cnf medium/test_9.cnf large/test_1.cnf large/test_2.cnf large/test_5.cnf large/test_7.cnf large/test_9.cnf special/easy.cnf","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script satsolver_fast.py small/test_1.cnf small/test_10.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/tseitin.cnf"],"metrics_before":{"root_hit_two_order_avg_baseline_s":0.5198,"mixed_slice_two_order_avg_baseline_s":36.5697,"mixed_slice_forward_baseline_s":36.7266,"mixed_slice_reverse_baseline_s":36.4127,"large_test_6_forward_baseline_s":18.4633,"large_test_6_reverse_baseline_s":18.2376,"special_hard_forward_baseline_s":11.6244,"special_hard_reverse_baseline_s":11.7144},"metrics_after":{"root_hit_two_order_avg_candidate_s":0.5205,"mixed_slice_two_order_avg_candidate_s":36.9565,"mixed_slice_forward_candidate_s":36.6320,"mixed_slice_reverse_candidate_s":37.2809,"large_test_6_forward_candidate_s":18.4107,"large_test_6_reverse_candidate_s":18.9720,"special_hard_forward_candidate_s":11.7868,"special_hard_reverse_candidate_s":12.2073},"correctness_status":"both existing solver files stayed checker-valid throughout the slice comparisons, and no repository code changed during this measurement cycle","decision":"discard","notes":"This is an alternate-file recheck reject. `satsolver_fast.py` is still viable, but it no longer beats the promoted main wrapper where it matters, so future alternate-file work should start from current `satsolver.py` unless a materially different wrapper emerges."}
+{"timestamp":"2026-03-21T11:35:55+01:00","experiment_id":"2026-03-21-reject-disable-main-portfolio","hypothesis":"Because only `large/test_8.cnf` still triggers the current portfolio gate, removing the portfolio handoff from the main exact-CLI wrapper may save enough process-launch overhead to improve the broad exact-CLI slices overall.","change_summary":"Scanned the benchmark corpus to confirm that only `large/test_8.cnf` still satisfies `should_use_parallel_portfolio(...)`, created `scratch_satsolver_noportfolio.py`, removed only the portfolio handoff from `solve_cnf()`, validated SAT and UNSAT smoke cases, benchmarked the scratch candidate against retained `satsolver.py` on the 12-case SAT-heavy exact-CLI root-hit slice and the mixed nine-case exact-CLI hotspot slice, then deleted the scratch file after the mixed gate failed decisively.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_8.cnf","small/test_1.cnf","special/tseitin.cnf","small/test_5.cnf","small/test_6.cnf","small/test_9.cnf","medium/test_8.cnf","medium/test_9.cnf","large/test_1.cnf","large/test_2.cnf","large/test_5.cnf","large/test_7.cnf","large/test_9.cnf","special/easy.cnf","small/test_10.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_6.cnf","large/test_10.cnf","special/hard.cnf"],"commands":["python - <<'PY' ... corpus scan for should_use_parallel_portfolio(...) hits ... PY","python -m py_compile scratch_satsolver_noportfolio.py","python scratch_satsolver_noportfolio.py small/test_1.cnf /tmp/noportfolio_sat.txt","python tools/checker.py small/test_1.cnf /tmp/noportfolio_sat.txt","python scratch_satsolver_noportfolio.py special/tseitin.cnf /tmp/noportfolio_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/noportfolio_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script scratch_satsolver_noportfolio.py --repeat 2 small/test_1.cnf small/test_5.cnf small/test_6.cnf small/test_9.cnf medium/test_8.cnf medium/test_9.cnf large/test_1.cnf large/test_2.cnf large/test_5.cnf large/test_7.cnf large/test_9.cnf special/easy.cnf","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script scratch_satsolver_noportfolio.py small/test_1.cnf small/test_10.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/tseitin.cnf"],"metrics_before":{"root_hit_two_order_avg_baseline_s":0.4724,"mixed_slice_two_order_avg_baseline_s":30.3681,"mixed_slice_forward_baseline_s":30.2344,"mixed_slice_reverse_baseline_s":30.5018,"large_test_8_forward_baseline_s":0.3372,"large_test_8_reverse_baseline_s":0.3526},"metrics_after":{"root_hit_two_order_avg_candidate_s":0.4478,"mixed_slice_two_order_avg_candidate_s":34.0072,"mixed_slice_forward_candidate_s":33.3600,"mixed_slice_reverse_candidate_s":34.6544,"large_test_8_forward_candidate_s":3.8820,"large_test_8_reverse_candidate_s":4.1060,"large_test_6_forward_candidate_s":14.7751,"large_test_6_reverse_candidate_s":15.8286,"special_hard_forward_candidate_s":9.9152,"special_hard_reverse_candidate_s":9.7547},"correctness_status":"the scratch no-portfolio wrapper compiled cleanly, stayed checker-valid on SAT and UNSAT smoke cases, and was deleted after the mixed exact-CLI hotspot gate regressed sharply overall","decision":"discard","notes":"This is a narrow-portfolio reject. Even though only one current benchmark case still triggers the gate, that one case still depends heavily on the forked portfolio path: `large/test_8.cnf` exploded by roughly an order of magnitude without it, overwhelming the small startup-heavy slice win."}
+{"timestamp":"2026-03-21T11:50:12+01:00","experiment_id":"2026-03-21-reject-phase-bias-portfolio-gate-replacement","hypothesis":"Because the current portfolio gate only fires on `large/test_8.cnf`, and the direct same-day serial `seed_phase_bias=True` solve is faster there than the forked portfolio, replacing the portfolio handoff with the phase-bias serial path may improve exact-CLI runtime overall.","change_summary":"Timed direct same-process default-serial, phase-bias-serial, and portfolio solves on `large/test_8.cnf`; created `scratch_satsolver_phasebias_gate.py`; changed only the portfolio branch in `solve_cnf()` to call `solve_cnf_fast_serial(..., seed_phase_bias=True)`; validated SAT and UNSAT smoke cases; benchmarked the scratch candidate against retained `satsolver.py` on the mixed nine-case exact-CLI hotspot slice; then ran same-day repeat-aware exact-CLI 59-case baseline-vs-candidate comparisons and deleted the scratch file after the broad suite came back slightly worse overall.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_8.cnf","small/test_1.cnf","special/tseitin.cnf","small/test_10.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_6.cnf","large/test_10.cnf","special/hard.cnf","small","medium","large","special","satlib_subset","satlib_more"],"commands":["python - <<'PY' ... direct large/test_8 serial vs phase-bias vs portfolio timings ... PY","python -m py_compile scratch_satsolver_phasebias_gate.py","python scratch_satsolver_phasebias_gate.py small/test_1.cnf /tmp/phasegate_sat.txt","python tools/checker.py small/test_1.cnf /tmp/phasegate_sat.txt","python scratch_satsolver_phasebias_gate.py special/tseitin.cnf /tmp/phasegate_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/phasegate_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script scratch_satsolver_phasebias_gate.py small/test_1.cnf small/test_10.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/tseitin.cnf","python benchmark_suite.py satsolver /tmp/cycle_baseline_phasebias_gate_cli_repeat2.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script satsolver.py --repeat 2","python benchmark_suite.py scratch_satsolver_phasebias_gate /tmp/cycle_candidate_phasebias_gate_cli_repeat2.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script scratch_satsolver_phasebias_gate.py --repeat 2"],"metrics_before":{"large_test_8_default_serial_samples_s":[4.2218,4.1424,4.0848],"large_test_8_portfolio_samples_s":[0.2800,0.2808,0.2704],"mixed_slice_two_order_avg_baseline_s":30.7417,"mixed_slice_forward_baseline_s":31.4071,"mixed_slice_reverse_baseline_s":30.0763,"full_exact_cli_repeat2_baseline_s":35.2571,"full_exact_cli_repeat2_large_test_8_s":0.3611},"metrics_after":{"large_test_8_phase_bias_serial_samples_s":[0.2122,0.2084,0.2412],"mixed_slice_two_order_avg_candidate_s":30.3299,"mixed_slice_forward_candidate_s":30.2937,"mixed_slice_reverse_candidate_s":30.3661,"large_test_8_forward_candidate_s":0.2796,"large_test_8_reverse_candidate_s":0.2967,"full_exact_cli_repeat2_candidate_s":35.2674,"full_exact_cli_repeat2_large_test_8_s":0.3217,"full_exact_cli_repeat2_large_test_6_s":15.9060,"full_exact_cli_repeat2_special_hard_s":10.2287},"correctness_status":"the scratch wrapper compiled cleanly, stayed checker-valid on SAT and UNSAT smoke cases, improved the mixed exact-CLI slice, but was deleted after the same-day repeat-aware 59-case exact-CLI suite came back slightly worse overall","decision":"discard","notes":"This is a one-case shortcut reject. The targeted replacement really did help `large/test_8.cnf`, but the win was too small to survive the broad same-day suite once the rest of the corpus and machine noise were included."}
+{"timestamp":"2026-03-21T11:53:41+01:00","experiment_id":"2026-03-21-reject-skip-ternary-learnt-minimization","hypothesis":"Because `minimize_learnt()` still costs real time in the current hard-case profile and ternary learnt clauses have very little room left to shrink, skipping minimization when `len(learnt) == 3` may cut conflict-analysis overhead enough to help the mixed exact-CLI hotspot slice.","change_summary":"Created a frozen `HEAD` baseline in `/tmp/satsolver_skipternmin_baseline/`, temporarily patched `satsolver_core.py` so `minimize_learnt()` returns immediately for learnt clauses of length `3`, validated SAT and UNSAT smoke cases, benchmarked the candidate against the frozen baseline on the mixed nine-case exact-CLI hotspot slice, then reverted the patch after the mixed gate regressed.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["small/test_1.cnf","special/tseitin.cnf","small/test_10.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_6.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf"],"commands":["mkdir -p /tmp/satsolver_skipternmin_baseline && git show HEAD:satsolver.py > /tmp/satsolver_skipternmin_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_skipternmin_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_skipternmin_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python satsolver.py small/test_1.cnf /tmp/skipternmin_sat.txt","python tools/checker.py small/test_1.cnf /tmp/skipternmin_sat.txt","python satsolver.py special/tseitin.cnf /tmp/skipternmin_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/skipternmin_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_skipternmin_baseline/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf small/test_10.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/tseitin.cnf"],"metrics_before":{"mixed_slice_two_order_avg_baseline_s":30.4068,"mixed_slice_forward_baseline_s":30.3753,"mixed_slice_reverse_baseline_s":30.4383,"large_test_6_forward_baseline_s":15.1699,"large_test_6_reverse_baseline_s":15.3032,"special_hard_forward_baseline_s":9.7911,"special_hard_reverse_baseline_s":9.9774},"metrics_after":{"mixed_slice_two_order_avg_candidate_s":30.5538,"mixed_slice_forward_candidate_s":30.4375,"mixed_slice_reverse_candidate_s":30.6701,"large_test_6_forward_candidate_s":15.7710,"large_test_6_reverse_candidate_s":15.4892,"special_hard_forward_candidate_s":9.2958,"special_hard_reverse_candidate_s":9.7349,"large_test_10_forward_candidate_s":2.0165,"large_test_10_reverse_candidate_s":2.0572,"large_test_8_forward_candidate_s":0.3474,"large_test_8_reverse_candidate_s":0.3278},"correctness_status":"the temporary patch compiled cleanly, stayed checker-valid on SAT and UNSAT smoke cases, but it was reverted after the mixed exact-CLI hotspot gate regressed overall","decision":"discard","notes":"This is a conflict-analysis shortcut reject. The branch did make `special/hard.cnf` and `large/test_8.cnf` slightly better, but the dense UNSAT cases that matter most, especially `large/test_6.cnf`, moved the wrong way in both orders."}
+{"timestamp":"2026-03-21T12:00:06+01:00","experiment_id":"2026-03-21-reject-watch-indexed-literal-truth-cache","hypothesis":"Because literal truth is read or written on nearly every hot-path step in `enqueue()`, `backtrack()`, and `propagate()`, storing `literal_values` in positive watch-index space instead of using signed list indexing with negative Python indices may reduce enough indexing overhead to help the mixed exact-CLI hotspot slice.","change_summary":"Created a frozen `HEAD` baseline in `/tmp/satsolver_watchvalue_baseline/`, temporarily patched `satsolver_core.py` so `literal_values` lives in watch-index space and all truth reads/writes in `literal_value()`, `enqueue()`, `backtrack()`, and `propagate()` use that mapping, validated SAT and UNSAT smoke cases, benchmarked the candidate against the frozen baseline on the mixed nine-case exact-CLI hotspot slice, then reverted the patch after the slice regressed decisively.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["small/test_1.cnf","special/tseitin.cnf","small/test_10.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_6.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf"],"commands":["mkdir -p /tmp/satsolver_watchvalue_baseline && git show HEAD:satsolver.py > /tmp/satsolver_watchvalue_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_watchvalue_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_watchvalue_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python satsolver.py small/test_1.cnf /tmp/watchvalue_sat.txt","python tools/checker.py small/test_1.cnf /tmp/watchvalue_sat.txt","python satsolver.py special/tseitin.cnf /tmp/watchvalue_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/watchvalue_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_watchvalue_baseline/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf small/test_10.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/tseitin.cnf"],"metrics_before":{"mixed_slice_two_order_avg_baseline_s":31.0231,"mixed_slice_forward_baseline_s":31.0070,"mixed_slice_reverse_baseline_s":31.0393,"large_test_6_forward_baseline_s":15.3921,"large_test_6_reverse_baseline_s":15.1555,"special_hard_forward_baseline_s":10.0445,"special_hard_reverse_baseline_s":10.2325,"large_test_10_forward_baseline_s":2.0104,"large_test_10_reverse_baseline_s":2.0675},"metrics_after":{"mixed_slice_two_order_avg_candidate_s":32.7078,"mixed_slice_forward_candidate_s":32.3361,"mixed_slice_reverse_candidate_s":33.0795,"large_test_6_forward_candidate_s":16.0680,"large_test_6_reverse_candidate_s":16.8912,"special_hard_forward_candidate_s":10.6671,"special_hard_reverse_candidate_s":10.2890,"large_test_10_forward_candidate_s":2.1026,"large_test_10_reverse_candidate_s":2.1534,"large_test_8_forward_candidate_s":0.3592,"large_test_8_reverse_candidate_s":0.3375},"correctness_status":"the temporary patch compiled cleanly, stayed checker-valid on SAT and UNSAT smoke cases, but it was reverted after the mixed exact-CLI hotspot gate regressed heavily overall","decision":"discard","notes":"This is a propagation-indexing reject. Re-encoding the literal-truth cache through positive watch indices made the same logical work slower, so the next real `propagate()` win still needs to remove more watcher traversal work rather than only change how truth values are looked up."}
+{"timestamp":"2026-03-21T12:11:12+01:00","experiment_id":"2026-03-21-keep-remove-zero-activity-phase-fallback","hypothesis":"Because earlier branch-frontier profiling showed zero-activity branch choices were absent on the main hotspot cases, the zero-activity `phase_bias` fallback in `pick_branch_literal()` is likely dead or low-value overhead on the current exact-CLI path, and always using `saved_phase` may produce a small broad-suite win.","change_summary":"Reread the current prompt, speed notes, and backlog; collected a fresh `large/test_6.cnf` `cProfile` pass; rechecked direct default-vs-phase-bias-vs-portfolio timings on `large/test_8.cnf`; froze a `HEAD` baseline in `/tmp/satsolver_nozerophase_baseline/`; patched `satsolver_core.py` so `pick_branch_literal()` always uses `saved_phase[best_variable]` instead of falling back to `phase_bias` when activity is zero; validated SAT and UNSAT smoke cases; benchmarked baseline vs candidate on the mixed nine-case exact-CLI hotspot slice and on the repeat-aware exact-CLI 59-case suite; then kept the change and added a regression that locks zero-activity branch polarity to `saved_phase`.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md","out_cli_extended.txt","satsolver_core.py","tests/test_solver_regressions.py"],"datasets":["large/test_6.cnf","large/test_8.cnf","small/test_1.cnf","small/test_5.cnf","small/test_6.cnf","small/test_9.cnf","medium/test_8.cnf","medium/test_9.cnf","large/test_1.cnf","large/test_2.cnf","large/test_5.cnf","large/test_7.cnf","large/test_9.cnf","special/easy.cnf","special/tseitin.cnf","small/test_10.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_10.cnf","special/hard.cnf","small","medium","large","special","satlib_subset","satlib_more"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/current_cycle_large6_profile.txt | head -n 35","python - <<'PY' ... direct same-process default vs phase-bias vs portfolio timings on large/test_8.cnf plus conflict counts ... PY","mkdir -p /tmp/satsolver_nozerophase_baseline && git show HEAD:satsolver.py > /tmp/satsolver_nozerophase_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_nozerophase_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_nozerophase_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python satsolver.py small/test_1.cnf /tmp/nozerophase_sat.txt","python tools/checker.py small/test_1.cnf /tmp/nozerophase_sat.txt","python satsolver.py special/tseitin.cnf /tmp/nozerophase_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/nozerophase_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_nozerophase_baseline/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf small/test_10.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/tseitin.cnf","PYTHONPATH=/tmp/satsolver_nozerophase_baseline python benchmark_suite.py satsolver /tmp/cycle_baseline_nozerophase_cli_repeat2.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script /tmp/satsolver_nozerophase_baseline/satsolver.py --repeat 2","python benchmark_suite.py satsolver /tmp/cycle_candidate_nozerophase_cli_repeat2.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script satsolver.py --repeat 2","python -m unittest discover -s tests -v"],"metrics_before":{"mixed_slice_two_order_avg_baseline_s":32.6520,"mixed_slice_forward_baseline_s":33.2466,"mixed_slice_reverse_baseline_s":32.0575,"full_exact_cli_repeat2_baseline_s":38.1276,"full_exact_cli_repeat2_measured_baseline_s":76.2552,"full_exact_cli_repeat2_large_test_6_s":17.4301,"full_exact_cli_repeat2_special_hard_s":11.4124,"full_exact_cli_repeat2_large_test_8_s":0.3861},"metrics_after":{"mixed_slice_two_order_avg_candidate_s":32.5010,"mixed_slice_forward_candidate_s":33.0447,"mixed_slice_reverse_candidate_s":31.9573,"full_exact_cli_repeat2_candidate_s":37.8494,"full_exact_cli_repeat2_measured_candidate_s":75.6988,"full_exact_cli_repeat2_large_test_6_s":16.8850,"full_exact_cli_repeat2_special_hard_s":11.3692,"full_exact_cli_repeat2_large_test_8_s":0.4012},"correctness_status":"the kept core change compiled cleanly, passed SAT and UNSAT checker smoke checks, solved the repeat-aware exact-CLI 59-case suite `59/59` correctly, and the regression suite passed after adding explicit zero-activity branch-polarity coverage","decision":"keep","notes":"This is a narrow branching-policy keep, not a reopening of the broader branching-design lane. The earlier profiler result that zero-activity branch choices were absent appears to transfer cleanly into a real exact-CLI win when the fallback branch is removed."}
+{"timestamp":"2026-03-21T12:19:55+01:00","experiment_id":"2026-03-21-reject-no-propagated-saved-phase","hypothesis":"Because `propagate()` still dominates runtime and every implied assignment currently writes `saved_phase[variable]`, removing those propagated phase-saving writes may trim enough hot-path overhead to help the mixed exact-CLI hotspot slice without materially hurting search quality.","change_summary":"Collected a fresh `large/test_6.cnf` profile, created a frozen `HEAD` baseline in `/tmp/satsolver_nosavedphaseprop_baseline/`, temporarily patched `satsolver_core.py` so the three inlined propagated-unit assignment sites no longer update `saved_phase`, validated SAT and UNSAT smoke cases, benchmarked the candidate against the frozen baseline on the mixed nine-case exact-CLI hotspot slice, then reverted the patch after the mixed gate failed catastrophically.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_6.cnf","small/test_1.cnf","special/tseitin.cnf","small/test_10.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/current_cycle_large6_profile_2.txt | head -n 40","mkdir -p /tmp/satsolver_nosavedphaseprop_baseline && git show HEAD:satsolver.py > /tmp/satsolver_nosavedphaseprop_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_nosavedphaseprop_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_nosavedphaseprop_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python satsolver.py small/test_1.cnf /tmp/nosavedphaseprop_sat.txt","python tools/checker.py small/test_1.cnf /tmp/nosavedphaseprop_sat.txt","python satsolver.py special/tseitin.cnf /tmp/nosavedphaseprop_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/nosavedphaseprop_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_nosavedphaseprop_baseline/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf small/test_10.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/tseitin.cnf"],"metrics_before":{"large_test_6_profile_propagate_tottime_s":18.179,"large_test_6_profile_analyze_tottime_s":3.014,"large_test_6_profile_pick_branch_literal_tottime_s":1.748,"mixed_slice_two_order_avg_baseline_s":30.5205,"mixed_slice_forward_baseline_s":30.6543,"mixed_slice_reverse_baseline_s":30.3866,"large_test_8_forward_baseline_s":0.3345,"large_test_8_reverse_baseline_s":0.3393},"metrics_after":{"mixed_slice_two_order_avg_candidate_s":56.9678,"mixed_slice_forward_candidate_s":56.4923,"mixed_slice_reverse_candidate_s":57.4433,"large_test_8_forward_candidate_s":24.7775,"large_test_8_reverse_candidate_s":25.8776,"large_test_6_forward_candidate_s":17.0311,"large_test_6_reverse_candidate_s":16.7994,"special_hard_forward_candidate_s":9.2372,"special_hard_reverse_candidate_s":9.2636},"correctness_status":"the temporary patch compiled cleanly, stayed checker-valid on SAT and UNSAT smoke cases, but it was reverted immediately after the mixed exact-CLI hotspot gate showed a catastrophic SAT-family regression","decision":"discard","notes":"This is a strong search-quality reject. Propagated phase saving is still essential for the current solver, especially on the SAT-like `large/test_8.cnf` family."}
+{"timestamp":"2026-03-21T12:26:53+01:00","experiment_id":"2026-03-21-reject-lazy-phase-bias-recompute","hypothesis":"Because the current mainline almost never uses the phase-biased worker, stopping per-literal `phase_bias` maintenance during clause ingest and recomputing phase bias only when `seed_phase_bias=True` may improve startup-heavy exact-CLI slices without changing mainline search behavior.","change_summary":"Collected a fresh `large/test_6.cnf` profile, temporarily patched `satsolver_core.py`, `satsolver.py`, and `satsolver_fast.py` so `observe_clause()` seeds only initial activity while `seed_saved_phases_from_bias(...)` recomputes phase bias from clauses on demand, validated SAT and UNSAT smoke cases, benchmarked the candidate against the frozen `HEAD` baseline on the 12-case SAT-heavy exact-CLI root-hit slice via `tools/hotspot_compare.py --repeat 2`, then reverted the patch after the first gate regressed.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_6.cnf","small/test_1.cnf","special/tseitin.cnf","small/test_5.cnf","small/test_6.cnf","small/test_9.cnf","medium/test_8.cnf","medium/test_9.cnf","large/test_1.cnf","large/test_2.cnf","large/test_5.cnf","large/test_7.cnf","large/test_9.cnf","special/easy.cnf"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/current_cycle_large6_profile_3.txt | head -n 35","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python satsolver.py small/test_1.cnf /tmp/lazyphasebias_sat.txt","python tools/checker.py small/test_1.cnf /tmp/lazyphasebias_sat.txt","python satsolver.py special/tseitin.cnf /tmp/lazyphasebias_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/lazyphasebias_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_nosavedphaseprop_baseline/satsolver.py --candidate-cli-script satsolver.py --repeat 2 small/test_1.cnf small/test_5.cnf small/test_6.cnf small/test_9.cnf medium/test_8.cnf medium/test_9.cnf large/test_1.cnf large/test_2.cnf large/test_5.cnf large/test_7.cnf large/test_9.cnf special/easy.cnf"],"metrics_before":{"large_test_6_profile_propagate_tottime_s":16.060,"large_test_6_profile_analyze_tottime_s":2.737,"large_test_6_profile_pick_branch_literal_tottime_s":1.580,"large_test_6_profile_observe_clause_tottime_s":0.002,"root_hit_two_order_avg_baseline_s":0.4780,"root_hit_forward_baseline_s":0.4725,"root_hit_reverse_baseline_s":0.4835},"metrics_after":{"root_hit_two_order_avg_candidate_s":0.4922,"root_hit_forward_candidate_s":0.4931,"root_hit_reverse_candidate_s":0.4914,"large_test_5_forward_candidate_s":0.0577,"large_test_7_forward_candidate_s":0.0603,"medium_test_9_reverse_candidate_s":0.0415},"correctness_status":"the temporary patch compiled cleanly and stayed checker-valid on SAT and UNSAT smoke cases, but it was reverted after the first startup-heavy exact-CLI gate regressed overall","decision":"discard","notes":"This is a startup/ingest reject. Eager `phase_bias` maintenance appears too small or too entangled to recover cleanly by itself."}
+{"timestamp":"2026-03-21T12:36:08+01:00","experiment_id":"2026-03-21-reject-literal-var-abs-rewrite","hypothesis":"Because fresh exact-CLI `cProfile` runs still show `abs` as a visible cost inside conflict analysis, replacing hot `abs(...)` calls with the solver's existing `literal_var[...]` lookup in `analyze()`, `minimize_learnt()`, and `prepare_learnt_clause()` may trim conflict-analysis overhead without changing search behavior.","change_summary":"Collected fresh `large/test_6.cnf` and `special/hard.cnf` profiles, created a frozen `HEAD` baseline in `/tmp/satsolver_absvar_baseline/`, temporarily patched `satsolver_core.py` so conflict analysis uses `literal_var[...]` instead of `abs(...)`, validated SAT and UNSAT smoke cases, benchmarked the candidate against the frozen baseline on the mixed nine-case exact-CLI hotspot slice, then reverted the patch after the mixed gate regressed.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_6.cnf","special/hard.cnf","small/test_1.cnf","special/tseitin.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_8.cnf","large/test_10.cnf","special/easy.cnf"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/cycle_profile_large6.txt | head -n 35","python -m cProfile -s tottime satsolver.py special/hard.cnf /tmp/cycle_profile_hard.txt | head -n 35","mkdir -p /tmp/satsolver_absvar_baseline && git show HEAD:satsolver.py > /tmp/satsolver_absvar_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_absvar_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_absvar_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python satsolver.py small/test_1.cnf /tmp/absvar_sat.txt","python tools/checker.py small/test_1.cnf /tmp/absvar_sat.txt","python satsolver.py special/tseitin.cnf /tmp/absvar_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/absvar_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_absvar_baseline/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf special/tseitin.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/easy.cnf"],"metrics_before":{"large_test_6_profile_propagate_tottime_s":15.983,"large_test_6_profile_analyze_tottime_s":2.755,"large_test_6_profile_abs_tottime_s":1.115,"special_hard_profile_propagate_tottime_s":11.001,"special_hard_profile_analyze_tottime_s":1.943,"special_hard_profile_abs_tottime_s":0.800,"mixed_slice_two_order_avg_baseline_s":30.3393,"mixed_slice_forward_baseline_s":31.0800,"mixed_slice_reverse_baseline_s":29.5986},"metrics_after":{"mixed_slice_two_order_avg_candidate_s":30.9773,"mixed_slice_forward_candidate_s":31.3153,"mixed_slice_reverse_candidate_s":30.6392,"large_test_6_forward_candidate_s":15.6328,"large_test_6_reverse_candidate_s":15.4005,"special_hard_forward_candidate_s":10.2898,"special_hard_reverse_candidate_s":9.8490,"large_test_10_forward_candidate_s":1.9903,"large_test_10_reverse_candidate_s":1.9295},"correctness_status":"the temporary patch compiled cleanly and stayed checker-valid on SAT and UNSAT smoke cases, but it was reverted after the mixed exact-CLI hotspot gate regressed overall","decision":"discard","notes":"This looks like another pure-overhead conflict-analysis rewrite: the candidate improved a few slice members, but the stable `large/test_6.cnf` regression in both orders was enough to reject it immediately."}
+{"timestamp":"2026-03-21T12:43:32+01:00","experiment_id":"2026-03-21-reject-keep-ternary-lbd3","hypothesis":"Because the workload is heavily ternary, broadening learnt retention to keep ternary clauses with `LBD <= 3` in `reduce_database()` may improve dense pure-3-SAT UNSAT search enough to outweigh the extra learnt-clause load.","change_summary":"Created a frozen `HEAD` baseline in `/tmp/satsolver_keepternlbd3_baseline/`, temporarily patched `satsolver_core.py` so `reduce_database()` keeps ternary learnt clauses when `clause.lbd <= 3`, validated SAT and UNSAT smoke cases, benchmarked the candidate against the frozen baseline on the mixed nine-case exact-CLI hotspot slice, then reverted the patch after the mixed gate failed catastrophically on the SAT-like family.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["small/test_1.cnf","special/tseitin.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_6.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf","special/easy.cnf"],"commands":["mkdir -p /tmp/satsolver_keepternlbd3_baseline && git show HEAD:satsolver.py > /tmp/satsolver_keepternlbd3_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_keepternlbd3_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_keepternlbd3_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python satsolver.py small/test_1.cnf /tmp/keepternlbd3_sat.txt","python tools/checker.py small/test_1.cnf /tmp/keepternlbd3_sat.txt","python satsolver.py special/tseitin.cnf /tmp/keepternlbd3_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/keepternlbd3_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_keepternlbd3_baseline/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf special/tseitin.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/easy.cnf"],"metrics_before":{"mixed_slice_two_order_avg_baseline_s":31.1445,"mixed_slice_forward_baseline_s":31.3888,"mixed_slice_reverse_baseline_s":30.9002,"large_test_8_forward_baseline_s":0.3193,"large_test_8_reverse_baseline_s":0.3519,"special_hard_forward_baseline_s":10.1341,"special_hard_reverse_baseline_s":9.7290},"metrics_after":{"mixed_slice_two_order_avg_candidate_s":54.9538,"mixed_slice_forward_candidate_s":55.7422,"mixed_slice_reverse_candidate_s":54.1655,"large_test_8_forward_candidate_s":25.6356,"large_test_8_reverse_candidate_s":24.9397,"special_hard_forward_candidate_s":7.6952,"special_hard_reverse_candidate_s":7.4674,"large_test_10_forward_candidate_s":1.6446,"large_test_10_reverse_candidate_s":1.7073},"correctness_status":"the temporary patch compiled cleanly and stayed checker-valid on SAT and UNSAT smoke cases, but it was reverted immediately after the mixed exact-CLI hotspot gate showed a catastrophic SAT-family regression","decision":"discard","notes":"This is a strong learnt-database reject. Extra retention of small ternary learnt clauses helps some dense UNSAT cases, but it destabilizes the SAT-like `large/test_8.cnf` family so badly that the branch is not viable."}
+{"timestamp":"2026-03-21T12:49:31+01:00","experiment_id":"2026-03-21-reject-skip-kept-clause-bumps","hypothesis":"Because clause activity only matters for ranking deletable learnt clauses in `reduce_database()`, skipping `bump_clause_activity()` for learnt clauses that are already effectively always kept (binaries and `LBD <= 2`) may trim conflict-analysis overhead without materially changing database decisions.","change_summary":"Created a frozen `HEAD` baseline in `/tmp/satsolver_skipkeptclausebump_baseline/`, temporarily patched `satsolver_core.py` so `analyze()` only bumps learnt clauses when `clause.lbd > 2` and length is greater than `2`, validated SAT and UNSAT smoke cases, benchmarked the candidate against the frozen baseline on the mixed nine-case exact-CLI hotspot slice, then reverted the patch after the mixed gate came back slightly negative overall.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["small/test_1.cnf","special/tseitin.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_6.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf","special/easy.cnf"],"commands":["mkdir -p /tmp/satsolver_skipkeptclausebump_baseline && git show HEAD:satsolver.py > /tmp/satsolver_skipkeptclausebump_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_skipkeptclausebump_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_skipkeptclausebump_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python satsolver.py small/test_1.cnf /tmp/skipkeptclausebump_sat.txt","python tools/checker.py small/test_1.cnf /tmp/skipkeptclausebump_sat.txt","python satsolver.py special/tseitin.cnf /tmp/skipkeptclausebump_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/skipkeptclausebump_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_skipkeptclausebump_baseline/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf special/tseitin.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/easy.cnf"],"metrics_before":{"mixed_slice_two_order_avg_baseline_s":32.6181,"mixed_slice_forward_baseline_s":32.3114,"mixed_slice_reverse_baseline_s":32.9248,"special_hard_forward_baseline_s":10.7750,"special_hard_reverse_baseline_s":11.2034,"large_test_6_forward_baseline_s":15.5857,"large_test_6_reverse_baseline_s":16.0836},"metrics_after":{"mixed_slice_two_order_avg_candidate_s":32.8545,"mixed_slice_forward_candidate_s":32.1107,"mixed_slice_reverse_candidate_s":33.5983,"special_hard_forward_candidate_s":10.4010,"special_hard_reverse_candidate_s":10.5056,"large_test_6_forward_candidate_s":15.9471,"large_test_6_reverse_candidate_s":17.4529,"large_test_8_forward_candidate_s":0.3602,"large_test_8_reverse_candidate_s":0.3540},"correctness_status":"the temporary patch compiled cleanly and stayed checker-valid on SAT and UNSAT smoke cases, but it was reverted after the mixed exact-CLI hotspot gate stayed slightly negative overall","decision":"discard","notes":"This looks like another learnt-database interaction reject: trimming clause bumps on always-kept learnt clauses helps `special/hard.cnf`, but it still hurts `large/test_6.cnf` enough to lose the mixed slice overall."}
+{"timestamp":"2026-03-21T12:58:38+01:00","experiment_id":"2026-03-21-reject-deferred-watcher-shrink","hypothesis":"Because watcher-list pops dominate explicit pop traffic in the profiler, keeping the current swap-remove semantics but deferring actual watcher-list shrink to one tail deletion per list may reduce propagation overhead without changing search behavior.","change_summary":"Created a frozen `HEAD` baseline in `/tmp/satsolver_watchcompact_baseline/`, temporarily patched `satsolver_core.py` so the non-binary watcher loop uses a logical end pointer and one final tail delete per watcher list, added and validated a focused conflict-return cleanup regression, benchmarked the candidate against the frozen baseline on the mixed nine-case exact-CLI hotspot slice, then reverted both the propagation patch and the temporary regression after the mixed gate regressed cleanly.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["small/test_1.cnf","special/tseitin.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_6.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf","special/easy.cnf"],"commands":["mkdir -p /tmp/satsolver_watchcompact_baseline && git show HEAD:satsolver.py > /tmp/satsolver_watchcompact_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_watchcompact_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_watchcompact_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py tests/test_solver_regressions.py","python -m unittest tests.test_solver_regressions.SolverRegressionTests.test_propagate_conflict_cleans_compacted_watcher_tail -v","python satsolver.py small/test_1.cnf /tmp/watchcompact_sat.txt","python tools/checker.py small/test_1.cnf /tmp/watchcompact_sat.txt","python satsolver.py special/tseitin.cnf /tmp/watchcompact_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/watchcompact_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_watchcompact_baseline/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf special/tseitin.cnf medium/test_3.cnf medium/test_4.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf special/easy.cnf"],"metrics_before":{"mixed_slice_two_order_avg_baseline_s":30.6616,"mixed_slice_forward_baseline_s":30.3996,"mixed_slice_reverse_baseline_s":30.9236,"special_hard_forward_baseline_s":9.9840,"special_hard_reverse_baseline_s":9.7723,"large_test_6_forward_baseline_s":14.9381,"large_test_6_reverse_baseline_s":15.6433},"metrics_after":{"mixed_slice_two_order_avg_candidate_s":31.6370,"mixed_slice_forward_candidate_s":31.4947,"mixed_slice_reverse_candidate_s":31.7792,"special_hard_forward_candidate_s":10.5435,"special_hard_reverse_candidate_s":10.1833,"large_test_6_forward_candidate_s":15.2874,"large_test_6_reverse_candidate_s":16.0219,"large_test_8_forward_candidate_s":0.3571,"large_test_8_reverse_candidate_s":0.3672},"correctness_status":"the temporary patch compiled cleanly, passed the focused conflict-return cleanup regression plus SAT/UNSAT smoke checks, but it was reverted after the mixed exact-CLI hotspot gate regressed overall","decision":"discard","notes":"This looks like another pure-overhead propagation rewrite: removing per-removal watcher `pop()` calls was not enough to pay for the changed shrink bookkeeping."}
+{"timestamp":"2026-03-21T13:10:18+01:00","experiment_id":"2026-03-21-keep-pick-branch-local-aliases","hypothesis":"Because fresh profiling still shows `pick_branch_literal()` as a real cost center, hoisting the current read-only branch scan state into locals may reduce branch-selection overhead enough to survive the mixed exact-CLI hotspot gate and the repeat-aware full exact-CLI suite without changing branching policy.","change_summary":"Collected a fresh `large/test_6.cnf` profile, froze a `HEAD` baseline in `/tmp/satsolver_pickbranchlocals_baseline/`, patched only `pick_branch_literal()` in `satsolver_core.py` to use local aliases for `values`, `activity`, `saved_phase`, and `num_vars`, validated with `py_compile`, the full unit-test suite, CLI SAT/UNSAT smoke checks plus checker validation, benchmarked baseline vs candidate on a mixed nine-case exact-CLI hotspot slice and then on the repeat-aware exact-CLI full suite, collected a fresh post-keep profile, and refreshed `out_cli_extended.txt` from the retained candidate run.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md","out_cli_extended.txt","satsolver_core.py"],"datasets":["large/test_6.cnf","small/test_1.cnf","special/tseitin.cnf","medium/test_3.cnf","medium/test_4.cnf","medium/test_9.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf","small","medium","large","special"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/current_cycle_large6_profile.txt | head -n 35","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","mkdir -p /tmp/satsolver_pickbranchlocals_baseline","cp satsolver.py /tmp/satsolver_pickbranchlocals_baseline/satsolver.py","git show HEAD:satsolver_core.py > /tmp/satsolver_pickbranchlocals_baseline/satsolver_core.py","cp satsolver_fast.py /tmp/satsolver_pickbranchlocals_baseline/satsolver_fast.py","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_pickbranchlocals_baseline/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf special/tseitin.cnf medium/test_3.cnf medium/test_4.cnf medium/test_9.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf","python benchmark_suite.py satsolver /tmp/cycle_pickbranchlocals_baseline_cli_repeat2.txt small medium large special --cli-script /tmp/satsolver_pickbranchlocals_baseline/satsolver.py --repeat 2","python benchmark_suite.py satsolver /tmp/cycle_pickbranchlocals_candidate_cli_repeat2.txt small medium large special --cli-script satsolver.py --repeat 2","python satsolver.py small/test_1.cnf /tmp/pickbranchlocals_sat.txt","python tools/checker.py small/test_1.cnf /tmp/pickbranchlocals_sat.txt","python satsolver.py special/tseitin.cnf /tmp/pickbranchlocals_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/pickbranchlocals_unsat.txt --bruteforce-var-limit 0","python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/pickbranchlocals_profile_after.txt | head -n 20"],"metrics_before":{"large_test_6_profile_total_s":31.067,"large_test_6_profile_propagate_tottime_s":17.053,"large_test_6_profile_analyze_tottime_s":2.878,"large_test_6_profile_pick_branch_literal_tottime_s":1.626,"mixed_slice_two_order_avg_baseline_s":31.0625,"mixed_slice_forward_baseline_s":31.3587,"mixed_slice_reverse_baseline_s":30.7663,"full_suite_repeat2_total_baseline_s":32.7030,"full_suite_repeat2_measured_total_baseline_s":65.4059,"full_suite_repeat2_large_test_6_baseline_s":15.4449,"full_suite_repeat2_special_hard_baseline_s":10.0763},"metrics_after":{"large_test_6_profile_total_s":29.932,"large_test_6_profile_propagate_tottime_s":16.370,"large_test_6_profile_analyze_tottime_s":2.803,"large_test_6_profile_pick_branch_literal_tottime_s":1.388,"mixed_slice_two_order_avg_candidate_s":30.9412,"mixed_slice_forward_candidate_s":31.2829,"mixed_slice_reverse_candidate_s":30.5995,"full_suite_repeat2_total_candidate_s":31.6015,"full_suite_repeat2_measured_total_candidate_s":63.2029,"full_suite_repeat2_large_test_6_candidate_s":14.7695,"full_suite_repeat2_special_hard_candidate_s":9.7189},"correctness_status":"compiled cleanly, passed all 51 unit tests, produced checker-valid SAT and UNSAT CLI smoke outputs, and stayed 35/35 correct on the repeat-aware exact-CLI full suite","decision":"keep","notes":"This is a narrow kept branching cleanup. It improves the current read-only scan without reviving any of the already-rejected mutable frontier or heap-based branching ideas."}
+{"timestamp":"2026-03-21T13:19:22+01:00","experiment_id":"2026-03-21-reject-inline-decay-updates","hypothesis":"Because `solve()` still executes two tiny activity-decay helper calls on every learnt conflict, replacing `decay_var_activity()` and `decay_clause_activity()` with direct assignments may trim enough helper-boundary overhead to help the exact-CLI path without changing search behavior.","change_summary":"Collected a fresh post-keep `large/test_6.cnf` profile, froze a `HEAD` baseline in `/tmp/satsolver_inline_decay_baseline/`, temporarily patched `satsolver_core.py` so `solve()` updates `var_inc` and `clause_inc` inline after learning, validated with `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks, benchmarked baseline vs candidate on the mixed nine-case exact-CLI hotspot slice and then on the repeat-aware exact-CLI 35-case suite, then reverted the patch after the broad suite came back slightly worse overall.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_6.cnf","small/test_1.cnf","special/tseitin.cnf","medium/test_3.cnf","medium/test_4.cnf","medium/test_9.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf","small","medium","large","special"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/cycle_profile_large6_after_pickbranch.txt | head -n 35","mkdir -p /tmp/satsolver_inline_decay_baseline && git show HEAD:satsolver.py > /tmp/satsolver_inline_decay_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_inline_decay_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_inline_decay_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_inline_decay_baseline/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf special/tseitin.cnf medium/test_3.cnf medium/test_4.cnf medium/test_9.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf","python benchmark_suite.py satsolver /tmp/cycle_inline_decay_baseline_cli_repeat2.txt small medium large special --cli-script /tmp/satsolver_inline_decay_baseline/satsolver.py --repeat 2","python benchmark_suite.py satsolver /tmp/cycle_inline_decay_candidate_cli_repeat2.txt small medium large special --cli-script satsolver.py --repeat 2","python satsolver.py small/test_1.cnf /tmp/inline_decay_revert_sat.txt","python tools/checker.py small/test_1.cnf /tmp/inline_decay_revert_sat.txt","python satsolver.py special/tseitin.cnf /tmp/inline_decay_revert_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/inline_decay_revert_unsat.txt --bruteforce-var-limit 0"],"metrics_before":{"large_test_6_profile_total_s":35.278,"large_test_6_profile_propagate_tottime_s":19.426,"large_test_6_profile_analyze_tottime_s":3.257,"large_test_6_profile_pick_branch_literal_tottime_s":1.636,"mixed_slice_two_order_avg_baseline_s":30.7973,"mixed_slice_forward_baseline_s":30.4765,"mixed_slice_reverse_baseline_s":31.1182,"full_suite_repeat2_total_baseline_s":33.4842,"full_suite_repeat2_measured_total_baseline_s":66.9684,"full_suite_repeat2_large_test_6_baseline_s":15.4237,"full_suite_repeat2_special_hard_baseline_s":10.9702},"metrics_after":{"mixed_slice_two_order_avg_candidate_s":30.4203,"mixed_slice_forward_candidate_s":29.8930,"mixed_slice_reverse_candidate_s":30.9477,"full_suite_repeat2_total_candidate_s":33.6295,"full_suite_repeat2_measured_total_candidate_s":67.2590,"full_suite_repeat2_large_test_6_candidate_s":15.8732,"full_suite_repeat2_special_hard_candidate_s":10.4972,"mixed_slice_large_test_6_forward_candidate_s":14.4010,"mixed_slice_large_test_6_reverse_candidate_s":15.1773},"correctness_status":"the temporary patch compiled cleanly, passed all 51 unit tests, stayed checker-valid on SAT and UNSAT smoke cases, but it was reverted after the repeat-aware exact-CLI full suite regressed slightly overall despite a positive hotspot slice","decision":"discard","notes":"This is a helper-boundary false positive: the mixed hotspot slice looked clearly positive, but the broad repeat-aware exact-CLI suite came back slightly worse overall."}
+{"timestamp":"2026-03-21T13:24:57+01:00","experiment_id":"2026-03-21-reject-solve-local-method-binding","hypothesis":"Because `solve()` repeatedly dispatches the same hot helper methods on every conflict and decision, binding those methods into locals once per call may reduce helper-lookup overhead enough to help the exact-CLI path without changing solver behavior.","change_summary":"Collected a fresh `large/test_6.cnf` profile after the prior reject, froze a `HEAD` baseline in `/tmp/satsolver_solve_alias_baseline/`, temporarily patched `satsolver_core.py` so `solve()` binds its hot helper methods and `trail_limits` into locals once before entering the CDCL loop, validated with `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks, benchmarked baseline vs candidate on the mixed nine-case exact-CLI hotspot slice, then reverted the patch immediately after the mixed gate regressed decisively.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_6.cnf","small/test_1.cnf","special/tseitin.cnf","medium/test_3.cnf","medium/test_4.cnf","medium/test_9.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/cycle_profile_large6_after_fb7b41e.txt | head -n 35","mkdir -p /tmp/satsolver_solve_alias_baseline && git show HEAD:satsolver.py > /tmp/satsolver_solve_alias_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_solve_alias_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_solve_alias_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_solve_alias_baseline/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf special/tseitin.cnf medium/test_3.cnf medium/test_4.cnf medium/test_9.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf","python satsolver.py small/test_1.cnf /tmp/solve_alias_revert_sat.txt","python tools/checker.py small/test_1.cnf /tmp/solve_alias_revert_sat.txt","python satsolver.py special/tseitin.cnf /tmp/solve_alias_revert_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/solve_alias_revert_unsat.txt --bruteforce-var-limit 0"],"metrics_before":{"large_test_6_profile_total_s":32.074,"large_test_6_profile_propagate_tottime_s":17.725,"large_test_6_profile_analyze_tottime_s":2.941,"large_test_6_profile_pick_branch_literal_tottime_s":1.470,"large_test_6_profile_add_learnt_clause_tottime_s":0.328,"large_test_6_profile_solve_tottime_s":0.596,"mixed_slice_two_order_avg_baseline_s":29.4850,"mixed_slice_forward_baseline_s":29.1647,"mixed_slice_reverse_baseline_s":29.8053},"metrics_after":{"mixed_slice_two_order_avg_candidate_s":31.0535,"mixed_slice_forward_candidate_s":29.8406,"mixed_slice_reverse_candidate_s":32.2663,"large_test_6_forward_candidate_s":14.7106,"large_test_6_reverse_candidate_s":16.9758,"special_hard_forward_candidate_s":9.9555,"special_hard_reverse_candidate_s":10.0131,"large_test_8_forward_candidate_s":0.3055,"large_test_8_reverse_candidate_s":0.3284},"correctness_status":"the temporary patch compiled cleanly, passed all 51 unit tests, and stayed checker-valid on SAT and UNSAT smoke cases, but it was reverted immediately after the mixed exact-CLI hotspot gate regressed strongly overall","decision":"discard","notes":"This is a broad local-binding reject. Unlike the kept `pick_branch_literal()` scan cleanup, binding most of the `solve()` helpers into locals made the dense UNSAT cases materially worse, especially reverse-order `large/test_6.cnf`."}
+{"timestamp":"2026-03-21T13:33:47+01:00","experiment_id":"2026-03-21-reject-conflict-abs-local-binding","hypothesis":"Because fresh exact-CLI profiling still shows `abs` as a visible cost center inside conflict analysis, binding `abs` into locals inside `analyze()`, `minimize_learnt()`, and `prepare_learnt_clause()` may trim builtin-lookup overhead enough to help the exact-CLI path without changing solver behavior.","change_summary":"Collected fresh `large/test_6.cnf` and `special/hard.cnf` profiles, froze a baseline copy in `/tmp/satsolver_abslocal_baseline.QdUJFU/`, temporarily patched `satsolver_core.py` so `analyze()`, `minimize_learnt()`, and `prepare_learnt_clause()` bind `abs` into locals, validated with `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks, benchmarked baseline vs candidate on the mixed nine-case exact-CLI hotspot slice, then reverted the patch after the mixed gate regressed clearly overall.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_6.cnf","special/hard.cnf","small/test_1.cnf","special/tseitin.cnf","medium/test_3.cnf","medium/test_4.cnf","medium/test_9.cnf","large/test_8.cnf","large/test_10.cnf"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/cycle_profile_large6_current.txt | head -n 40","python -m cProfile -s tottime satsolver.py special/hard.cnf /tmp/cycle_profile_hard_current.txt | head -n 40","baseline_dir=$(mktemp -d /tmp/satsolver_abslocal_baseline.XXXXXX) && cp satsolver.py satsolver_core.py satsolver_fast.py \"$baseline_dir\" && printf '%s' \"$baseline_dir\"","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_abslocal_baseline.QdUJFU/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf special/tseitin.cnf medium/test_3.cnf medium/test_4.cnf medium/test_9.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf","python satsolver.py small/test_1.cnf /tmp/abslocal_revert_sat.txt","python tools/checker.py small/test_1.cnf /tmp/abslocal_revert_sat.txt","python satsolver.py special/tseitin.cnf /tmp/abslocal_revert_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/abslocal_revert_unsat.txt --bruteforce-var-limit 0"],"metrics_before":{"large_test_6_profile_total_s":33.356,"large_test_6_profile_propagate_tottime_s":18.56,"large_test_6_profile_analyze_tottime_s":3.079,"large_test_6_profile_pick_branch_literal_tottime_s":1.544,"large_test_6_profile_abs_tottime_s":1.194,"special_hard_profile_total_s":19.99,"special_hard_profile_propagate_tottime_s":10.929,"special_hard_profile_analyze_tottime_s":1.958,"special_hard_profile_pick_branch_literal_tottime_s":0.748,"special_hard_profile_abs_tottime_s":0.788,"mixed_slice_two_order_avg_baseline_s":31.4277,"mixed_slice_forward_baseline_s":32.3663,"mixed_slice_reverse_baseline_s":30.4891},"metrics_after":{"mixed_slice_two_order_avg_candidate_s":32.1594,"mixed_slice_forward_candidate_s":33.0372,"mixed_slice_reverse_candidate_s":31.2816,"large_test_6_forward_candidate_s":16.5961,"large_test_6_reverse_candidate_s":15.4358,"special_hard_forward_candidate_s":10.8689,"special_hard_reverse_candidate_s":10.3215,"large_test_10_forward_candidate_s":2.039,"large_test_10_reverse_candidate_s":1.9988,"large_test_8_forward_candidate_s":0.3377,"large_test_8_reverse_candidate_s":0.3162},"correctness_status":"the temporary patch compiled cleanly, passed all 51 unit tests, and stayed checker-valid on SAT and UNSAT smoke cases, but it was reverted immediately after the mixed exact-CLI hotspot gate regressed clearly overall","decision":"discard","notes":"This is another pure-overhead conflict-analysis reject: the visible `abs` cost did not turn into an end-to-end gain when the builtin was simply bound into locals."}
+{"timestamp":"2026-03-21T13:42:17+01:00","experiment_id":"2026-03-21-reject-prepare-learnt-fixed-size-fast-path","hypothesis":"Because the solver learns many short clauses and `prepare_learnt_clause()` still does generic LBD-token bookkeeping and a best-level scan for every learnt clause, special-casing binary and ternary learnt clauses may trim conflict-analysis overhead enough to help the exact-CLI path without changing solver policy.","change_summary":"Froze a `HEAD` baseline in `/tmp/satsolver_preparelearnt_baseline.Es2D5k/`, temporarily patched `prepare_learnt_clause()` in `satsolver_core.py` with dedicated binary and ternary fast paths while leaving the generic path unchanged for larger learnt clauses, validated with `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks, benchmarked baseline vs candidate on the mixed nine-case exact-CLI hotspot slice, then reverted the patch immediately after the mixed gate regressed clearly overall.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["small/test_1.cnf","special/tseitin.cnf","medium/test_3.cnf","medium/test_4.cnf","medium/test_9.cnf","large/test_6.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf"],"commands":["baseline_dir=$(mktemp -d /tmp/satsolver_preparelearnt_baseline.XXXXXX) && git show HEAD:satsolver.py > \"$baseline_dir/satsolver.py\" && git show HEAD:satsolver_core.py > \"$baseline_dir/satsolver_core.py\" && git show HEAD:satsolver_fast.py > \"$baseline_dir/satsolver_fast.py\" && printf '%s' \"$baseline_dir\"","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_preparelearnt_baseline.Es2D5k/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf special/tseitin.cnf medium/test_3.cnf medium/test_4.cnf medium/test_9.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf","python satsolver.py small/test_1.cnf /tmp/preparelearnt_revert_sat.txt","python tools/checker.py small/test_1.cnf /tmp/preparelearnt_revert_sat.txt","python satsolver.py special/tseitin.cnf /tmp/preparelearnt_revert_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/preparelearnt_revert_unsat.txt --bruteforce-var-limit 0"],"metrics_before":{"mixed_slice_two_order_avg_baseline_s":32.1394,"mixed_slice_forward_baseline_s":32.1665,"mixed_slice_reverse_baseline_s":32.1123,"large_test_6_forward_baseline_s":15.9523,"large_test_6_reverse_baseline_s":14.9877,"special_hard_forward_baseline_s":10.8156,"special_hard_reverse_baseline_s":11.0351},"metrics_after":{"mixed_slice_two_order_avg_candidate_s":34.0749,"mixed_slice_forward_candidate_s":34.5739,"mixed_slice_reverse_candidate_s":33.5760,"large_test_6_forward_candidate_s":18.1880,"large_test_6_reverse_candidate_s":16.9680,"special_hard_forward_candidate_s":11.0575,"special_hard_reverse_candidate_s":10.6748,"large_test_8_forward_candidate_s":0.3344,"large_test_8_reverse_candidate_s":0.3131},"correctness_status":"the temporary patch compiled cleanly, passed all 51 unit tests, and stayed checker-valid on SAT and UNSAT smoke cases, but it was reverted immediately after the mixed exact-CLI hotspot gate regressed strongly overall","decision":"discard","notes":"This looked like a harmless fixed-size conflict-analysis specialization, but it materially worsened `large/test_6.cnf` in both orders and failed the mixed exact-CLI gate decisively."}
+{"timestamp":"2026-03-21T13:48:28+01:00","experiment_id":"2026-03-21-reject-flat-binary-implications","hypothesis":"Because `propagate()` still dominates runtime and the binary implication loop still unpacks Python tuples, storing `binary_implications` as flat integer pairs may reduce same-search propagation overhead without changing solver behavior.","change_summary":"Froze a `HEAD` baseline in `/tmp/satsolver_binaryflat_baseline.TPfZD0/`, temporarily patched `satsolver_core.py` so `binary_implications` stores alternating `implied_literal, clause_id` integers and `propagate()` iterates them by step `2`, updated `tools/profile_solver.py` to mirror the temporary layout so tests and profiler tooling stayed valid during measurement, validated with `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks, benchmarked baseline vs candidate on the mixed nine-case exact-CLI hotspot slice, then reverted both the core patch and the profiler mirror after the mixed gate regressed overall.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["small/test_1.cnf","special/tseitin.cnf","medium/test_3.cnf","medium/test_4.cnf","medium/test_9.cnf","large/test_6.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf"],"commands":["baseline_dir=$(mktemp -d /tmp/satsolver_binaryflat_baseline.XXXXXX) && git show HEAD:satsolver.py > \"$baseline_dir/satsolver.py\" && git show HEAD:satsolver_core.py > \"$baseline_dir/satsolver_core.py\" && git show HEAD:satsolver_fast.py > \"$baseline_dir/satsolver_fast.py\" && printf '%s' \"$baseline_dir\"","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py tools/profile_solver.py","python -m unittest discover -s tests -v","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_binaryflat_baseline.TPfZD0/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf special/tseitin.cnf medium/test_3.cnf medium/test_4.cnf medium/test_9.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf","python satsolver.py small/test_1.cnf /tmp/binaryflat_revert_sat.txt","python tools/checker.py small/test_1.cnf /tmp/binaryflat_revert_sat.txt","python satsolver.py special/tseitin.cnf /tmp/binaryflat_revert_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/binaryflat_revert_unsat.txt --bruteforce-var-limit 0"],"metrics_before":{"mixed_slice_two_order_avg_baseline_s":35.0798,"mixed_slice_forward_baseline_s":35.8088,"mixed_slice_reverse_baseline_s":34.3507,"large_test_6_forward_baseline_s":18.5623,"large_test_6_reverse_baseline_s":16.9915,"special_hard_forward_baseline_s":11.1569,"special_hard_reverse_baseline_s":11.2627,"large_test_10_forward_baseline_s":2.3252,"large_test_10_reverse_baseline_s":2.2495},"metrics_after":{"mixed_slice_two_order_avg_candidate_s":36.0096,"mixed_slice_forward_candidate_s":35.5085,"mixed_slice_reverse_candidate_s":36.5107,"large_test_6_forward_candidate_s":17.4797,"large_test_6_reverse_candidate_s":18.9111,"special_hard_forward_candidate_s":12.0093,"special_hard_reverse_candidate_s":11.3503,"large_test_10_forward_candidate_s":2.2217,"large_test_10_reverse_candidate_s":2.4885,"large_test_8_forward_candidate_s":0.3684,"large_test_8_reverse_candidate_s":0.3722},"correctness_status":"the temporary core patch plus mirrored profiler-layout patch compiled cleanly, passed all 51 unit tests, and stayed checker-valid on SAT and UNSAT smoke cases, but both were reverted immediately after the mixed exact-CLI hotspot gate regressed overall","decision":"discard","notes":"This looked like a plausible propagation data-layout cleanup, but the reverse-order dense UNSAT losses outweighed the forward-order gains and it did not survive the mixed exact-CLI gate."}
+{"timestamp":"2026-03-21T14:01:47+01:00","experiment_id":"2026-03-21-reject-one-pass-backtrack-tail","hypothesis":"Because fresh profiling still shows `backtrack()` as a visible cost center after the earlier kept cleanup, computing the cut point once and clearing the whole trail tail in one pass may reduce same-search backtrack overhead enough to survive the mixed exact-CLI slice and the repeat-aware exact-CLI suite without changing solver behavior.","change_summary":"Collected a fresh retained-baseline `large/test_6.cnf` profile, froze a `HEAD` baseline in `/tmp/satsolver_backtrackslice_baseline.KCqpxd/`, temporarily patched `satsolver_core.py` so `backtrack()` computes one start index, clears the trail tail in one pass, and slices `trail_limits` once, added a regression in `tests/test_solver_regressions.py` for backtrack-to-nonzero-level behavior, validated with `py_compile` and the full unit suite, benchmarked baseline vs candidate on the mixed nine-case exact-CLI hotspot slice and then on the repeat-aware exact-CLI 35-case suite, then reverted the core patch after the broad suite regressed while keeping the new regression test.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md","tests/test_solver_regressions.py"],"datasets":["large/test_6.cnf","small/test_1.cnf","special/tseitin.cnf","medium/test_3.cnf","medium/test_4.cnf","medium/test_9.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf","small","medium","large","special"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/cycle_backtrack_baseline_out.txt | head -n 35","baseline_dir=$(mktemp -d /tmp/satsolver_backtrackslice_baseline.XXXXXX) && git show HEAD:satsolver.py > \"$baseline_dir/satsolver.py\" && git show HEAD:satsolver_core.py > \"$baseline_dir/satsolver_core.py\" && git show HEAD:satsolver_fast.py > \"$baseline_dir/satsolver_fast.py\" && printf '%s' \"$baseline_dir\"","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py tests/test_solver_regressions.py","python -m unittest discover -s tests -v","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_backtrackslice_baseline.KCqpxd/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf special/tseitin.cnf medium/test_3.cnf medium/test_4.cnf medium/test_9.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf","python benchmark_suite.py satsolver /tmp/cycle_backtrack_baseline_cli_repeat2.txt small medium large special --cli-script /tmp/satsolver_backtrackslice_baseline.KCqpxd/satsolver.py --repeat 2","python benchmark_suite.py satsolver /tmp/cycle_backtrack_candidate_cli_repeat2.txt small medium large special --cli-script satsolver.py --repeat 2"],"metrics_before":{"unit_test_count":51,"large_test_6_profile_total_s":36.264,"large_test_6_profile_propagate_tottime_s":20.287,"large_test_6_profile_analyze_tottime_s":3.328,"large_test_6_profile_pick_branch_literal_tottime_s":1.657,"large_test_6_profile_backtrack_tottime_s":0.971,"mixed_slice_two_order_avg_baseline_s":38.9067,"mixed_slice_forward_baseline_s":39.1605,"mixed_slice_reverse_baseline_s":38.6528,"full_suite_repeat2_total_baseline_s":39.2286,"full_suite_repeat2_measured_total_baseline_s":78.4572,"full_suite_repeat2_large_test_6_baseline_s":18.9120,"full_suite_repeat2_special_hard_baseline_s":11.8325},"metrics_after":{"unit_test_count":52,"mixed_slice_two_order_avg_candidate_s":38.1503,"mixed_slice_forward_candidate_s":38.8441,"mixed_slice_reverse_candidate_s":37.4565,"full_suite_repeat2_total_candidate_s":39.7958,"full_suite_repeat2_measured_total_candidate_s":79.5916,"full_suite_repeat2_large_test_6_candidate_s":18.4629,"full_suite_repeat2_special_hard_candidate_s":12.8074,"full_suite_repeat2_medium_test_4_candidate_s":2.6679,"full_suite_repeat2_large_test_10_candidate_s":2.3904},"correctness_status":"the temporary backtrack rewrite compiled cleanly, the repository passed all 52 unit tests with the new regression, mixed-slice outputs stayed checker-valid, and the retained repository returned to the committed solver logic after the broad repeat-aware exact-CLI suite regressed overall","decision":"discard","notes":"This is a hotspot-only mirage. The candidate clearly helped the mixed nine-case slice and `large/test_6.cnf`, but it still lost the repeat-aware 35-case suite because broader regressions on `special/hard.cnf` and `medium/test_4.cnf` outweighed the dense-case gain."}
+{"timestamp":"2026-03-21T14:10:29+01:00","experiment_id":"2026-03-21-reject-portfolio-phase32-worker","hypothesis":"Because the exact-CLI portfolio gate is now extremely narrow and mainly protects the `large/test_8.cnf` family, replacing the current phase-biased worker with a more aggressive `seed_phase_bias=True, restart_base=32` worker might improve that one protected case enough to justify itself.","change_summary":"Created `scratch_satsolver_portfolio32.py` as a temporary wrapper over the retained mainline that kept the current default portfolio worker but changed the second worker to run with `seed_phase_bias=True` and `restart_base=32`, validated SAT output on `large/test_8.cnf`, benchmarked retained `satsolver.py` vs the scratch wrapper on exact-CLI `large/test_8.cnf` with `tools/hotspot_compare.py --repeat 2`, then deleted the scratch wrapper immediately after the one-case gate failed catastrophically.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_8.cnf"],"commands":["python -m py_compile scratch_satsolver_portfolio32.py","python scratch_satsolver_portfolio32.py large/test_8.cnf /tmp/portfolio32_large8.txt","python tools/checker.py large/test_8.cnf /tmp/portfolio32_large8.txt","python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script scratch_satsolver_portfolio32.py --repeat 2 large/test_8.cnf","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v"],"metrics_before":{"unit_test_count":52,"large_test_8_two_order_avg_baseline_s":0.4129,"large_test_8_forward_baseline_s":0.3952,"large_test_8_reverse_baseline_s":0.4307},"metrics_after":{"unit_test_count":52,"large_test_8_two_order_avg_candidate_s":5.5657,"large_test_8_forward_candidate_s":5.6692,"large_test_8_reverse_candidate_s":5.4622},"correctness_status":"the temporary wrapper compiled cleanly, produced checker-valid SAT output on large/test_8.cnf, and the retained repository returned to the unchanged committed solver after the one-case exact-CLI gate failed; the retained baseline still passes all 52 regression tests","decision":"discard","notes":"This was a hard early reject. The tuned second worker was not merely neutral; it made the one remaining portfolio-gated family about 13.5x slower, so more aggressive restart retuning for that worker is currently off the table."}
+{"timestamp":"2026-03-21T14:22:22+01:00","experiment_id":"2026-03-21-reject-merge-root-propagate-solve","hypothesis":"Because `solve()` currently performs one root `propagate()` call before entering a loop that immediately calls `propagate()` again, removing that standalone pre-loop call may shave exact-CLI startup overhead without changing the real search on larger cases.","change_summary":"Collected a fresh retained-baseline `large/test_6.cnf` profile, froze a `HEAD` baseline in `/tmp/satsolver_rootprop_baseline/`, temporarily patched `satsolver_core.py` to remove the standalone root `propagate()` call from `solve()`, validated with `py_compile`, benchmarked baseline vs candidate on the 12-case SAT-heavy exact-CLI root-hit slice and the mixed nine-case exact-CLI hotspot slice, then reverted the patch immediately after the mixed gate regressed and reran the unit suite plus checker-backed SAT/UNSAT smoke checks.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_6.cnf","small/test_1.cnf","small/test_5.cnf","small/test_6.cnf","small/test_9.cnf","medium/test_8.cnf","medium/test_9.cnf","large/test_1.cnf","large/test_2.cnf","large/test_5.cnf","large/test_7.cnf","large/test_9.cnf","special/easy.cnf","special/tseitin.cnf","medium/test_3.cnf","medium/test_4.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/current_cycle_profile.txt | head -n 40","mkdir -p /tmp/satsolver_rootprop_baseline && git show HEAD:satsolver.py > /tmp/satsolver_rootprop_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_rootprop_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_rootprop_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_rootprop_baseline/satsolver.py --candidate-cli-script satsolver.py --repeat 2 small/test_1.cnf small/test_5.cnf small/test_6.cnf small/test_9.cnf medium/test_8.cnf medium/test_9.cnf large/test_1.cnf large/test_2.cnf large/test_5.cnf large/test_7.cnf large/test_9.cnf special/easy.cnf","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_rootprop_baseline/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf special/tseitin.cnf medium/test_3.cnf medium/test_4.cnf medium/test_9.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/current_cycle_sat.txt","python tools/checker.py small/test_1.cnf /tmp/current_cycle_sat.txt","python satsolver.py special/tseitin.cnf /tmp/current_cycle_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/current_cycle_unsat.txt --bruteforce-var-limit 0"],"metrics_before":{"large_test_6_profile_total_s":34.74,"large_test_6_profile_propagate_tottime_s":19.301,"large_test_6_profile_analyze_tottime_s":3.188,"large_test_6_profile_pick_branch_literal_tottime_s":1.578,"large_test_6_profile_backtrack_tottime_s":0.936,"root_hit_two_order_avg_baseline_s":0.5092,"root_hit_forward_baseline_s":0.5225,"root_hit_reverse_baseline_s":0.4959,"mixed_slice_two_order_avg_baseline_s":36.2592,"mixed_slice_forward_baseline_s":36.4923,"mixed_slice_reverse_baseline_s":36.0261,"mixed_slice_large_test_6_forward_baseline_s":18.39,"mixed_slice_large_test_6_reverse_baseline_s":18.1681},"metrics_after":{"root_hit_two_order_avg_candidate_s":0.5010,"root_hit_forward_candidate_s":0.5270,"root_hit_reverse_candidate_s":0.4750,"mixed_slice_two_order_avg_candidate_s":36.5577,"mixed_slice_forward_candidate_s":36.9874,"mixed_slice_reverse_candidate_s":36.1280,"mixed_slice_large_test_6_forward_candidate_s":18.8554,"mixed_slice_large_test_6_reverse_candidate_s":18.6613,"mixed_slice_large_test_8_forward_candidate_s":0.4054,"mixed_slice_large_test_8_reverse_candidate_s":0.3567,"mixed_slice_special_hard_forward_candidate_s":11.6014,"mixed_slice_special_hard_reverse_candidate_s":11.2535,"unit_test_count":52},"correctness_status":"the temporary patch compiled cleanly, the retained repository passed all 52 unit tests after rollback, and SAT/UNSAT checker smoke checks passed on `small/test_1.cnf` and `special/tseitin.cnf`","decision":"discard","notes":"This is another startup-only mirage. Removing the standalone root `propagate()` call helped the startup-heavy exact-CLI slice slightly, but it still regressed the real mixed exact-CLI gate because the dense UNSAT family, especially `large/test_6.cnf`, moved the wrong way."}
+{"timestamp":"2026-03-21T14:36:37+01:00","experiment_id":"2026-03-21-keep-profile-restart-reduction-cadence","hypothesis":"If `tools/profile_solver.py` mirrors the retained zero-activity branching rule and records restart/reduction cadence directly, it can sharpen the backlog by showing whether more work should go into restart/reduction bookkeeping or whether those paths are already too small for another micro-optimization to matter.","change_summary":"Patched `tools/profile_solver.py` so zero-activity branch choices still count but always follow `saved_phase`, added explicit restart and reduction counters plus CLI reporting, mirrored the retained `reduce_database()` logic inside the profiler wrapper, added profile-tool regressions for zero-activity branch polarity, restart stats, and reduction stats in `tests/test_profile_solver.py`, validated with `py_compile` and the full unit suite, and reran the hotspot profiler on the main hard cases.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md","tests/test_profile_solver.py","tools/profile_solver.py"],"datasets":["small/test_4.cnf","large/test_6.cnf","special/hard.cnf","medium/test_4.cnf","large/test_8.cnf"],"commands":["python -m py_compile tools/profile_solver.py tests/test_profile_solver.py","python -m unittest discover -s tests -v","python tools/profile_solver.py large/test_6.cnf special/hard.cnf medium/test_4.cnf large/test_8.cnf"],"metrics_before":{"unit_test_count":52},"metrics_after":{"unit_test_count":55,"large_test_6_restarts":253,"large_test_6_avg_conflicts_per_restart":226.4,"large_test_6_avg_restart_decision_level":10.16,"large_test_6_avg_restart_trail":33.5,"large_test_6_reductions":260,"large_test_6_avg_live_learnts_per_reduction":550.25,"large_test_6_avg_locked_clauses_per_reduction":23.94,"large_test_6_avg_candidate_clauses_per_reduction":447.42,"special_hard_restarts":218,"special_hard_avg_conflicts_per_restart":204.04,"special_hard_reductions":186,"special_hard_avg_locked_clauses_per_reduction":24.69,"special_hard_avg_candidate_clauses_per_reduction":469.92,"medium_test_4_restarts":61,"medium_test_4_avg_conflicts_per_restart":166.82,"medium_test_4_reductions":66,"medium_test_4_avg_locked_clauses_per_reduction":22.73,"medium_test_4_avg_candidate_clauses_per_reduction":320.55,"large_test_8_restarts":92,"large_test_8_avg_conflicts_per_restart":177.39,"large_test_8_avg_restart_decision_level":16.3,"large_test_8_avg_restart_trail":51.83,"large_test_8_reductions":102,"large_test_8_avg_locked_clauses_per_reduction":33.07,"large_test_8_avg_candidate_clauses_per_reduction":315.26},"correctness_status":"the profiler upgrade compiled cleanly, the repository passed all 55 unit tests after adding the new profile regressions, the hotspot profiler ran cleanly on the four main hard cases, and the production solver stayed unchanged","decision":"keep","notes":"This is a tooling keep, not a solver-core keep. The new counters show reductions are mostly operating on a few hundred deletable candidates while only a few dozen learnt clauses are locked, so future `reduce_database()` work should focus on classifier/search effects rather than more locked-set bookkeeping cleanup."}
+{"timestamp":"2026-03-21T14:44:43+01:00","experiment_id":"2026-03-21-reject-pick-branch-while-scan","hypothesis":"Because the last kept branch-scan cleanup came from removing repeated attribute lookups, replacing the remaining `for range(...)` machinery in `pick_branch_literal()` with a manual `while` loop may trim enough branch-selection overhead to help the exact-CLI path without changing branch policy or tie behavior.","change_summary":"Collected a fresh retained-baseline `large/test_6.cnf` profile, froze a `HEAD` baseline in `/tmp/satsolver_pickbranchwhile_baseline/`, temporarily patched `pick_branch_literal()` in `satsolver_core.py` to use a manual `while variable <= num_vars` scan with the same `>` tie policy, validated with `py_compile` and the full unit suite, benchmarked baseline vs candidate on the mixed nine-case exact-CLI hotspot slice, then reverted the patch immediately after the mixed gate regressed and reran full validation plus checker-backed SAT/UNSAT smoke checks.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_6.cnf","small/test_1.cnf","special/tseitin.cnf","medium/test_3.cnf","medium/test_4.cnf","medium/test_9.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/current_cycle_profile.txt | head -n 30","mkdir -p /tmp/satsolver_pickbranchwhile_baseline && git show HEAD:satsolver.py > /tmp/satsolver_pickbranchwhile_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_pickbranchwhile_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_pickbranchwhile_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_pickbranchwhile_baseline/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf special/tseitin.cnf medium/test_3.cnf medium/test_4.cnf medium/test_9.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/current_cycle_sat.txt","python tools/checker.py small/test_1.cnf /tmp/current_cycle_sat.txt","python satsolver.py special/tseitin.cnf /tmp/current_cycle_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/current_cycle_unsat.txt --bruteforce-var-limit 0"],"metrics_before":{"large_test_6_profile_total_s":27.938,"large_test_6_profile_propagate_tottime_s":15.213,"large_test_6_profile_analyze_tottime_s":2.652,"large_test_6_profile_pick_branch_literal_tottime_s":1.292,"mixed_slice_two_order_avg_baseline_s":28.0431,"mixed_slice_forward_baseline_s":28.0849,"mixed_slice_reverse_baseline_s":28.0013,"large_test_6_forward_baseline_s":13.9161,"large_test_6_reverse_baseline_s":13.9364,"special_hard_forward_baseline_s":9.2612,"special_hard_reverse_baseline_s":9.1085,"medium_test_4_forward_baseline_s":1.9543,"medium_test_4_reverse_baseline_s":1.8855},"metrics_after":{"unit_test_count":55,"mixed_slice_two_order_avg_candidate_s":29.6058,"mixed_slice_forward_candidate_s":29.5404,"mixed_slice_reverse_candidate_s":29.6711,"large_test_6_forward_candidate_s":14.4373,"large_test_6_reverse_candidate_s":14.5136,"special_hard_forward_candidate_s":9.8463,"special_hard_reverse_candidate_s":9.9682,"medium_test_4_forward_candidate_s":2.0481,"medium_test_4_reverse_candidate_s":2.1457,"large_test_8_forward_candidate_s":0.3560,"large_test_8_reverse_candidate_s":0.3091},"correctness_status":"the temporary patch compiled cleanly, passed all 55 unit tests, stayed checker-valid on SAT and UNSAT smoke cases, and was reverted immediately after the mixed exact-CLI hotspot gate regressed decisively overall","decision":"discard","notes":"This is a clean mixed-gate reject. The previous kept local-alias cleanup in `pick_branch_literal()` does not extend to swapping the scan loop from `for range(...)` to `while`; the dense UNSAT cases all moved the wrong way in both orders."}
+{"timestamp":"2026-03-21T14:55:03+01:00","experiment_id":"2026-03-21-reject-ternary-true-candidate-hold","hypothesis":"Because only about 13.5%..17.2% of ternary relocations go to already-`TRUE` candidate literals, leaving those clauses satisfied in place instead of relocating the false watch might cut watcher churn on a minority path without disturbing the dominant `candidate=UNASSIGNED` ternary behavior.","change_summary":"Froze a `HEAD` baseline in `/tmp/satsolver_ternarytruehold_baseline/`, temporarily patched the ternary branch in `propagate()` so `candidate_value == TRUE` kept the clause satisfied in place instead of relocating the watch, validated with `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks, benchmarked baseline vs candidate on the mixed nine-case exact-CLI hotspot slice, then reverted the patch immediately after the mixed gate failed catastrophically and reran full validation on the retained baseline.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["small/test_1.cnf","special/tseitin.cnf","medium/test_3.cnf","medium/test_4.cnf","medium/test_9.cnf","large/test_6.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf"],"commands":["mkdir -p /tmp/satsolver_ternarytruehold_baseline && git show HEAD:satsolver.py > /tmp/satsolver_ternarytruehold_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_ternarytruehold_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_ternarytruehold_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/ternary_true_hold_sat.txt","python tools/checker.py small/test_1.cnf /tmp/ternary_true_hold_sat.txt","python satsolver.py special/tseitin.cnf /tmp/ternary_true_hold_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/ternary_true_hold_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_ternarytruehold_baseline/satsolver.py --candidate-cli-script satsolver.py small/test_1.cnf special/tseitin.cnf medium/test_3.cnf medium/test_4.cnf medium/test_9.cnf large/test_6.cnf large/test_8.cnf large/test_10.cnf special/hard.cnf","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/current_cycle_sat.txt","python tools/checker.py small/test_1.cnf /tmp/current_cycle_sat.txt","python satsolver.py special/tseitin.cnf /tmp/current_cycle_unsat.txt","python tools/checker.py special/tseitin.cnf /tmp/current_cycle_unsat.txt --bruteforce-var-limit 0"],"metrics_before":{"unit_test_count":55,"mixed_slice_two_order_avg_baseline_s":34.2608,"mixed_slice_forward_baseline_s":35.1672,"mixed_slice_reverse_baseline_s":33.3543,"large_test_6_forward_baseline_s":16.8833,"large_test_6_reverse_baseline_s":16.9439,"large_test_8_forward_baseline_s":0.3514,"large_test_8_reverse_baseline_s":0.3674,"special_hard_forward_baseline_s":11.8450,"special_hard_reverse_baseline_s":10.8565},"metrics_after":{"unit_test_count":55,"mixed_slice_two_order_avg_candidate_s":55.5632,"mixed_slice_forward_candidate_s":57.8010,"mixed_slice_reverse_candidate_s":53.3254,"large_test_6_forward_candidate_s":25.7924,"large_test_6_reverse_candidate_s":23.3024,"large_test_8_forward_candidate_s":12.0130,"large_test_8_reverse_candidate_s":11.9362,"special_hard_forward_candidate_s":14.0072,"special_hard_reverse_candidate_s":13.1154,"large_test_10_forward_candidate_s":1.8070,"large_test_10_reverse_candidate_s":1.6425},"correctness_status":"the temporary patch compiled cleanly, passed all 55 unit tests, stayed checker-valid on SAT and UNSAT smoke cases, and was reverted immediately after the mixed exact-CLI hotspot gate failed catastrophically overall","decision":"discard","notes":"This is a strong propagation reject. Even though `candidate=TRUE` ternary relocations are a minority path, leaving the false watch in place destroyed `large/test_8.cnf` and made the dense UNSAT cases much worse too."}
+{"timestamp":"2026-03-21T18:05:00+01:00","experiment_id":"2026-03-21-reject-reason-sentinel-plus-else-tail","hypothesis":"Because `reason` is touched across `enqueue()`, `backtrack()`, `minimize_learnt()`, `analyze()`, and `reduce_database()`, and because the no-replacement ternary tails in `propagate()` still branch on an already-impossible `other_value == TRUE` case, combining integer-only `reason` sentinel storage with a tiny no-replacement-tail cleanup might produce a broader same-search win than recent primitive-binding rejects.","change_summary":"Collected a fresh retained-baseline `large/test_6.cnf` profile, froze a baseline in `/tmp/satsolver_reasonsentinel_baseline.nViK3a/`, patched a bundled candidate that both replaced `None` decision reasons with `NO_REASON = -1` and simplified the two no-replacement tails in `propagate()` from `if other_value == FALSE ... elif other_value == UNASSIGNED ...` to `if other_value == FALSE ... else ...`, mirrored the sentinel path in `tools/profile_solver.py`, updated the backtrack regressions temporarily, validated with `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks, benchmarked baseline vs candidate on the mixed nine-case exact-CLI hotspot slice, then ran same-day repeat-aware exact-CLI 35-case suites for both before reverting the bundled branch and restoring the retained solver/artifact files after the broader suite regressed.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md","out_cli_extended.txt","satsolver.py","satsolver_core.py","satsolver_fast.py","tests/test_solver_regressions.py","tools/profile_solver.py"],"datasets":["large/test_6.cnf","small/test_1.cnf","special/tseitin.cnf","medium/test_4.cnf","medium/test_8.cnf","small/test_5.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf","small","medium","large","special"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/codex_cycle_profile.txt | head -n 35","baseline_dir=$(mktemp -d /tmp/satsolver_reasonsentinel_baseline.XXXXXX) && cp satsolver.py satsolver_core.py satsolver_fast.py \"$baseline_dir\" && printf '%s\\n' \"$baseline_dir\"","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py tools/profile_solver.py tests/test_solver_regressions.py tests/test_profile_solver.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/reasonsentinel_sat.txt && python tools/checker.py small/test_1.cnf /tmp/reasonsentinel_sat.txt","python satsolver.py special/tseitin.cnf /tmp/reasonsentinel_unsat.txt && python tools/checker.py special/tseitin.cnf /tmp/reasonsentinel_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_reasonsentinel_baseline.nViK3a/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf medium/test_4.cnf large/test_10.cnf large/test_8.cnf small/test_1.cnf small/test_5.cnf medium/test_8.cnf special/tseitin.cnf","python benchmark_suite.py satsolver /tmp/elseunit_baseline_cli_repeat2.txt small medium large special --bruteforce-var-limit 16 --cli-script /tmp/satsolver_reasonsentinel_baseline.nViK3a/satsolver.py --repeat 2","python benchmark_suite.py satsolver /tmp/elseunit_candidate_cli_repeat2.txt small medium large special --bruteforce-var-limit 16 --cli-script satsolver.py --repeat 2","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py tools/profile_solver.py tests/test_solver_regressions.py tests/test_profile_solver.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/revert_cycle_sat.txt && python tools/checker.py small/test_1.cnf /tmp/revert_cycle_sat.txt","python satsolver.py special/tseitin.cnf /tmp/revert_cycle_unsat.txt && python tools/checker.py special/tseitin.cnf /tmp/revert_cycle_unsat.txt --bruteforce-var-limit 0"],"metrics_before":{"unit_test_count":55,"large_test_6_profile_total_s":29.479,"large_test_6_profile_propagate_tottime_s":16.097,"large_test_6_profile_analyze_tottime_s":2.804,"large_test_6_profile_pick_branch_literal_tottime_s":1.373,"large_test_6_profile_minimize_learnt_tottime_s":0.864,"large_test_6_profile_backtrack_tottime_s":0.826,"mixed_slice_two_order_avg_baseline_s":38.0602,"mixed_slice_forward_baseline_s":39.6473,"mixed_slice_reverse_baseline_s":36.4732,"suite35_repeat2_baseline_s":40.3613,"suite35_large_test_6_baseline_s":18.3887,"suite35_special_hard_baseline_s":13.6687,"suite35_large_test_10_baseline_s":2.1764,"suite35_large_test_8_baseline_s":0.4560},"metrics_after":{"unit_test_count":55,"mixed_slice_two_order_avg_candidate_s":37.6673,"mixed_slice_forward_candidate_s":39.4773,"mixed_slice_reverse_candidate_s":35.8573,"suite35_repeat2_candidate_s":43.3099,"suite35_large_test_6_candidate_s":19.5514,"suite35_special_hard_candidate_s":14.4636,"suite35_large_test_10_candidate_s":2.7222,"suite35_large_test_8_candidate_s":0.5581},"correctness_status":"the temporary bundled patch compiled cleanly, passed all 55 unit tests, stayed checker-valid on SAT and UNSAT smoke cases, and still solved the repeat-aware exact-CLI 35-case suite correctly at 35/35, but the broader suite regressed strongly enough that the branch was reverted and the retained solver/artifact files were restored unchanged","decision":"discard","notes":"This is a bundled-branch reject, not evidence against either subchange on its own. The mixed exact-CLI hotspot slice was mildly positive, but the repeat-aware exact-CLI 35-case suite regressed badly, so future cross-cutting cleanup work should isolate these lanes one at a time and still require broad-suite confirmation."}
+{"timestamp":"2026-03-21T15:27:08+01:00","experiment_id":"2026-03-21-reject-isolated-else-tail-cleanup","hypothesis":"Because the no-replacement watched-clause tails in `propagate()` already know `other_value != TRUE`, deleting the redundant `other_value == UNASSIGNED` check there might shave a small amount of hot-path overhead without changing solver behavior.","change_summary":"Collected a fresh retained-baseline `large/test_6.cnf` profile, froze a `HEAD` baseline in `/tmp/satsolver_else_tail_baseline/`, patched only the two no-replacement tails in `satsolver_core.py` so they use `if other_value == FALSE: conflict else: unit`, validated with `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks, benchmarked baseline vs candidate on the mixed nine-case exact-CLI hotspot slice, then ran same-day repeat-aware exact-CLI 35-case suites for both before reverting the solver patch after the broader suite regressed and cleaning the stale scratch reason-sentinel helper files.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_6.cnf","small/test_1.cnf","special/tseitin.cnf","medium/test_4.cnf","medium/test_8.cnf","small/test_5.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf","small","medium","large","special"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/cycle_profile.txt | head -n 35","mkdir -p /tmp/satsolver_else_tail_baseline && git show HEAD:satsolver.py > /tmp/satsolver_else_tail_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_else_tail_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_else_tail_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/else_tail_sat.txt && python tools/checker.py small/test_1.cnf /tmp/else_tail_sat.txt","python satsolver.py special/tseitin.cnf /tmp/else_tail_unsat.txt && python tools/checker.py special/tseitin.cnf /tmp/else_tail_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_else_tail_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf medium/test_4.cnf large/test_10.cnf large/test_8.cnf small/test_1.cnf small/test_5.cnf medium/test_8.cnf special/tseitin.cnf","python benchmark_suite.py satsolver /tmp/else_tail_baseline_cli_repeat2.txt small medium large special --bruteforce-var-limit 16 --cli-script /tmp/satsolver_else_tail_baseline/satsolver.py --repeat 2","python benchmark_suite.py satsolver /tmp/else_tail_candidate_cli_repeat2.txt small medium large special --bruteforce-var-limit 16 --cli-script satsolver.py --repeat 2","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/revert_cycle_sat.txt && python tools/checker.py small/test_1.cnf /tmp/revert_cycle_sat.txt","python satsolver.py special/tseitin.cnf /tmp/revert_cycle_unsat.txt && python tools/checker.py special/tseitin.cnf /tmp/revert_cycle_unsat.txt --bruteforce-var-limit 0"],"metrics_before":{"unit_test_count":55,"large_test_6_profile_total_s":36.29,"large_test_6_profile_propagate_tottime_s":20.209,"large_test_6_profile_analyze_tottime_s":3.341,"large_test_6_profile_pick_branch_literal_tottime_s":1.66,"large_test_6_profile_minimize_learnt_tottime_s":1.044,"large_test_6_profile_backtrack_tottime_s":0.979,"mixed_slice_two_order_avg_baseline_s":32.5969,"mixed_slice_forward_baseline_s":32.5612,"mixed_slice_reverse_baseline_s":32.6325,"suite35_repeat2_baseline_s":33.6532,"suite35_large_test_6_baseline_s":15.2192,"suite35_special_hard_baseline_s":11.2203,"suite35_medium_test_4_baseline_s":2.1749,"suite35_large_test_10_baseline_s":1.9581,"suite35_large_test_8_baseline_s":0.3826},"metrics_after":{"unit_test_count":55,"mixed_slice_two_order_avg_candidate_s":31.1921,"mixed_slice_forward_candidate_s":31.6352,"mixed_slice_reverse_candidate_s":30.7490,"suite35_repeat2_candidate_s":38.5035,"suite35_large_test_6_candidate_s":17.5894,"suite35_special_hard_candidate_s":12.6692,"suite35_medium_test_4_candidate_s":2.4914,"suite35_large_test_10_candidate_s":2.3852,"suite35_large_test_8_candidate_s":0.3731},"correctness_status":"the temporary patch compiled cleanly, passed all 55 unit tests, stayed checker-valid on SAT and UNSAT smoke cases, and still solved the repeat-aware exact-CLI 35-case suite correctly at 35/35, but the broader suite regressed badly enough that the solver patch was reverted and the retained baseline was restored unchanged","decision":"discard","notes":"This is a clean isolated reject. The mixed exact-CLI hotspot slice looked genuinely strong, but the repeat-aware exact-CLI 35-case suite regressed hard enough that the branch still does not clear the bar."}
+{"timestamp":"2026-03-21T15:32:37+01:00","experiment_id":"2026-03-21-reject-rerun-isolated-else-tail-cleanup","hypothesis":"Because the two no-replacement tails in `propagate()` already know `other_value != TRUE`, rerunning the isolated `if other_value == FALSE ... else ...` simplification on the current retained baseline would tell us whether the earlier strong hotspot win was a transient measurement fluke or a repeatable but still broad-suite-negative lane.","change_summary":"Collected a fresh retained-baseline `large/test_6.cnf` profile, reread the current backlog and metadata warnings, temporarily re-applied only the two no-replacement-tail `else` simplifications in `satsolver_core.py`, validated with `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks, benchmarked the frozen `HEAD` baseline vs candidate on the mixed nine-case exact-CLI hotspot slice, ran repeat-aware exact-CLI 35-case suites for both, then reverted the solver patch and cleaned the stale untracked scratch reason-sentinel helper files after the broader suite regressed again.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_6.cnf","small/test_1.cnf","special/tseitin.cnf","medium/test_4.cnf","medium/test_8.cnf","small/test_5.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf","small","medium","large","special"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/current_cycle_profile2.txt | head -n 35","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/else_tail_sat.txt && python tools/checker.py small/test_1.cnf /tmp/else_tail_sat.txt","python satsolver.py special/tseitin.cnf /tmp/else_tail_unsat.txt && python tools/checker.py special/tseitin.cnf /tmp/else_tail_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_else_tail_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf medium/test_4.cnf large/test_10.cnf large/test_8.cnf small/test_1.cnf small/test_5.cnf medium/test_8.cnf special/tseitin.cnf","python benchmark_suite.py satsolver /tmp/else_tail_baseline_cli_repeat2.txt small medium large special --bruteforce-var-limit 16 --cli-script /tmp/satsolver_else_tail_baseline/satsolver.py --repeat 2","python benchmark_suite.py satsolver /tmp/else_tail_candidate_cli_repeat2.txt small medium large special --bruteforce-var-limit 16 --cli-script satsolver.py --repeat 2","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/revert_cycle_sat2.txt && python tools/checker.py small/test_1.cnf /tmp/revert_cycle_sat2.txt","python satsolver.py special/tseitin.cnf /tmp/revert_cycle_unsat2.txt && python tools/checker.py special/tseitin.cnf /tmp/revert_cycle_unsat2.txt --bruteforce-var-limit 0"],"metrics_before":{"unit_test_count":55,"large_test_6_profile_total_s":36.424,"large_test_6_profile_propagate_tottime_s":20.33,"large_test_6_profile_analyze_tottime_s":3.348,"large_test_6_profile_pick_branch_literal_tottime_s":1.658,"large_test_6_profile_minimize_learnt_tottime_s":1.034,"large_test_6_profile_backtrack_tottime_s":0.988,"mixed_slice_two_order_avg_baseline_s":32.5969,"mixed_slice_forward_baseline_s":32.5612,"mixed_slice_reverse_baseline_s":32.6325,"suite35_repeat2_baseline_s":33.6532,"suite35_large_test_6_baseline_s":15.2192,"suite35_special_hard_baseline_s":11.2203,"suite35_medium_test_4_baseline_s":2.1749,"suite35_large_test_10_baseline_s":1.9581,"suite35_large_test_8_baseline_s":0.3826},"metrics_after":{"unit_test_count":55,"mixed_slice_two_order_avg_candidate_s":31.1921,"mixed_slice_forward_candidate_s":31.6352,"mixed_slice_reverse_candidate_s":30.7490,"suite35_repeat2_candidate_s":38.5035,"suite35_large_test_6_candidate_s":17.5894,"suite35_special_hard_candidate_s":12.6692,"suite35_medium_test_4_candidate_s":2.4914,"suite35_large_test_10_candidate_s":2.3852,"suite35_large_test_8_candidate_s":0.3731},"correctness_status":"the rerun patch compiled cleanly, passed all 55 unit tests, stayed checker-valid on SAT and UNSAT smoke cases, and still solved the repeat-aware exact-CLI 35-case suite correctly at 35/35, but the broader suite regressed again, so the solver patch was reverted and the retained baseline restored unchanged","decision":"discard","notes":"This rerun reproduced the earlier shape almost exactly: a convincing mixed exact-CLI hotspot win that still fails the repeat-aware exact-CLI 35-case suite badly. So the lane is now best treated as actively misleading rather than merely inconclusive."}
+{"timestamp":"2026-03-21T15:43:49+01:00","experiment_id":"2026-03-21-reject-array-backed-hot-state","hypothesis":"Because `propagate()`, `analyze()`, and `pick_branch_literal()` do huge numbers of indexed reads and writes against small-integer solver state, moving that state onto stdlib `array(...)` / `bytearray` containers might cut enough Python object overhead to help the exact-CLI core path without changing search behavior.","change_summary":"Collected a fresh retained-baseline `large/test_6.cnf` profile, froze a `HEAD` baseline in `/tmp/satsolver_arraystate_baseline/`, temporarily patched `satsolver_core.py` so `literal_values`, `literal_var`, `literal_sign`, `literal_watch_index`, `negated_watch_index`, `values`, `level`, `phase_bias`, `saved_phase`, `seen`, and `lbd_marks` use typed arrays, validated with `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks, benchmarked the frozen baseline vs candidate on the mixed nine-case exact-CLI hotspot slice, then reverted the patch immediately after the mixed gate regressed and reran retained-baseline validation.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_6.cnf","small/test_1.cnf","special/tseitin.cnf","medium/test_4.cnf","medium/test_8.cnf","small/test_5.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/current_cycle_profile3.txt | head -n 35","mkdir -p /tmp/satsolver_arraystate_baseline && git show HEAD:satsolver.py > /tmp/satsolver_arraystate_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_arraystate_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_arraystate_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/array_state_sat.txt && python tools/checker.py small/test_1.cnf /tmp/array_state_sat.txt","python satsolver.py special/tseitin.cnf /tmp/array_state_unsat.txt && python tools/checker.py special/tseitin.cnf /tmp/array_state_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_arraystate_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf medium/test_4.cnf large/test_10.cnf large/test_8.cnf small/test_1.cnf small/test_5.cnf medium/test_8.cnf special/tseitin.cnf","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/reject_sat_check.txt && python tools/checker.py small/test_1.cnf /tmp/reject_sat_check.txt","python satsolver.py special/tseitin.cnf /tmp/reject_unsat_check.txt && python tools/checker.py special/tseitin.cnf /tmp/reject_unsat_check.txt --bruteforce-var-limit 0"],"metrics_before":{"unit_test_count":55,"large_test_6_profile_total_s":36.424,"large_test_6_profile_propagate_tottime_s":20.33,"large_test_6_profile_analyze_tottime_s":3.348,"large_test_6_profile_list_append_tottime_s":2.885,"large_test_6_profile_pick_branch_literal_tottime_s":1.658,"large_test_6_profile_list_pop_tottime_s":1.595,"large_test_6_profile_abs_tottime_s":1.303,"large_test_6_profile_len_tottime_s":1.064,"large_test_6_profile_minimize_learnt_tottime_s":1.034,"large_test_6_profile_backtrack_tottime_s":0.988,"mixed_slice_two_order_avg_baseline_s":25.5674,"mixed_slice_forward_baseline_s":24.8951,"mixed_slice_reverse_baseline_s":26.2398},"metrics_after":{"unit_test_count":55,"mixed_slice_two_order_avg_candidate_s":31.1749,"mixed_slice_forward_candidate_s":30.3363,"mixed_slice_reverse_candidate_s":32.0135,"large_test_6_forward_candidate_s":16.2617,"large_test_6_reverse_candidate_s":16.3599,"special_hard_forward_candidate_s":9.6518,"special_hard_reverse_candidate_s":11.0078,"medium_test_4_forward_candidate_s":2.0213,"medium_test_4_reverse_candidate_s":2.1286,"large_test_10_forward_candidate_s":1.981,"large_test_10_reverse_candidate_s":2.083},"correctness_status":"the array-backed candidate compiled cleanly, passed all 55 unit tests, stayed checker-valid on SAT and UNSAT smoke cases, and preserved outputs on the mixed exact-CLI gate, but it regressed badly enough that no broader suite run was warranted","decision":"discard","notes":"This was not a near miss. The candidate lost in both orders and especially hurt the dense UNSAT cases, so future pure-Python data-layout work should be skeptical of stdlib typed arrays unless the branch removes materially more real solver work than a container substitution."}
+{"timestamp":"2026-03-21T15:53:51+01:00","experiment_id":"2026-03-21-reject-isolated-reason-sentinel","hypothesis":"Because `reason` is read and written across `enqueue()`, `backtrack()`, `minimize_learnt()`, `analyze()`, `reduce_database()`, and the profiled solver, replacing `None` with `NO_REASON = -1` might remove enough mixed-type overhead to help the exact-CLI core path without changing search behavior.","change_summary":"Collected a fresh retained-baseline `large/test_6.cnf` profile, froze a `HEAD` baseline in `/tmp/satsolver_reasonsolo_baseline/`, temporarily patched `satsolver_core.py`, `satsolver.py`, `tools/profile_solver.py`, and `tests/test_solver_regressions.py` so solver reasons use `NO_REASON = -1` internally, validated with `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks, benchmarked the frozen baseline vs candidate on the mixed nine-case exact-CLI hotspot slice, then ran repeat-aware exact-CLI 35-case suites for both before reverting the patch after the broader suite regressed and rerunning retained-baseline validation.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_6.cnf","small/test_1.cnf","special/tseitin.cnf","medium/test_4.cnf","medium/test_8.cnf","small/test_5.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf","small","medium","large","special"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/reason_solo_profile.txt | head -n 35","mkdir -p /tmp/satsolver_reasonsolo_baseline && git show HEAD:satsolver.py > /tmp/satsolver_reasonsolo_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_reasonsolo_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_reasonsolo_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py tools/profile_solver.py tests/test_solver_regressions.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/reason_solo_sat.txt && python tools/checker.py small/test_1.cnf /tmp/reason_solo_sat.txt","python satsolver.py special/tseitin.cnf /tmp/reason_solo_unsat.txt && python tools/checker.py special/tseitin.cnf /tmp/reason_solo_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_reasonsolo_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf medium/test_4.cnf large/test_10.cnf large/test_8.cnf small/test_1.cnf small/test_5.cnf medium/test_8.cnf special/tseitin.cnf","python benchmark_suite.py satsolver /tmp/reasonsolo_baseline_cli_repeat2.txt small medium large special --bruteforce-var-limit 16 --cli-script /tmp/satsolver_reasonsolo_baseline/satsolver.py --repeat 2","python benchmark_suite.py satsolver /tmp/reasonsolo_candidate_cli_repeat2.txt small medium large special --bruteforce-var-limit 16 --cli-script satsolver.py --repeat 2","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py tools/profile_solver.py tests/test_solver_regressions.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/revert_reason_solo_sat.txt && python tools/checker.py small/test_1.cnf /tmp/revert_reason_solo_sat.txt","python satsolver.py special/tseitin.cnf /tmp/revert_reason_solo_unsat.txt && python tools/checker.py special/tseitin.cnf /tmp/revert_reason_solo_unsat.txt --bruteforce-var-limit 0"],"metrics_before":{"unit_test_count":55,"large_test_6_profile_total_s":23.459,"large_test_6_profile_propagate_tottime_s":12.337,"large_test_6_profile_analyze_tottime_s":2.352,"large_test_6_profile_list_append_tottime_s":1.971,"large_test_6_profile_list_pop_tottime_s":1.162,"large_test_6_profile_pick_branch_literal_tottime_s":1.112,"large_test_6_profile_abs_tottime_s":0.961,"large_test_6_profile_len_tottime_s":0.765,"large_test_6_profile_minimize_learnt_tottime_s":0.711,"large_test_6_profile_backtrack_tottime_s":0.679,"mixed_slice_two_order_avg_baseline_s":24.3347,"mixed_slice_forward_baseline_s":23.9083,"mixed_slice_reverse_baseline_s":24.7612,"suite35_repeat2_baseline_s":25.4875,"suite35_large_test_6_baseline_s":11.6523,"suite35_special_hard_baseline_s":7.8904,"suite35_medium_test_4_baseline_s":1.7178,"suite35_large_test_8_baseline_s":0.2732},"metrics_after":{"unit_test_count":55,"mixed_slice_two_order_avg_candidate_s":24.1806,"mixed_slice_forward_candidate_s":24.2229,"mixed_slice_reverse_candidate_s":24.1384,"suite35_repeat2_candidate_s":25.9045,"suite35_large_test_6_candidate_s":11.8537,"suite35_special_hard_candidate_s":8.0711,"suite35_medium_test_4_candidate_s":1.7716,"suite35_large_test_8_candidate_s":0.2928},"correctness_status":"the isolated sentinel patch compiled cleanly, passed all 55 unit tests, stayed checker-valid on SAT and UNSAT smoke cases, and still solved the repeat-aware exact-CLI 35-case suite correctly at 35/35, but the broader suite regressed, so the patch was reverted and the retained baseline restored unchanged","decision":"discard","notes":"This isolates the old bundled lane cleanly. The mixed exact-CLI hotspot slice was mildly positive, but the broader repeat-aware exact-CLI suite still lost, so integer-only `reason` storage should now be treated as a dead micro-optimization lane by itself."}
+{"timestamp":"2026-03-21T16:01:21+01:00","experiment_id":"2026-03-21-reject-global-phase-bias-main-path","hypothesis":"Because `phase_bias` is already accumulated during problem-clause ingest and the solver now always branches from `saved_phase`, turning on `seed_phase_bias=True` for the default exact-CLI `solve_cnf_fast_serial()` path might broaden the old phase-bias signal into a real mixed-gate search win instead of leaving it confined to the narrow portfolio worker.","change_summary":"Collected a fresh retained-baseline `large/test_6.cnf` profile, froze a `HEAD` baseline in `/tmp/satsolver_phasebiasmain_baseline/`, temporarily patched `satsolver.py` so the default `solve_cnf()` path calls `solve_cnf_fast_serial(..., seed_phase_bias=True)`, validated with `py_compile`, the full unit suite, and checker-backed SAT/UNSAT smoke checks, benchmarked the frozen baseline vs candidate on the mixed nine-case exact-CLI hotspot slice, then reverted the wrapper patch immediately after the mixed gate regressed and reran retained-baseline validation.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_6.cnf","small/test_1.cnf","special/tseitin.cnf","medium/test_4.cnf","medium/test_8.cnf","small/test_5.cnf","large/test_8.cnf","large/test_10.cnf","special/hard.cnf"],"commands":["python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/phasebiasmain_profile.txt | head -n 35","mkdir -p /tmp/satsolver_phasebiasmain_baseline && git show HEAD:satsolver.py > /tmp/satsolver_phasebiasmain_baseline/satsolver.py && git show HEAD:satsolver_core.py > /tmp/satsolver_phasebiasmain_baseline/satsolver_core.py && git show HEAD:satsolver_fast.py > /tmp/satsolver_phasebiasmain_baseline/satsolver_fast.py","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/phasebiasmain_sat.txt && python tools/checker.py small/test_1.cnf /tmp/phasebiasmain_sat.txt","python satsolver.py special/tseitin.cnf /tmp/phasebiasmain_unsat.txt && python tools/checker.py special/tseitin.cnf /tmp/phasebiasmain_unsat.txt --bruteforce-var-limit 0","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_phasebiasmain_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf medium/test_4.cnf large/test_10.cnf large/test_8.cnf small/test_1.cnf small/test_5.cnf medium/test_8.cnf special/tseitin.cnf","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python satsolver.py small/test_1.cnf /tmp/revert_phasebiasmain_sat.txt && python tools/checker.py small/test_1.cnf /tmp/revert_phasebiasmain_sat.txt","python satsolver.py special/tseitin.cnf /tmp/revert_phasebiasmain_unsat.txt && python tools/checker.py special/tseitin.cnf /tmp/revert_phasebiasmain_unsat.txt --bruteforce-var-limit 0"],"metrics_before":{"unit_test_count":55,"large_test_6_profile_total_s":36.222,"large_test_6_profile_propagate_tottime_s":20.285,"large_test_6_profile_analyze_tottime_s":3.275,"large_test_6_profile_list_append_tottime_s":2.883,"large_test_6_profile_pick_branch_literal_tottime_s":1.648,"large_test_6_profile_list_pop_tottime_s":1.625,"large_test_6_profile_abs_tottime_s":1.297,"large_test_6_profile_len_tottime_s":1.058,"large_test_6_profile_minimize_learnt_tottime_s":1.023,"large_test_6_profile_backtrack_tottime_s":0.957,"mixed_slice_two_order_avg_baseline_s":31.7103,"mixed_slice_forward_baseline_s":32.3513,"mixed_slice_reverse_baseline_s":31.0694},"metrics_after":{"unit_test_count":55,"mixed_slice_two_order_avg_candidate_s":37.6381,"mixed_slice_forward_candidate_s":36.0224,"mixed_slice_reverse_candidate_s":39.2538,"large_test_6_forward_candidate_s":17.5613,"large_test_6_reverse_candidate_s":19.2728,"special_hard_forward_candidate_s":13.4149,"special_hard_reverse_candidate_s":14.9598,"medium_test_4_forward_candidate_s":2.4407,"medium_test_4_reverse_candidate_s":2.6837,"large_test_10_forward_candidate_s":2.1127,"large_test_10_reverse_candidate_s":1.8062},"correctness_status":"the wrapper patch compiled cleanly, passed all 55 unit tests, stayed checker-valid on SAT and UNSAT smoke cases, and preserved outputs on the mixed exact-CLI gate, but the search policy regressed badly enough that no broader suite run was warranted","decision":"discard","notes":"This confirms the earlier heuristic warning in a cleaner main-path form: phase-bias seeding is still too narrow and unstable to turn on globally. One `large/test_6.cnf` forward improvement was overwhelmed by broad losses, especially on `special/hard.cnf`."}
+{"timestamp":"2026-03-21T16:07:23+01:00","experiment_id":"2026-03-21-reject-portfolio-fast-workers","hypothesis":"Because the current portfolio gate effectively only fires on the all-3-SAT `large/test_8.cnf` family, and because that family is already on the no-root-pure exact-CLI fast path outside the worker wrapper, switching portfolio workers from `solve_cnf_serial()` to `solve_cnf_fast_serial()` might remove enough wrapper overhead to improve the one remaining gated case.","change_summary":"Temporarily patched `solve_cnf_portfolio()` in `satsolver_core.py` so both workers call `solve_cnf_fast_serial()` instead of `solve_cnf_serial()`, validated with `py_compile`, the full unit suite, and checker-backed SAT smoke on `large/test_8.cnf`, benchmarked the frozen retained baseline vs candidate on `large/test_8.cnf` via `tools/hotspot_compare.py --repeat 2`, then reverted the worker patch immediately after the one-case gate regressed and reran retained-baseline validation.","files_changed":["agent_log.md","benchmark_summary.md","experiments.jsonl","next_steps.md"],"datasets":["large/test_8.cnf"],"commands":["python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python satsolver.py large/test_8.cnf /tmp/portfolio_fast8_sat.txt && python tools/checker.py large/test_8.cnf /tmp/portfolio_fast8_sat.txt","python tools/hotspot_compare.py --baseline-cli-script /tmp/satsolver_phasebiasmain_baseline/satsolver.py --candidate-cli-script satsolver.py --repeat 2 large/test_8.cnf","python -m py_compile satsolver.py satsolver_core.py satsolver_fast.py","python -m unittest discover -s tests -v","python satsolver.py large/test_8.cnf /tmp/revert_fast_portfolio8_sat.txt && python tools/checker.py large/test_8.cnf /tmp/revert_fast_portfolio8_sat.txt"],"metrics_before":{"unit_test_count":55,"large_test_8_two_order_avg_baseline_s":0.2924,"large_test_8_forward_baseline_s":0.2772,"large_test_8_reverse_baseline_s":0.3075},"metrics_after":{"unit_test_count":55,"large_test_8_two_order_avg_candidate_s":0.295,"large_test_8_forward_candidate_s":0.3008,"large_test_8_reverse_candidate_s":0.2892},"correctness_status":"the worker-swap candidate compiled cleanly, passed all 55 unit tests, and stayed checker-valid on `large/test_8.cnf`, but it still lost slightly on the exact one-case gate it was meant to help, so the patch was reverted and the retained baseline restored unchanged","decision":"discard","notes":"This is a very narrow reject, but it matters because the current portfolio gate now effectively matches only this one case. Even here, swapping workers to the lighter fast-serial path did not produce a reliable win."}
+``````
 
 ### `extra.md`
 
@@ -2754,11 +3185,11 @@ Raw content:
 - Git status: tracked
 - Size: `2112` bytes
 - Line count: `69`
-- Why it matters: Supplementary notes, especially benchmark-expansion and workflow context.
+- Why it matters: Supplementary workflow and optimization notes.
 
 Raw content:
 
-`````md
+``````md
 # Extended Benchmark Notes
 
 Goal: expand the local benchmark with more SATLIB instances while keeping the full run for both solvers comfortably below 5 minutes.
@@ -2828,8 +3259,7 @@ Notes:
 - Both parsers stop cleanly at the SATLIB `%` terminator used in some DIMACS files.
 - The slowest added SATLIB case is `satlib_more/uuf150-01.cnf`, and it stays under 1 second on both solvers.
 - `satsolver_blaze.py` remains the faster solver on the enlarged benchmark.
-
-`````
+``````
 
 ### `large/test_1.cnf`
 
@@ -2841,7 +3271,7 @@ Notes:
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 373 variables and 811 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -3661,8 +4091,7 @@ p cnf 373 811
 -106 336 -373 0
 -213 -272 297 0
 1 -117 311 0
-
-`````
+``````
 
 ### `large/test_10.cnf`
 
@@ -3674,7 +4103,7 @@ p cnf 373 811
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 229 variables and 1280 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -4963,8 +5392,7 @@ p cnf 229 1280
 16 -116 211 0
 28 -43 -94 0
 -33 -83 -220 0
-
-`````
+``````
 
 ### `large/test_2.cnf`
 
@@ -4976,7 +5404,7 @@ p cnf 229 1280
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 319 variables and 573 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -5558,8 +5986,7 @@ p cnf 319 573
 -120 -156 -215 0
 90 133 -300 0
 -98 -121 -137 0
-
-`````
+``````
 
 ### `large/test_3.cnf`
 
@@ -5571,7 +5998,7 @@ p cnf 319 573
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 227 variables and 1460 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -7040,8 +7467,7 @@ p cnf 227 1460
 -21 53 -194 0
 -18 -30 201 0
 -49 90 208 0
-
-`````
+``````
 
 ### `large/test_4.cnf`
 
@@ -7053,7 +7479,7 @@ p cnf 227 1460
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 219 variables and 1363 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -8425,8 +8851,7 @@ p cnf 219 1363
 -17 35 176 0
 -25 108 -188 0
 -37 109 -111 0
-
-`````
+``````
 
 ### `large/test_5.cnf`
 
@@ -8438,7 +8863,7 @@ p cnf 219 1363
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 244 variables and 772 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -9219,8 +9644,7 @@ p cnf 244 772
 -23 88 217 0
 132 188 227 0
 -36 -79 167 0
-
-`````
+``````
 
 ### `large/test_6.cnf`
 
@@ -9232,7 +9656,7 @@ p cnf 244 772
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 271 variables and 1393 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -10634,8 +11058,7 @@ p cnf 271 1393
 -40 146 217 0
 57 112 -239 0
 34 -127 265 0
-
-`````
+``````
 
 ### `large/test_7.cnf`
 
@@ -10647,7 +11070,7 @@ p cnf 271 1393
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 389 variables and 863 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -11519,8 +11942,7 @@ p cnf 389 863
 -326 -350 -369 0
 -165 -170 181 0
 88 -89 -306 0
-
-`````
+``````
 
 ### `large/test_8.cnf`
 
@@ -11532,7 +11954,7 @@ p cnf 389 863
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 298 variables and 1210 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -12751,8 +13173,7 @@ p cnf 298 1210
 5 -173 268 0
 112 -220 243 0
 -52 -98 177 0
-
-`````
+``````
 
 ### `large/test_9.cnf`
 
@@ -12764,7 +13185,7 @@ p cnf 298 1210
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 365 variables and 969 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -13742,8 +14163,7 @@ p cnf 365 969
 -42 44 120 0
 -63 -86 305 0
 -32 127 221 0
-
-`````
+``````
 
 ### `maybe.md`
 
@@ -13751,14 +14171,14 @@ p cnf 365 969
 - Git status: tracked
 - Size: `169` bytes
 - Line count: `2`
-- Why it matters: Short idea note, mainly around legal standard-library-only parallelism/portfolio ideas.
+- Why it matters: Short idea note, mainly around legal standard-library-only parallelism and other candidate directions.
 
 Raw content:
 
-`````md
+``````md
  Use Adding multithreading with concurrent.futures or SIMD or numpy whatever.
   But remember -Using any external packages outside the standard python library is forbiden
-`````
+``````
 
 ### `medium/test_1.cnf`
 
@@ -13770,7 +14190,7 @@ Raw content:
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 63 variables and 835 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -14614,8 +15034,7 @@ p cnf 63 835
 -16 37 -43 0
 -10 -32 -55 0
 -26 47 -51 0
-
-`````
+``````
 
 ### `medium/test_10.cnf`
 
@@ -14627,7 +15046,7 @@ p cnf 63 835
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 68 variables and 822 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -15458,8 +15877,7 @@ p cnf 68 822
 7 -29 55 0
 1 32 59 0
 4 -12 -51 0
-
-`````
+``````
 
 ### `medium/test_2.cnf`
 
@@ -15471,7 +15889,7 @@ p cnf 68 822
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 69 variables and 352 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -15832,8 +16250,7 @@ p cnf 69 352
 33 -38 69 0
 21 -43 -64 0
 18 37 -43 0
-
-`````
+``````
 
 ### `medium/test_3.cnf`
 
@@ -15845,7 +16262,7 @@ p cnf 69 352
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 172 variables and 774 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -16628,8 +17045,7 @@ p cnf 172 774
 5 -38 68 0
 -78 -123 147 0
 6 -49 -116 0
-
-`````
+``````
 
 ### `medium/test_4.cnf`
 
@@ -16641,7 +17057,7 @@ p cnf 172 774
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 191 variables and 886 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -17536,8 +17952,7 @@ p cnf 191 886
 -53 173 -188 0
 33 35 145 0
 -38 -109 185 0
-
-`````
+``````
 
 ### `medium/test_5.cnf`
 
@@ -17549,7 +17964,7 @@ p cnf 191 886
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 55 variables and 713 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -18271,8 +18686,7 @@ p cnf 55 713
 6 -10 41 0
 32 -44 45 0
 -33 39 47 0
-
-`````
+``````
 
 ### `medium/test_6.cnf`
 
@@ -18284,7 +18698,7 @@ p cnf 55 713
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 61 variables and 512 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -18805,8 +19219,7 @@ p cnf 61 512
 11 -26 -33 0
 13 -34 59 0
 -1 19 34 0
-
-`````
+``````
 
 ### `medium/test_7.cnf`
 
@@ -18818,7 +19231,7 @@ p cnf 61 512
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 75 variables and 562 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -19389,8 +19802,7 @@ p cnf 75 562
 56 60 64 0
 -26 -34 64 0
 -30 47 60 0
-
-`````
+``````
 
 ### `medium/test_8.cnf`
 
@@ -19402,7 +19814,7 @@ p cnf 75 562
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 130 variables and 333 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -19744,8 +20156,7 @@ p cnf 130 333
 32 -74 -107 0
 13 -18 92 0
 27 -28 -89 0
-
-`````
+``````
 
 ### `medium/test_9.cnf`
 
@@ -19757,7 +20168,7 @@ p cnf 130 333
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 138 variables and 379 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -20145,20 +20556,19 @@ p cnf 138 379
 27 47 99 0
 -51 -88 93 0
 -14 -25 -64 0
-
-`````
+``````
 
 ### `next_steps.md`
 
 - Category: Project state / decision history
 - Git status: tracked
-- Size: `57409` bytes
-- Line count: `60`
-- Why it matters: Prioritized backlog and accumulated caution list for future experiments.
+- Size: `84262` bytes
+- Line count: `97`
+- Why it matters: Prioritized backlog and accumulated cautions from previous cycles.
 
 Raw content:
 
-`````md
+``````md
 # Next Steps
 
 1. Use the upgraded profiler on the dense UNSAT-heavy pure-3-SAT bottlenecks (`large/test_6.cnf`, `special/hard.cnf`, `medium/test_4.cnf`) before changing heuristics again, and use `benchmark_suite.py --repeat 2` as the default confirmation pass for any change whose claimed gain is small enough that one-off full-suite timings could be noise.
@@ -20219,8 +20629,44 @@ Additional watch-order boundary: the newest ternary normalized-outcome split say
 55. Treat trimming the imported standalone CLI surface in `satsolver_core.py` as another startup-path dead end unless a future branch changes something materially different than just skipping dead helper definitions. A scratch pair that made imported `satsolver_core.py` omit its standalone text parser, standalone solve helpers, standalone write path, and `main()` while keeping the real wrapper solve path unchanged still regressed the 12-case SAT-heavy root-hit exact-CLI slice (`0.3984s -> 0.4108s`) and regressed the mixed nine-case exact-CLI hotspot slice much harder on the two-order average (`24.5731s -> 26.5896s`), with reverse-order `large/test_6.cnf` doing most of the damage (`11.8065s -> 15.7812s`). So future startup work should keep preferring the retained main-wrapper import gating over trying to hollow out imported `satsolver_core.py` itself.
 56. Treat tiny CLI-local alias sets for genuinely hot `satsolver_core` symbols as a still-live wrapper lane, but only with broad-suite confirmation. A scratch `satsolver.py` that, only in CLI mode, locally bound `Solver`, `model_satisfies`, `has_pigeonhole_core`, `xor_system_unsat`, `format_model`, and `should_use_parallel_portfolio` regressed the 12-case SAT-heavy root-hit exact-CLI slice (`0.3878s -> 0.3997s`) but still improved the mixed nine-case exact-CLI hotspot slice (`23.4102s -> 23.2025`) and the same-day repeat-aware exact-CLI baseline-vs-candidate suite (`27.2824s -> 27.0228`), with the refreshed retained artifact landing at `25.7027`. So future wrapper work can still consider very small CLI-only local aliasing for hot core symbols, but it should keep demanding same-day repeat-aware full-suite confirmation because the startup-heavy SAT slice can move the wrong way even when the broad suite wins.
 57. Treat low-density all-3-SAT gating as the only root-pure lane that is currently still alive on the promoted exact-CLI wrapper, and still demand broad-suite confirmation before keeping it. A scratch branch that reintroduced iterative root-pure presolve only when all clauses were length `3` and clause density was at most `3.2` improved the 12-case SAT-heavy root-hit exact-CLI slice (`0.3794s -> 0.3674`), improved the mixed nine-case exact-CLI hotspot slice (`23.5744s -> 23.0621`), and improved the same-day repeat-aware baseline-vs-candidate exact-CLI full suite (`26.1422s -> 25.9837`), all `59/59` correct. But the refreshed retained artifact landed at `26.1805`, still slower than the retained historical best `25.7027`. So future root-pure work should prefer cheap density/shape prefilters over assignment-count-only or removed-clause-ratio gates, while still treating same-day broad-suite A/B as the real arbiter when the refreshed retained artifact is noisy.
-
-`````
+58. Treat parse-time `all_ternary` carry-forward as another likely exact-CLI wrapper dead end unless a future branch removes more than the current clause-shape rescan. A scratch `satsolver.py` branch that returned `all_ternary` from the byte parser and threaded it into both the low-density root-pure gate and portfolio gate did improve the 12-case SAT-heavy root-hit exact-CLI slice (`0.4696s -> 0.4536s`), but it still regressed the mixed nine-case exact-CLI hotspot slice on the two-order average (`28.1142s -> 28.6419s`), with `large/test_6.cnf` worsening in both orders (`13.6206s -> 14.0899s` forward, `13.2467s -> 14.9543s` reverse). So future wrapper work should not assume that reusing parse-time clause-shape metadata is enough by itself; it still has to beat the dense mixed gate, not just the startup-heavy slice.
+59. Treat `FAST_ROOT_PURE_DENSITY_GATE = 3.2` as a practical lower bound unless a future branch adds a better classifier than density alone. A scratch `satsolver.py` branch that only tightened the gate to `2.7` regressed the 12-case SAT-heavy root-hit exact-CLI slice (`0.5057s -> 0.5126s`) and still regressed the mixed nine-case exact-CLI hotspot slice on the two-order average (`33.6012s -> 34.4853s`), with the main reverse-order damage on `large/test_6.cnf` (`17.6161s -> 19.0170s`) and `special/hard.cnf` (`10.4885s -> 11.6226s`). So future root-pure tuning should not assume that simply tightening the current density cutoff is safer; this lane now looks classifier-limited rather than threshold-limited.
+60. Treat the no-root-pure `solve_cnf_fast_serial()` path as the new exact-CLI baseline again. A same-day cycle first showed current `satsolver_fast.py` beating retained `satsolver.py` on the root-hit exact-CLI slice (`0.5025s -> 0.4947s`), the mixed nine-case hotspot slice (`32.7270s -> 32.5444s`), and the repeat-aware exact-CLI 59-case suite (`39.8399s -> 39.1591s`). Promoting that policy back into the import-gated main wrapper then improved the root-hit slice further (`0.4790s -> 0.4603s`), improved the mixed nine-case hotspot slice (`31.9046s -> 31.4055s`), and improved the same-day repeat-aware exact-CLI 59-case suite strongly (`39.8399s -> 36.6465s`), all `59/59` correct. So future presolve work should treat “no fast-path root pure on the submission path” as the current mainline and only revisit root-pure on exact CLI with a materially stronger classifier than density alone plus same-day broad-suite confirmation.
+61. Treat dedicated immutable original-ternary branch hoisting as another likely propagation dead end unless a future branch shows a materially stronger broad exact-CLI win than the `Clause.problem_ternary` attempt did. A scratch core branch that added immutable `Clause.problem_ternary` metadata and a dedicated original-ternary fast branch in `propagate()` did improve the 12-case SAT-heavy root-hit exact-CLI slice (`0.5028s -> 0.4952s`), but it still regressed the mixed nine-case exact-CLI hotspot slice from `32.7926s` to `34.1993s`, with `large/test_6.cnf` and `special/hard.cnf` both worse in both orders. So future immutable metadata work should distinguish “replace one hot shape test” from “hoist a whole clause family into its own branch”; the former can still win, but the latter needs a much stronger dense-case story.
+62. Treat lazy heap-based branch-frontier maintenance as another branching dead end unless a future design avoids both heavy activity-update churn and backtrack reinsertion churn. A scratch branch that replaced the read-only `pick_branch_literal()` scan with a lazy `heapq` frontier regressed the mixed nine-case exact-CLI hotspot slice from `38.5681s` to `55.0274s`, with catastrophic losses on `large/test_6.cnf` (`16.3472s -> 26.6500s` forward, `20.8493s -> 26.6526s` reverse) and `special/hard.cnf` (`13.3576s -> 19.0475s` forward, `13.0566s -> 18.9846s` reverse). So future branching work should stay skeptical of mutable active-frontier structures; the current read-only scan is still far safer than maintaining a heap of branch candidates in pure Python.
+63. Treat the current promoted `satsolver.py` wrapper as the stronger exact-CLI alternate-file baseline again. A fresh same-day A/B showed the SAT-heavy root-hit slice essentially tied (`0.5198s` for `satsolver.py` vs `0.5205s` for `satsolver_fast.py`) while the mixed nine-case exact-CLI hotspot slice still favored `satsolver.py` overall (`36.5697s` vs `36.9565s`), with the main reverse-order damage for `satsolver_fast.py` on `special/hard.cnf` and `large/test_6.cnf`. So future alternate-file work should start from current `satsolver.py` unless a materially different wrapper beats it on the mixed slice, not just on startup-heavy cases.
+64. Treat the current narrow portfolio handoff as still required exact-CLI behavior unless a future single-case accelerator can replace it cleanly. A scratch main-wrapper variant that disabled portfolio entirely did improve the 12-case SAT-heavy exact-CLI slice (`0.4724s -> 0.4478s`), but it regressed the mixed nine-case exact-CLI hotspot slice badly (`30.3681s -> 34.0072s`) because the one remaining portfolio-triggered case, `large/test_8.cnf`, blew up from `0.3372s -> 3.8820s` forward and `0.3526s -> 4.1060s` reverse. So future wrapper work should not assume that “only one case still uses portfolio” means the fork path is now disposable; a replacement for that case has to beat the current handoff on the broad mixed gate, not just on the startup-heavy slice.
+65. Treat “replace the one remaining portfolio call with serial phase-bias solve” as another too-small exact-CLI wrapper idea unless a future branch adds a materially stronger fallback story. A scratch wrapper that replaced the current portfolio handoff with `solve_cnf_fast_serial(..., seed_phase_bias=True)` did improve `large/test_8.cnf` directly and improved the mixed nine-case exact-CLI hotspot slice (`30.7417s -> 30.3299s`), but the same-day repeat-aware exact-CLI 59-case suite still came back slightly worse overall (`35.2571s -> 35.2674`). So future portfolio work should not assume that a one-case shortcut is enough; it still has to survive the broad repeat-aware suite, not just the mixed slice.
+66. Treat “skip `minimize_learnt()` for ternary learnt clauses” as another conflict-analysis dead end unless a future branch shows a materially stronger dense UNSAT upside. A scratch core branch that changed the early-return guard in `minimize_learnt()` from `len(learnt) <= 2` to `<= 3` regressed the mixed nine-case exact-CLI hotspot slice from `30.4068s` to `30.5538s`. `special/hard.cnf` improved in both orders, but `large/test_6.cnf` and `large/test_10.cnf` both regressed in both orders, so future conflict-analysis work should not assume that skipping minimization on already-small learnt clauses is free.
+67. Treat “move literal truth into positive watch-index space” as another propagation micro-optimization dead end unless a future branch removes more than indexing style. A scratch core rewrite that stored `literal_values` in watch-index space and routed `literal_value()`, `enqueue()`, `backtrack()`, and `propagate()` through that mapping regressed the mixed nine-case exact-CLI hotspot slice from `31.0231s` to `32.7078s`, with broad dense-case damage on `large/test_6.cnf`, `special/hard.cnf`, and `large/test_10.cnf`. So future propagation work should not assume that replacing signed negative indexing with another truth-cache encoding is enough by itself.
+68. Treat the zero-activity `phase_bias` fallback in `pick_branch_literal()` as removable baggage on the current mainline. A kept core change that removed `if self.activity[best_variable] == 0.0: positive = self.phase_bias[best_variable] >= 0` and always used `saved_phase[best_variable]` improved the mixed nine-case exact-CLI hotspot slice from `32.6520s` to `32.5010s` and improved the same-day repeat-aware exact-CLI 59-case suite from `38.1276s` to `37.8494s`, still `59/59` correct. That lines up with the earlier branch-frontier profiling that found zero-activity branch choices absent on the main hotspot cases. So future branching work should not preserve the old phase-bias fallback out of caution, but it should still stay skeptical of heavier mutable-frontier or heap-based branch-picking rewrites.
+69. Treat propagated `saved_phase` updates as essential current behavior unless a future branch brings a materially stronger replacement for the lost search guidance. A scratch core branch that removed `saved_phase[variable] = ...` writes from the three inlined propagated-unit assignment sites in `propagate()` regressed the mixed nine-case exact-CLI hotspot slice from `30.5205s` to `56.9678s`, with `large/test_8.cnf` exploding from about `0.34s` to about `25s` in both orders while still staying checker-valid. So future propagation work should not assume that trimming phase-saving writes is a harmless hot-path cleanup; for the current solver, propagated phase saving is still a major part of the search behavior.
+70. Treat lazy `phase_bias` recomputation as another startup/ingest dead end unless a future branch removes substantially more clause-ingest bookkeeping than this one did. A scratch branch that stopped updating `phase_bias` during `observe_clause()` and recomputed it only in the rare `seed_phase_bias=True` path still regressed the 12-case SAT-heavy exact-CLI root-hit slice from `0.4780s` to `0.4922s`, with broad small/medium SAT-case losses. So future exact-CLI wrapper or clause-ingest work should not assume that eager `phase_bias` maintenance is recoverable overhead by itself.
+71. Treat direct `literal_var[...]` substitution for hot `abs(...)` calls in conflict analysis as another pure-overhead dead end unless a future branch removes more actual analysis work than this one did. A scratch core branch that rewrote `analyze()`, `minimize_learnt()`, and `prepare_learnt_clause()` to use the solver's precomputed literal-to-variable lookup instead of `abs(...)` still regressed the mixed nine-case exact-CLI hotspot slice from `30.3393s` to `30.9773s`, with `large/test_6.cnf` worse in both orders (`15.2590s -> 15.6328s` forward, `14.5444s -> 15.4005s` reverse). So future conflict-analysis work should not assume that a profiler-visible `abs` cost can be recovered by swapping it for another primitive without cutting more real reasoning work.
+72. Treat “keep ternary learnt clauses with `LBD <= 3`” as another learnt-database dead end unless a future branch comes with a materially stronger SAT-family safeguard. A scratch core branch that broadened `reduce_database()` retention to preserve ternary learnt clauses through `LBD == 3` blew up the mixed nine-case exact-CLI hotspot slice from `31.1445s` to `54.9538s`, almost entirely because `large/test_8.cnf` exploded from `0.3193s -> 25.6356s` forward and `0.3519s -> 24.9397s` reverse. `special/hard.cnf` and `large/test_10.cnf` did improve, but not remotely enough to repay the SAT-family collapse. So future learnt-database work should stay skeptical of retention broadening for small ternary learnt clauses.
+73. Treat selective clause-activity bump skipping as another likely learnt-database dead end unless a future branch brings a materially stronger dense-UNSAT gain. A scratch core branch that changed `analyze()` to skip `bump_clause_activity()` for learnt clauses that were already effectively always kept (binaries and `LBD <= 2`) still regressed the mixed nine-case exact-CLI hotspot slice from `32.6181s` to `32.8545s`, with the decisive loss on `large/test_6.cnf` reverse (`16.0836s -> 17.4529s`). `special/hard.cnf` improved in both orders, but not enough to recover the dense-case loss. So future learnt-database work should not assume that trimming activity bumps on “safe” learnt clauses is free overhead to harvest.
+74. Treat “defer watcher-list shrink to one tail delete per list” as another propagation micro-optimization dead end unless a future branch removes more than current list-shrink overhead. A scratch core branch that replaced per-removal watcher `pop()` calls with a logical end pointer plus one final `del watchers[watchers_end:]` still regressed the mixed nine-case exact-CLI hotspot slice from `30.6616s` to `31.6370s`, with both `special/hard.cnf` and `large/test_6.cnf` worse in both orders. So future propagation work should not assume that the watcher-pop hotspot is recoverable just by changing shrink mechanics while keeping the same traversal and relocation work.
+75. Treat tiny read-only branch-scan cleanup as a still-live branching lane, distinct from the already-rejected mutable frontier ideas. A kept core change that hoisted `self.values`, `self.activity`, `self.saved_phase`, and `self.num_vars` into locals inside `pick_branch_literal()` improved the fresh `large/test_6.cnf` `cProfile` `pick_branch_literal()` cost from `1.626s` to `1.388s`, improved the mixed nine-case exact-CLI hotspot slice from `31.0625s` to `30.9412s`, and improved the same-day repeat-aware exact-CLI 35-case suite from `32.7030s` to `31.6015s`, all still correct. So future branching work can still consider very small same-search scan cleanups, but it should keep rejecting heaps, active-frontier structures, and other mutable branch-state machinery unless a materially stronger broad-suite signal appears.
+76. Treat inline `solve()` helper cleanup around activity decay as another hotspot-only mirage unless a future branch survives the repeat-aware exact-CLI suite. A scratch core branch that replaced `self.decay_var_activity()` and `self.decay_clause_activity()` with direct assignments inside `solve()` improved the mixed nine-case exact-CLI hotspot slice from `30.7973s` to `30.4203s`, largely by helping `large/test_6.cnf`, but still regressed the repeat-aware exact-CLI 35-case suite from `33.4842s` to `33.6295`. So future helper-boundary cleanup in the main conflict loop should demand the same broad-suite confirmation as `analyze()`/wrapper cleanups, not just a positive hotspot slice.
+77. Treat broad local method binding in `solve()` as another helper-boundary dead end unless a future branch shows a materially different broad-suite gain. A scratch core branch that bound `propagate`, `analyze`, `add_learnt_clause`, `enqueue`, `reduce_database`, `pick_branch_literal`, the decay helpers, and `trail_limits` into locals once per `solve()` call regressed the mixed nine-case exact-CLI hotspot slice from `29.4850s` to `31.0535s`, with the worst loss on reverse-order `large/test_6.cnf` (`14.6849s -> 16.9758s`). So future `solve()`-loop cleanup should not assume that the kept `pick_branch_literal()` local-alias win generalizes to broad method binding at the loop level.
+78. Treat local builtin binding around conflict-analysis `abs(...)` calls as another low-level dead end unless a future branch removes more real reasoning work than primitive lookup overhead alone. A scratch core branch that bound `abs` into locals inside `analyze()`, `minimize_learnt()`, and `prepare_learnt_clause()` still regressed the mixed nine-case exact-CLI hotspot slice from `31.4277s` to `32.1594s`, with `large/test_6.cnf` (`16.3400s -> 16.5961s` forward, `15.3030s -> 15.4358s` reverse) and `special/hard.cnf` (`10.4151s -> 10.8689s` forward, `9.6581s -> 10.3215s` reverse) worse in both orders. So future conflict-analysis work should not assume that the visible `abs` cost in the profiler can be recovered just by binding the builtin locally; the next real win still needs to simplify more actual analysis work.
+79. Treat fixed-size learnt-clause preparation fast paths as another likely conflict-analysis dead end unless a future branch comes with materially stronger broad-suite evidence. A scratch core branch that special-cased `prepare_learnt_clause()` for binary and ternary learnt clauses regressed the mixed nine-case exact-CLI hotspot slice from `32.1394s` to `34.0749s`, with the main damage on `large/test_6.cnf` (`15.9523s -> 18.1880s` forward, `14.9877s -> 16.9680s` reverse). So future conflict-analysis work should not assume that short learnt-clause postprocessing is a safe target for hand-specialized fast paths; the next real win still needs a stronger structural simplification than “skip the generic loop for tiny learnt clauses.”
+80. Treat flat binary implication payloads as another likely propagation micro-optimization dead end unless a future branch removes more than tuple-unpacking overhead alone. A scratch core branch that stored `binary_implications` as alternating `implied_literal, clause_id` integers and iterated them by step `2` regressed the mixed nine-case exact-CLI hotspot slice from `35.0798s` to `36.0096s`: forward order improved slightly (`35.8088s -> 35.5085s`), but reverse order lost much more strongly (`34.3507s -> 36.5107s`), with the main damage on `large/test_6.cnf` (`16.9915s -> 18.9111s`) and `large/test_10.cnf` (`2.2495s -> 2.4885s`). So future propagation work should not assume that simply flattening binary implication payloads is enough; the next real win still needs to remove larger watcher/ternary traversal cost.
+81. Treat one-pass full-tail `backtrack()` rewriting as another hotspot-only mirage unless a future branch survives the repeat-aware exact-CLI suite. A scratch core branch that computed the backtrack cut point once, cleared the whole trail tail in one pass, and sliced `trail_limits` once improved the mixed nine-case exact-CLI hotspot slice from `38.9067s` to `38.1503s`, largely by helping `large/test_6.cnf` in both orders. But it still regressed the repeat-aware exact-CLI 35-case suite from `39.2286s` to `39.7958`, with the broad loss driven mainly by `special/hard.cnf` (`11.8325s -> 12.8074s`) and `medium/test_4.cnf` (`2.4703s -> 2.6679s`). So future backtrack cleanup should demand the same broad-suite confirmation as other hotspot-looking wins.
+82. Treat “retune the second portfolio worker with a more aggressive restart schedule” as another portfolio dead end unless a future design comes with materially stronger one-case evidence. A scratch exact-CLI wrapper that kept the current default worker but changed the phase-biased worker to `seed_phase_bias=True, restart_base=32` blew the gated case `large/test_8.cnf` up from `0.4129s` to `5.5657s` on the two-order average while still staying SAT-correct. So future portfolio work should not assume that the current gate is narrow enough to make restart retuning safe; the remaining protected case is still highly restart-sensitive.
+83. Treat “merge the standalone root propagation into the main `solve()` loop” as another startup-only mirage unless a future cleanup also helps the dense exact-CLI gate. A scratch core branch that removed the pre-loop `propagate()` call from `solve()` did improve the 12-case SAT-heavy exact-CLI root-hit slice slightly from `0.5092s` to `0.5010s`, but it still regressed the mixed nine-case exact-CLI hotspot slice from `36.2592s` to `36.5577s`, with `large/test_6.cnf` worse in both orders (`18.3900s -> 18.8554s`, `18.1681s -> 18.6613s`). So future outer-loop cleanup should not assume that deleting one apparently redundant startup call is a free win; the next real speed gain still needs to survive the dense mixed gate, not just the startup-heavy slice.
+84. Treat `reduce_database()` bookkeeping and locked-clause micro-optimizations as even lower priority unless a future branch changes clause selection or search policy itself. Fresh profiler data shows that on the main hotspots, reductions only carry about `22.73..33.07` locked clauses against `315.26..469.92` candidates while deleting about half of those candidates each time (`large/test_6.cnf`: `23.94` locked vs `447.42` candidates; `special/hard.cnf`: `24.69` vs `469.92`; `medium/test_4.cnf`: `22.73` vs `320.55`; `large/test_8.cnf`: `33.07` vs `315.26`). So future `reduce_database()` work should target classifier/search effects, not more locked-set or candidate-bookkeeping cleanup.
+85. Treat raw restart-cadence profiling as too weak by itself to reopen restart tuning. Fresh profiler data shows the dense cases already restart every `166.82..226.40` conflicts at average decision level `8.21..16.30` and average trail `32.77..51.83`, and the repo already has multiple failed restart-policy retunes. So future restart work should require a materially stronger family-specific classifier than generic cadence tweaks.
+86. Treat “same logic, different loop primitive” in `pick_branch_literal()` as another branching micro-optimization dead end unless a future branch removes more than loop-shape overhead. A scratch core branch that replaced the current `for range(...)` scan with a manual `while variable <= num_vars` scan regressed the mixed nine-case exact-CLI hotspot slice from `28.0431s` to `29.6058s`, with `large/test_6.cnf`, `special/hard.cnf`, and `medium/test_4.cnf` all worse in both orders. So future branching work should distinguish the kept local-alias cleanup from dead loop-shape churn; the next real win is still more likely in `propagate()` or conflict analysis.
+87. Treat “leave the false watch in place when a ternary replacement candidate is already `TRUE`” as another strong original-ternary dead end. A scratch core branch that stopped relocating ternary clauses on the `candidate_value == TRUE` path and simply kept the clause satisfied in place blew the mixed nine-case exact-CLI hotspot slice up from `34.2608s` to `55.5632s`, with `large/test_8.cnf` exploding from about `0.35s` to about `12s` and `large/test_6.cnf` plus `special/hard.cnf` much worse in both orders. So future original-ternary work should not assume that minority satisfied-candidate relocations are easy churn to remove; the dominant relocation/unit path is still the right target.
+88. Treat bundled cross-cutting core cleanups as unproven unless they survive the repeat-aware exact-CLI suite one change at a time. A branch that combined integer-only `reason` sentinel storage with a redundant no-replacement-tail cleanup in `propagate()` looked slightly positive on the mixed nine-case exact-CLI hotspot slice (`38.0602s -> 37.6673s`) but regressed the repeat-aware exact-CLI 35-case suite from `40.3613s` to `43.3099s`, with `large/test_6.cnf`, `special/hard.cnf`, `large/test_10.cnf`, and `large/test_8.cnf` all worse. So future cross-cutting cleanup work should isolate those lanes one at a time and still require broad-suite confirmation.
+89. Treat isolated no-replacement-tail branch cleanup in `propagate()` as another hotspot-only mirage unless a future branch brings materially stronger broad-suite evidence. A scratch core branch that changed the two no-replacement tails from `if other_value == FALSE ... if other_value == UNASSIGNED ...` to `if other_value == FALSE ... else ...` improved the mixed nine-case exact-CLI hotspot slice from `32.5969s` to `31.1921s`, led by `large/test_6.cnf` and `special/hard.cnf` in both orders. But it still regressed the repeat-aware exact-CLI 35-case suite from `33.6532s` to `38.5035`, with `large/test_6.cnf`, `special/hard.cnf`, `medium/test_4.cnf`, and `large/test_10.cnf` all worse. So future branch-shape cleanup in the watched-clause tails should still require broad-suite confirmation even when the local hotspot A/B looks convincingly positive.
+90. Treat watched-clause no-replacement-tail branch-shape cleanup as a likely dead lane unless a future branch changes something materially larger than the branch itself. A rerun of the isolated `if other_value == FALSE ... else ...` cleanup on the current retained baseline reproduced the same pattern: strong mixed exact-CLI hotspot improvement (`32.5969s -> 31.1921s`) followed by a hard repeat-aware exact-CLI 35-case suite regression (`33.6532s -> 38.5035`). So future work should stop treating that branch shape as a live micro-optimization target by itself and go back to more structural `propagate()` or conflict-analysis changes.
+91. Treat array/bytearray-backed hot solver state as another pure-Python core-layout dead end unless a future branch removes much more work than a container swap. A scratch core branch that moved `literal_values`, `literal_var`, `literal_sign`, `literal_watch_index`, `negated_watch_index`, `values`, `level`, `phase_bias`, `saved_phase`, `seen`, and `lbd_marks` onto stdlib typed arrays regressed the mixed nine-case exact-CLI hotspot slice from `25.5674s` to `31.1749s`, with the biggest losses on `large/test_6.cnf` (`11.9928s -> 16.2617s` forward, `13.8218s -> 16.3599s` reverse), `special/hard.cnf`, `medium/test_4.cnf`, and `large/test_10.cnf`. So future data-layout work should stay focused on removing watcher/conflict-analysis work, not just storing the same integers in denser containers.
+92. Treat isolated integer-only `reason` sentinel storage as another hotspot-only mirage unless a future branch also removes materially more conflict-analysis or reduction work. A scratch core branch that changed `reason` from `None`/clause-id to `NO_REASON = -1` was mildly positive on the mixed nine-case exact-CLI hotspot slice (`24.3347s -> 24.1806s`), but still regressed the repeat-aware exact-CLI 35-case suite from `25.4875s` to `25.9045s`, with `large/test_6.cnf`, `special/hard.cnf`, `medium/test_4.cnf`, and `large/test_8.cnf` all worse. So future cleanup work should stop treating integer-only `reason` storage as a live lane by itself and go back to more structural `propagate()` or conflict-analysis changes.
+93. Treat global phase-bias seeding on the main exact-CLI fast path as another phase-policy dead end unless a future branch comes with a much stronger classifier than “turn it on everywhere.” A scratch wrapper branch that changed the default `solve_cnf()` path to call `solve_cnf_fast_serial(..., seed_phase_bias=True)` regressed the mixed nine-case exact-CLI hotspot slice from `31.7103s` to `37.6381s`, with especially bad losses on `special/hard.cnf` (`9.6094s -> 13.4149s` forward, `9.9988s -> 14.9598s` reverse), `large/test_6.cnf` reverse (`16.6386s -> 19.2728s`), and `medium/test_4.cnf`. So future phase work should keep treating phase-bias seeding as a narrow specialist heuristic rather than a broad default-policy improvement.
+94. Treat portfolio-worker wrapper churn as another nearly-exhausted one-case lane unless a future branch brings a materially stronger `large/test_8.cnf` win than this. A scratch branch that kept the current narrow portfolio gate but switched both workers from `solve_cnf_serial()` to `solve_cnf_fast_serial()` still regressed the repeat-2 exact-CLI `large/test_8.cnf` two-order average from `0.2924s` to `0.2950s` (`0.2772s -> 0.3008s` forward, `0.3075s -> 0.2892s` reverse). So future portfolio work should demand a clearly positive one-case exact-CLI signal before spending more mixed-slice or full-suite benchmarking budget on worker-plumbing tweaks.
+``````
 
 ### `out.txt`
 
@@ -20228,11 +20674,11 @@ Additional watch-order boundary: the newest ternary normalized-outcome split say
 - Git status: tracked
 - Size: `3179` bytes
 - Line count: `60`
-- Why it matters: Older benchmark output snapshot for the main solver.
+- Why it matters: Historical benchmark output artifact from earlier solver runs.
 
 Raw content:
 
-`````text
+``````text
 [small]
 test_1.cnf: SAT ok=True vars=19 clauses=26 time=0.0004s
 test_10.cnf: UNSAT ok=True vars=22 clauses=174 time=0.0015s
@@ -20293,8 +20739,7 @@ medium/test_3.cnf: UNSAT ok=True vars=172 clauses=774 time=1.0327s
 large/test_3.cnf: UNSAT ok=True vars=227 clauses=1460 time=0.3729s
 large/test_4.cnf: UNSAT ok=True vars=219 clauses=1363 time=0.3489s
 special/dense.cnf: UNSAT ok=True vars=200 clauses=1500 time=0.1364s
-
-`````
+``````
 
 ### `out_blaze.txt`
 
@@ -20302,11 +20747,11 @@ special/dense.cnf: UNSAT ok=True vars=200 clauses=1500 time=0.1364s
 - Git status: tracked
 - Size: `3173` bytes
 - Line count: `60`
-- Why it matters: Historical benchmark output snapshot for the blaze solver variant.
+- Why it matters: Historical benchmark artifact for the blaze variant.
 
 Raw content:
 
-`````text
+``````text
 [small]
 test_1.cnf: SAT ok=True vars=19 clauses=26 time=0.0003s
 test_10.cnf: UNSAT ok=True vars=22 clauses=174 time=0.0013s
@@ -20367,8 +20812,7 @@ large/test_4.cnf: UNSAT ok=True vars=219 clauses=1363 time=0.4468s
 large/test_3.cnf: UNSAT ok=True vars=227 clauses=1460 time=0.3834s
 special/dense.cnf: UNSAT ok=True vars=200 clauses=1500 time=0.1603s
 large/test_7.cnf: SAT ok=True vars=389 clauses=863 time=0.0120s
-
-`````
+``````
 
 ### `out_blaze_extended.txt`
 
@@ -20376,11 +20820,11 @@ large/test_7.cnf: SAT ok=True vars=389 clauses=863 time=0.0120s
 - Git status: tracked
 - Size: `4932` bytes
 - Line count: `92`
-- Why it matters: Extended benchmark artifact for the blaze solver variant.
+- Why it matters: Extended benchmark artifact for the blaze variant.
 
 Raw content:
 
-`````text
+``````text
 solver=satsolver_blaze
 
 [small]
@@ -20473,20 +20917,19 @@ satlib_more/uuf150-01.cnf: UNSAT ok=True vars=150 clauses=645 time=0.5508s
 large/test_3.cnf: UNSAT ok=True vars=227 clauses=1460 time=0.3950s
 large/test_4.cnf: UNSAT ok=True vars=219 clauses=1363 time=0.2918s
 satlib_more/uuf125-010.cnf: UNSAT ok=True vars=125 clauses=538 time=0.1683s
-
-`````
+``````
 
 ### `out_cli_extended.txt`
 
 - Category: Benchmark artifacts
 - Git status: tracked
-- Size: `12996` bytes
-- Line count: `98`
-- Why it matters: Current repeat-aware exact-CLI benchmark artifact for the main solver.
+- Size: `8400` bytes
+- Line count: `68`
+- Why it matters: Current exact-CLI benchmark artifact for the main solver entrypoint.
 
 Raw content:
 
-`````text
+``````text
 solver=satsolver
 mode=cli
 cli_script=/home/doomguy/Desktop/sat/satsolver/satsolver.py
@@ -20496,97 +20939,66 @@ repeat=2
 representative_time=median_of_repeats
 
 [small]
-test_1.cnf: SAT ok=True validation='valid SAT' vars=19 clauses=26 time=0.0341s repeat_count=2 best=0.0332s avg=0.0341s median=0.0341s samples=[0.0350, 0.0332]
-test_10.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=22 clauses=174 time=0.0357s repeat_count=2 best=0.0338s avg=0.0357s median=0.0357s samples=[0.0377, 0.0338]
-test_2.cnf: SAT ok=True validation='valid SAT' vars=46 clauses=176 time=0.0346s repeat_count=2 best=0.0323s avg=0.0346s median=0.0346s samples=[0.0369, 0.0323]
-test_3.cnf: SAT ok=True validation='valid SAT' vars=41 clauses=150 time=0.0343s repeat_count=2 best=0.0337s avg=0.0343s median=0.0343s samples=[0.0349, 0.0337]
-test_4.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=30 clauses=167 time=0.0331s repeat_count=2 best=0.0324s avg=0.0331s median=0.0331s samples=[0.0324, 0.0338]
-test_5.cnf: SAT ok=True validation='valid SAT' vars=20 clauses=40 time=0.0199s repeat_count=2 best=0.0195s avg=0.0199s median=0.0199s samples=[0.0195, 0.0202]
-test_6.cnf: SAT ok=True validation='valid SAT' vars=42 clauses=70 time=0.0272s repeat_count=2 best=0.0220s avg=0.0272s median=0.0272s samples=[0.0323, 0.0220]
-test_7.cnf: SAT ok=True validation='valid SAT' vars=49 clauses=167 time=0.0281s repeat_count=2 best=0.0213s avg=0.0281s median=0.0281s samples=[0.0213, 0.0348]
-test_8.cnf: UNSAT ok=True validation='valid UNSAT (brute-force checked)' vars=14 clauses=68 time=0.0261s repeat_count=2 best=0.0242s avg=0.0261s median=0.0261s samples=[0.0279, 0.0242]
-test_9.cnf: SAT ok=True validation='valid SAT' vars=40 clauses=100 time=0.0300s repeat_count=2 best=0.0263s avg=0.0300s median=0.0300s samples=[0.0337, 0.0263]
-SUMMARY small: count=10 solved_correctly=10 sat=7 unsat=3 errors=0 repeat_count=2 total=0.3030s avg=0.0303s median=0.0315s max=0.0357s measured_total=0.6059s
+test_1.cnf: SAT ok=True validation='valid SAT' vars=19 clauses=26 time=0.0344s repeat_count=2 best=0.0336s avg=0.0344s median=0.0344s samples=[0.0336, 0.0352]
+test_10.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=22 clauses=174 time=0.0363s repeat_count=2 best=0.0304s avg=0.0363s median=0.0363s samples=[0.0304, 0.0422]
+test_2.cnf: SAT ok=True validation='valid SAT' vars=46 clauses=176 time=0.0342s repeat_count=2 best=0.0287s avg=0.0342s median=0.0342s samples=[0.0287, 0.0397]
+test_3.cnf: SAT ok=True validation='valid SAT' vars=41 clauses=150 time=0.0292s repeat_count=2 best=0.0255s avg=0.0292s median=0.0292s samples=[0.0328, 0.0255]
+test_4.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=30 clauses=167 time=0.0279s repeat_count=2 best=0.0276s avg=0.0279s median=0.0279s samples=[0.0282, 0.0276]
+test_5.cnf: SAT ok=True validation='valid SAT' vars=20 clauses=40 time=0.0320s repeat_count=2 best=0.0255s avg=0.0320s median=0.0320s samples=[0.0385, 0.0255]
+test_6.cnf: SAT ok=True validation='valid SAT' vars=42 clauses=70 time=0.0314s repeat_count=2 best=0.0265s avg=0.0314s median=0.0314s samples=[0.0364, 0.0265]
+test_7.cnf: SAT ok=True validation='valid SAT' vars=49 clauses=167 time=0.0368s repeat_count=2 best=0.0367s avg=0.0368s median=0.0368s samples=[0.0367, 0.0369]
+test_8.cnf: UNSAT ok=True validation='valid UNSAT (brute-force checked)' vars=14 clauses=68 time=0.0360s repeat_count=2 best=0.0338s avg=0.0360s median=0.0360s samples=[0.0338, 0.0383]
+test_9.cnf: SAT ok=True validation='valid SAT' vars=40 clauses=100 time=0.0411s repeat_count=2 best=0.0392s avg=0.0411s median=0.0411s samples=[0.0430, 0.0392]
+SUMMARY small: count=10 solved_correctly=10 sat=7 unsat=3 errors=0 repeat_count=2 total=0.3395s avg=0.0339s median=0.0343s max=0.0411s measured_total=0.6789s
 
 [medium]
-test_1.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=63 clauses=835 time=0.0355s repeat_count=2 best=0.0271s avg=0.0355s median=0.0355s samples=[0.0271, 0.0439]
-test_10.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=68 clauses=822 time=0.0341s repeat_count=2 best=0.0285s avg=0.0341s median=0.0341s samples=[0.0397, 0.0285]
-test_2.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=69 clauses=352 time=0.0283s repeat_count=2 best=0.0259s avg=0.0283s median=0.0283s samples=[0.0306, 0.0259]
-test_3.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=172 clauses=774 time=0.6483s repeat_count=2 best=0.6476s avg=0.6483s median=0.6483s samples=[0.6490, 0.6476]
-test_4.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=191 clauses=886 time=1.6309s repeat_count=2 best=1.6010s avg=1.6309s median=1.6309s samples=[1.6010, 1.6609]
-test_5.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=55 clauses=713 time=0.0375s repeat_count=2 best=0.0373s avg=0.0375s median=0.0375s samples=[0.0376, 0.0373]
-test_6.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=61 clauses=512 time=0.0305s repeat_count=2 best=0.0244s avg=0.0305s median=0.0305s samples=[0.0244, 0.0366]
-test_7.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=75 clauses=562 time=0.0315s repeat_count=2 best=0.0277s avg=0.0315s median=0.0315s samples=[0.0277, 0.0353]
-test_8.cnf: SAT ok=True validation='valid SAT' vars=130 clauses=333 time=0.0254s repeat_count=2 best=0.0229s avg=0.0254s median=0.0254s samples=[0.0229, 0.0280]
-test_9.cnf: SAT ok=True validation='valid SAT' vars=138 clauses=379 time=0.0230s repeat_count=2 best=0.0229s avg=0.0230s median=0.0230s samples=[0.0230, 0.0229]
-SUMMARY medium: count=10 solved_correctly=10 sat=2 unsat=8 errors=0 repeat_count=2 total=2.5250s avg=0.2525s median=0.0328s max=1.6309s measured_total=5.0500s
+test_1.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=63 clauses=835 time=0.0429s repeat_count=2 best=0.0355s avg=0.0429s median=0.0429s samples=[0.0355, 0.0503]
+test_10.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=68 clauses=822 time=0.0438s repeat_count=2 best=0.0337s avg=0.0438s median=0.0438s samples=[0.0539, 0.0337]
+test_2.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=69 clauses=352 time=0.0433s repeat_count=2 best=0.0424s avg=0.0433s median=0.0433s samples=[0.0424, 0.0441]
+test_3.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=172 clauses=774 time=0.8001s repeat_count=2 best=0.7775s avg=0.8001s median=0.8001s samples=[0.7775, 0.8227]
+test_4.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=191 clauses=886 time=2.1529s repeat_count=2 best=2.0249s avg=2.1529s median=2.1529s samples=[2.0249, 2.2809]
+test_5.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=55 clauses=713 time=0.0292s repeat_count=2 best=0.0286s avg=0.0292s median=0.0292s samples=[0.0286, 0.0297]
+test_6.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=61 clauses=512 time=0.0344s repeat_count=2 best=0.0291s avg=0.0344s median=0.0344s samples=[0.0397, 0.0291]
+test_7.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=75 clauses=562 time=0.0402s repeat_count=2 best=0.0339s avg=0.0402s median=0.0402s samples=[0.0465, 0.0339]
+test_8.cnf: SAT ok=True validation='valid SAT' vars=130 clauses=333 time=0.0303s repeat_count=2 best=0.0301s avg=0.0303s median=0.0303s samples=[0.0304, 0.0301]
+test_9.cnf: SAT ok=True validation='valid SAT' vars=138 clauses=379 time=0.0372s repeat_count=2 best=0.0295s avg=0.0372s median=0.0372s samples=[0.0295, 0.0448]
+SUMMARY medium: count=10 solved_correctly=10 sat=2 unsat=8 errors=0 repeat_count=2 total=3.2541s avg=0.3254s median=0.0415s max=2.1529s measured_total=6.5082s
 
 [large]
-test_1.cnf: SAT ok=True validation='valid SAT' vars=373 clauses=811 time=0.0337s repeat_count=2 best=0.0312s avg=0.0337s median=0.0337s samples=[0.0362, 0.0312]
-test_10.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=229 clauses=1280 time=1.5617s repeat_count=2 best=1.5264s avg=1.5617s median=1.5617s samples=[1.5264, 1.5971]
-test_2.cnf: SAT ok=True validation='valid SAT' vars=319 clauses=573 time=0.0301s repeat_count=2 best=0.0292s avg=0.0301s median=0.0301s samples=[0.0292, 0.0309]
-test_3.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=227 clauses=1460 time=0.2722s repeat_count=2 best=0.2604s avg=0.2722s median=0.2722s samples=[0.2604, 0.2841]
-test_4.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=219 clauses=1363 time=0.2430s repeat_count=2 best=0.2327s avg=0.2430s median=0.2430s samples=[0.2327, 0.2534]
-test_5.cnf: SAT ok=True validation='valid SAT' vars=244 clauses=772 time=0.0340s repeat_count=2 best=0.0275s avg=0.0340s median=0.0340s samples=[0.0275, 0.0404]
-test_6.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=271 clauses=1393 time=11.6820s repeat_count=2 best=11.6662s avg=11.6820s median=11.6820s samples=[11.6662, 11.6979]
-test_7.cnf: SAT ok=True validation='valid SAT' vars=389 clauses=863 time=0.0418s repeat_count=2 best=0.0339s avg=0.0418s median=0.0418s samples=[0.0498, 0.0339]
-test_8.cnf: SAT ok=True validation='valid SAT' vars=298 clauses=1210 time=0.2563s repeat_count=2 best=0.2540s avg=0.2563s median=0.2563s samples=[0.2540, 0.2585]
-test_9.cnf: SAT ok=True validation='valid SAT' vars=365 clauses=969 time=0.0393s repeat_count=2 best=0.0325s avg=0.0393s median=0.0393s samples=[0.0461, 0.0325]
-SUMMARY large: count=10 solved_correctly=10 sat=6 unsat=4 errors=0 repeat_count=2 total=14.1942s avg=1.4194s median=0.1424s max=11.6820s measured_total=28.3883s
+test_1.cnf: SAT ok=True validation='valid SAT' vars=373 clauses=811 time=0.0440s repeat_count=2 best=0.0428s avg=0.0440s median=0.0440s samples=[0.0452, 0.0428]
+test_10.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=229 clauses=1280 time=2.0291s repeat_count=2 best=1.9806s avg=2.0291s median=2.0291s samples=[1.9806, 2.0776]
+test_2.cnf: SAT ok=True validation='valid SAT' vars=319 clauses=573 time=0.0524s repeat_count=2 best=0.0522s avg=0.0524s median=0.0524s samples=[0.0522, 0.0526]
+test_3.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=227 clauses=1460 time=0.3510s repeat_count=2 best=0.3414s avg=0.3510s median=0.3510s samples=[0.3414, 0.3607]
+test_4.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=219 clauses=1363 time=0.3258s repeat_count=2 best=0.2877s avg=0.3258s median=0.3258s samples=[0.3640, 0.2877]
+test_5.cnf: SAT ok=True validation='valid SAT' vars=244 clauses=772 time=0.0406s repeat_count=2 best=0.0365s avg=0.0406s median=0.0406s samples=[0.0448, 0.0365]
+test_6.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=271 clauses=1393 time=14.7695s repeat_count=2 best=14.5086s avg=14.7695s median=14.7695s samples=[14.5086, 15.0304]
+test_7.cnf: SAT ok=True validation='valid SAT' vars=389 clauses=863 time=0.0656s repeat_count=2 best=0.0577s avg=0.0656s median=0.0656s samples=[0.0577, 0.0736]
+test_8.cnf: SAT ok=True validation='valid SAT' vars=298 clauses=1210 time=0.3294s repeat_count=2 best=0.3219s avg=0.3294s median=0.3294s samples=[0.3219, 0.3370]
+test_9.cnf: SAT ok=True validation='valid SAT' vars=365 clauses=969 time=0.0350s repeat_count=2 best=0.0318s avg=0.0350s median=0.0350s samples=[0.0382, 0.0318]
+SUMMARY large: count=10 solved_correctly=10 sat=6 unsat=4 errors=0 repeat_count=2 total=18.0425s avg=1.8043s median=0.1957s max=14.7695s measured_total=36.0851s
 
 [special]
-dense.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=200 clauses=1500 time=0.1166s repeat_count=2 best=0.1094s avg=0.1166s median=0.1166s samples=[0.1094, 0.1238]
-easy.cnf: SAT ok=True validation='valid SAT' vars=200 clauses=400 time=0.0312s repeat_count=2 best=0.0244s avg=0.0312s median=0.0312s samples=[0.0244, 0.0380]
-hard.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=200 clauses=850 time=7.5598s repeat_count=2 best=7.5113s avg=7.5598s median=7.5598s samples=[7.6082, 7.5113]
-pigeonhole.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=90 clauses=415 time=0.0260s repeat_count=2 best=0.0202s avg=0.0260s median=0.0260s samples=[0.0318, 0.0202]
-tseitin.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=40 clauses=160 time=0.0367s repeat_count=2 best=0.0361s avg=0.0367s median=0.0367s samples=[0.0361, 0.0374]
-SUMMARY special: count=5 solved_correctly=5 sat=1 unsat=4 errors=0 repeat_count=2 total=7.7703s avg=1.5541s median=0.0367s max=7.5598s measured_total=15.5407s
-
-[satlib_subset]
-dubois20.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=60 clauses=160 time=0.0281s repeat_count=2 best=0.0204s avg=0.0281s median=0.0281s samples=[0.0204, 0.0358]
-dubois21.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=63 clauses=168 time=0.0257s repeat_count=2 best=0.0213s avg=0.0257s median=0.0257s samples=[0.0213, 0.0301]
-flat50-1.cnf: SAT ok=True validation='valid SAT' vars=150 clauses=545 time=0.0289s repeat_count=2 best=0.0233s avg=0.0289s median=0.0289s samples=[0.0233, 0.0345]
-flat50-10.cnf: SAT ok=True validation='valid SAT' vars=150 clauses=545 time=0.0384s repeat_count=2 best=0.0359s avg=0.0384s median=0.0384s samples=[0.0359, 0.0409]
-hole10.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=110 clauses=561 time=0.0265s repeat_count=2 best=0.0204s avg=0.0265s median=0.0265s samples=[0.0204, 0.0326]
-hole8.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=72 clauses=297 time=0.0263s repeat_count=2 best=0.0205s avg=0.0263s median=0.0263s samples=[0.0205, 0.0322]
-uf100-01.cnf: SAT ok=True validation='valid SAT' vars=100 clauses=430 time=0.0478s repeat_count=2 best=0.0462s avg=0.0478s median=0.0478s samples=[0.0462, 0.0494]
-uf100-010.cnf: SAT ok=True validation='valid SAT' vars=100 clauses=430 time=0.0328s repeat_count=2 best=0.0267s avg=0.0328s median=0.0328s samples=[0.0388, 0.0267]
-uuf100-01.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=100 clauses=430 time=0.0459s repeat_count=2 best=0.0399s avg=0.0459s median=0.0459s samples=[0.0399, 0.0520]
-uuf100-010.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=100 clauses=430 time=0.0535s repeat_count=2 best=0.0529s avg=0.0535s median=0.0535s samples=[0.0540, 0.0529]
-SUMMARY satlib_subset: count=10 solved_correctly=10 sat=4 unsat=6 errors=0 repeat_count=2 total=0.3539s avg=0.0354s median=0.0308s max=0.0535s measured_total=0.7077s
-
-[satlib_more]
-aim-100-1_6-no-1.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=100 clauses=160 time=0.0279s repeat_count=2 best=0.0220s avg=0.0279s median=0.0279s samples=[0.0338, 0.0220]
-aim-100-1_6-no-2.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=100 clauses=160 time=0.0249s repeat_count=2 best=0.0232s avg=0.0249s median=0.0249s samples=[0.0265, 0.0232]
-aim-100-1_6-yes1-1.cnf: SAT ok=True validation='valid SAT' vars=100 clauses=160 time=0.0234s repeat_count=2 best=0.0224s avg=0.0234s median=0.0234s samples=[0.0244, 0.0224]
-aim-100-1_6-yes1-2.cnf: SAT ok=True validation='valid SAT' vars=100 clauses=160 time=0.0236s repeat_count=2 best=0.0236s avg=0.0236s median=0.0236s samples=[0.0237, 0.0236]
-flat75-1.cnf: SAT ok=True validation='valid SAT' vars=225 clauses=840 time=0.0240s repeat_count=2 best=0.0239s avg=0.0240s median=0.0240s samples=[0.0239, 0.0241]
-flat75-10.cnf: SAT ok=True validation='valid SAT' vars=225 clauses=840 time=0.0375s repeat_count=2 best=0.0308s avg=0.0375s median=0.0375s samples=[0.0308, 0.0441]
-jnh1.cnf: SAT ok=True validation='valid SAT' vars=100 clauses=850 time=0.0385s repeat_count=2 best=0.0323s avg=0.0385s median=0.0385s samples=[0.0448, 0.0323]
-jnh10.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=100 clauses=850 time=0.0359s repeat_count=2 best=0.0304s avg=0.0359s median=0.0359s samples=[0.0414, 0.0304]
-uf125-01.cnf: SAT ok=True validation='valid SAT' vars=125 clauses=538 time=0.0353s repeat_count=2 best=0.0314s avg=0.0353s median=0.0353s samples=[0.0314, 0.0391]
-uf125-010.cnf: SAT ok=True validation='valid SAT' vars=125 clauses=538 time=0.0474s repeat_count=2 best=0.0401s avg=0.0474s median=0.0474s samples=[0.0401, 0.0546]
-uf150-01.cnf: SAT ok=True validation='valid SAT' vars=150 clauses=645 time=0.0396s repeat_count=2 best=0.0395s avg=0.0396s median=0.0396s samples=[0.0395, 0.0396]
-uuf125-01.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=125 clauses=538 time=0.1091s repeat_count=2 best=0.1004s avg=0.1091s median=0.1091s samples=[0.1004, 0.1179]
-uuf125-010.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=125 clauses=538 time=0.1609s repeat_count=2 best=0.1573s avg=0.1609s median=0.1609s samples=[0.1573, 0.1644]
-uuf150-01.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=150 clauses=645 time=0.4063s repeat_count=2 best=0.4005s avg=0.4063s median=0.4063s samples=[0.4005, 0.4121]
-SUMMARY satlib_more: count=14 solved_correctly=14 sat=8 unsat=6 errors=0 repeat_count=2 total=1.0342s avg=0.0739s median=0.0367s max=0.4063s measured_total=2.0684s
+dense.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=200 clauses=1500 time=0.1328s repeat_count=2 best=0.1284s avg=0.1328s median=0.1328s samples=[0.1284, 0.1373]
+easy.cnf: SAT ok=True validation='valid SAT' vars=200 clauses=400 time=0.0417s repeat_count=2 best=0.0323s avg=0.0417s median=0.0417s samples=[0.0510, 0.0323]
+hard.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=200 clauses=850 time=9.7189s repeat_count=2 best=9.7027s avg=9.7189s median=9.7189s samples=[9.7352, 9.7027]
+pigeonhole.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=90 clauses=415 time=0.0335s repeat_count=2 best=0.0255s avg=0.0335s median=0.0335s samples=[0.0415, 0.0255]
+tseitin.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=40 clauses=160 time=0.0384s repeat_count=2 best=0.0369s avg=0.0384s median=0.0384s samples=[0.0400, 0.0369]
+SUMMARY special: count=5 solved_correctly=5 sat=1 unsat=4 errors=0 repeat_count=2 total=9.9654s avg=1.9931s median=0.0417s max=9.7189s measured_total=19.9307s
 
 [overall]
-total_cases=59 solved_correctly=59 sat=28 unsat=31 errors=0 repeat_count=2 total=26.1805s avg=0.4437s median=0.0343s max=11.6820s measured_total=52.3610s wall_clock=52.5982s
+total_cases=35 solved_correctly=35 sat=16 unsat=19 errors=0 repeat_count=2 total=31.6015s avg=0.9029s median=0.0406s max=14.7695s measured_total=63.2029s wall_clock=63.3686s
 slowest_cases:
-large/test_6.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=271 clauses=1393 time=11.6820s samples=[11.6662, 11.6979]
-special/hard.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=200 clauses=850 time=7.5598s samples=[7.6082, 7.5113]
-medium/test_4.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=191 clauses=886 time=1.6309s samples=[1.6010, 1.6609]
-large/test_10.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=229 clauses=1280 time=1.5617s samples=[1.5264, 1.5971]
-medium/test_3.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=172 clauses=774 time=0.6483s samples=[0.6490, 0.6476]
-satlib_more/uuf150-01.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=150 clauses=645 time=0.4063s samples=[0.4005, 0.4121]
-large/test_3.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=227 clauses=1460 time=0.2722s samples=[0.2604, 0.2841]
-large/test_8.cnf: SAT ok=True validation='valid SAT' vars=298 clauses=1210 time=0.2563s samples=[0.2540, 0.2585]
-large/test_4.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=219 clauses=1363 time=0.2430s samples=[0.2327, 0.2534]
-satlib_more/uuf125-010.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=125 clauses=538 time=0.1609s samples=[0.1573, 0.1644]
-
-`````
+large/test_6.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=271 clauses=1393 time=14.7695s samples=[14.5086, 15.0304]
+special/hard.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=200 clauses=850 time=9.7189s samples=[9.7352, 9.7027]
+medium/test_4.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=191 clauses=886 time=2.1529s samples=[2.0249, 2.2809]
+large/test_10.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=229 clauses=1280 time=2.0291s samples=[1.9806, 2.0776]
+medium/test_3.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=172 clauses=774 time=0.8001s samples=[0.7775, 0.8227]
+large/test_3.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=227 clauses=1460 time=0.3510s samples=[0.3414, 0.3607]
+large/test_8.cnf: SAT ok=True validation='valid SAT' vars=298 clauses=1210 time=0.3294s samples=[0.3219, 0.3370]
+large/test_4.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=219 clauses=1363 time=0.3258s samples=[0.3640, 0.2877]
+special/dense.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=200 clauses=1500 time=0.1328s samples=[0.1284, 0.1373]
+large/test_7.cnf: SAT ok=True validation='valid SAT' vars=389 clauses=863 time=0.0656s samples=[0.0577, 0.0736]
+``````
 
 ### `out_extended.txt`
 
@@ -20594,11 +21006,11 @@ satlib_more/uuf125-010.cnf: UNSAT ok=True validation='valid UNSAT (format checke
 - Git status: tracked
 - Size: `12905` bytes
 - Line count: `96`
-- Why it matters: Current repeat-aware in-process benchmark artifact for the main solver.
+- Why it matters: Current module/in-process benchmark artifact for the main solver path.
 
 Raw content:
 
-`````text
+``````text
 solver=satsolver
 mode=module
 bruteforce_var_limit=16
@@ -20695,8 +21107,7 @@ large/test_3.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=2
 large/test_8.cnf: SAT ok=True validation='valid SAT' vars=298 clauses=1210 time=0.2407s samples=[0.2644, 0.2170]
 large/test_4.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=219 clauses=1363 time=0.2302s samples=[0.2305, 0.2299]
 satlib_more/uuf125-010.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=125 clauses=538 time=0.1436s samples=[0.1425, 0.1448]
-
-`````
+``````
 
 ### `out_fast_cli_extended.txt`
 
@@ -20704,11 +21115,11 @@ satlib_more/uuf125-010.cnf: UNSAT ok=True validation='valid UNSAT (format checke
 - Git status: tracked
 - Size: `13006` bytes
 - Line count: `98`
-- Why it matters: Current repeat-aware exact-CLI benchmark artifact for the alternate fast wrapper.
+- Why it matters: Exact-CLI benchmark artifact for the fast alternate wrapper.
 
 Raw content:
 
-`````text
+``````text
 solver=satsolver_fast
 mode=cli
 cli_script=/home/doomguy/Desktop/sat/satsolver/satsolver_fast.py
@@ -20807,8 +21218,7 @@ large/test_8.cnf: SAT ok=True validation='valid SAT' vars=298 clauses=1210 time=
 large/test_3.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=227 clauses=1460 time=0.2754s samples=[0.2748, 0.2759]
 large/test_4.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=219 clauses=1363 time=0.2431s samples=[0.2403, 0.2458]
 satlib_more/uuf125-010.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=125 clauses=538 time=0.1648s samples=[0.1733, 0.1563]
-
-`````
+``````
 
 ### `out_old.txt`
 
@@ -20816,11 +21226,11 @@ satlib_more/uuf125-010.cnf: UNSAT ok=True validation='valid UNSAT (format checke
 - Git status: tracked
 - Size: `3177` bytes
 - Line count: `60`
-- Why it matters: Another historical benchmark output snapshot for the main solver.
+- Why it matters: Older retained benchmark artifact kept for comparison history.
 
 Raw content:
 
-`````text
+``````text
 [small]
 test_1.cnf: SAT ok=True vars=19 clauses=26 time=0.0003s
 test_10.cnf: UNSAT ok=True vars=22 clauses=174 time=0.0010s
@@ -20881,8 +21291,7 @@ medium/test_3.cnf: UNSAT ok=True vars=172 clauses=774 time=0.9458s
 large/test_3.cnf: UNSAT ok=True vars=227 clauses=1460 time=0.3934s
 large/test_4.cnf: UNSAT ok=True vars=219 clauses=1363 time=0.3085s
 special/dense.cnf: UNSAT ok=True vars=200 clauses=1500 time=0.1221s
-
-`````
+``````
 
 ### `satlib_more/aim-100-1_6-no-1.cnf`
 
@@ -20890,11 +21299,11 @@ special/dense.cnf: UNSAT ok=True vars=200 clauses=1500 time=0.1221s
 - Git status: tracked
 - Size: `2273` bytes
 - Line count: `171`
-- Why it matters: Additional SATLIB benchmark input used in the extended 59-case benchmark suite.
+- Why it matters: Additional SATLIB benchmark CNF used in expanded suites and comparison runs.
 
 Raw content:
 
-`````text
+``````text
 c FILE: aim-100-1_6-no-1.cnf
 c
 c SOURCE: Kazuo Iwama, Eiji Miyano (miyano@cscu.kyushu-u.ac.jp),
@@ -21066,7 +21475,7 @@ p cnf 100 160
 43 -45 -96 0
 34 -45 -69 0
 63 -86 -98 0
-`````
+``````
 
 ### `satlib_more/aim-100-1_6-no-2.cnf`
 
@@ -21074,11 +21483,11 @@ p cnf 100 160
 - Git status: tracked
 - Size: `2258` bytes
 - Line count: `171`
-- Why it matters: Additional SATLIB benchmark input used in the extended 59-case benchmark suite.
+- Why it matters: Additional SATLIB benchmark CNF used in expanded suites and comparison runs.
 
 Raw content:
 
-`````text
+``````text
 c FILE: aim-100-1_6-no-2.cnf
 c
 c SOURCE: Kazuo Iwama, Eiji Miyano (miyano@cscu.kyushu-u.ac.jp),
@@ -21250,7 +21659,7 @@ p cnf 100 160
 -12 -25 -31 0
 2 -43 74 0
 -30 37 -61 0
-`````
+``````
 
 ### `satlib_more/aim-100-1_6-yes1-1.cnf`
 
@@ -21258,11 +21667,11 @@ p cnf 100 160
 - Git status: tracked
 - Size: `2259` bytes
 - Line count: `171`
-- Why it matters: Additional SATLIB benchmark input used in the extended 59-case benchmark suite.
+- Why it matters: Additional SATLIB benchmark CNF used in expanded suites and comparison runs.
 
 Raw content:
 
-`````text
+``````text
 c FILE: aim-100-1_6-yes1-1.cnf
 c
 c SOURCE: Kazuo Iwama, Eiji Miyano (miyano@cscu.kyushu-u.ac.jp),
@@ -21434,7 +21843,7 @@ p cnf 100 160
 13 -30 35 0
 14 -52 -77 0
 37 -77 0
-`````
+``````
 
 ### `satlib_more/aim-100-1_6-yes1-2.cnf`
 
@@ -21442,11 +21851,11 @@ p cnf 100 160
 - Git status: tracked
 - Size: `2258` bytes
 - Line count: `171`
-- Why it matters: Additional SATLIB benchmark input used in the extended 59-case benchmark suite.
+- Why it matters: Additional SATLIB benchmark CNF used in expanded suites and comparison runs.
 
 Raw content:
 
-`````text
+``````text
 c FILE: aim-100-1_6-yes1-2.cnf
 c
 c SOURCE: Kazuo Iwama, Eiji Miyano (miyano@cscu.kyushu-u.ac.jp),
@@ -21618,7 +22027,7 @@ p cnf 100 160
 -4 42 93 0
 -7 -21 0
 -7 -10 81 0
-`````
+``````
 
 ### `satlib_more/flat75-1.cnf`
 
@@ -21626,11 +22035,11 @@ p cnf 100 160
 - Git status: tracked
 - Size: `9999` bytes
 - Line count: `857`
-- Why it matters: Additional SATLIB benchmark input used in the extended 59-case benchmark suite.
+- Why it matters: Additional SATLIB benchmark CNF used in expanded suites and comparison runs.
 
 Raw content:
 
-`````text
+``````text
 c File: flat75_3_0.col
 c
 c SOURCE: Joseph Culberson (joe@cs.ualberta.ca)
@@ -22488,8 +22897,7 @@ p cnf 225 840
 -223 -190 0
 -224 -191 0
 -225 -192 0
-
-`````
+``````
 
 ### `satlib_more/flat75-10.cnf`
 
@@ -22497,11 +22905,11 @@ p cnf 225 840
 - Git status: tracked
 - Size: `9969` bytes
 - Line count: `857`
-- Why it matters: Additional SATLIB benchmark input used in the extended 59-case benchmark suite.
+- Why it matters: Additional SATLIB benchmark CNF used in expanded suites and comparison runs.
 
 Raw content:
 
-`````text
+``````text
 c File: flat75_3_0.col
 c
 c SOURCE: Joseph Culberson (joe@cs.ualberta.ca)
@@ -23359,8 +23767,7 @@ p cnf 225 840
 -223 -217 0
 -224 -218 0
 -225 -219 0
-
-`````
+``````
 
 ### `satlib_more/jnh1.cnf`
 
@@ -23368,11 +23775,11 @@ p cnf 225 840
 - Git status: tracked
 - Size: `24913` bytes
 - Line count: `866`
-- Why it matters: Additional SATLIB benchmark input used in the extended 59-case benchmark suite.
+- Why it matters: Additional SATLIB benchmark CNF used in expanded suites and comparison runs.
 
 Raw content:
 
-`````text
+``````text
 c File:  jnh1.cnf
 c
 c SOURCE: John Hooker (jh38+@andrew.cmu.edu)
@@ -24239,8 +24646,7 @@ p cnf 100 850
    2   17   37  -71  -75  0
  -68   88  0
  -36   42   50  -62  -80   83   98  0
-
-`````
+``````
 
 ### `satlib_more/jnh10.cnf`
 
@@ -24248,11 +24654,11 @@ p cnf 100 850
 - Git status: tracked
 - Size: `23778` bytes
 - Line count: `866`
-- Why it matters: Additional SATLIB benchmark input used in the extended 59-case benchmark suite.
+- Why it matters: Additional SATLIB benchmark CNF used in expanded suites and comparison runs.
 
 Raw content:
 
-`````text
+``````text
 c File:  jnh10.cnf
 c
 c SOURCE: John Hooker (jh38+@andrew.cmu.edu)
@@ -25119,8 +25525,7 @@ p cnf 100 850
   -2  -80   85  0
   -4   14   67  -89   98  -99  0
    1   13   37  -38   55   56   67   75  -83  -90  0
-
-`````
+``````
 
 ### `satlib_more/uf125-01.cnf`
 
@@ -25128,11 +25533,11 @@ p cnf 100 850
 - Git status: tracked
 - Size: `7095` bytes
 - Line count: `549`
-- Why it matters: Additional SATLIB benchmark input used in the extended 59-case benchmark suite.
+- Why it matters: Additional SATLIB benchmark CNF used in expanded suites and comparison runs.
 
 Raw content:
 
-`````text
+``````text
 c This Formular is generated by mcnf
 c
 c    horn? no 
@@ -25682,8 +26087,7 @@ p cnf 125  538
 %
 0
 
-
-`````
+``````
 
 ### `satlib_more/uf125-010.cnf`
 
@@ -25691,11 +26095,11 @@ p cnf 125  538
 - Git status: tracked
 - Size: `7047` bytes
 - Line count: `549`
-- Why it matters: Additional SATLIB benchmark input used in the extended 59-case benchmark suite.
+- Why it matters: Additional SATLIB benchmark CNF used in expanded suites and comparison runs.
 
 Raw content:
 
-`````text
+``````text
 c This Formular is generated by mcnf
 c
 c    horn? no 
@@ -26245,8 +26649,7 @@ p cnf 125  538
 %
 0
 
-
-`````
+``````
 
 ### `satlib_more/uf150-01.cnf`
 
@@ -26254,11 +26657,11 @@ p cnf 125  538
 - Git status: tracked
 - Size: `8740` bytes
 - Line count: `656`
-- Why it matters: Additional SATLIB benchmark input used in the extended 59-case benchmark suite.
+- Why it matters: Additional SATLIB benchmark CNF used in expanded suites and comparison runs.
 
 Raw content:
 
-`````text
+``````text
 c This Formular is generated by mcnf
 c
 c    horn? no 
@@ -26915,8 +27318,7 @@ p cnf 150  645
 %
 0
 
-
-`````
+``````
 
 ### `satlib_more/uuf125-01.cnf`
 
@@ -26924,11 +27326,11 @@ p cnf 150  645
 - Git status: tracked
 - Size: `7066` bytes
 - Line count: `549`
-- Why it matters: Additional SATLIB benchmark input used in the extended 59-case benchmark suite.
+- Why it matters: Additional SATLIB benchmark CNF used in expanded suites and comparison runs.
 
 Raw content:
 
-`````text
+``````text
 c This Formular is generated by mcnf
 c
 c    horn? no 
@@ -27478,8 +27880,7 @@ p cnf 125  538
 %
 0
 
-
-`````
+``````
 
 ### `satlib_more/uuf125-010.cnf`
 
@@ -27487,11 +27888,11 @@ p cnf 125  538
 - Git status: tracked
 - Size: `7093` bytes
 - Line count: `549`
-- Why it matters: Additional SATLIB benchmark input used in the extended 59-case benchmark suite.
+- Why it matters: Additional SATLIB benchmark CNF used in expanded suites and comparison runs.
 
 Raw content:
 
-`````text
+``````text
 c This Formular is generated by mcnf
 c
 c    horn? no 
@@ -28041,8 +28442,7 @@ p cnf 125  538
 %
 0
 
-
-`````
+``````
 
 ### `satlib_more/uuf150-01.cnf`
 
@@ -28050,11 +28450,11 @@ p cnf 125  538
 - Git status: tracked
 - Size: `8691` bytes
 - Line count: `656`
-- Why it matters: Additional SATLIB benchmark input used in the extended 59-case benchmark suite.
+- Why it matters: Additional SATLIB benchmark CNF used in expanded suites and comparison runs.
 
 Raw content:
 
-`````text
+``````text
 c This Formular is generated by mcnf
 c
 c    horn? no 
@@ -28711,8 +29111,7 @@ p cnf 150  645
 %
 0
 
-
-`````
+``````
 
 ### `satlib_subset/dubois20.cnf`
 
@@ -28720,11 +29119,11 @@ p cnf 150  645
 - Git status: tracked
 - Size: `2603` bytes
 - Line count: `173`
-- Why it matters: Curated SATLIB benchmark input included to widen the evaluation corpus.
+- Why it matters: Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set.
 
 Raw content:
 
-`````text
+``````text
 c FILE: dubois20.cnf
 c
 c SOURCE: Olivier Dubois (dubois@laforia.ibp.fr)
@@ -28898,8 +29297,7 @@ p cnf 60 160
 -39 -40 -38  0
  39 -40  38  0
 -39  40  38  0
-
-`````
+``````
 
 ### `satlib_subset/dubois21.cnf`
 
@@ -28907,11 +29305,11 @@ p cnf 60 160
 - Git status: tracked
 - Size: `2723` bytes
 - Line count: `181`
-- Why it matters: Curated SATLIB benchmark input included to widen the evaluation corpus.
+- Why it matters: Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set.
 
 Raw content:
 
-`````text
+``````text
 c FILE: dubois21.cnf
 c
 c SOURCE: Olivier Dubois (dubois@laforia.ibp.fr)
@@ -29093,8 +29491,7 @@ p cnf 63 168
 -41 -42 -40  0
  41 -42  40  0
 -41  42  40  0
-
-`````
+``````
 
 ### `satlib_subset/flat50-1.cnf`
 
@@ -29102,11 +29499,11 @@ p cnf 63 168
 - Git status: tracked
 - Size: `6270` bytes
 - Line count: `558`
-- Why it matters: Curated SATLIB benchmark input included to widen the evaluation corpus.
+- Why it matters: Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set.
 
 Raw content:
 
-`````text
+``````text
 c File: flat50_3_0.col
 c
 c SOURCE: Joseph Culberson (joe@cs.ualberta.ca)
@@ -29665,8 +30062,7 @@ p cnf 150 545
 -136 -100 0
 -137 -101 0
 -138 -102 0
-
-`````
+``````
 
 ### `satlib_subset/flat50-10.cnf`
 
@@ -29674,11 +30070,11 @@ p cnf 150 545
 - Git status: tracked
 - Size: `6273` bytes
 - Line count: `558`
-- Why it matters: Curated SATLIB benchmark input included to widen the evaluation corpus.
+- Why it matters: Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set.
 
 Raw content:
 
-`````text
+``````text
 c File: flat50_3_0.col
 c
 c SOURCE: Joseph Culberson (joe@cs.ualberta.ca)
@@ -30237,8 +30633,7 @@ p cnf 150 545
 -142 -100 0
 -143 -101 0
 -144 -102 0
-
-`````
+``````
 
 ### `satlib_subset/hole10.cnf`
 
@@ -30246,11 +30641,11 @@ p cnf 150 545
 - Git status: tracked
 - Size: `6271` bytes
 - Line count: `574`
-- Why it matters: Curated SATLIB benchmark input included to widen the evaluation corpus.
+- Why it matters: Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set.
 
 Raw content:
 
-`````text
+``````text
 c File:  hole10.cnf
 c
 c SOURCE: John Hooker (jh38+@andrew.cmu.edu)
@@ -30825,8 +31220,7 @@ p cnf 110 561
  90 89 88 87 86 85 84 83 82 81 0
  100 99 98 97 96 95 94 93 92 91 0
  110 109 108 107 106 105 104 103 102 101 0
-
-`````
+``````
 
 ### `satlib_subset/hole8.cnf`
 
@@ -30834,11 +31228,11 @@ p cnf 110 561
 - Git status: tracked
 - Size: `5217` bytes
 - Line count: `310`
-- Why it matters: Curated SATLIB benchmark input included to widen the evaluation corpus.
+- Why it matters: Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set.
 
 Raw content:
 
-`````text
+``````text
 c File:  hole8.cnf
 c
 c SOURCE: John Hooker (jh38+@andrew.cmu.edu)
@@ -31149,8 +31543,7 @@ p cnf 72 297
  56     55     54     53     52     51     50     49   0
  64     63     62     61     60     59     58     57   0
  72     71     70     69     68     67     66     65   0
-
-`````
+``````
 
 ### `satlib_subset/uf100-01.cnf`
 
@@ -31158,11 +31551,11 @@ p cnf 72 297
 - Git status: tracked
 - Size: `5399` bytes
 - Line count: `441`
-- Why it matters: Curated SATLIB benchmark input included to widen the evaluation corpus.
+- Why it matters: Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set.
 
 Raw content:
 
-`````text
+``````text
 c This Formular is generated by mcnf
 c
 c    horn? no 
@@ -31604,8 +31997,7 @@ p cnf 100  430
 %
 0
 
-
-`````
+``````
 
 ### `satlib_subset/uf100-010.cnf`
 
@@ -31613,11 +32005,11 @@ p cnf 100  430
 - Git status: tracked
 - Size: `5348` bytes
 - Line count: `441`
-- Why it matters: Curated SATLIB benchmark input included to widen the evaluation corpus.
+- Why it matters: Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set.
 
 Raw content:
 
-`````text
+``````text
 c This Formular is generated by mcnf
 c
 c    horn? no 
@@ -32059,8 +32451,7 @@ p cnf 100  430
 %
 0
 
-
-`````
+``````
 
 ### `satlib_subset/uuf100-01.cnf`
 
@@ -32068,11 +32459,11 @@ p cnf 100  430
 - Git status: tracked
 - Size: `5443` bytes
 - Line count: `441`
-- Why it matters: Curated SATLIB benchmark input included to widen the evaluation corpus.
+- Why it matters: Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set.
 
 Raw content:
 
-`````text
+``````text
 c This Formular is generated by mcnf
 c
 c    horn? no 
@@ -32514,8 +32905,7 @@ p cnf 100  430
 %
 0
 
-
-`````
+``````
 
 ### `satlib_subset/uuf100-010.cnf`
 
@@ -32523,11 +32913,11 @@ p cnf 100  430
 - Git status: tracked
 - Size: `5408` bytes
 - Line count: `441`
-- Why it matters: Curated SATLIB benchmark input included to widen the evaluation corpus.
+- Why it matters: Representative SATLIB benchmark CNF used to broaden beyond the handpicked course set.
 
 Raw content:
 
-`````text
+``````text
 c This Formular is generated by mcnf
 c
 c    horn? no 
@@ -32969,20 +33359,19 @@ p cnf 100  430
 %
 0
 
-
-`````
+``````
 
 ### `satsolver.py`
 
 - Category: Core runtime / benchmark code
 - Git status: tracked
-- Size: `7987` bytes
-- Line count: `241`
-- Why it matters: Current primary submission entrypoint and exact-CLI wrapper around the shared solver core.
+- Size: `7321` bytes
+- Line count: `225`
+- Why it matters: Current required CLI entrypoint and wrapper around the shared solver core.
 
 Raw content:
 
-`````python
+``````python
 from __future__ import annotations
 
 import sys
@@ -32990,7 +33379,6 @@ import sys
 import satsolver_core as base
 
 CLI_MODE = __name__ == "__main__"
-FAST_ROOT_PURE_DENSITY_GATE = 3.2
 
 if CLI_MODE:
     Solver = base.Solver
@@ -33082,15 +33470,6 @@ def parse_dimacs_file(path: str) -> tuple[int, list[list[int]]]:
     with open(path, "rb") as handle:
         return parse_dimacs_bytes(handle.read())
 
-
-def should_try_fast_root_pure(num_vars: int, clauses: list[list[int]]) -> bool:
-    if num_vars == 0 or not clauses:
-        return False
-    if (len(clauses) / num_vars) > FAST_ROOT_PURE_DENSITY_GATE:
-        return False
-    return all(len(clause) == 3 for clause in clauses)
-
-
 if not CLI_MODE:
 
     def solve_cnf_serial(
@@ -33120,12 +33499,6 @@ def solve_cnf_fast_serial(
     seed_phase_bias: bool = False,
 ) -> list[int] | None:
     solver = Solver(num_vars)
-    if should_try_fast_root_pure(num_vars, clauses):
-        root_pure_literals = base.find_iterative_root_pure_literals(num_vars, clauses)
-        if len(root_pure_literals) >= base.ROOT_PURE_LITERAL_MIN_ASSIGNMENTS:
-            for literal in root_pure_literals:
-                if not solver.enqueue(literal, None):
-                    return None
     for clause in clauses:
         if not solver.add_problem_clause(clause):
             return None
@@ -33224,8 +33597,7 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
-`````
+``````
 
 ### `satsolver_blaze.py`
 
@@ -33233,11 +33605,11 @@ if __name__ == "__main__":
 - Git status: tracked
 - Size: `23818` bytes
 - Line count: `731`
-- Why it matters: Older sibling solver kept as a comparison baseline and alternate search identity.
+- Why it matters: Older alternate wrapper/solver variant retained for comparison.
 
 Raw content:
 
-`````python
+``````python
 from __future__ import annotations
 
 import sys
@@ -33969,20 +34341,19 @@ def main(argv: Optional[list[str]] = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
-`````
+``````
 
 ### `satsolver_core.py`
 
 - Category: Core runtime / benchmark code
 - Git status: tracked
-- Size: `35483` bytes
-- Line count: `1034`
-- Why it matters: Shared CDCL solver core plus common parsing, presolve, and solve helpers.
+- Size: `35572` bytes
+- Line count: `1040`
+- Why it matters: Shared CDCL solver core plus parsing, presolve, and solve helpers.
 
 Raw content:
 
-`````python
+``````python
 from __future__ import annotations
 
 from collections.abc import Iterable
@@ -34599,19 +34970,25 @@ class Solver:
         return learnt, best_level, lbd
 
     def pick_branch_literal(self) -> int:
+        values = self.values
+        activity = self.activity
+        saved_phase = self.saved_phase
+        num_vars = self.num_vars
         best_variable = 0
         best_activity = -1.0
-        for variable in range(1, self.num_vars + 1):
-            if self.values[variable] == UNASSIGNED and self.activity[variable] > best_activity:
-                best_activity = self.activity[variable]
+        for variable in range(1, num_vars + 1):
+            if values[variable] != UNASSIGNED:
+                continue
+
+            variable_activity = activity[variable]
+            if variable_activity > best_activity:
+                best_activity = variable_activity
                 best_variable = variable
 
         if best_variable == 0:
             return 0
 
-        positive = self.saved_phase[best_variable]
-        if self.activity[best_variable] == 0.0:
-            positive = self.phase_bias[best_variable] >= 0
+        positive = saved_phase[best_variable]
         return best_variable if positive else -best_variable
 
     def reduce_database(self) -> None:
@@ -35017,8 +35394,7 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
-`````
+``````
 
 ### `satsolver_fast.py`
 
@@ -35030,7 +35406,7 @@ if __name__ == "__main__":
 
 Raw content:
 
-`````python
+``````python
 from __future__ import annotations
 
 import sys
@@ -35221,8 +35597,7 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
-`````
+``````
 
 ### `small/test_1.cnf`
 
@@ -35230,11 +35605,11 @@ if __name__ == "__main__":
 - Git status: tracked
 - Size: `567` bytes
 - Line count: `34`
-- Why it matters: Small benchmark CNF used for quick correctness and performance smoke checks.
+- Why it matters: Small benchmark CNF used for quick correctness and smoke checks.
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 19 variables and 26 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -35269,8 +35644,7 @@ p cnf 19 26
 11 16 -18 0
 11 -13 14 0
 -7 9 17 0
-
-`````
+``````
 
 ### `small/test_10.cnf`
 
@@ -35278,11 +35652,11 @@ p cnf 19 26
 - Git status: tracked
 - Size: `2259` bytes
 - Line count: `182`
-- Why it matters: Small benchmark CNF used for quick correctness and performance smoke checks.
+- Why it matters: Small benchmark CNF used for quick correctness and smoke checks.
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 22 variables and 174 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -35465,8 +35839,7 @@ p cnf 22 174
 6 -12 16 0
 -2 11 -21 0
 2 4 -12 0
-
-`````
+``````
 
 ### `small/test_2.cnf`
 
@@ -35474,11 +35847,11 @@ p cnf 22 174
 - Git status: tracked
 - Size: `2389` bytes
 - Line count: `184`
-- Why it matters: Small benchmark CNF used for quick correctness and performance smoke checks.
+- Why it matters: Small benchmark CNF used for quick correctness and smoke checks.
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 46 variables and 176 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -35663,8 +36036,7 @@ p cnf 46 176
 9 20 -32 0
 26 -31 42 0
 15 -21 -40 0
-
-`````
+``````
 
 ### `small/test_3.cnf`
 
@@ -35672,11 +36044,11 @@ p cnf 46 176
 - Git status: tracked
 - Size: `2060` bytes
 - Line count: `158`
-- Why it matters: Small benchmark CNF used for quick correctness and performance smoke checks.
+- Why it matters: Small benchmark CNF used for quick correctness and smoke checks.
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 41 variables and 150 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -35835,8 +36207,7 @@ p cnf 41 150
 3 31 -41 0
 -3 -28 32 0
 -7 -10 -19 0
-
-`````
+``````
 
 ### `small/test_4.cnf`
 
@@ -35844,11 +36215,11 @@ p cnf 41 150
 - Git status: tracked
 - Size: `2204` bytes
 - Line count: `175`
-- Why it matters: Small benchmark CNF used for quick correctness and performance smoke checks.
+- Why it matters: Small benchmark CNF used for quick correctness and smoke checks.
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 30 variables and 167 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -36024,8 +36395,7 @@ p cnf 30 167
 -12 -15 -24 0
 -10 22 -29 0
 13 -17 -29 0
-
-`````
+``````
 
 ### `small/test_5.cnf`
 
@@ -36033,11 +36403,11 @@ p cnf 30 167
 - Git status: tracked
 - Size: `729` bytes
 - Line count: `48`
-- Why it matters: Small benchmark CNF used for quick correctness and performance smoke checks.
+- Why it matters: Small benchmark CNF used for quick correctness and smoke checks.
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 20 variables and 40 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -36086,8 +36456,7 @@ p cnf 20 40
 6 8 16 0
 6 11 -16 0
 12 13 15 0
-
-`````
+``````
 
 ### `small/test_6.cnf`
 
@@ -36095,11 +36464,11 @@ p cnf 20 40
 - Git status: tracked
 - Size: `1101` bytes
 - Line count: `78`
-- Why it matters: Small benchmark CNF used for quick correctness and performance smoke checks.
+- Why it matters: Small benchmark CNF used for quick correctness and smoke checks.
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 42 variables and 70 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -36178,8 +36547,7 @@ p cnf 42 70
 -22 -24 38 0
 3 9 17 0
 -6 -8 14 0
-
-`````
+``````
 
 ### `small/test_7.cnf`
 
@@ -36187,11 +36555,11 @@ p cnf 42 70
 - Git status: tracked
 - Size: `2255` bytes
 - Line count: `175`
-- Why it matters: Small benchmark CNF used for quick correctness and performance smoke checks.
+- Why it matters: Small benchmark CNF used for quick correctness and smoke checks.
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 49 variables and 167 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -36367,8 +36735,7 @@ p cnf 49 167
 -9 28 32 0
 20 45 -48 0
 21 24 -30 0
-
-`````
+``````
 
 ### `small/test_8.cnf`
 
@@ -36376,11 +36743,11 @@ p cnf 49 167
 - Git status: tracked
 - Size: `1004` bytes
 - Line count: `76`
-- Why it matters: Small benchmark CNF used for quick correctness and performance smoke checks.
+- Why it matters: Small benchmark CNF used for quick correctness and smoke checks.
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 14 variables and 68 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -36457,8 +36824,7 @@ p cnf 14 68
 -1 -6 -9 0
 1 10 12 0
 3 -8 14 0
-
-`````
+``````
 
 ### `small/test_9.cnf`
 
@@ -36466,11 +36832,11 @@ p cnf 14 68
 - Git status: tracked
 - Size: `1441` bytes
 - Line count: `108`
-- Why it matters: Small benchmark CNF used for quick correctness and performance smoke checks.
+- Why it matters: Small benchmark CNF used for quick correctness and smoke checks.
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 40 variables and 100 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -36579,8 +36945,7 @@ p cnf 40 100
 -13 -20 -31 0
 -4 30 33 0
 -5 22 27 0
-
-`````
+``````
 
 ### `special/dense.cnf`
 
@@ -36592,7 +36957,7 @@ p cnf 40 100
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 200 variables and 1500 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -38101,8 +38466,7 @@ p cnf 200 1500
 108 141 151 0
 26 172 181 0
 -103 -121 172 0
-
-`````
+``````
 
 ### `special/easy.cnf`
 
@@ -38114,7 +38478,7 @@ p cnf 200 1500
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 200 variables and 400 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -38523,8 +38887,7 @@ p cnf 200 400
 -105 -177 197 0
 -109 110 120 0
 -24 -74 -76 0
-
-`````
+``````
 
 ### `special/hard.cnf`
 
@@ -38536,7 +38899,7 @@ p cnf 200 400
 
 Raw content:
 
-`````text
+``````text
 c description: Random 3-CNF over 200 variables and 850 clauses
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -39395,8 +39758,7 @@ p cnf 200 850
 93 153 193 0
 87 187 -190 0
 -28 -112 -120 0
-
-`````
+``````
 
 ### `special/pigeonhole.cnf`
 
@@ -39408,7 +39770,7 @@ p cnf 200 850
 
 Raw content:
 
-`````text
+``````text
 c description: Pigeonhole principle formula for 10 pigeons and 9 holes
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -39831,8 +40193,7 @@ p cnf 90 415
 -72 -81 0
 -72 -90 0
 -81 -90 0
-
-`````
+``````
 
 ### `special/tseitin.cnf`
 
@@ -39844,7 +40205,7 @@ p cnf 90 415
 
 Raw content:
 
-`````text
+``````text
 c description: Tseitin formula on Random 4-regular graph of 20 vertices, with odd charge
 c generator: CNFgen (0.9.5)
 c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
@@ -40012,8 +40373,7 @@ p cnf 40 160
 -4 21 -32 37 0
 -4 -21 32 37 0
 -4 -21 -32 -37 0
-
-`````
+``````
 
 ### `tests/test_benchmark_suite.py`
 
@@ -40025,7 +40385,7 @@ p cnf 40 160
 
 Raw content:
 
-`````python
+``````python
 from __future__ import annotations
 
 import sys
@@ -40112,20 +40472,101 @@ class BenchmarkSuiteCliModeTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+``````
 
-`````
+### `tests/test_hotspot_compare.py`
+
+- Category: Regression tests
+- Git status: tracked
+- Size: `2770` bytes
+- Line count: `69`
+- Why it matters: Regression tests for the hotspot A/B comparison tool.
+
+Raw content:
+
+``````python
+from __future__ import annotations
+
+import unittest
+from pathlib import Path
+
+from tools import hotspot_compare
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class HotspotCompareTests(unittest.TestCase):
+    def test_load_runner_requires_exactly_one_mode(self) -> None:
+        with self.assertRaisesRegex(ValueError, "exactly one"):
+            hotspot_compare.load_runner("baseline", None, None, "python")
+
+        with self.assertRaisesRegex(ValueError, "exactly one"):
+            hotspot_compare.load_runner("baseline", "satsolver", "satsolver.py", "python")
+
+    def test_compare_runners_module_vs_cli_smoke(self) -> None:
+        baseline = hotspot_compare.load_runner("baseline", "satsolver", None, "python")
+        candidate = hotspot_compare.load_runner(
+            "candidate",
+            None,
+            str(ROOT / "satsolver.py"),
+            "python",
+        )
+        comparisons = hotspot_compare.compare_runners(
+            baseline,
+            candidate,
+            [
+                str(ROOT / "small" / "test_1.cnf"),
+                str(ROOT / "special" / "tseitin.cnf"),
+            ],
+            brute_force_var_limit=0,
+            repeat=1,
+        )
+
+        self.assertEqual(["forward", "reverse"], [comparison.order_name for comparison in comparisons])
+        for comparison in comparisons:
+            self.assertEqual(2, len(comparison.case_rows))
+            self.assertGreaterEqual(comparison.baseline_total_s, 0.0)
+            self.assertGreaterEqual(comparison.candidate_total_s, 0.0)
+            for baseline_case, candidate_case in comparison.case_rows:
+                self.assertEqual(baseline_case.status, candidate_case.status)
+                self.assertIn(baseline_case.validation, {"valid SAT", "valid UNSAT (format checked)"})
+                self.assertEqual(baseline_case.validation, candidate_case.validation)
+
+        rendered = hotspot_compare.render_comparisons(baseline, candidate, comparisons, repeat=1)
+        self.assertIn("[forward]", rendered)
+        self.assertIn("[reverse]", rendered)
+        self.assertIn("[two-order-average]", rendered)
+        self.assertIn("small/test_1.cnf", rendered)
+        self.assertIn("special/tseitin.cnf", rendered)
+
+    def test_repeat_must_be_positive(self) -> None:
+        baseline = hotspot_compare.load_runner("baseline", "satsolver", None, "python")
+        candidate = hotspot_compare.load_runner("candidate", "satsolver", None, "python")
+        with self.assertRaisesRegex(ValueError, "repeat must be at least 1"):
+            hotspot_compare.compare_runners(
+                baseline,
+                candidate,
+                [str(ROOT / "small" / "test_1.cnf")],
+                repeat=0,
+            )
+
+
+if __name__ == "__main__":
+    unittest.main()
+``````
 
 ### `tests/test_profile_solver.py`
 
 - Category: Regression tests
 - Git status: tracked
-- Size: `27210` bytes
-- Line count: `630`
-- Why it matters: Regression tests for profiler counters and invariants so instrumentation remains trustworthy.
+- Size: `30707` bytes
+- Line count: `712`
+- Why it matters: Regression tests for profiler counters and invariants so instrumentation stays trustworthy.
 
 Raw content:
 
-`````python
+``````python
 from __future__ import annotations
 
 import tempfile
@@ -40421,6 +40862,88 @@ class ProfileSolverTests(unittest.TestCase):
             self.assertEqual(stats.branch_zero_activity_choices, 3)
             self.assertEqual(stats.max_branch_unassigned, 3)
             self.assertEqual(stats.max_branch_best_tie, 3)
+
+    def test_profile_solver_zero_activity_branch_uses_saved_phase(self) -> None:
+        solver = profile_solver.ProfiledSolver(
+            1,
+            restart_base=64,
+            next_reduce=256,
+            var_decay=0.95,
+            clause_decay=0.999,
+        )
+        solver.saved_phase[1] = False
+        solver.phase_bias[1] = 10
+
+        literal = solver.pick_branch_literal()
+
+        self.assertEqual(literal, -1)
+        self.assertEqual(solver.decisions, 1)
+        self.assertEqual(solver.branch_zero_activity_choices, 1)
+        self.assertEqual(solver.branch_unassigned_sum, 1)
+        self.assertEqual(solver.branch_zero_activity_unassigned_sum, 1)
+        self.assertEqual(solver.branch_best_tie_sum, 1)
+
+    def test_profile_solver_collects_restart_stats(self) -> None:
+        case_path = Path(__file__).resolve().parents[1] / "small" / "test_4.cnf"
+
+        stats = profile_solver.solve_with_profile(
+            str(case_path),
+            restart_base=1,
+            next_reduce=256,
+            var_decay=0.95,
+            clause_decay=0.999,
+        )
+
+        self.assertFalse(stats.sat)
+        self.assertTrue(stats.ok)
+        self.assertGreater(stats.restarts, 0)
+        self.assertGreaterEqual(stats.restart_conflict_sum, stats.restarts)
+        self.assertGreaterEqual(stats.max_restart_conflicts, 1)
+        self.assertGreaterEqual(stats.restart_decision_level_sum, stats.restarts)
+        self.assertGreaterEqual(stats.max_restart_decision_level, 1)
+        self.assertGreaterEqual(stats.restart_trail_sum, stats.restarts)
+        self.assertGreaterEqual(stats.max_restart_trail, 1)
+
+    def test_profile_solver_collects_reduction_stats(self) -> None:
+        solver = profile_solver.ProfiledSolver(
+            8,
+            restart_base=64,
+            next_reduce=1,
+            var_decay=0.95,
+            clause_decay=0.999,
+        )
+        locked_clause_id = solver.add_learnt_clause([1, 2, 3], 3)
+        binary_clause_id = solver.add_learnt_clause([4, 5], 2)
+        low_lbd_clause_id = solver.add_learnt_clause([6, 7, 8], 2)
+        kept_candidate_clause_id = solver.add_learnt_clause([1, -4, 6, 7], 4)
+        deleted_candidate_clause_id = solver.add_learnt_clause([-1, -5, -6, 8], 5)
+        solver.reason[1] = locked_clause_id
+
+        solver.reduce_database()
+
+        self.assertEqual(solver.reductions, 1)
+        self.assertEqual(solver.reduction_live_learnts_sum, 5)
+        self.assertEqual(solver.reduction_locked_clause_sum, 1)
+        self.assertEqual(solver.reduction_candidate_clause_sum, 2)
+        self.assertEqual(solver.reduction_deleted_clause_sum, 1)
+        self.assertEqual(solver.max_reduction_live_learnts, 5)
+        self.assertEqual(solver.max_reduction_locked_clause_count, 1)
+        self.assertEqual(solver.max_reduction_candidate_clause_count, 2)
+        self.assertEqual(solver.max_reduction_deleted_clause_count, 1)
+        self.assertFalse(solver.clauses[locked_clause_id].deleted)
+        self.assertFalse(solver.clauses[binary_clause_id].deleted)
+        self.assertFalse(solver.clauses[low_lbd_clause_id].deleted)
+        self.assertFalse(solver.clauses[kept_candidate_clause_id].deleted)
+        self.assertTrue(solver.clauses[deleted_candidate_clause_id].deleted)
+        self.assertEqual(
+            solver.learnt_ids,
+            [
+                locked_clause_id,
+                binary_clause_id,
+                low_lbd_clause_id,
+                kept_candidate_clause_id,
+            ],
+        )
 
     def test_profile_solver_splits_satisfied_watch_skips_by_clause_family(self) -> None:
         solver = profile_solver.ProfiledSolver(
@@ -40756,8 +41279,7 @@ class ProfileSolverTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
-`````
+``````
 
 ### `tests/test_solver_fast.py`
 
@@ -40769,7 +41291,7 @@ if __name__ == "__main__":
 
 Raw content:
 
-`````python
+``````python
 import unittest
 
 import satsolver
@@ -40829,20 +41351,19 @@ class FastSolverTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
-`````
+``````
 
 ### `tests/test_solver_regressions.py`
 
 - Category: Regression tests
 - Git status: tracked
-- Size: `13355` bytes
-- Line count: `354`
+- Size: `14311` bytes
+- Line count: `377`
 - Why it matters: Regression tests for solver invariants and bugs found during optimization cycles.
 
 Raw content:
 
-`````python
+``````python
 from __future__ import annotations
 
 import itertools
@@ -40922,7 +41443,7 @@ class SolverRegressionTests(unittest.TestCase):
         self.assertIsNotNone(model)
         self.assertEqual(enqueue.call_count, 2)
 
-    def test_fast_serial_solver_only_tries_root_pure_on_low_density_ternary_cases(self) -> None:
+    def test_fast_serial_solver_skips_root_pure_presolve(self) -> None:
         with mock.patch(
             "satsolver.base.find_iterative_root_pure_literals",
             return_value=[1, 2],
@@ -40937,16 +41458,14 @@ class SolverRegressionTests(unittest.TestCase):
             )
 
         self.assertIsNotNone(model)
-        find_root_pure.assert_called_once()
-
-        with mock.patch(
-            "satsolver.base.find_iterative_root_pure_literals",
-            return_value=[1, 2],
-        ) as find_root_pure:
-            model = satsolver.solve_cnf_fast_serial(10, [[1, 2, 3]] * 33)
-
-        self.assertIsNotNone(model)
         find_root_pure.assert_not_called()
+
+    def test_pick_branch_literal_uses_saved_phase_for_zero_activity(self) -> None:
+        solver = satsolver.Solver(2)
+        solver.phase_bias[1] = 7
+        solver.saved_phase[1] = False
+
+        self.assertEqual(solver.pick_branch_literal(), -1)
 
     def test_propagate_sets_reason_and_literal_cache_for_inlined_units(self) -> None:
         binary_solver = satsolver.Solver(2)
@@ -41013,6 +41532,31 @@ class SolverRegressionTests(unittest.TestCase):
         self.assertEqual(solver.reason[3], None)
         self.assertEqual(solver.literal_value(2), satsolver.UNASSIGNED)
         self.assertEqual(solver.literal_value(-2), satsolver.UNASSIGNED)
+        self.assertEqual(solver.literal_value(3), satsolver.UNASSIGNED)
+        self.assertEqual(solver.literal_value(-3), satsolver.UNASSIGNED)
+
+    def test_backtrack_to_nonzero_level_keeps_lower_tail_prefix(self) -> None:
+        solver = satsolver.Solver(4)
+        self.assertTrue(solver.enqueue(1, None))
+
+        solver.trail_limits.append(len(solver.trail))
+        solver.decision_level = 1
+        self.assertTrue(solver.enqueue(-2, 17))
+
+        solver.trail_limits.append(len(solver.trail))
+        solver.decision_level = 2
+        self.assertTrue(solver.enqueue(3, 18))
+
+        solver.backtrack(1)
+
+        self.assertEqual(solver.decision_level, 1)
+        self.assertEqual(solver.trail, [1, -2])
+        self.assertEqual(solver.trail_limits, [1])
+        self.assertEqual(solver.qhead, 2)
+        self.assertEqual(solver.reason[2], 17)
+        self.assertEqual(solver.reason[3], None)
+        self.assertEqual(solver.literal_value(2), satsolver.FALSE)
+        self.assertEqual(solver.literal_value(-2), satsolver.TRUE)
         self.assertEqual(solver.literal_value(3), satsolver.UNASSIGNED)
         self.assertEqual(solver.literal_value(-3), satsolver.UNASSIGNED)
 
@@ -41197,8 +41741,7 @@ class SolverRegressionTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
-`````
+``````
 
 ### `tests/test_validation_tools.py`
 
@@ -41210,7 +41753,7 @@ if __name__ == "__main__":
 
 Raw content:
 
-`````python
+``````python
 from __future__ import annotations
 
 import unittest
@@ -41271,8 +41814,7 @@ class CheckerRegressionTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
-`````
+``````
 
 ### `tools/checker.py`
 
@@ -41284,7 +41826,7 @@ if __name__ == "__main__":
 
 Raw content:
 
-`````python
+``````python
 from __future__ import annotations
 
 import argparse
@@ -41433,20 +41975,347 @@ def main(argv: Optional[list[str]] = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+``````
 
-`````
+### `tools/hotspot_compare.py`
+
+- Category: Support tooling
+- Git status: tracked
+- Size: `9777` bytes
+- Line count: `315`
+- Why it matters: Forward/reverse hotspot A/B timing helper with correctness validation.
+
+Raw content:
+
+``````python
+from __future__ import annotations
+
+import argparse
+import importlib
+import sys
+import tempfile
+from dataclasses import dataclass
+from pathlib import Path
+from statistics import mean, median
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+import benchmark_suite
+import satsolver
+
+
+@dataclass(slots=True)
+class RunnerConfig:
+    label: str
+    module_name: str | None
+    cli_script: Path | None
+    python_executable: str
+    module: object | None
+
+
+@dataclass(slots=True)
+class CaseTiming:
+    path: str
+    status: str
+    validation: str
+    elapsed_s: float
+    elapsed_samples: list[float]
+
+
+@dataclass(slots=True)
+class OrderComparison:
+    order_name: str
+    baseline_total_s: float
+    candidate_total_s: float
+    case_rows: list[tuple[CaseTiming, CaseTiming]]
+
+
+def summarize_elapsed_samples(samples: list[float]) -> tuple[float, float, float]:
+    return min(samples), mean(samples), median(samples)
+
+
+def format_elapsed_samples(samples: list[float]) -> str:
+    return "[" + ", ".join(f"{sample:.4f}" for sample in samples) + "]"
+
+
+def load_runner(
+    label: str,
+    module_name: str | None,
+    cli_script: str | None,
+    python_executable: str,
+) -> RunnerConfig:
+    if (module_name is None) == (cli_script is None):
+        raise ValueError(f"{label} runner needs exactly one of module_name or cli_script")
+
+    if module_name is not None:
+        return RunnerConfig(
+            label=label,
+            module_name=module_name,
+            cli_script=None,
+            python_executable=python_executable,
+            module=importlib.import_module(module_name),
+        )
+
+    return RunnerConfig(
+        label=label,
+        module_name=None,
+        cli_script=Path(cli_script).resolve(),
+        python_executable=python_executable,
+        module=None,
+    )
+
+
+def run_runner_case(
+    runner: RunnerConfig,
+    cnf_path: Path,
+    num_vars: int,
+    clauses: list[list[int]],
+    scratch_dir: Path,
+    case_id: str,
+    brute_force_var_limit: int,
+    repeat: int,
+) -> CaseTiming:
+    if repeat < 1:
+        raise ValueError("repeat must be at least 1")
+
+    statuses: list[str] = []
+    validations: list[str] = []
+    elapsed_samples: list[float] = []
+
+    for repeat_index in range(repeat):
+        repeat_case_id = f"{case_id}_{repeat_index}"
+        if runner.module is not None:
+            status, validation, elapsed = benchmark_suite.run_case_via_module(
+                runner.module,
+                num_vars,
+                clauses,
+                scratch_dir,
+                repeat_case_id,
+                brute_force_var_limit,
+            )
+        else:
+            assert runner.cli_script is not None
+            status, validation, elapsed = benchmark_suite.run_case_via_cli(
+                runner.cli_script,
+                runner.python_executable,
+                cnf_path,
+                num_vars,
+                clauses,
+                scratch_dir,
+                repeat_case_id,
+                brute_force_var_limit,
+            )
+        statuses.append(status)
+        validations.append(validation)
+        elapsed_samples.append(elapsed)
+
+    distinct_statuses = sorted(set(statuses))
+    if len(distinct_statuses) != 1:
+        raise RuntimeError(
+            f"{runner.label} produced inconsistent statuses across repeats: {distinct_statuses}"
+        )
+
+    distinct_validations = sorted(set(validations))
+    if len(distinct_validations) != 1:
+        raise RuntimeError(
+            f"{runner.label} produced inconsistent validations across repeats: {distinct_validations}"
+        )
+
+    _, _, representative_elapsed = summarize_elapsed_samples(elapsed_samples)
+    return CaseTiming(
+        path=str(cnf_path),
+        status=statuses[0],
+        validation=validations[0],
+        elapsed_s=representative_elapsed,
+        elapsed_samples=elapsed_samples,
+    )
+
+
+def compare_runners(
+    baseline: RunnerConfig,
+    candidate: RunnerConfig,
+    case_paths: list[str],
+    brute_force_var_limit: int = 16,
+    repeat: int = 1,
+) -> list[OrderComparison]:
+    canonical_cases = [Path(path) for path in case_paths]
+    comparisons: list[OrderComparison] = []
+
+    with tempfile.TemporaryDirectory(prefix="sat-hotspot-compare-") as scratch_dir_str:
+        scratch_dir = Path(scratch_dir_str)
+
+        for order_name, ordered_cases in (
+            ("forward", canonical_cases),
+            ("reverse", list(reversed(canonical_cases))),
+        ):
+            rows: list[tuple[CaseTiming, CaseTiming]] = []
+            baseline_total = 0.0
+            candidate_total = 0.0
+
+            for case_index, cnf_path in enumerate(ordered_cases):
+                num_vars, clauses = satsolver.parse_dimacs_file(str(cnf_path))
+                baseline_case = run_runner_case(
+                    baseline,
+                    cnf_path,
+                    num_vars,
+                    clauses,
+                    scratch_dir,
+                    f"{order_name}_baseline_{case_index}",
+                    brute_force_var_limit,
+                    repeat,
+                )
+                candidate_case = run_runner_case(
+                    candidate,
+                    cnf_path,
+                    num_vars,
+                    clauses,
+                    scratch_dir,
+                    f"{order_name}_candidate_{case_index}",
+                    brute_force_var_limit,
+                    repeat,
+                )
+                rows.append((baseline_case, candidate_case))
+                baseline_total += baseline_case.elapsed_s
+                candidate_total += candidate_case.elapsed_s
+
+            comparisons.append(
+                OrderComparison(
+                    order_name=order_name,
+                    baseline_total_s=baseline_total,
+                    candidate_total_s=candidate_total,
+                    case_rows=rows,
+                )
+            )
+
+    return comparisons
+
+
+def render_comparisons(
+    baseline: RunnerConfig,
+    candidate: RunnerConfig,
+    comparisons: list[OrderComparison],
+    repeat: int,
+) -> str:
+    lines = [
+        f"baseline={baseline.module_name or baseline.cli_script}",
+        f"candidate={candidate.module_name or candidate.cli_script}",
+        f"repeat={repeat}",
+        "",
+    ]
+
+    for comparison in comparisons:
+        lines.append(
+            (
+                f"[{comparison.order_name}] baseline_total={comparison.baseline_total_s:.4f}s "
+                f"candidate_total={comparison.candidate_total_s:.4f}s"
+            )
+        )
+        for baseline_case, candidate_case in comparison.case_rows:
+            repeat_suffix = ""
+            if repeat > 1:
+                repeat_suffix = (
+                    f" baseline_samples={format_elapsed_samples(baseline_case.elapsed_samples)}"
+                    f" candidate_samples={format_elapsed_samples(candidate_case.elapsed_samples)}"
+                )
+            lines.append(
+                (
+                    f"{baseline_case.path}: baseline={baseline_case.elapsed_s:.4f}s "
+                    f"candidate={candidate_case.elapsed_s:.4f}s "
+                    f"status={baseline_case.status}/{candidate_case.status} "
+                    f"validation={baseline_case.validation!r}/{candidate_case.validation!r}"
+                    f"{repeat_suffix}"
+                )
+            )
+        lines.append("")
+
+    if len(comparisons) == 2:
+        avg_baseline = (comparisons[0].baseline_total_s + comparisons[1].baseline_total_s) / 2.0
+        avg_candidate = (comparisons[0].candidate_total_s + comparisons[1].candidate_total_s) / 2.0
+        lines.append(
+            f"[two-order-average] baseline={avg_baseline:.4f}s candidate={avg_candidate:.4f}s"
+        )
+
+    return "\n".join(lines)
+
+
+def build_argument_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Compare two SAT solver runners on an ordered hotspot case slice."
+    )
+    parser.add_argument("cases", nargs="+", help="CNF case paths to compare in order")
+    parser.add_argument("--baseline-module")
+    parser.add_argument("--baseline-cli-script")
+    parser.add_argument(
+        "--baseline-python-executable",
+        default=sys.executable,
+        help="Python executable for --baseline-cli-script",
+    )
+    parser.add_argument("--candidate-module")
+    parser.add_argument("--candidate-cli-script")
+    parser.add_argument(
+        "--candidate-python-executable",
+        default=sys.executable,
+        help="Python executable for --candidate-cli-script",
+    )
+    parser.add_argument(
+        "--bruteforce-var-limit",
+        type=int,
+        default=16,
+        help="Brute-force UNSAT validation only when num_vars is at most this limit",
+    )
+    parser.add_argument(
+        "--repeat",
+        type=int,
+        default=1,
+        help="Run each case this many times per runner and use the median as representative time",
+    )
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_argument_parser()
+    args = parser.parse_args(sys.argv[1:] if argv is None else argv)
+
+    baseline = load_runner(
+        "baseline",
+        args.baseline_module,
+        args.baseline_cli_script,
+        args.baseline_python_executable,
+    )
+    candidate = load_runner(
+        "candidate",
+        args.candidate_module,
+        args.candidate_cli_script,
+        args.candidate_python_executable,
+    )
+    comparisons = compare_runners(
+        baseline,
+        candidate,
+        args.cases,
+        brute_force_var_limit=args.bruteforce_var_limit,
+        repeat=args.repeat,
+    )
+    print(render_comparisons(baseline, candidate, comparisons, args.repeat))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+``````
 
 ### `tools/profile_solver.py`
 
 - Category: Support tooling
 - Git status: tracked
-- Size: `80673` bytes
-- Line count: `1756`
+- Size: `88141` bytes
+- Line count: `1912`
 - Why it matters: Deep instrumentation/profiling harness used to understand solver internals and guide optimizations.
 
 Raw content:
 
-`````python
+``````python
 from __future__ import annotations
 
 import argparse
@@ -41483,7 +42352,21 @@ class RunStats:
     processed_literals: int
     propagations: int
     restarts: int
+    restart_conflict_sum: int
+    max_restart_conflicts: int
+    restart_decision_level_sum: int
+    max_restart_decision_level: int
+    restart_trail_sum: int
+    max_restart_trail: int
     reductions: int
+    reduction_live_learnts_sum: int
+    reduction_locked_clause_sum: int
+    reduction_candidate_clause_sum: int
+    reduction_deleted_clause_sum: int
+    max_reduction_live_learnts: int
+    max_reduction_locked_clause_count: int
+    max_reduction_candidate_clause_count: int
+    max_reduction_deleted_clause_count: int
     learnts_added: int
     live_learnts: int
     max_live_learnts: int
@@ -41659,7 +42542,21 @@ class ProfiledSolver(satsolver.Solver):
         self.propagations = 0
         self.processed_literals = 0
         self.restarts = 0
+        self.restart_conflict_sum = 0
+        self.max_restart_conflicts = 0
+        self.restart_decision_level_sum = 0
+        self.max_restart_decision_level = 0
+        self.restart_trail_sum = 0
+        self.max_restart_trail = 0
         self.reductions = 0
+        self.reduction_live_learnts_sum = 0
+        self.reduction_locked_clause_sum = 0
+        self.reduction_candidate_clause_sum = 0
+        self.reduction_deleted_clause_sum = 0
+        self.max_reduction_live_learnts = 0
+        self.max_reduction_locked_clause_count = 0
+        self.max_reduction_candidate_clause_count = 0
+        self.max_reduction_deleted_clause_count = 0
         self.learnts_added = 0
         self.max_live_learnts = 0
         self.max_trail = 0
@@ -42142,14 +43039,64 @@ class ProfiledSolver(satsolver.Solver):
         positive = self.saved_phase[best_variable]
         if best_activity == 0.0:
             self.branch_zero_activity_choices += 1
-            positive = self.phase_bias[best_variable] >= 0
         return best_variable if positive else -best_variable
 
     def reduce_database(self) -> None:
-        should_reduce = len(self.learnt_ids) >= self.next_reduce
-        super().reduce_database()
-        if should_reduce:
-            self.reductions += 1
+        if len(self.learnt_ids) < self.next_reduce:
+            return
+
+        self.reductions += 1
+
+        live_learnts = sum(
+            1 for learnt_id in self.learnt_ids if not self.clauses[learnt_id].deleted
+        )
+        locked = {clause_id for clause_id in self.reason[1:] if clause_id is not None}
+        keep: list[int] = []
+        candidates: list[int] = []
+
+        for clause_id in self.learnt_ids:
+            clause = self.clauses[clause_id]
+            if clause.deleted:
+                continue
+            if clause_id in locked or len(clause.lits) <= 2 or clause.lbd <= 2:
+                keep.append(clause_id)
+            else:
+                candidates.append(clause_id)
+
+        candidates.sort(
+            key=lambda clause_id: (
+                self.clauses[clause_id].lbd,
+                -self.clauses[clause_id].activity,
+                len(self.clauses[clause_id].lits),
+            )
+        )
+        midpoint = len(candidates) // 2
+        deleted_count = len(candidates) - midpoint
+
+        self.reduction_live_learnts_sum += live_learnts
+        self.reduction_locked_clause_sum += len(locked)
+        self.reduction_candidate_clause_sum += len(candidates)
+        self.reduction_deleted_clause_sum += deleted_count
+        self.max_reduction_live_learnts = max(self.max_reduction_live_learnts, live_learnts)
+        self.max_reduction_locked_clause_count = max(
+            self.max_reduction_locked_clause_count,
+            len(locked),
+        )
+        self.max_reduction_candidate_clause_count = max(
+            self.max_reduction_candidate_clause_count,
+            len(candidates),
+        )
+        self.max_reduction_deleted_clause_count = max(
+            self.max_reduction_deleted_clause_count,
+            deleted_count,
+        )
+
+        keep.extend(candidates[:midpoint])
+        for clause_id in candidates[midpoint:]:
+            self.clauses[clause_id].deleted = True
+
+        self.learnt_ids = keep
+        self.next_reduce = max(256, int(len(self.learnt_ids) * 1.5) + 64)
 
     def minimize_learnt(self, learnt: list[int], token: int) -> list[int]:
         if len(learnt) <= 2:
@@ -42364,6 +43311,21 @@ class ProfiledSolver(satsolver.Solver):
                 if conflicts_since_restart >= restart_limit:
                     if self.current_level() > 0:
                         self.restarts += 1
+                        self.restart_conflict_sum += conflicts_since_restart
+                        self.max_restart_conflicts = max(
+                            self.max_restart_conflicts,
+                            conflicts_since_restart,
+                        )
+                        self.restart_decision_level_sum += self.current_level()
+                        self.max_restart_decision_level = max(
+                            self.max_restart_decision_level,
+                            self.current_level(),
+                        )
+                        self.restart_trail_sum += len(self.trail)
+                        self.max_restart_trail = max(
+                            self.max_restart_trail,
+                            len(self.trail),
+                        )
                     self.backtrack(0)
                     conflicts_since_restart = 0
                     restart_index += 1
@@ -42415,7 +43377,21 @@ def build_run_stats(
             processed_literals=0,
             propagations=0,
             restarts=0,
+            restart_conflict_sum=0,
+            max_restart_conflicts=0,
+            restart_decision_level_sum=0,
+            max_restart_decision_level=0,
+            restart_trail_sum=0,
+            max_restart_trail=0,
             reductions=0,
+            reduction_live_learnts_sum=0,
+            reduction_locked_clause_sum=0,
+            reduction_candidate_clause_sum=0,
+            reduction_deleted_clause_sum=0,
+            max_reduction_live_learnts=0,
+            max_reduction_locked_clause_count=0,
+            max_reduction_candidate_clause_count=0,
+            max_reduction_deleted_clause_count=0,
             learnts_added=0,
             live_learnts=0,
             max_live_learnts=0,
@@ -42560,7 +43536,21 @@ def build_run_stats(
         processed_literals=solver.processed_literals,
         propagations=solver.propagations,
         restarts=solver.restarts,
+        restart_conflict_sum=solver.restart_conflict_sum,
+        max_restart_conflicts=solver.max_restart_conflicts,
+        restart_decision_level_sum=solver.restart_decision_level_sum,
+        max_restart_decision_level=solver.max_restart_decision_level,
+        restart_trail_sum=solver.restart_trail_sum,
+        max_restart_trail=solver.max_restart_trail,
         reductions=solver.reductions,
+        reduction_live_learnts_sum=solver.reduction_live_learnts_sum,
+        reduction_locked_clause_sum=solver.reduction_locked_clause_sum,
+        reduction_candidate_clause_sum=solver.reduction_candidate_clause_sum,
+        reduction_deleted_clause_sum=solver.reduction_deleted_clause_sum,
+        max_reduction_live_learnts=solver.max_reduction_live_learnts,
+        max_reduction_locked_clause_count=solver.max_reduction_locked_clause_count,
+        max_reduction_candidate_clause_count=solver.max_reduction_candidate_clause_count,
+        max_reduction_deleted_clause_count=solver.max_reduction_deleted_clause_count,
         learnts_added=solver.learnts_added,
         live_learnts=live_learnts,
         max_live_learnts=max(solver.max_live_learnts, live_learnts),
@@ -42852,6 +43842,27 @@ def main() -> int:
             stats.branch_zero_activity_choices / stats.decisions if stats.decisions else 0.0
         )
         avg_lbd = stats.lbd_sum / stats.conflicts if stats.conflicts else 0.0
+        avg_conflicts_per_restart = (
+            stats.restart_conflict_sum / stats.restarts if stats.restarts else 0.0
+        )
+        avg_restart_decision_level = (
+            stats.restart_decision_level_sum / stats.restarts if stats.restarts else 0.0
+        )
+        avg_restart_trail = (
+            stats.restart_trail_sum / stats.restarts if stats.restarts else 0.0
+        )
+        avg_live_learnts_per_reduction = (
+            stats.reduction_live_learnts_sum / stats.reductions if stats.reductions else 0.0
+        )
+        avg_locked_clauses_per_reduction = (
+            stats.reduction_locked_clause_sum / stats.reductions if stats.reductions else 0.0
+        )
+        avg_candidate_clauses_per_reduction = (
+            stats.reduction_candidate_clause_sum / stats.reductions if stats.reductions else 0.0
+        )
+        avg_deleted_clauses_per_reduction = (
+            stats.reduction_deleted_clause_sum / stats.reductions if stats.reductions else 0.0
+        )
         avg_large_probe = stats.large_probe_steps / stats.large_watch_visits if stats.large_watch_visits else 0.0
         avg_large_probe_success = (
             stats.large_probe_success_steps / stats.large_relocations if stats.large_relocations else 0.0
@@ -43057,7 +44068,21 @@ def main() -> int:
                 f"max_branch_unassigned={stats.max_branch_unassigned} "
                 f"max_branch_best_tie={stats.max_branch_best_tie} "
                 f"processed_literals={stats.processed_literals} propagations={stats.propagations} "
-                f"restarts={stats.restarts} reductions={stats.reductions} "
+                f"restarts={stats.restarts} avg_conflicts_per_restart={avg_conflicts_per_restart:.2f} "
+                f"avg_restart_decision_level={avg_restart_decision_level:.2f} "
+                f"avg_restart_trail={avg_restart_trail:.2f} "
+                f"max_restart_conflicts={stats.max_restart_conflicts} "
+                f"max_restart_decision_level={stats.max_restart_decision_level} "
+                f"max_restart_trail={stats.max_restart_trail} "
+                f"reductions={stats.reductions} "
+                f"avg_live_learnts_per_reduction={avg_live_learnts_per_reduction:.2f} "
+                f"avg_locked_clauses_per_reduction={avg_locked_clauses_per_reduction:.2f} "
+                f"avg_candidate_clauses_per_reduction={avg_candidate_clauses_per_reduction:.2f} "
+                f"avg_deleted_clauses_per_reduction={avg_deleted_clauses_per_reduction:.2f} "
+                f"max_reduction_live_learnts={stats.max_reduction_live_learnts} "
+                f"max_reduction_locked_clauses={stats.max_reduction_locked_clause_count} "
+                f"max_reduction_candidates={stats.max_reduction_candidate_clause_count} "
+                f"max_reduction_deleted={stats.max_reduction_deleted_clause_count} "
                 f"learnts_added={stats.learnts_added} live_learnts={stats.live_learnts} "
                 f"max_live_learnts={stats.max_live_learnts} max_trail={stats.max_trail} "
                 f"binary_checks={stats.binary_clause_checks} binary_units={stats.binary_units} "
@@ -43203,421 +44228,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+``````
 
-`````
-
-## Significant Local Untracked Files
-
-These files are not currently in git, so they do not satisfy the literal “what makes it to GitHub” criterion. They are still included because they affect the current local engineering workflow and could matter to a second-opinion model looking at the present state of the project.
-
-### `tools/hotspot_compare.py`
-
-- Category: Support tooling
-- Git status: untracked but significant current working-tree file
-- Size: `9777` bytes
-- Line count: `315`
-- Why it matters: Local significant A/B comparison tool for forward/reverse hotspot timing with validation.
-
-Raw content:
-
-`````python
-from __future__ import annotations
-
-import argparse
-import importlib
-import sys
-import tempfile
-from dataclasses import dataclass
-from pathlib import Path
-from statistics import mean, median
-
-ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
-
-import benchmark_suite
-import satsolver
-
-
-@dataclass(slots=True)
-class RunnerConfig:
-    label: str
-    module_name: str | None
-    cli_script: Path | None
-    python_executable: str
-    module: object | None
-
-
-@dataclass(slots=True)
-class CaseTiming:
-    path: str
-    status: str
-    validation: str
-    elapsed_s: float
-    elapsed_samples: list[float]
-
-
-@dataclass(slots=True)
-class OrderComparison:
-    order_name: str
-    baseline_total_s: float
-    candidate_total_s: float
-    case_rows: list[tuple[CaseTiming, CaseTiming]]
-
-
-def summarize_elapsed_samples(samples: list[float]) -> tuple[float, float, float]:
-    return min(samples), mean(samples), median(samples)
-
-
-def format_elapsed_samples(samples: list[float]) -> str:
-    return "[" + ", ".join(f"{sample:.4f}" for sample in samples) + "]"
-
-
-def load_runner(
-    label: str,
-    module_name: str | None,
-    cli_script: str | None,
-    python_executable: str,
-) -> RunnerConfig:
-    if (module_name is None) == (cli_script is None):
-        raise ValueError(f"{label} runner needs exactly one of module_name or cli_script")
-
-    if module_name is not None:
-        return RunnerConfig(
-            label=label,
-            module_name=module_name,
-            cli_script=None,
-            python_executable=python_executable,
-            module=importlib.import_module(module_name),
-        )
-
-    return RunnerConfig(
-        label=label,
-        module_name=None,
-        cli_script=Path(cli_script).resolve(),
-        python_executable=python_executable,
-        module=None,
-    )
-
-
-def run_runner_case(
-    runner: RunnerConfig,
-    cnf_path: Path,
-    num_vars: int,
-    clauses: list[list[int]],
-    scratch_dir: Path,
-    case_id: str,
-    brute_force_var_limit: int,
-    repeat: int,
-) -> CaseTiming:
-    if repeat < 1:
-        raise ValueError("repeat must be at least 1")
-
-    statuses: list[str] = []
-    validations: list[str] = []
-    elapsed_samples: list[float] = []
-
-    for repeat_index in range(repeat):
-        repeat_case_id = f"{case_id}_{repeat_index}"
-        if runner.module is not None:
-            status, validation, elapsed = benchmark_suite.run_case_via_module(
-                runner.module,
-                num_vars,
-                clauses,
-                scratch_dir,
-                repeat_case_id,
-                brute_force_var_limit,
-            )
-        else:
-            assert runner.cli_script is not None
-            status, validation, elapsed = benchmark_suite.run_case_via_cli(
-                runner.cli_script,
-                runner.python_executable,
-                cnf_path,
-                num_vars,
-                clauses,
-                scratch_dir,
-                repeat_case_id,
-                brute_force_var_limit,
-            )
-        statuses.append(status)
-        validations.append(validation)
-        elapsed_samples.append(elapsed)
-
-    distinct_statuses = sorted(set(statuses))
-    if len(distinct_statuses) != 1:
-        raise RuntimeError(
-            f"{runner.label} produced inconsistent statuses across repeats: {distinct_statuses}"
-        )
-
-    distinct_validations = sorted(set(validations))
-    if len(distinct_validations) != 1:
-        raise RuntimeError(
-            f"{runner.label} produced inconsistent validations across repeats: {distinct_validations}"
-        )
-
-    _, _, representative_elapsed = summarize_elapsed_samples(elapsed_samples)
-    return CaseTiming(
-        path=str(cnf_path),
-        status=statuses[0],
-        validation=validations[0],
-        elapsed_s=representative_elapsed,
-        elapsed_samples=elapsed_samples,
-    )
-
-
-def compare_runners(
-    baseline: RunnerConfig,
-    candidate: RunnerConfig,
-    case_paths: list[str],
-    brute_force_var_limit: int = 16,
-    repeat: int = 1,
-) -> list[OrderComparison]:
-    canonical_cases = [Path(path) for path in case_paths]
-    comparisons: list[OrderComparison] = []
-
-    with tempfile.TemporaryDirectory(prefix="sat-hotspot-compare-") as scratch_dir_str:
-        scratch_dir = Path(scratch_dir_str)
-
-        for order_name, ordered_cases in (
-            ("forward", canonical_cases),
-            ("reverse", list(reversed(canonical_cases))),
-        ):
-            rows: list[tuple[CaseTiming, CaseTiming]] = []
-            baseline_total = 0.0
-            candidate_total = 0.0
-
-            for case_index, cnf_path in enumerate(ordered_cases):
-                num_vars, clauses = satsolver.parse_dimacs_file(str(cnf_path))
-                baseline_case = run_runner_case(
-                    baseline,
-                    cnf_path,
-                    num_vars,
-                    clauses,
-                    scratch_dir,
-                    f"{order_name}_baseline_{case_index}",
-                    brute_force_var_limit,
-                    repeat,
-                )
-                candidate_case = run_runner_case(
-                    candidate,
-                    cnf_path,
-                    num_vars,
-                    clauses,
-                    scratch_dir,
-                    f"{order_name}_candidate_{case_index}",
-                    brute_force_var_limit,
-                    repeat,
-                )
-                rows.append((baseline_case, candidate_case))
-                baseline_total += baseline_case.elapsed_s
-                candidate_total += candidate_case.elapsed_s
-
-            comparisons.append(
-                OrderComparison(
-                    order_name=order_name,
-                    baseline_total_s=baseline_total,
-                    candidate_total_s=candidate_total,
-                    case_rows=rows,
-                )
-            )
-
-    return comparisons
-
-
-def render_comparisons(
-    baseline: RunnerConfig,
-    candidate: RunnerConfig,
-    comparisons: list[OrderComparison],
-    repeat: int,
-) -> str:
-    lines = [
-        f"baseline={baseline.module_name or baseline.cli_script}",
-        f"candidate={candidate.module_name or candidate.cli_script}",
-        f"repeat={repeat}",
-        "",
-    ]
-
-    for comparison in comparisons:
-        lines.append(
-            (
-                f"[{comparison.order_name}] baseline_total={comparison.baseline_total_s:.4f}s "
-                f"candidate_total={comparison.candidate_total_s:.4f}s"
-            )
-        )
-        for baseline_case, candidate_case in comparison.case_rows:
-            repeat_suffix = ""
-            if repeat > 1:
-                repeat_suffix = (
-                    f" baseline_samples={format_elapsed_samples(baseline_case.elapsed_samples)}"
-                    f" candidate_samples={format_elapsed_samples(candidate_case.elapsed_samples)}"
-                )
-            lines.append(
-                (
-                    f"{baseline_case.path}: baseline={baseline_case.elapsed_s:.4f}s "
-                    f"candidate={candidate_case.elapsed_s:.4f}s "
-                    f"status={baseline_case.status}/{candidate_case.status} "
-                    f"validation={baseline_case.validation!r}/{candidate_case.validation!r}"
-                    f"{repeat_suffix}"
-                )
-            )
-        lines.append("")
-
-    if len(comparisons) == 2:
-        avg_baseline = (comparisons[0].baseline_total_s + comparisons[1].baseline_total_s) / 2.0
-        avg_candidate = (comparisons[0].candidate_total_s + comparisons[1].candidate_total_s) / 2.0
-        lines.append(
-            f"[two-order-average] baseline={avg_baseline:.4f}s candidate={avg_candidate:.4f}s"
-        )
-
-    return "\n".join(lines)
-
-
-def build_argument_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Compare two SAT solver runners on an ordered hotspot case slice."
-    )
-    parser.add_argument("cases", nargs="+", help="CNF case paths to compare in order")
-    parser.add_argument("--baseline-module")
-    parser.add_argument("--baseline-cli-script")
-    parser.add_argument(
-        "--baseline-python-executable",
-        default=sys.executable,
-        help="Python executable for --baseline-cli-script",
-    )
-    parser.add_argument("--candidate-module")
-    parser.add_argument("--candidate-cli-script")
-    parser.add_argument(
-        "--candidate-python-executable",
-        default=sys.executable,
-        help="Python executable for --candidate-cli-script",
-    )
-    parser.add_argument(
-        "--bruteforce-var-limit",
-        type=int,
-        default=16,
-        help="Brute-force UNSAT validation only when num_vars is at most this limit",
-    )
-    parser.add_argument(
-        "--repeat",
-        type=int,
-        default=1,
-        help="Run each case this many times per runner and use the median as representative time",
-    )
-    return parser
-
-
-def main(argv: list[str] | None = None) -> int:
-    parser = build_argument_parser()
-    args = parser.parse_args(sys.argv[1:] if argv is None else argv)
-
-    baseline = load_runner(
-        "baseline",
-        args.baseline_module,
-        args.baseline_cli_script,
-        args.baseline_python_executable,
-    )
-    candidate = load_runner(
-        "candidate",
-        args.candidate_module,
-        args.candidate_cli_script,
-        args.candidate_python_executable,
-    )
-    comparisons = compare_runners(
-        baseline,
-        candidate,
-        args.cases,
-        brute_force_var_limit=args.bruteforce_var_limit,
-        repeat=args.repeat,
-    )
-    print(render_comparisons(baseline, candidate, comparisons, args.repeat))
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
-
-`````
-
-### `tests/test_hotspot_compare.py`
-
-- Category: Regression tests
-- Git status: untracked but significant current working-tree file
-- Size: `2770` bytes
-- Line count: `69`
-- Why it matters: Local significant regression tests for the hotspot A/B comparison tool.
-
-Raw content:
-
-`````python
-from __future__ import annotations
-
-import unittest
-from pathlib import Path
-
-from tools import hotspot_compare
-
-
-ROOT = Path(__file__).resolve().parents[1]
-
-
-class HotspotCompareTests(unittest.TestCase):
-    def test_load_runner_requires_exactly_one_mode(self) -> None:
-        with self.assertRaisesRegex(ValueError, "exactly one"):
-            hotspot_compare.load_runner("baseline", None, None, "python")
-
-        with self.assertRaisesRegex(ValueError, "exactly one"):
-            hotspot_compare.load_runner("baseline", "satsolver", "satsolver.py", "python")
-
-    def test_compare_runners_module_vs_cli_smoke(self) -> None:
-        baseline = hotspot_compare.load_runner("baseline", "satsolver", None, "python")
-        candidate = hotspot_compare.load_runner(
-            "candidate",
-            None,
-            str(ROOT / "satsolver.py"),
-            "python",
-        )
-        comparisons = hotspot_compare.compare_runners(
-            baseline,
-            candidate,
-            [
-                str(ROOT / "small" / "test_1.cnf"),
-                str(ROOT / "special" / "tseitin.cnf"),
-            ],
-            brute_force_var_limit=0,
-            repeat=1,
-        )
-
-        self.assertEqual(["forward", "reverse"], [comparison.order_name for comparison in comparisons])
-        for comparison in comparisons:
-            self.assertEqual(2, len(comparison.case_rows))
-            self.assertGreaterEqual(comparison.baseline_total_s, 0.0)
-            self.assertGreaterEqual(comparison.candidate_total_s, 0.0)
-            for baseline_case, candidate_case in comparison.case_rows:
-                self.assertEqual(baseline_case.status, candidate_case.status)
-                self.assertIn(baseline_case.validation, {"valid SAT", "valid UNSAT (format checked)"})
-                self.assertEqual(baseline_case.validation, candidate_case.validation)
-
-        rendered = hotspot_compare.render_comparisons(baseline, candidate, comparisons, repeat=1)
-        self.assertIn("[forward]", rendered)
-        self.assertIn("[reverse]", rendered)
-        self.assertIn("[two-order-average]", rendered)
-        self.assertIn("small/test_1.cnf", rendered)
-        self.assertIn("special/tseitin.cnf", rendered)
-
-    def test_repeat_must_be_positive(self) -> None:
-        baseline = hotspot_compare.load_runner("baseline", "satsolver", None, "python")
-        candidate = hotspot_compare.load_runner("candidate", "satsolver", None, "python")
-        with self.assertRaisesRegex(ValueError, "repeat must be at least 1"):
-            hotspot_compare.compare_runners(
-                baseline,
-                candidate,
-                [str(ROOT / "small" / "test_1.cnf")],
-                repeat=0,
-            )
-
-
-if __name__ == "__main__":
-    unittest.main()
-
-`````
