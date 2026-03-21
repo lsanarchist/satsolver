@@ -173,3 +173,6 @@ Current bottlenecks:
 - `medium/test_4.cnf`: `1.6973s`
 - `large/test_10.cnf`: `1.6261s`
 - `medium/test_3.cnf`: `0.6503s`
+
+Latest cycle note:
+- The newest `reduce_database()` schedule reject closes another tempting learnt-large door: even keeping the same ranking and top-half retention policy, lowering the post-reduction `next_reduce` growth factor from `1.5` to `1.25` regressed the mixed nine-case exact-CLI hotspot slice from `24.4791s` to `30.9079s`. The damage was broad, not just one family: `large/test_8.cnf` jumped from about `0.29s` to about `2.32s`, `large/test_6.cnf` regressed by about `1.14s`, and `special/hard.cnf` regressed by about `2.29s`. So future learnt-database work should not assume that reducing earlier with the same classifier is any safer than keeping a smaller fraction.
