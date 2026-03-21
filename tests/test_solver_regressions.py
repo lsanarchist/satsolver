@@ -170,6 +170,11 @@ class SolverRegressionTests(unittest.TestCase):
         self.assertFalse(solver.clauses[0].deleted)
         self.assertFalse(solver.clauses[1].deleted)
 
+    def test_clause_ternary_flag_matches_clause_length(self) -> None:
+        self.assertTrue(satsolver.Clause([1, 2, 3]).ternary)
+        self.assertFalse(satsolver.Clause([1, 2]).ternary)
+        self.assertFalse(satsolver.Clause([1, 2, 3, 4]).ternary)
+
     def test_minimize_learnt_handles_binary_and_ternary_reasons(self) -> None:
         solver = satsolver.Solver(4)
         self.assertTrue(solver.add_problem_clause([-2, 1]))

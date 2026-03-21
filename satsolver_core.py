@@ -102,7 +102,7 @@ def find_iterative_root_pure_literals(
 
 
 class Clause:
-    __slots__ = ("lits", "learnt", "activity", "lbd", "deleted")
+    __slots__ = ("lits", "learnt", "activity", "lbd", "deleted", "ternary")
 
     def __init__(
         self,
@@ -117,6 +117,7 @@ class Clause:
         self.activity = activity
         self.lbd = lbd
         self.deleted = deleted
+        self.ternary = len(lits) == 3
 
 
 class Solver:
@@ -390,7 +391,7 @@ class Solver:
                     index += 1
                     continue
 
-                if len(lits) == 3:
+                if clause.ternary:
                     candidate_literal = lits[2]
                     candidate_value = literal_values[candidate_literal]
                     if candidate_value != FALSE:
