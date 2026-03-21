@@ -614,17 +614,25 @@ class Solver:
         return learnt, best_level, lbd
 
     def pick_branch_literal(self) -> int:
+        values = self.values
+        activity = self.activity
+        saved_phase = self.saved_phase
+        num_vars = self.num_vars
         best_variable = 0
         best_activity = -1.0
-        for variable in range(1, self.num_vars + 1):
-            if self.values[variable] == UNASSIGNED and self.activity[variable] > best_activity:
-                best_activity = self.activity[variable]
+        for variable in range(1, num_vars + 1):
+            if values[variable] != UNASSIGNED:
+                continue
+
+            variable_activity = activity[variable]
+            if variable_activity > best_activity:
+                best_activity = variable_activity
                 best_variable = variable
 
         if best_variable == 0:
             return 0
 
-        positive = self.saved_phase[best_variable]
+        positive = saved_phase[best_variable]
         return best_variable if positive else -best_variable
 
     def reduce_database(self) -> None:
