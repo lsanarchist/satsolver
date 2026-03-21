@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
 import os
 import sys
-from typing import Iterable, Optional
 
 
 TRUE = 1
@@ -35,7 +35,7 @@ def lit_index(literal: int) -> int:
     return variable * 2 if literal > 0 else variable * 2 + 1
 
 
-def normalize_clause_literals(literals: Iterable[int]) -> Optional[list[int]]:
+def normalize_clause_literals(literals: Iterable[int]) -> list[int] | None:
     clause: list[int] = []
     seen: set[int] = set()
     for literal in literals:
@@ -136,7 +136,7 @@ class Solver:
 
         self.values = [UNASSIGNED] * (num_vars + 1)
         self.level = [0] * (num_vars + 1)
-        self.reason: list[Optional[int]] = [None] * (num_vars + 1)
+        self.reason: list[int | None] = [None] * (num_vars + 1)
 
         self.activity = [0.0] * (num_vars + 1)
         self.phase_bias = [0] * (num_vars + 1)
@@ -185,7 +185,7 @@ class Solver:
     def literal_value(self, literal: int) -> int:
         return self.literal_values[literal]
 
-    def enqueue(self, literal: int, reason: Optional[int]) -> bool:
+    def enqueue(self, literal: int, reason: int | None) -> bool:
         variable = self.literal_var[literal]
         value = self.literal_sign[literal]
         current = self.values[variable]
@@ -266,10 +266,10 @@ class Solver:
             self.activity[variable] += 1.0
             self.phase_bias[variable] += 1 if literal > 0 else -1
 
-    def normalize_clause(self, literals: Iterable[int]) -> Optional[list[int]]:
+    def normalize_clause(self, literals: Iterable[int]) -> list[int] | None:
         return normalize_clause_literals(literals)
 
-    def simplify_root_clause(self, literals: Iterable[int]) -> Optional[list[int]]:
+    def simplify_root_clause(self, literals: Iterable[int]) -> list[int] | None:
         reduced: list[int] = []
         for literal in literals:
             value = self.literal_value(literal)
@@ -321,7 +321,7 @@ class Solver:
             self.attach_clause(clause_id)
         return clause_id
 
-    def propagate(self) -> Optional[int]:
+    def propagate(self) -> int | None:
         clauses = self.clauses
         literal_values = self.literal_values
         literal_var = self.literal_var
@@ -678,7 +678,7 @@ class Solver:
             if values[variable] == UNASSIGNED:
                 saved_phase[variable] = phase_bias[variable] >= 0
 
-    def solve(self) -> Optional[list[int]]:
+    def solve(self) -> list[int] | None:
         if not self.ok:
             return None
 
@@ -730,8 +730,8 @@ class Solver:
 
 
 def parse_dimacs(text: str) -> tuple[int, list[list[int]]]:
-    num_vars: Optional[int] = None
-    num_clauses: Optional[int] = None
+    num_vars: int | None = None
+    num_clauses: int | None = None
     clauses: list[list[int]] = []
     current: list[int] = []
     header_seen = False
@@ -917,7 +917,7 @@ def solve_cnf_serial(
     clauses: list[list[int]],
     *,
     seed_phase_bias: bool = False,
-) -> Optional[list[int]]:
+) -> list[int] | None:
     solver = Solver(num_vars)
     root_pure_literals = find_iterative_root_pure_literals(num_vars, clauses)
     if len(root_pure_literals) >= ROOT_PURE_LITERAL_MIN_ASSIGNMENTS:
@@ -947,7 +947,7 @@ def should_use_parallel_portfolio(num_vars: int, clauses: list[list[int]]) -> bo
     return (len(clauses) / num_vars) <= PORTFOLIO_MAX_DENSITY
 
 
-def solve_cnf_portfolio(num_vars: int, clauses: list[list[int]]) -> Optional[list[int]]:
+def solve_cnf_portfolio(num_vars: int, clauses: list[list[int]]) -> list[int] | None:
     import multiprocessing as mp
 
     def solve_portfolio_worker(seed_phase_bias: bool, result_queue) -> None:
@@ -989,7 +989,7 @@ def solve_cnf_portfolio(num_vars: int, clauses: list[list[int]]) -> Optional[lis
     raise RuntimeError(f"Parallel portfolio failed: {'; '.join(errors)}")
 
 
-def solve_cnf(num_vars: int, clauses: list[list[int]]) -> Optional[list[int]]:
+def solve_cnf(num_vars: int, clauses: list[list[int]]) -> list[int] | None:
     if has_pigeonhole_core(clauses):
         return None
     if xor_system_unsat(num_vars, clauses):
@@ -999,7 +999,7 @@ def solve_cnf(num_vars: int, clauses: list[list[int]]) -> Optional[list[int]]:
     return solve_cnf_serial(num_vars, clauses)
 
 
-def write_result(path: str, model: Optional[list[int]]) -> None:
+def write_result(path: str, model: list[int] | None) -> None:
     with open(path, "w", encoding="utf-8") as handle:
         if model is None:
             handle.write("UNSAT\n")
@@ -1009,7 +1009,7 @@ def write_result(path: str, model: Optional[list[int]]) -> None:
             handle.write("\n")
 
 
-def main(argv: Optional[list[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     arguments = sys.argv[1:] if argv is None else argv
     if len(arguments) != 2:
         print("Usage: python satsolver.py input.cnf output.txt", file=sys.stderr)

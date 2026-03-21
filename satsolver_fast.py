@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import sys
-from typing import Optional
 
 import satsolver_core as base
 
@@ -28,8 +27,8 @@ format_model = base.format_model
 
 
 def parse_dimacs_bytes(data: bytes) -> tuple[int, list[list[int]]]:
-    num_vars: Optional[int] = None
-    num_clauses: Optional[int] = None
+    num_vars: int | None = None
+    num_clauses: int | None = None
     clauses: list[list[int]] = []
     current: list[int] = []
     header_seen = False
@@ -86,7 +85,7 @@ def parse_dimacs_file(path: str) -> tuple[int, list[list[int]]]:
         return parse_dimacs_bytes(handle.read())
 
 
-def write_result(path: str, model: Optional[list[int]]) -> None:
+def write_result(path: str, model: list[int] | None) -> None:
     with open(path, "wb") as handle:
         if model is None:
             handle.write(b"UNSAT\n")
@@ -101,7 +100,7 @@ def solve_cnf_serial(
     clauses: list[list[int]],
     *,
     seed_phase_bias: bool = False,
-) -> Optional[list[int]]:
+) -> list[int] | None:
     solver = Solver(num_vars)
     for clause in clauses:
         if not solver.add_problem_clause(clause):
@@ -115,7 +114,7 @@ def should_use_parallel_portfolio(num_vars: int, clauses: list[list[int]]) -> bo
     return base.should_use_parallel_portfolio(num_vars, clauses)
 
 
-def solve_cnf_portfolio(num_vars: int, clauses: list[list[int]]) -> Optional[list[int]]:
+def solve_cnf_portfolio(num_vars: int, clauses: list[list[int]]) -> list[int] | None:
     import multiprocessing as mp
 
     def solve_portfolio_worker(seed_phase_bias: bool, result_queue) -> None:
@@ -157,7 +156,7 @@ def solve_cnf_portfolio(num_vars: int, clauses: list[list[int]]) -> Optional[lis
     raise RuntimeError(f"Parallel portfolio failed: {'; '.join(errors)}")
 
 
-def solve_cnf(num_vars: int, clauses: list[list[int]]) -> Optional[list[int]]:
+def solve_cnf(num_vars: int, clauses: list[list[int]]) -> list[int] | None:
     if has_pigeonhole_core(clauses):
         return None
     if xor_system_unsat(num_vars, clauses):
@@ -167,7 +166,7 @@ def solve_cnf(num_vars: int, clauses: list[list[int]]) -> Optional[list[int]]:
     return solve_cnf_serial(num_vars, clauses)
 
 
-def main(argv: Optional[list[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     arguments = sys.argv[1:] if argv is None else argv
     if len(arguments) != 2:
         print("Usage: python satsolver_fast.py input.cnf output.txt", file=sys.stderr)
