@@ -625,8 +625,6 @@ class Solver:
             return 0
 
         positive = self.saved_phase[best_variable]
-        if self.activity[best_variable] == 0.0:
-            positive = self.phase_bias[best_variable] >= 0
         return best_variable if positive else -best_variable
 
     def reduce_database(self) -> None:

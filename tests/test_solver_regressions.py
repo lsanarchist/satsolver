@@ -94,6 +94,13 @@ class SolverRegressionTests(unittest.TestCase):
         self.assertIsNotNone(model)
         find_root_pure.assert_not_called()
 
+    def test_pick_branch_literal_uses_saved_phase_for_zero_activity(self) -> None:
+        solver = satsolver.Solver(2)
+        solver.phase_bias[1] = 7
+        solver.saved_phase[1] = False
+
+        self.assertEqual(solver.pick_branch_literal(), -1)
+
     def test_propagate_sets_reason_and_literal_cache_for_inlined_units(self) -> None:
         binary_solver = satsolver.Solver(2)
         self.assertTrue(binary_solver.add_problem_clause([1, 2]))
