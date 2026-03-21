@@ -48,8 +48,9 @@ At the start of every run:
 1. Inspect the repository.
 2. Read the current implementation.
 3. Read prior experiment logs and notes if they exist.
-4. Infer the highest-value next step.
-5. Execute one meaningful improvement cycle end-to-end.
+4. Read `autonomous_work_verdict.md` if it exists and treat it as strategic guidance for branch selection.
+5. Infer the highest-value next step.
+6. Execute one meaningful improvement cycle end-to-end.
 
 A meaningful improvement cycle should normally include:
 - understanding the current bottleneck or weakness,
@@ -84,6 +85,8 @@ Use an engineer-researcher loop:
 4. Benchmark.
 5. Record results.
 6. Keep or discard the change based on evidence.
+
+When the current repository evidence says the remaining cost is dominated by one algorithmic path, prefer reducing solver work on that path over pure-Python micro-optimizations that only reshuffle interpreter overhead.
 
 Examples of worthwhile directions include:
 - parser robustness improvements,
