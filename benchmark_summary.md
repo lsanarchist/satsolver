@@ -1,6 +1,6 @@
 # Benchmark Summary
 
-Updated: `2026-03-21T01:08:55+01:00`
+Updated: `2026-03-21T01:15:40+01:00`
 
 Best-known submission configuration:
 - `satsolver.py`
@@ -91,9 +91,9 @@ Best single-run exact-CLI validated 59-case snapshot:
 - Worst-case runtime: `12.1124s` on `large/test_6.cnf`
 
 Latest cycle note:
-- This cycle rejected applying the same byte-level DIMACS parse/write path to the main submission file `satsolver.py`.
-- The early exact-CLI slices looked plausible: the SAT-heavy root-hit slice improved (`0.4960s -> 0.4718s`) and the mixed nine-case hotspot slice was effectively tied (`24.6647s -> 24.6994s`). But the real same-day repeat-aware exact-CLI 59-case suite regressed badly from `27.6153s` on the temp baseline to `29.3807s` on the candidate, both still `59/59` correct.
-- So the main solver stays on the previous parser/output path, and the new boundary is clear: parser/read/write experimentation can pay off on alternate exact-CLI wrappers like `satsolver_fast.py`, but it should not be merged into `satsolver.py` without clearing a same-day repeat-aware full-suite gate.
+- This cycle rejected a second-generation lazy structural wrapper around the current `satsolver_fast.py`.
+- The idea was to keep local byte-level parsing/output plus local structural pigeonhole/XOR fast exits, then lazy-import `satsolver_fast` only for non-structural cases. That failed all three early exact-CLI gates: the structural-hit slice regressed `0.1857s -> 0.1924s`, the SAT-heavy root-hit slice regressed `0.4189s -> 0.4208s`, and the mixed nine-case hotspot slice regressed `24.3005s -> 24.6247s`.
+- So the retained alternate exact-CLI candidate stays `satsolver_fast.py` as-is, and the lazy-structural-wrapper direction now looks exhausted unless a future design is materially different from “do local structural checks, then import the current alternate solver anyway.”
 
 Cumulative improvement since the first archived 59-case snapshot:
 - Full suite: `50.2815s -> 26.4178s` (`-47.46%`)
