@@ -1,6 +1,6 @@
 # Benchmark Summary
 
-Updated: `2026-03-21T04:54:48+01:00`
+Updated: `2026-03-21T05:03:29+01:00`
 
 Best-known submission configuration:
 - `satsolver.py`
@@ -104,10 +104,9 @@ Best single-run exact-CLI validated 59-case snapshot:
 - Worst-case runtime: `12.1124s` on `large/test_6.cnf`
 
 Latest cycle note:
-- This cycle kept an import-gated main-wrapper split in `satsolver.py`.
-- The retained wrapper now stays lean on the exact CLI path by using `satsolver_core` symbols directly in CLI mode, while still exposing the broad alias surface and `solve_cnf_serial()` when imported for tests and tooling.
-- The same-day exact-CLI gates all stayed positive: the SAT-heavy root-hit slice improved `0.3905s -> 0.3842s`, the mixed nine-case hotspot slice improved `25.2601s -> 23.5388s`, the same-day repeat-aware baseline-vs-candidate full-suite run improved `27.6064s -> 27.5425s`, and the refreshed retained artifact landed at `26.4762s`, all `59/59` correct.
-- The caution flag is that the temp baseline-vs-candidate full-suite edge was modest, so future wrapper/startup work still needs same-day repeat-aware confirmation even when a refreshed retained artifact looks much stronger.
+- This cycle rejected a narrower follow-on startup branch in `satsolver_core.py`.
+- The scratch branch made imported `satsolver_core.py` skip its dead standalone parser/solver/writer/main surface, leaving only the symbols used by the real wrappers, but that still regressed the 12-case SAT-heavy root-hit exact-CLI slice (`0.3984s -> 0.4108s`) and regressed the mixed nine-case exact-CLI hotspot slice even more clearly on the two-order average (`24.5731s -> 26.5896s`), with reverse-order `large/test_6.cnf` doing most of the damage.
+- So the kept main-wrapper import gating remains a live lane, but trimming imported `satsolver_core.py` surface itself is now another startup-path dead end.
 
 Cumulative improvement since the first archived 59-case snapshot:
 - Full suite: `50.2815s -> 26.4178s` (`-47.46%`)
@@ -209,3 +208,4 @@ Latest cycle note:
 - The newest quaternary watched-clause reject tightens the surviving immutable-shape lane around `propagate()` too. A scratch branch that added `Clause.quaternary` and a dedicated exact-4-literal watched-clause fast path did win the mixed nine-case exact-CLI hotspot slice (`23.8342s -> 23.6216s`), but it still regressed the 12-case SAT-heavy root-hit slice (`0.3453s -> 0.3528s`) and the same-day repeat-aware exact-CLI 59-case suite (`26.8303s -> 27.4920s`), with the main broad-suite damage on `large/test_6.cnf`, `medium/test_4.cnf`, and `large/test_10.cnf`. So future propagation metadata work should not assume that every next fixed clause family after ternary is worth specializing; hotspot wins from exact-size watched-clause branches still need the same broad-suite confirmation as conflict-analysis micro-paths.
 - The newest local-alias reject closes another tempting “the profiler says append/pop, so just rebind them” door in `propagate()`. A scratch branch that localized `trail.append` and per-watcher-list `watchers.pop` inside `propagate()` looked good in forward order (`25.1835s -> 24.5555s`) but regressed in reverse strongly enough that the mixed nine-case exact-CLI hotspot average still moved the wrong way (`24.1557s -> 24.2120s`). The main stable damage landed on `large/test_6.cnf` and `special/hard.cnf`, while the apparent forward-order wins on `medium/test_3.cnf` and `medium/test_4.cnf` did not survive the reverse pass. So future propagation micro-optimizations should not assume that shaving Python method lookup on hot list operations is enough by itself; the remaining win still needs to come from removing more real watcher/trail work.
 - The newest keep reopens a narrow exact-CLI wrapper lane that the recent lazy-export and alias-trimming rejects did not. Making `satsolver.py` lean only in CLI mode while preserving the rich import-time compatibility surface improved the SAT-heavy root-hit slice (`0.3905s -> 0.3842s`), improved the mixed nine-case exact-CLI hotspot slice (`25.2601s -> 23.5388s`), improved the same-day repeat-aware baseline-vs-candidate full suite (`27.6064s -> 27.5425s`), and then refreshed the retained exact-CLI artifact down to `26.4762s`, all `59/59` correct. So future startup-path work should prefer explicit CLI-mode/import-mode separation over lazy export forwarding or blanket alias trimming, while still demanding same-day repeat-aware full-suite confirmation because the broad A/B margin itself was modest.
+- The newest core-surface reject tightens that startup-path boundary again: even when the dead standalone parser/solver/writer/main surface in `satsolver_core.py` is removed only from imported mode, leaving the real wrapper solve path and search logic untouched, the root-hit exact-CLI slice still regressed (`0.3984s -> 0.4108s`) and the mixed exact-CLI hotspot slice regressed much more strongly (`24.5731s -> 26.5896s`). So future startup-path work should treat the kept main-wrapper import gating as the useful side of this idea, and treat trimming imported `satsolver_core.py` surface itself as another dead end unless a future branch changes something materially different.
