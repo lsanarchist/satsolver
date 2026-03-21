@@ -1,6 +1,6 @@
 # Benchmark Summary
 
-Updated: `2026-03-21T01:15:40+01:00`
+Updated: `2026-03-21T01:21:12+01:00`
 
 Best-known submission configuration:
 - `satsolver.py`
@@ -91,9 +91,9 @@ Best single-run exact-CLI validated 59-case snapshot:
 - Worst-case runtime: `12.1124s` on `large/test_6.cnf`
 
 Latest cycle note:
-- This cycle rejected a second-generation lazy structural wrapper around the current `satsolver_fast.py`.
-- The idea was to keep local byte-level parsing/output plus local structural pigeonhole/XOR fast exits, then lazy-import `satsolver_fast` only for non-structural cases. That failed all three early exact-CLI gates: the structural-hit slice regressed `0.1857s -> 0.1924s`, the SAT-heavy root-hit slice regressed `0.4189s -> 0.4208s`, and the mixed nine-case hotspot slice regressed `24.3005s -> 24.6247s`.
-- So the retained alternate exact-CLI candidate stays `satsolver_fast.py` as-is, and the lazy-structural-wrapper direction now looks exhausted unless a future design is materially different from “do local structural checks, then import the current alternate solver anyway.”
+- This cycle rejected a streaming-file DIMACS parser for the retained alternate exact-CLI solver `satsolver_fast.py`.
+- The scratch candidate kept the retained alternate behavior but replaced `parse_dimacs_file()` with a streaming binary-line parser. It failed the first exact-CLI gate, so it did not earn a mixed-slice or full-suite run: the SAT-heavy root-hit slice regressed from `0.3701s` to `0.3931s` on the two-order average (`0.3721s -> 0.3778s` forward, `0.3680s -> 0.4083s` reverse).
+- So the retained alternate exact-CLI candidate stays `satsolver_fast.py` as-is, and parse-path work there now looks even more noise-sensitive: the earlier byte-parser keep was real, but a simple streamed file loop is not enough by itself.
 
 Cumulative improvement since the first archived 59-case snapshot:
 - Full suite: `50.2815s -> 26.4178s` (`-47.46%`)
