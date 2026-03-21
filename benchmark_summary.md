@@ -1,6 +1,6 @@
 # Benchmark Summary
 
-Updated: `2026-03-20T23:13:51+01:00`
+Updated: `2026-03-21T00:58:40+01:00`
 
 Best-known submission configuration:
 - `satsolver.py`
@@ -60,6 +60,12 @@ Latest repeat-aware exact-CLI reruns this cycle:
 - Rerun 1: `27.7868s` representative, `55.5737s` measured, `55.8209s` wall clock, `59/59` correct
 - Rerun 2: `27.6136s` representative, `55.2273s` measured, `55.4582s` wall clock, `59/59` correct
 
+Current alternate exact-CLI candidate (`satsolver_fast.py`):
+- Historical best repeat-aware snapshot: `27.3829s` representative, `54.7658s` measured, `59/59` correct
+- Same-day retained-wrapper rerun before the bytes-parser keep: `27.6459s` representative, `55.2917s` measured, `59/59` correct
+- Same-day scratch bytes-parser branch before merge: `27.4523s` representative, `54.9045s` measured, `59/59` correct
+- Refreshed merged artifact in `out_fast_cli_extended.txt`: `27.5074s` representative, `55.0148s` measured, `55.2459s` wall clock, `59/59` correct
+
 Best single-run in-process validated 59-case snapshot:
 - Instances attempted: `59`
 - Solved correctly: `59`
@@ -85,9 +91,9 @@ Best single-run exact-CLI validated 59-case snapshot:
 - Worst-case runtime: `12.1124s` on `large/test_6.cnf`
 
 Latest cycle note:
-- This cycle ended as a measured reject, not a solver-core keep. I compared the retained solver directly against the repo's sibling solver, `satsolver_blaze.py`, to see whether it still offers a meaningful alternate-worker profile on the live hotspot slice.
-- The answer is no on the current landscape. Forward order finished `29.8179s` for the retained solver versus `35.5141s` for `satsolver_blaze.py`, with the retained solver winning four of five cases; reverse order widened that to `35.8424s` versus `43.0727s`, with the retained solver winning all five cases.
-- The production solver remains unchanged, and the new boundary is that the old `satsolver_blaze.py` benchmark note is not a current optimization lead anymore. Future portfolio or alternate-worker work needs a materially different and current search identity.
+- This cycle kept a real but modest exact-CLI improvement in the alternate submission-path file: `satsolver_fast.py` now uses a byte-level DIMACS parser plus local byte-output writer instead of inheriting the main text parser/writer from `satsolver.py`.
+- The slice story was mixed but usable: the SAT-heavy root-hit exact-CLI slice improved on the two-order average (`0.4431s -> 0.4319s`), while the mixed nine-case exact-CLI hotspot slice was effectively tied (`24.6944s -> 24.6945s`). The real gate was the same-day repeat-aware exact-CLI full suite, where the retained wrapper rerun landed at `27.6459s` and the scratch bytes-parser branch improved that to `27.4523s`, both `59/59` correct.
+- After merging, the refreshed repo artifact in `out_fast_cli_extended.txt` landed at `27.5074s`, still `59/59` correct. That keeps the bytes-parser change as a same-day improvement to the retained alternate path, but not a new all-time exact-CLI best because the historical `satsolver_fast.py` snapshot `27.3829s` still stands.
 
 Cumulative improvement since the first archived 59-case snapshot:
 - Full suite: `50.2815s -> 26.4178s` (`-47.46%`)
@@ -120,6 +126,8 @@ Profiling note:
 - The newest reject extends that lesson to `solve()` bookkeeping too: even trimming three very frequent helper calls around decay and reduction can still wash out to a near-tie on the exact-CLI hotspot slice. Future helper-boundary work in the outer loop needs a cleaner signal than that before it earns a full-suite run.
 - The newest reject closes another clause-local-state direction on the propagation side: fixed-order problem ternary clauses plus watched-position side arrays preserved exact conflict counts on the five-case hotspot slice and still regressed in both orders. So future original-ternary work should be skeptical of replacing `clause.lits` mutation with extra watched-position side state unless it removes substantially more work than this branch did.
 - The newest cross-solver comparison closes another tempting portfolio lead too: on the current five-case hotspot slice, the retained solver now beats `satsolver_blaze.py` clearly in both forward and reverse order, with blaze only stealing one forward `large/test_10.cnf` run. So the old sibling-solver speed note is stale as a current alternate-worker lead; future portfolio work needs a more materially different search identity than simply reviving `satsolver_blaze.py`.
+- The immediately previous profiler split also says active watcher batches containing problem ternary clauses are frequently mixed with other families rather than already homogeneous: mixed-share is `47.21%..70.78%` on the four main hotspots, with learnt-large traffic as the dominant co-resident family. So true physical watch-list separation is still not ruled out on homogeneity grounds alone, even though branch-hoisting and clause-local side-state ideas remain rejected.
+- The newest workflow keep tightens measurement hygiene in the same area: forward/reverse hotspot A/B is now a first-class tool instead of a pile of ad hoc shell snippets, so future small candidate branches should use `tools/hotspot_compare.py` before spending full-suite benchmark time.
 - The latest rejected branching branch adds another rule: `pick_branch_literal()` may look tempting in `cProfile`, but cheap best-variable hint caches can still lose even when they preserve the exact same decisions/conflicts on the hotspot cases. If branching is revisited again, it needs a more substantive design than local memoization.
 - The newest keep adds a second positive pattern on the conflict-analysis side: token-scoped state can sometimes be left stale safely. `analyze()` was already using `seen_token` for membership tests, so removing the touched-list cleanup loop produced a cleaner win than several earlier clause-shape rewrites. Future bookkeeping work should prefer deleting redundant cleanup passes outright when token scoping already provides correctness.
 - The latest `maybe.md` parallelism revisit adds a caution flag on portfolio plumbing: even when a raw-`fork` rewrite makes the one gated case faster, that does not automatically translate into a better same-day exact-CLI suite. Future portfolio work should demand a broad exact-CLI win, not just a cleaner `large/test_8.cnf` microbenchmark.
@@ -149,6 +157,12 @@ Profiling note:
 - The newest watcher-removal reject tightens that boundary one step further: even after proving watcher-list churn dominates the pop hotspot, a pop-return swap-removal rewrite still lost slightly on the two-order five-case average while preserving exact conflict counts. So future watcher-churn work still needs a larger structural reduction than shaving one list read off the current swap-pop pattern.
 - The newest watcher-pop cause split sharpens the target inside that remaining churn: deleted-watch cleanup is only about `1.7%..2.5%` of watcher pops on the hotspot cases, while original problem-ternary relocations alone account for `56.4%..73.9%` and learnt large-clause relocations account for another `21.4%..38.3%`. So future watcher-churn work should target original-ternary relocation first, with learnt-large relocation as the secondary bucket, rather than treating deleted-watch cleanup as a co-equal target.
 - The newest ternary normalized-outcome split closes one more tempting door on that same path: only about `31.2%..33.7%` of problem-ternary relocations and `27.1%..29.8%` of problem-ternary units happen after watched-slot normalization. Even problem-ternary conflicts, which are more normalization-heavy at `47.5%..48.0%`, are still under `1%` of the non-satisfied original-ternary path. So future watch-order or swap-avoidance ideas would only touch a minority of the dominant relocation/unit workload.
+- The newest watch-batch family-mix split adds an important nuance to that propagation picture: batches containing problem ternary clauses are mixed much more often than the global family totals alone suggest, mostly with learnt-large watchers. So a true physical watch-list split is not ruled out on “the lists are already homogeneous anyway” grounds, but it still needs to be materially different from the already-rejected branch-hoist and per-clause-side-state ideas.
+- The newest physical split-list reject closes much of that remaining loophole too: simply moving original problem-ternary clauses into their own watch lists and traversing them separately changed the search path badly enough to lose hard on `large/test_6.cnf` and `large/test_8.cnf`, even while helping `special/hard.cnf`. So future split-list work would need a much stronger semantics-preservation story than “physically separate the lists because batches are mixed.”
+- The newest alternate-file keep adds a useful exact-CLI counterexample on the preprocessing side: a lean wrapper that simply removes the root pure-literal presolve from the current solver core can beat the current same-day exact-CLI full-suite run by `3.12%` and land `27.3829s` repeat-aware, even though the hotspot serial slice is only near-tied. So root-pure policy is still one of the few remaining levers that can move real submission-path runtime without another deep propagation rewrite.
+- The newest exact-CLI wrapper reject closes another easy-looking door on the submission path: removing the post-solve `model_satisfies(...)` self-check from `satsolver_fast.py` only removes about `0.0053s` total across the entire current SAT benchmark corpus, so it is not a meaningful speed lever and not worth weakening the wrapper's internal safety.
+- The newest parser-gating reject narrows the root-pure story further on the alternate submission path: even when first-round pure counts are collected during parsing and used as a cheap gate, reintroducing iterative root-pure preprocessing into `satsolver_fast.py` still comes out as a root-hit near-tie and a mixed-slice near-tie. So future exact-CLI root-pure work needs something materially stronger than “run it only when first-round pures are already visible.”
+- The newest alternate-file reject adds the complementary startup lesson: even though the wrapper version imports the full main solver module, replacing it with a standalone no-root-pure copy is worse on the exact-CLI root-hit SAT slice. So “avoid the wrapper import” is not a free win; script size and parse/load cost still matter on the submission path.
 
 Workload note:
 - `27,414 / 32,783` benchmark clauses are length 3 (`83.62%`), which justifies continued focus on ternary-specialized propagation/data layout.
