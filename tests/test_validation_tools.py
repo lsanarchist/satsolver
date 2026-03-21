@@ -7,6 +7,10 @@ from tools import checker
 
 
 class ParseDimacsRegressionTests(unittest.TestCase):
+    def test_parse_dimacs_ignores_comments_and_percent_terminator(self) -> None:
+        num_vars, clauses = satsolver.parse_dimacs("c note\np cnf 2 2\n1 -2 0\n0\n% rest ignored\n1 0\n")
+        self.assertEqual((num_vars, clauses), (2, [[1, -2], []]))
+
     def test_rejects_clause_before_problem_line(self) -> None:
         with self.assertRaisesRegex(ValueError, "problem line"):
             satsolver.parse_dimacs("1 -2 0\np cnf 2 1\n")

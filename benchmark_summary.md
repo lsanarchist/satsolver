@@ -1,6 +1,6 @@
 # Benchmark Summary
 
-Updated: `2026-03-21T00:58:40+01:00`
+Updated: `2026-03-21T01:08:55+01:00`
 
 Best-known submission configuration:
 - `satsolver.py`
@@ -91,9 +91,9 @@ Best single-run exact-CLI validated 59-case snapshot:
 - Worst-case runtime: `12.1124s` on `large/test_6.cnf`
 
 Latest cycle note:
-- This cycle kept a real but modest exact-CLI improvement in the alternate submission-path file: `satsolver_fast.py` now uses a byte-level DIMACS parser plus local byte-output writer instead of inheriting the main text parser/writer from `satsolver.py`.
-- The slice story was mixed but usable: the SAT-heavy root-hit exact-CLI slice improved on the two-order average (`0.4431s -> 0.4319s`), while the mixed nine-case exact-CLI hotspot slice was effectively tied (`24.6944s -> 24.6945s`). The real gate was the same-day repeat-aware exact-CLI full suite, where the retained wrapper rerun landed at `27.6459s` and the scratch bytes-parser branch improved that to `27.4523s`, both `59/59` correct.
-- After merging, the refreshed repo artifact in `out_fast_cli_extended.txt` landed at `27.5074s`, still `59/59` correct. That keeps the bytes-parser change as a same-day improvement to the retained alternate path, but not a new all-time exact-CLI best because the historical `satsolver_fast.py` snapshot `27.3829s` still stands.
+- This cycle rejected applying the same byte-level DIMACS parse/write path to the main submission file `satsolver.py`.
+- The early exact-CLI slices looked plausible: the SAT-heavy root-hit slice improved (`0.4960s -> 0.4718s`) and the mixed nine-case hotspot slice was effectively tied (`24.6647s -> 24.6994s`). But the real same-day repeat-aware exact-CLI 59-case suite regressed badly from `27.6153s` on the temp baseline to `29.3807s` on the candidate, both still `59/59` correct.
+- So the main solver stays on the previous parser/output path, and the new boundary is clear: parser/read/write experimentation can pay off on alternate exact-CLI wrappers like `satsolver_fast.py`, but it should not be merged into `satsolver.py` without clearing a same-day repeat-aware full-suite gate.
 
 Cumulative improvement since the first archived 59-case snapshot:
 - Full suite: `50.2815s -> 26.4178s` (`-47.46%`)
