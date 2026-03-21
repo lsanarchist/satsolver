@@ -5,7 +5,6 @@ import sys
 import satsolver_core as base
 
 CLI_MODE = __name__ == "__main__"
-FAST_ROOT_PURE_DENSITY_GATE = 3.2
 
 if CLI_MODE:
     Solver = base.Solver
@@ -97,15 +96,6 @@ def parse_dimacs_file(path: str) -> tuple[int, list[list[int]]]:
     with open(path, "rb") as handle:
         return parse_dimacs_bytes(handle.read())
 
-
-def should_try_fast_root_pure(num_vars: int, clauses: list[list[int]]) -> bool:
-    if num_vars == 0 or not clauses:
-        return False
-    if (len(clauses) / num_vars) > FAST_ROOT_PURE_DENSITY_GATE:
-        return False
-    return all(len(clause) == 3 for clause in clauses)
-
-
 if not CLI_MODE:
 
     def solve_cnf_serial(
@@ -135,12 +125,6 @@ def solve_cnf_fast_serial(
     seed_phase_bias: bool = False,
 ) -> list[int] | None:
     solver = Solver(num_vars)
-    if should_try_fast_root_pure(num_vars, clauses):
-        root_pure_literals = base.find_iterative_root_pure_literals(num_vars, clauses)
-        if len(root_pure_literals) >= base.ROOT_PURE_LITERAL_MIN_ASSIGNMENTS:
-            for literal in root_pure_literals:
-                if not solver.enqueue(literal, None):
-                    return None
     for clause in clauses:
         if not solver.add_problem_clause(clause):
             return None

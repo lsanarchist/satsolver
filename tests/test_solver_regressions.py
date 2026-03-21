@@ -77,7 +77,7 @@ class SolverRegressionTests(unittest.TestCase):
         self.assertIsNotNone(model)
         self.assertEqual(enqueue.call_count, 2)
 
-    def test_fast_serial_solver_only_tries_root_pure_on_low_density_ternary_cases(self) -> None:
+    def test_fast_serial_solver_skips_root_pure_presolve(self) -> None:
         with mock.patch(
             "satsolver.base.find_iterative_root_pure_literals",
             return_value=[1, 2],
@@ -90,15 +90,6 @@ class SolverRegressionTests(unittest.TestCase):
                     [1, -2, 3],
                 ],
             )
-
-        self.assertIsNotNone(model)
-        find_root_pure.assert_called_once()
-
-        with mock.patch(
-            "satsolver.base.find_iterative_root_pure_literals",
-            return_value=[1, 2],
-        ) as find_root_pure:
-            model = satsolver.solve_cnf_fast_serial(10, [[1, 2, 3]] * 33)
 
         self.assertIsNotNone(model)
         find_root_pure.assert_not_called()
