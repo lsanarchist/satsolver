@@ -6,7 +6,14 @@ import satsolver_core as base
 
 CLI_MODE = __name__ == "__main__"
 
-if not CLI_MODE:
+if CLI_MODE:
+    Solver = base.Solver
+    model_satisfies = base.model_satisfies
+    has_pigeonhole_core = base.has_pigeonhole_core
+    xor_system_unsat = base.xor_system_unsat
+    format_model = base.format_model
+    should_use_parallel_portfolio = base.should_use_parallel_portfolio
+else:
     import os
 
     TRUE = base.TRUE
@@ -98,7 +105,7 @@ if not CLI_MODE:
         *,
         seed_phase_bias: bool = False,
     ) -> list[int] | None:
-        solver = base.Solver(num_vars)
+        solver = Solver(num_vars)
         root_pure_literals = base.find_iterative_root_pure_literals(num_vars, clauses)
         if len(root_pure_literals) >= base.ROOT_PURE_LITERAL_MIN_ASSIGNMENTS:
             for literal in root_pure_literals:
@@ -118,7 +125,7 @@ def solve_cnf_fast_serial(
     *,
     seed_phase_bias: bool = False,
 ) -> list[int] | None:
-    solver = base.Solver(num_vars)
+    solver = Solver(num_vars)
     for clause in clauses:
         if not solver.add_problem_clause(clause):
             return None
@@ -127,8 +134,10 @@ def solve_cnf_fast_serial(
     return solver.solve()
 
 
-def should_use_parallel_portfolio(num_vars: int, clauses: list[list[int]]) -> bool:
-    return base.should_use_parallel_portfolio(num_vars, clauses)
+if not CLI_MODE:
+
+    def should_use_parallel_portfolio(num_vars: int, clauses: list[list[int]]) -> bool:
+        return base.should_use_parallel_portfolio(num_vars, clauses)
 
 
 def solve_cnf_portfolio(num_vars: int, clauses: list[list[int]]) -> list[int] | None:
@@ -174,9 +183,9 @@ def solve_cnf_portfolio(num_vars: int, clauses: list[list[int]]) -> list[int] | 
 
 
 def solve_cnf(num_vars: int, clauses: list[list[int]]) -> list[int] | None:
-    if base.has_pigeonhole_core(clauses):
+    if has_pigeonhole_core(clauses):
         return None
-    if base.xor_system_unsat(num_vars, clauses):
+    if xor_system_unsat(num_vars, clauses):
         return None
     if should_use_parallel_portfolio(num_vars, clauses):
         return solve_cnf_portfolio(num_vars, clauses)
@@ -189,7 +198,7 @@ def write_result(path: str, model: list[int] | None) -> None:
             handle.write(b"UNSAT\n")
         else:
             handle.write(b"SAT\n")
-            handle.write(base.format_model(model).encode("ascii"))
+            handle.write(format_model(model).encode("ascii"))
             handle.write(b"\n")
 
 
@@ -203,7 +212,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         num_vars, clauses = parse_dimacs_file(input_path)
         model = solve_cnf(num_vars, clauses)
-        if model is not None and not base.model_satisfies(clauses, model):
+        if model is not None and not model_satisfies(clauses, model):
             raise RuntimeError("Internal error: produced model does not satisfy the input CNF")
         write_result(output_path, model)
     except Exception as exc:  # pragma: no cover - CLI safety path
