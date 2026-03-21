@@ -34,7 +34,21 @@ class RunStats:
     processed_literals: int
     propagations: int
     restarts: int
+    restart_conflict_sum: int
+    max_restart_conflicts: int
+    restart_decision_level_sum: int
+    max_restart_decision_level: int
+    restart_trail_sum: int
+    max_restart_trail: int
     reductions: int
+    reduction_live_learnts_sum: int
+    reduction_locked_clause_sum: int
+    reduction_candidate_clause_sum: int
+    reduction_deleted_clause_sum: int
+    max_reduction_live_learnts: int
+    max_reduction_locked_clause_count: int
+    max_reduction_candidate_clause_count: int
+    max_reduction_deleted_clause_count: int
     learnts_added: int
     live_learnts: int
     max_live_learnts: int
@@ -210,7 +224,21 @@ class ProfiledSolver(satsolver.Solver):
         self.propagations = 0
         self.processed_literals = 0
         self.restarts = 0
+        self.restart_conflict_sum = 0
+        self.max_restart_conflicts = 0
+        self.restart_decision_level_sum = 0
+        self.max_restart_decision_level = 0
+        self.restart_trail_sum = 0
+        self.max_restart_trail = 0
         self.reductions = 0
+        self.reduction_live_learnts_sum = 0
+        self.reduction_locked_clause_sum = 0
+        self.reduction_candidate_clause_sum = 0
+        self.reduction_deleted_clause_sum = 0
+        self.max_reduction_live_learnts = 0
+        self.max_reduction_locked_clause_count = 0
+        self.max_reduction_candidate_clause_count = 0
+        self.max_reduction_deleted_clause_count = 0
         self.learnts_added = 0
         self.max_live_learnts = 0
         self.max_trail = 0
@@ -693,14 +721,64 @@ class ProfiledSolver(satsolver.Solver):
         positive = self.saved_phase[best_variable]
         if best_activity == 0.0:
             self.branch_zero_activity_choices += 1
-            positive = self.phase_bias[best_variable] >= 0
         return best_variable if positive else -best_variable
 
     def reduce_database(self) -> None:
-        should_reduce = len(self.learnt_ids) >= self.next_reduce
-        super().reduce_database()
-        if should_reduce:
-            self.reductions += 1
+        if len(self.learnt_ids) < self.next_reduce:
+            return
+
+        self.reductions += 1
+
+        live_learnts = sum(
+            1 for learnt_id in self.learnt_ids if not self.clauses[learnt_id].deleted
+        )
+        locked = {clause_id for clause_id in self.reason[1:] if clause_id is not None}
+        keep: list[int] = []
+        candidates: list[int] = []
+
+        for clause_id in self.learnt_ids:
+            clause = self.clauses[clause_id]
+            if clause.deleted:
+                continue
+            if clause_id in locked or len(clause.lits) <= 2 or clause.lbd <= 2:
+                keep.append(clause_id)
+            else:
+                candidates.append(clause_id)
+
+        candidates.sort(
+            key=lambda clause_id: (
+                self.clauses[clause_id].lbd,
+                -self.clauses[clause_id].activity,
+                len(self.clauses[clause_id].lits),
+            )
+        )
+        midpoint = len(candidates) // 2
+        deleted_count = len(candidates) - midpoint
+
+        self.reduction_live_learnts_sum += live_learnts
+        self.reduction_locked_clause_sum += len(locked)
+        self.reduction_candidate_clause_sum += len(candidates)
+        self.reduction_deleted_clause_sum += deleted_count
+        self.max_reduction_live_learnts = max(self.max_reduction_live_learnts, live_learnts)
+        self.max_reduction_locked_clause_count = max(
+            self.max_reduction_locked_clause_count,
+            len(locked),
+        )
+        self.max_reduction_candidate_clause_count = max(
+            self.max_reduction_candidate_clause_count,
+            len(candidates),
+        )
+        self.max_reduction_deleted_clause_count = max(
+            self.max_reduction_deleted_clause_count,
+            deleted_count,
+        )
+
+        keep.extend(candidates[:midpoint])
+        for clause_id in candidates[midpoint:]:
+            self.clauses[clause_id].deleted = True
+
+        self.learnt_ids = keep
+        self.next_reduce = max(256, int(len(self.learnt_ids) * 1.5) + 64)
 
     def minimize_learnt(self, learnt: list[int], token: int) -> list[int]:
         if len(learnt) <= 2:
@@ -915,6 +993,21 @@ class ProfiledSolver(satsolver.Solver):
                 if conflicts_since_restart >= restart_limit:
                     if self.current_level() > 0:
                         self.restarts += 1
+                        self.restart_conflict_sum += conflicts_since_restart
+                        self.max_restart_conflicts = max(
+                            self.max_restart_conflicts,
+                            conflicts_since_restart,
+                        )
+                        self.restart_decision_level_sum += self.current_level()
+                        self.max_restart_decision_level = max(
+                            self.max_restart_decision_level,
+                            self.current_level(),
+                        )
+                        self.restart_trail_sum += len(self.trail)
+                        self.max_restart_trail = max(
+                            self.max_restart_trail,
+                            len(self.trail),
+                        )
                     self.backtrack(0)
                     conflicts_since_restart = 0
                     restart_index += 1
@@ -966,7 +1059,21 @@ def build_run_stats(
             processed_literals=0,
             propagations=0,
             restarts=0,
+            restart_conflict_sum=0,
+            max_restart_conflicts=0,
+            restart_decision_level_sum=0,
+            max_restart_decision_level=0,
+            restart_trail_sum=0,
+            max_restart_trail=0,
             reductions=0,
+            reduction_live_learnts_sum=0,
+            reduction_locked_clause_sum=0,
+            reduction_candidate_clause_sum=0,
+            reduction_deleted_clause_sum=0,
+            max_reduction_live_learnts=0,
+            max_reduction_locked_clause_count=0,
+            max_reduction_candidate_clause_count=0,
+            max_reduction_deleted_clause_count=0,
             learnts_added=0,
             live_learnts=0,
             max_live_learnts=0,
@@ -1111,7 +1218,21 @@ def build_run_stats(
         processed_literals=solver.processed_literals,
         propagations=solver.propagations,
         restarts=solver.restarts,
+        restart_conflict_sum=solver.restart_conflict_sum,
+        max_restart_conflicts=solver.max_restart_conflicts,
+        restart_decision_level_sum=solver.restart_decision_level_sum,
+        max_restart_decision_level=solver.max_restart_decision_level,
+        restart_trail_sum=solver.restart_trail_sum,
+        max_restart_trail=solver.max_restart_trail,
         reductions=solver.reductions,
+        reduction_live_learnts_sum=solver.reduction_live_learnts_sum,
+        reduction_locked_clause_sum=solver.reduction_locked_clause_sum,
+        reduction_candidate_clause_sum=solver.reduction_candidate_clause_sum,
+        reduction_deleted_clause_sum=solver.reduction_deleted_clause_sum,
+        max_reduction_live_learnts=solver.max_reduction_live_learnts,
+        max_reduction_locked_clause_count=solver.max_reduction_locked_clause_count,
+        max_reduction_candidate_clause_count=solver.max_reduction_candidate_clause_count,
+        max_reduction_deleted_clause_count=solver.max_reduction_deleted_clause_count,
         learnts_added=solver.learnts_added,
         live_learnts=live_learnts,
         max_live_learnts=max(solver.max_live_learnts, live_learnts),
@@ -1403,6 +1524,27 @@ def main() -> int:
             stats.branch_zero_activity_choices / stats.decisions if stats.decisions else 0.0
         )
         avg_lbd = stats.lbd_sum / stats.conflicts if stats.conflicts else 0.0
+        avg_conflicts_per_restart = (
+            stats.restart_conflict_sum / stats.restarts if stats.restarts else 0.0
+        )
+        avg_restart_decision_level = (
+            stats.restart_decision_level_sum / stats.restarts if stats.restarts else 0.0
+        )
+        avg_restart_trail = (
+            stats.restart_trail_sum / stats.restarts if stats.restarts else 0.0
+        )
+        avg_live_learnts_per_reduction = (
+            stats.reduction_live_learnts_sum / stats.reductions if stats.reductions else 0.0
+        )
+        avg_locked_clauses_per_reduction = (
+            stats.reduction_locked_clause_sum / stats.reductions if stats.reductions else 0.0
+        )
+        avg_candidate_clauses_per_reduction = (
+            stats.reduction_candidate_clause_sum / stats.reductions if stats.reductions else 0.0
+        )
+        avg_deleted_clauses_per_reduction = (
+            stats.reduction_deleted_clause_sum / stats.reductions if stats.reductions else 0.0
+        )
         avg_large_probe = stats.large_probe_steps / stats.large_watch_visits if stats.large_watch_visits else 0.0
         avg_large_probe_success = (
             stats.large_probe_success_steps / stats.large_relocations if stats.large_relocations else 0.0
@@ -1608,7 +1750,21 @@ def main() -> int:
                 f"max_branch_unassigned={stats.max_branch_unassigned} "
                 f"max_branch_best_tie={stats.max_branch_best_tie} "
                 f"processed_literals={stats.processed_literals} propagations={stats.propagations} "
-                f"restarts={stats.restarts} reductions={stats.reductions} "
+                f"restarts={stats.restarts} avg_conflicts_per_restart={avg_conflicts_per_restart:.2f} "
+                f"avg_restart_decision_level={avg_restart_decision_level:.2f} "
+                f"avg_restart_trail={avg_restart_trail:.2f} "
+                f"max_restart_conflicts={stats.max_restart_conflicts} "
+                f"max_restart_decision_level={stats.max_restart_decision_level} "
+                f"max_restart_trail={stats.max_restart_trail} "
+                f"reductions={stats.reductions} "
+                f"avg_live_learnts_per_reduction={avg_live_learnts_per_reduction:.2f} "
+                f"avg_locked_clauses_per_reduction={avg_locked_clauses_per_reduction:.2f} "
+                f"avg_candidate_clauses_per_reduction={avg_candidate_clauses_per_reduction:.2f} "
+                f"avg_deleted_clauses_per_reduction={avg_deleted_clauses_per_reduction:.2f} "
+                f"max_reduction_live_learnts={stats.max_reduction_live_learnts} "
+                f"max_reduction_locked_clauses={stats.max_reduction_locked_clause_count} "
+                f"max_reduction_candidates={stats.max_reduction_candidate_clause_count} "
+                f"max_reduction_deleted={stats.max_reduction_deleted_clause_count} "
                 f"learnts_added={stats.learnts_added} live_learnts={stats.live_learnts} "
                 f"max_live_learnts={stats.max_live_learnts} max_trail={stats.max_trail} "
                 f"binary_checks={stats.binary_clause_checks} binary_units={stats.binary_units} "

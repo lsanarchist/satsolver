@@ -294,6 +294,88 @@ class ProfileSolverTests(unittest.TestCase):
             self.assertEqual(stats.max_branch_unassigned, 3)
             self.assertEqual(stats.max_branch_best_tie, 3)
 
+    def test_profile_solver_zero_activity_branch_uses_saved_phase(self) -> None:
+        solver = profile_solver.ProfiledSolver(
+            1,
+            restart_base=64,
+            next_reduce=256,
+            var_decay=0.95,
+            clause_decay=0.999,
+        )
+        solver.saved_phase[1] = False
+        solver.phase_bias[1] = 10
+
+        literal = solver.pick_branch_literal()
+
+        self.assertEqual(literal, -1)
+        self.assertEqual(solver.decisions, 1)
+        self.assertEqual(solver.branch_zero_activity_choices, 1)
+        self.assertEqual(solver.branch_unassigned_sum, 1)
+        self.assertEqual(solver.branch_zero_activity_unassigned_sum, 1)
+        self.assertEqual(solver.branch_best_tie_sum, 1)
+
+    def test_profile_solver_collects_restart_stats(self) -> None:
+        case_path = Path(__file__).resolve().parents[1] / "small" / "test_4.cnf"
+
+        stats = profile_solver.solve_with_profile(
+            str(case_path),
+            restart_base=1,
+            next_reduce=256,
+            var_decay=0.95,
+            clause_decay=0.999,
+        )
+
+        self.assertFalse(stats.sat)
+        self.assertTrue(stats.ok)
+        self.assertGreater(stats.restarts, 0)
+        self.assertGreaterEqual(stats.restart_conflict_sum, stats.restarts)
+        self.assertGreaterEqual(stats.max_restart_conflicts, 1)
+        self.assertGreaterEqual(stats.restart_decision_level_sum, stats.restarts)
+        self.assertGreaterEqual(stats.max_restart_decision_level, 1)
+        self.assertGreaterEqual(stats.restart_trail_sum, stats.restarts)
+        self.assertGreaterEqual(stats.max_restart_trail, 1)
+
+    def test_profile_solver_collects_reduction_stats(self) -> None:
+        solver = profile_solver.ProfiledSolver(
+            8,
+            restart_base=64,
+            next_reduce=1,
+            var_decay=0.95,
+            clause_decay=0.999,
+        )
+        locked_clause_id = solver.add_learnt_clause([1, 2, 3], 3)
+        binary_clause_id = solver.add_learnt_clause([4, 5], 2)
+        low_lbd_clause_id = solver.add_learnt_clause([6, 7, 8], 2)
+        kept_candidate_clause_id = solver.add_learnt_clause([1, -4, 6, 7], 4)
+        deleted_candidate_clause_id = solver.add_learnt_clause([-1, -5, -6, 8], 5)
+        solver.reason[1] = locked_clause_id
+
+        solver.reduce_database()
+
+        self.assertEqual(solver.reductions, 1)
+        self.assertEqual(solver.reduction_live_learnts_sum, 5)
+        self.assertEqual(solver.reduction_locked_clause_sum, 1)
+        self.assertEqual(solver.reduction_candidate_clause_sum, 2)
+        self.assertEqual(solver.reduction_deleted_clause_sum, 1)
+        self.assertEqual(solver.max_reduction_live_learnts, 5)
+        self.assertEqual(solver.max_reduction_locked_clause_count, 1)
+        self.assertEqual(solver.max_reduction_candidate_clause_count, 2)
+        self.assertEqual(solver.max_reduction_deleted_clause_count, 1)
+        self.assertFalse(solver.clauses[locked_clause_id].deleted)
+        self.assertFalse(solver.clauses[binary_clause_id].deleted)
+        self.assertFalse(solver.clauses[low_lbd_clause_id].deleted)
+        self.assertFalse(solver.clauses[kept_candidate_clause_id].deleted)
+        self.assertTrue(solver.clauses[deleted_candidate_clause_id].deleted)
+        self.assertEqual(
+            solver.learnt_ids,
+            [
+                locked_clause_id,
+                binary_clause_id,
+                low_lbd_clause_id,
+                kept_candidate_clause_id,
+            ],
+        )
+
     def test_profile_solver_splits_satisfied_watch_skips_by_clause_family(self) -> None:
         solver = profile_solver.ProfiledSolver(
             3,
