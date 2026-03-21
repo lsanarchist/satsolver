@@ -1,6 +1,6 @@
 # Benchmark Summary
 
-Updated: `2026-03-21T01:27:12+01:00`
+Updated: `2026-03-21T01:33:25+01:00`
 
 Best-known submission configuration:
 - `satsolver.py`
@@ -91,9 +91,9 @@ Best single-run exact-CLI validated 59-case snapshot:
 - Worst-case runtime: `12.1124s` on `large/test_6.cnf`
 
 Latest cycle note:
-- This cycle rejected a single-worker phase-bias replacement for the narrow portfolio gate in `satsolver_fast.py`.
-- The candidate swapped the current two-worker portfolio path for one serial `seed_phase_bias=True` solve whenever the current gate fired. That really did help the intended case: exact-CLI `large/test_8.cnf` improved from `0.2922s` to `0.2207s` on the two-order average. But the broader mixed nine-case exact-CLI hotspot slice still lost overall (`24.3702s -> 24.5513s`), because the forward win (`24.4601s -> 24.3689s`) was outweighed by the reverse loss (`24.2804s -> 24.7337s`).
-- So the retained alternate exact-CLI candidate stays `satsolver_fast.py` as-is, and portfolio simplification still needs a broader suite-level story than “avoid `fork()` on `large/test_8.cnf`.”
+- This cycle rejected a more aggressive learnt-clause reduction policy in `satsolver.py`.
+- The branch changed `reduce_database()` to keep only the top `40%` of ranked candidates instead of the top `50%`, aiming to shrink the learnt-large propagation footprint. It failed decisively on the mixed nine-case exact-CLI hotspot slice: the two-order average regressed from `24.6309s` to `40.4076s`, with the biggest disaster on `large/test_8.cnf` (`0.2769s -> 12.1894s` forward, `0.3061s -> 12.1799s` reverse).
+- So the retained main solver stays unchanged, and broad “same ranking, keep fewer clauses” database trimming now looks like another learnt-retention dead end.
 
 Cumulative improvement since the first archived 59-case snapshot:
 - Full suite: `50.2815s -> 26.4178s` (`-47.46%`)
