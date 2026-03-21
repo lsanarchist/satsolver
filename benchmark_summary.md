@@ -1,13 +1,13 @@
 # Benchmark Summary
 
-Updated: `2026-03-21T05:14:03+01:00`
+Updated: `2026-03-21T05:30:38+01:00`
 
 Best-known submission configuration:
 - `satsolver.py`
 - Exact-CLI wrapper over `satsolver_core.py`
 - Import-gated main wrapper surface: CLI mode uses `satsolver_core` symbols directly, while import mode still exposes the broader compatibility aliases and helper entrypoints used by tests/tooling
 - Byte-level DIMACS parse/write path on the required submission command
-- No root pure-literal presolve on the main `solve_cnf()` submission path
+- Density-gated iterative root pure-literal presolve on `solve_cnf_fast_serial()` only for low-density all-3-SAT formulas on the main `solve_cnf()` submission path
 - Root-pure-enabled `solve_cnf_serial()` compatibility path still exposed for tests and tooling
 - CDCL core in `satsolver_core.py` with watched literals, VSIDS-style activity, Luby restarts, clause database reduction
 - Structural UNSAT presolvers for pigeonhole cores and XOR contradictions
@@ -61,9 +61,9 @@ Best repeat-aware exact-CLI 59-case snapshot:
 - Worst-case representative runtime: `11.4367s` on `large/test_6.cnf`
 
 Latest repeat-aware exact-CLI reruns this cycle:
-- Same-day baseline before the CLI-local alias keep: `27.2824s` representative, `59/59` correct
-- Same-day scratch CLI-local alias candidate before merge: `27.0228s` representative, `59/59` correct
-- Refreshed retained artifact in `out_cli_extended.txt`: `25.7027s` representative, `51.4054s` measured, `51.6562s` wall clock, `59/59` correct
+- Same-day baseline before the low-density root-pure keep: `26.1422s` representative, `59/59` correct
+- Same-day scratch low-density root-pure candidate before merge: `25.9837s` representative, `59/59` correct
+- Refreshed retained artifact in `out_cli_extended.txt`: `26.1805s` representative, `52.3610s` measured, `52.5982s` wall clock, `59/59` correct
 
 Current alternate exact-CLI candidate (`satsolver_fast.py`):
 - Historical best repeat-aware snapshot: `27.3829s` representative, `54.7658s` measured, `59/59` correct
@@ -72,9 +72,9 @@ Current alternate exact-CLI candidate (`satsolver_fast.py`):
 - Refreshed merged artifact in `out_fast_cli_extended.txt`: `27.5074s` representative, `55.0148s` measured, `55.2459s` wall clock, `59/59` correct
 
 Latest promoted-main exact-CLI artifact (`satsolver.py` after helper split + import gating + CLI-local aliases):
-- Same-day baseline before the CLI-local alias keep: `27.2824s` representative, `59/59` correct
-- Same-day scratch candidate before merge: `27.0228s` representative, `59/59` correct
-- Current retained wrapper artifact in `out_cli_extended.txt`: `25.7027s` representative, `51.4054s` measured, `51.6562s` wall clock, `59/59` correct
+- Same-day baseline before the low-density root-pure keep: `26.1422s` representative, `59/59` correct
+- Same-day scratch candidate before merge: `25.9837s` representative, `59/59` correct
+- Current retained wrapper artifact in `out_cli_extended.txt`: `26.1805s` representative, `52.3610s` measured, `52.5982s` wall clock, `59/59` correct
 
 Latest promoted-main in-process artifact (`satsolver.py` after helper split):
 - Current promoted wrapper artifact in `out_extended.txt`: `27.6294s` representative, `55.2588s` measured, `55.4222s` wall clock, `59/59` correct
@@ -104,10 +104,10 @@ Best single-run exact-CLI validated 59-case snapshot:
 - Worst-case runtime: `12.1124s` on `large/test_6.cnf`
 
 Latest cycle note:
-- This cycle kept a tiny CLI-local alias set in `satsolver.py`.
-- The retained wrapper now binds a very small set of hot `satsolver_core` symbols to local names only on the real CLI path, while preserving the kept import-gated compatibility surface for imports.
-- The startup-heavy root-hit SAT slice regressed (`0.3878s -> 0.3997s`), but the mixed nine-case exact-CLI hotspot slice improved (`23.4102s -> 23.2025`), the same-day repeat-aware baseline-vs-candidate full-suite run improved (`27.2824s -> 27.0228`), and the refreshed retained artifact landed at `25.7027`, all `59/59` correct.
-- So this is a broad-suite exact-CLI keep rather than a startup-SAT keep, and future wrapper work should still require same-day repeat-aware confirmation because slice-level signals now clearly disagree by family.
+- This cycle kept a low-density all-3-SAT root-pure gate on the fast exact-CLI path in `satsolver.py`.
+- The retained wrapper now runs iterative root-pure presolve only when all clauses are length `3` and clause density is at most `3.2`, leaving the dense pure-3-SAT hotspot families on the no-root-pure path.
+- The 12-case SAT-heavy root-hit exact-CLI slice improved (`0.3794s -> 0.3674`), the mixed nine-case exact-CLI hotspot slice improved (`23.5744s -> 23.0621`), and the same-day repeat-aware baseline-vs-candidate full-suite run improved (`26.1422s -> 25.9837`), all `59/59` correct.
+- The refreshed retained artifact in `out_cli_extended.txt` landed at `26.1805`, which is not a new best versus the retained historical `25.7027`, so this is a cautious broad-suite keep that should still be judged by same-day baseline-vs-candidate comparisons rather than by a single refreshed artifact.
 
 Cumulative improvement since the first archived 59-case snapshot:
 - Full suite: `50.2815s -> 26.4178s` (`-47.46%`)
@@ -182,11 +182,11 @@ Workload note:
 - `27,414 / 32,783` benchmark clauses are length 3 (`83.62%`), which justifies continued focus on ternary-specialized propagation/data layout.
 
 Current bottlenecks:
-- `large/test_6.cnf`: `11.4367s`
-- `special/hard.cnf`: `7.5375s`
-- `medium/test_4.cnf`: `1.6401s`
-- `large/test_10.cnf`: `1.5715s`
-- `medium/test_3.cnf`: `0.6197s`
+- `large/test_6.cnf`: `11.6820s`
+- `special/hard.cnf`: `7.5598s`
+- `medium/test_4.cnf`: `1.6309s`
+- `large/test_10.cnf`: `1.5617s`
+- `medium/test_3.cnf`: `0.6483s`
 
 Latest cycle note:
 - The newest `reduce_database()` schedule reject closes another tempting learnt-large door: even keeping the same ranking and top-half retention policy, lowering the post-reduction `next_reduce` growth factor from `1.5` to `1.25` regressed the mixed nine-case exact-CLI hotspot slice from `24.4791s` to `30.9079s`. The damage was broad, not just one family: `large/test_8.cnf` jumped from about `0.29s` to about `2.32s`, `large/test_6.cnf` regressed by about `1.14s`, and `special/hard.cnf` regressed by about `2.29s`. So future learnt-database work should not assume that reducing earlier with the same classifier is any safer than keeping a smaller fraction.
@@ -211,3 +211,4 @@ Latest cycle note:
 - The newest keep reopens a narrow exact-CLI wrapper lane that the recent lazy-export and alias-trimming rejects did not. Making `satsolver.py` lean only in CLI mode while preserving the rich import-time compatibility surface improved the SAT-heavy root-hit slice (`0.3905s -> 0.3842s`), improved the mixed nine-case exact-CLI hotspot slice (`25.2601s -> 23.5388s`), improved the same-day repeat-aware baseline-vs-candidate full suite (`27.6064s -> 27.5425s`), and then refreshed the retained exact-CLI artifact down to `26.4762s`, all `59/59` correct. So future startup-path work should prefer explicit CLI-mode/import-mode separation over lazy export forwarding or blanket alias trimming, while still demanding same-day repeat-aware full-suite confirmation because the broad A/B margin itself was modest.
 - The newest core-surface reject tightens that startup-path boundary again: even when the dead standalone parser/solver/writer/main surface in `satsolver_core.py` is removed only from imported mode, leaving the real wrapper solve path and search logic untouched, the root-hit exact-CLI slice still regressed (`0.3984s -> 0.4108s`) and the mixed exact-CLI hotspot slice regressed much more strongly (`24.5731s -> 26.5896s`). So future startup-path work should treat the kept main-wrapper import gating as the useful side of this idea, and treat trimming imported `satsolver_core.py` surface itself as another dead end unless a future branch changes something materially different.
 - The newest keep adds a more nuanced wrapper-side positive case: a tiny CLI-local alias set for `Solver`, `model_satisfies`, `has_pigeonhole_core`, `xor_system_unsat`, `format_model`, and `should_use_parallel_portfolio` regressed the startup-heavy root-hit slice (`0.3878s -> 0.3997s`) but still improved the mixed nine-case exact-CLI hotspot slice (`23.4102s -> 23.2025`) and the same-day repeat-aware exact-CLI full-suite comparison (`27.2824s -> 27.0228`), with the refreshed retained artifact landing at `25.7027`. So future wrapper work can still consider tiny CLI-only local aliasing for genuinely hot core symbols, but only if the same-day repeat-aware full suite stays positive; root-hit SAT slices are no longer a reliable proxy for broad exact-CLI wins.
+- The newest keep reopens a narrower root-pure lane on the promoted exact-CLI wrapper: enabling iterative root-pure presolve only when the formula is all-3-SAT and clause density is at most `3.2` improved the 12-case root-hit exact-CLI slice (`0.3794s -> 0.3674`), improved the mixed nine-case exact-CLI hotspot slice (`23.5744s -> 23.0621`), and improved the same-day repeat-aware baseline-vs-candidate full-suite comparison (`26.1422s -> 25.9837`), all `59/59` correct. But the refreshed retained artifact landed at `26.1805`, which is still slower than the retained historical best `25.7027`. So future root-pure work should treat cheap density/shape prefilters as a live direction, while still requiring same-day broad-suite A/B and not over-trusting a single refreshed retained artifact when the margin is small.

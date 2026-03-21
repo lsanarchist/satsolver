@@ -77,6 +77,32 @@ class SolverRegressionTests(unittest.TestCase):
         self.assertIsNotNone(model)
         self.assertEqual(enqueue.call_count, 2)
 
+    def test_fast_serial_solver_only_tries_root_pure_on_low_density_ternary_cases(self) -> None:
+        with mock.patch(
+            "satsolver.base.find_iterative_root_pure_literals",
+            return_value=[1, 2],
+        ) as find_root_pure:
+            model = satsolver.solve_cnf_fast_serial(
+                3,
+                [
+                    [1, 2, 3],
+                    [-1, 2, 3],
+                    [1, -2, 3],
+                ],
+            )
+
+        self.assertIsNotNone(model)
+        find_root_pure.assert_called_once()
+
+        with mock.patch(
+            "satsolver.base.find_iterative_root_pure_literals",
+            return_value=[1, 2],
+        ) as find_root_pure:
+            model = satsolver.solve_cnf_fast_serial(10, [[1, 2, 3]] * 33)
+
+        self.assertIsNotNone(model)
+        find_root_pure.assert_not_called()
+
     def test_propagate_sets_reason_and_literal_cache_for_inlined_units(self) -> None:
         binary_solver = satsolver.Solver(2)
         self.assertTrue(binary_solver.add_problem_clause([1, 2]))
