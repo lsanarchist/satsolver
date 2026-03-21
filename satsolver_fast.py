@@ -3,7 +3,7 @@ from __future__ import annotations
 import sys
 from typing import Optional
 
-import satsolver as base
+import satsolver_core as base
 
 
 TRUE = base.TRUE

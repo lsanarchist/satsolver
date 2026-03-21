@@ -1,12 +1,15 @@
 # Benchmark Summary
 
-Updated: `2026-03-21T02:22:29+01:00`
+Updated: `2026-03-21T02:44:19+01:00`
 
 Best-known submission configuration:
 - `satsolver.py`
-- CDCL core with watched literals, VSIDS-style activity, Luby restarts, clause database reduction
+- Exact-CLI wrapper over `satsolver_core.py`
+- Byte-level DIMACS parse/write path on the required submission command
+- No root pure-literal presolve on the main `solve_cnf()` submission path
+- Root-pure-enabled `solve_cnf_serial()` compatibility path still exposed for tests and tooling
+- CDCL core in `satsolver_core.py` with watched literals, VSIDS-style activity, Luby restarts, clause database reduction
 - Structural UNSAT presolvers for pigeonhole cores and XOR contradictions
-- Iterative root pure-literal presolve, but only when the root fixpoint reaches at least two assignments
 - Precomputed per-literal lookup tables in the propagation hot path
 - Per-literal truth-value cache updated on enqueue/backtrack and read directly in propagation
 - Inlined assignment updates for already-known-unassigned binary and watched-clause units inside `propagate()`
@@ -65,6 +68,13 @@ Current alternate exact-CLI candidate (`satsolver_fast.py`):
 - Same-day retained-wrapper rerun before the bytes-parser keep: `27.6459s` representative, `55.2917s` measured, `59/59` correct
 - Same-day scratch bytes-parser branch before merge: `27.4523s` representative, `54.9045s` measured, `59/59` correct
 - Refreshed merged artifact in `out_fast_cli_extended.txt`: `27.5074s` representative, `55.0148s` measured, `55.2459s` wall clock, `59/59` correct
+
+Latest promoted-main exact-CLI artifact (`satsolver.py` after helper split):
+- Same-day baseline before promotion: `30.3078s` representative, `60.6156s` measured, `59/59` correct
+- Current promoted wrapper artifact in `out_cli_extended.txt`: `29.5746s` representative, `59.1493s` measured, `59.3763s` wall clock, `59/59` correct
+
+Latest promoted-main in-process artifact (`satsolver.py` after helper split):
+- Current promoted wrapper artifact in `out_extended.txt`: `27.6294s` representative, `55.2588s` measured, `55.4222s` wall clock, `59/59` correct
 
 Best single-run in-process validated 59-case snapshot:
 - Instances attempted: `59`
@@ -180,3 +190,4 @@ Latest cycle note:
 - The newest alternate-file reject closes a tempting hybrid exact-CLI idea too: a scratch wrapper that kept `satsolver_fast.py` as the default path but routed one dense pure-3-SAT band back to the main solver still regressed the mixed nine-case exact-CLI hotspot slice from `24.6659s` to `25.0305s`. The target `large/test_6.cnf` only improved in one order and lost in the other, while `special/hard.cnf`, `large/test_10.cnf`, and some small startup-sensitive cases gave the gain back. So future hybrid exact-CLI selectors need a much stronger classifier than “large dense all-3-SAT.”
 - The newest learnt-signal reject closes another tempting simplification on the solver-core side: even though `bump_clause_activity()` is not a large direct hotspot, removing learnt-clause activity bumping entirely caused a catastrophic mixed exact-CLI hotspot regression (`25.5245s -> 34.0354s`). The biggest damage hit both dense UNSAT and SAT-like search (`large/test_6.cnf`, `special/hard.cnf`, and `large/test_8.cnf`), so future learnt-database work should treat clause activity as a still-essential ranking signal rather than easy bookkeeping to delete.
 - The newest learnt-ranking reject closes another tempting “gentler classifier” variant too: even keeping the same reduction schedule and the same top-half retention, changing the sort to use activity per literal inside each LBD bucket regressed the mixed nine-case exact-CLI hotspot slice from `25.3946s` to `30.0746s`. The main damage still landed on `large/test_6.cnf` and `large/test_8.cnf`, so future learnt-database work should not assume that length-normalized activity is meaningfully safer than shorter-first tie-breaking or earlier reduction.
+- The newest keep promoted the faster wrapper architecture into the real submission file. Splitting the old monolithic solver into `satsolver_core.py` and making `satsolver.py` use the byte-parser/no-root-pure exact-CLI wrapper improved the same-day root-hit slice (`0.5026s -> 0.4044s`), the mixed nine-case exact-CLI hotspot slice (`24.5923s -> 24.1644s`), and the repeat-aware exact-CLI 59-case suite (`30.3078s -> 29.5746s`) against the previous mainline, all still `59/59` correct. That still does not beat the historical exact-CLI best snapshot `27.1974s`, and the sibling `satsolver_fast.py` remained slightly faster on one same-day broad repeat-aware rerun (`29.1527s`), so future exact-CLI work should treat the promoted wrapper as the new baseline but continue demanding same-day full-suite confirmation rather than trusting one artifact alone.
