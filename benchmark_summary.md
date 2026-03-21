@@ -1,10 +1,11 @@
 # Benchmark Summary
 
-Updated: `2026-03-21T02:44:19+01:00`
+Updated: `2026-03-21T04:54:48+01:00`
 
 Best-known submission configuration:
 - `satsolver.py`
 - Exact-CLI wrapper over `satsolver_core.py`
+- Import-gated main wrapper surface: CLI mode uses `satsolver_core` symbols directly, while import mode still exposes the broader compatibility aliases and helper entrypoints used by tests/tooling
 - Byte-level DIMACS parse/write path on the required submission command
 - No root pure-literal presolve on the main `solve_cnf()` submission path
 - Root-pure-enabled `solve_cnf_serial()` compatibility path still exposed for tests and tooling
@@ -54,14 +55,15 @@ Best repeat-aware exact-CLI 59-case snapshot:
 - SAT solved: `28`
 - UNSAT solved: `31`
 - Errors: `0`
-- Representative total runtime: `27.1974s`
-- Measured total across both repeats: `54.3948s`
-- Wall clock: `54.6329s`
-- Worst-case representative runtime: `11.5797s` on `large/test_6.cnf`
+- Representative total runtime: `26.4762s`
+- Measured total across both repeats: `52.9525s`
+- Wall clock: `53.2029s`
+- Worst-case representative runtime: `11.7026s` on `large/test_6.cnf`
 
 Latest repeat-aware exact-CLI reruns this cycle:
-- Rerun 1: `27.7868s` representative, `55.5737s` measured, `55.8209s` wall clock, `59/59` correct
-- Rerun 2: `27.6136s` representative, `55.2273s` measured, `55.4582s` wall clock, `59/59` correct
+- Same-day baseline before the import-gated wrapper: `27.6064s` representative, `59/59` correct
+- Same-day scratch import-gated candidate before merge: `27.5425s` representative, `59/59` correct
+- Refreshed retained artifact in `out_cli_extended.txt`: `26.4762s` representative, `52.9525s` measured, `53.2029s` wall clock, `59/59` correct
 
 Current alternate exact-CLI candidate (`satsolver_fast.py`):
 - Historical best repeat-aware snapshot: `27.3829s` representative, `54.7658s` measured, `59/59` correct
@@ -69,9 +71,10 @@ Current alternate exact-CLI candidate (`satsolver_fast.py`):
 - Same-day scratch bytes-parser branch before merge: `27.4523s` representative, `54.9045s` measured, `59/59` correct
 - Refreshed merged artifact in `out_fast_cli_extended.txt`: `27.5074s` representative, `55.0148s` measured, `55.2459s` wall clock, `59/59` correct
 
-Latest promoted-main exact-CLI artifact (`satsolver.py` after helper split):
-- Same-day baseline before promotion: `30.3078s` representative, `60.6156s` measured, `59/59` correct
-- Current promoted wrapper artifact in `out_cli_extended.txt`: `29.5746s` representative, `59.1493s` measured, `59.3763s` wall clock, `59/59` correct
+Latest promoted-main exact-CLI artifact (`satsolver.py` after helper split + import gating):
+- Same-day baseline before import gating: `27.6064s` representative, `59/59` correct
+- Same-day scratch candidate before merge: `27.5425s` representative, `59/59` correct
+- Current retained wrapper artifact in `out_cli_extended.txt`: `26.4762s` representative, `52.9525s` measured, `53.2029s` wall clock, `59/59` correct
 
 Latest promoted-main in-process artifact (`satsolver.py` after helper split):
 - Current promoted wrapper artifact in `out_extended.txt`: `27.6294s` representative, `55.2588s` measured, `55.4222s` wall clock, `59/59` correct
@@ -101,9 +104,10 @@ Best single-run exact-CLI validated 59-case snapshot:
 - Worst-case runtime: `12.1124s` on `large/test_6.cnf`
 
 Latest cycle note:
-- This cycle rejected a manual byte-scanner DIMACS parser for the retained alternate exact-CLI solver `satsolver_fast.py`.
-- The scratch candidate replaced the current byte parser’s `splitlines()` / `split()` path with a single-pass raw-byte scanner while keeping the rest of the alternate solver unchanged. It still failed the first exact-CLI gate: the SAT-heavy root-hit slice regressed from `0.4605s` to `0.4908s` on the two-order average (`0.4936s -> 0.5321s` forward, `0.4273s -> 0.4495s` reverse).
-- So the retained alternate exact-CLI candidate stays `satsolver_fast.py` as-is, and parser-path work there now looks even more exhausted: both the streamed-line parser and the manual scanner lost the same-day root-hit gate after the original bytes-parser keep.
+- This cycle kept an import-gated main-wrapper split in `satsolver.py`.
+- The retained wrapper now stays lean on the exact CLI path by using `satsolver_core` symbols directly in CLI mode, while still exposing the broad alias surface and `solve_cnf_serial()` when imported for tests and tooling.
+- The same-day exact-CLI gates all stayed positive: the SAT-heavy root-hit slice improved `0.3905s -> 0.3842s`, the mixed nine-case hotspot slice improved `25.2601s -> 23.5388s`, the same-day repeat-aware baseline-vs-candidate full-suite run improved `27.6064s -> 27.5425s`, and the refreshed retained artifact landed at `26.4762s`, all `59/59` correct.
+- The caution flag is that the temp baseline-vs-candidate full-suite edge was modest, so future wrapper/startup work still needs same-day repeat-aware confirmation even when a refreshed retained artifact looks much stronger.
 
 Cumulative improvement since the first archived 59-case snapshot:
 - Full suite: `50.2815s -> 26.4178s` (`-47.46%`)
@@ -204,3 +208,4 @@ Latest cycle note:
 - The newest later-reduction reject closes the remaining schedule-only learnt-database lane just as hard as the earlier-reduction reject did: raising the post-reduction growth factor from `1.5` to `1.75` regressed the mixed nine-case exact-CLI hotspot slice from `23.5526s` to `33.5169s`. The main damage was catastrophic on `large/test_8.cnf` (`0.2912s -> 6.6520s` forward, `0.2766s -> 6.4384s` reverse) and large on `large/test_6.cnf` too (`11.5209s -> 15.2828s` forward, `11.3521s -> 15.4253s` reverse). So both “reduce earlier” and “reduce later” are now proven dangerous without a materially better learnt-clause classifier.
 - The newest quaternary watched-clause reject tightens the surviving immutable-shape lane around `propagate()` too. A scratch branch that added `Clause.quaternary` and a dedicated exact-4-literal watched-clause fast path did win the mixed nine-case exact-CLI hotspot slice (`23.8342s -> 23.6216s`), but it still regressed the 12-case SAT-heavy root-hit slice (`0.3453s -> 0.3528s`) and the same-day repeat-aware exact-CLI 59-case suite (`26.8303s -> 27.4920s`), with the main broad-suite damage on `large/test_6.cnf`, `medium/test_4.cnf`, and `large/test_10.cnf`. So future propagation metadata work should not assume that every next fixed clause family after ternary is worth specializing; hotspot wins from exact-size watched-clause branches still need the same broad-suite confirmation as conflict-analysis micro-paths.
 - The newest local-alias reject closes another tempting “the profiler says append/pop, so just rebind them” door in `propagate()`. A scratch branch that localized `trail.append` and per-watcher-list `watchers.pop` inside `propagate()` looked good in forward order (`25.1835s -> 24.5555s`) but regressed in reverse strongly enough that the mixed nine-case exact-CLI hotspot average still moved the wrong way (`24.1557s -> 24.2120s`). The main stable damage landed on `large/test_6.cnf` and `special/hard.cnf`, while the apparent forward-order wins on `medium/test_3.cnf` and `medium/test_4.cnf` did not survive the reverse pass. So future propagation micro-optimizations should not assume that shaving Python method lookup on hot list operations is enough by itself; the remaining win still needs to come from removing more real watcher/trail work.
+- The newest keep reopens a narrow exact-CLI wrapper lane that the recent lazy-export and alias-trimming rejects did not. Making `satsolver.py` lean only in CLI mode while preserving the rich import-time compatibility surface improved the SAT-heavy root-hit slice (`0.3905s -> 0.3842s`), improved the mixed nine-case exact-CLI hotspot slice (`25.2601s -> 23.5388s`), improved the same-day repeat-aware baseline-vs-candidate full suite (`27.6064s -> 27.5425s`), and then refreshed the retained exact-CLI artifact down to `26.4762s`, all `59/59` correct. So future startup-path work should prefer explicit CLI-mode/import-mode separation over lazy export forwarding or blanket alias trimming, while still demanding same-day repeat-aware full-suite confirmation because the broad A/B margin itself was modest.

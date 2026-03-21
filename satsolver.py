@@ -1,31 +1,34 @@
 from __future__ import annotations
 
-import os
 import sys
 
 import satsolver_core as base
 
+CLI_MODE = __name__ == "__main__"
 
-TRUE = base.TRUE
-FALSE = base.FALSE
-UNASSIGNED = base.UNASSIGNED
+if not CLI_MODE:
+    import os
 
-PORTFOLIO_DISABLE_ENV = base.PORTFOLIO_DISABLE_ENV
-PORTFOLIO_MIN_VARS = base.PORTFOLIO_MIN_VARS
-PORTFOLIO_MIN_CLAUSES = base.PORTFOLIO_MIN_CLAUSES
-PORTFOLIO_MAX_DENSITY = base.PORTFOLIO_MAX_DENSITY
-ROOT_PURE_LITERAL_MIN_ASSIGNMENTS = base.ROOT_PURE_LITERAL_MIN_ASSIGNMENTS
+    TRUE = base.TRUE
+    FALSE = base.FALSE
+    UNASSIGNED = base.UNASSIGNED
 
-luby = base.luby
-lit_index = base.lit_index
-normalize_clause_literals = base.normalize_clause_literals
-find_iterative_root_pure_literals = base.find_iterative_root_pure_literals
-Clause = base.Clause
-Solver = base.Solver
-model_satisfies = base.model_satisfies
-has_pigeonhole_core = base.has_pigeonhole_core
-xor_system_unsat = base.xor_system_unsat
-format_model = base.format_model
+    PORTFOLIO_DISABLE_ENV = base.PORTFOLIO_DISABLE_ENV
+    PORTFOLIO_MIN_VARS = base.PORTFOLIO_MIN_VARS
+    PORTFOLIO_MIN_CLAUSES = base.PORTFOLIO_MIN_CLAUSES
+    PORTFOLIO_MAX_DENSITY = base.PORTFOLIO_MAX_DENSITY
+    ROOT_PURE_LITERAL_MIN_ASSIGNMENTS = base.ROOT_PURE_LITERAL_MIN_ASSIGNMENTS
+
+    luby = base.luby
+    lit_index = base.lit_index
+    normalize_clause_literals = base.normalize_clause_literals
+    find_iterative_root_pure_literals = base.find_iterative_root_pure_literals
+    Clause = base.Clause
+    Solver = base.Solver
+    model_satisfies = base.model_satisfies
+    has_pigeonhole_core = base.has_pigeonhole_core
+    xor_system_unsat = base.xor_system_unsat
+    format_model = base.format_model
 
 
 def parse_dimacs_bytes(data: bytes) -> tuple[int, list[list[int]]]:
@@ -87,24 +90,26 @@ def parse_dimacs_file(path: str) -> tuple[int, list[list[int]]]:
         return parse_dimacs_bytes(handle.read())
 
 
-def solve_cnf_serial(
-    num_vars: int,
-    clauses: list[list[int]],
-    *,
-    seed_phase_bias: bool = False,
-) -> list[int] | None:
-    solver = Solver(num_vars)
-    root_pure_literals = find_iterative_root_pure_literals(num_vars, clauses)
-    if len(root_pure_literals) >= ROOT_PURE_LITERAL_MIN_ASSIGNMENTS:
-        for literal in root_pure_literals:
-            if not solver.enqueue(literal, None):
+if not CLI_MODE:
+
+    def solve_cnf_serial(
+        num_vars: int,
+        clauses: list[list[int]],
+        *,
+        seed_phase_bias: bool = False,
+    ) -> list[int] | None:
+        solver = base.Solver(num_vars)
+        root_pure_literals = base.find_iterative_root_pure_literals(num_vars, clauses)
+        if len(root_pure_literals) >= base.ROOT_PURE_LITERAL_MIN_ASSIGNMENTS:
+            for literal in root_pure_literals:
+                if not solver.enqueue(literal, None):
+                    return None
+        for clause in clauses:
+            if not solver.add_problem_clause(clause):
                 return None
-    for clause in clauses:
-        if not solver.add_problem_clause(clause):
-            return None
-    if seed_phase_bias:
-        solver.seed_saved_phases_from_bias()
-    return solver.solve()
+        if seed_phase_bias:
+            solver.seed_saved_phases_from_bias()
+        return solver.solve()
 
 
 def solve_cnf_fast_serial(
@@ -113,7 +118,7 @@ def solve_cnf_fast_serial(
     *,
     seed_phase_bias: bool = False,
 ) -> list[int] | None:
-    solver = Solver(num_vars)
+    solver = base.Solver(num_vars)
     for clause in clauses:
         if not solver.add_problem_clause(clause):
             return None
@@ -169,9 +174,9 @@ def solve_cnf_portfolio(num_vars: int, clauses: list[list[int]]) -> list[int] | 
 
 
 def solve_cnf(num_vars: int, clauses: list[list[int]]) -> list[int] | None:
-    if has_pigeonhole_core(clauses):
+    if base.has_pigeonhole_core(clauses):
         return None
-    if xor_system_unsat(num_vars, clauses):
+    if base.xor_system_unsat(num_vars, clauses):
         return None
     if should_use_parallel_portfolio(num_vars, clauses):
         return solve_cnf_portfolio(num_vars, clauses)
@@ -184,7 +189,7 @@ def write_result(path: str, model: list[int] | None) -> None:
             handle.write(b"UNSAT\n")
         else:
             handle.write(b"SAT\n")
-            handle.write(format_model(model).encode("ascii"))
+            handle.write(base.format_model(model).encode("ascii"))
             handle.write(b"\n")
 
 
@@ -198,7 +203,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         num_vars, clauses = parse_dimacs_file(input_path)
         model = solve_cnf(num_vars, clauses)
-        if model is not None and not model_satisfies(clauses, model):
+        if model is not None and not base.model_satisfies(clauses, model):
             raise RuntimeError("Internal error: produced model does not satisfy the input CNF")
         write_result(output_path, model)
     except Exception as exc:  # pragma: no cover - CLI safety path
