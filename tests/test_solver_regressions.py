@@ -169,6 +169,31 @@ class SolverRegressionTests(unittest.TestCase):
         self.assertEqual(solver.literal_value(3), satsolver.UNASSIGNED)
         self.assertEqual(solver.literal_value(-3), satsolver.UNASSIGNED)
 
+    def test_backtrack_to_nonzero_level_keeps_lower_tail_prefix(self) -> None:
+        solver = satsolver.Solver(4)
+        self.assertTrue(solver.enqueue(1, None))
+
+        solver.trail_limits.append(len(solver.trail))
+        solver.decision_level = 1
+        self.assertTrue(solver.enqueue(-2, 17))
+
+        solver.trail_limits.append(len(solver.trail))
+        solver.decision_level = 2
+        self.assertTrue(solver.enqueue(3, 18))
+
+        solver.backtrack(1)
+
+        self.assertEqual(solver.decision_level, 1)
+        self.assertEqual(solver.trail, [1, -2])
+        self.assertEqual(solver.trail_limits, [1])
+        self.assertEqual(solver.qhead, 2)
+        self.assertEqual(solver.reason[2], 17)
+        self.assertEqual(solver.reason[3], None)
+        self.assertEqual(solver.literal_value(2), satsolver.FALSE)
+        self.assertEqual(solver.literal_value(-2), satsolver.TRUE)
+        self.assertEqual(solver.literal_value(3), satsolver.UNASSIGNED)
+        self.assertEqual(solver.literal_value(-3), satsolver.UNASSIGNED)
+
     def test_reduce_database_keeps_binary_learnt_clauses(self) -> None:
         solver = satsolver.Solver(3)
         binary_id = solver.add_learnt_clause([1, -2], lbd=5)
