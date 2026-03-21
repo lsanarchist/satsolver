@@ -1,6 +1,6 @@
 # Benchmark Summary
 
-Updated: `2026-03-21T01:33:25+01:00`
+Updated: `2026-03-21T01:39:06+01:00`
 
 Best-known submission configuration:
 - `satsolver.py`
@@ -91,9 +91,9 @@ Best single-run exact-CLI validated 59-case snapshot:
 - Worst-case runtime: `12.1124s` on `large/test_6.cnf`
 
 Latest cycle note:
-- This cycle rejected a more aggressive learnt-clause reduction policy in `satsolver.py`.
-- The branch changed `reduce_database()` to keep only the top `40%` of ranked candidates instead of the top `50%`, aiming to shrink the learnt-large propagation footprint. It failed decisively on the mixed nine-case exact-CLI hotspot slice: the two-order average regressed from `24.6309s` to `40.4076s`, with the biggest disaster on `large/test_8.cnf` (`0.2769s -> 12.1894s` forward, `0.3061s -> 12.1799s` reverse).
-- So the retained main solver stays unchanged, and broad “same ranking, keep fewer clauses” database trimming now looks like another learnt-retention dead end.
+- This cycle rejected a manual byte-scanner DIMACS parser for the retained alternate exact-CLI solver `satsolver_fast.py`.
+- The scratch candidate replaced the current byte parser’s `splitlines()` / `split()` path with a single-pass raw-byte scanner while keeping the rest of the alternate solver unchanged. It still failed the first exact-CLI gate: the SAT-heavy root-hit slice regressed from `0.4605s` to `0.4908s` on the two-order average (`0.4936s -> 0.5321s` forward, `0.4273s -> 0.4495s` reverse).
+- So the retained alternate exact-CLI candidate stays `satsolver_fast.py` as-is, and parser-path work there now looks even more exhausted: both the streamed-line parser and the manual scanner lost the same-day root-hit gate after the original bytes-parser keep.
 
 Cumulative improvement since the first archived 59-case snapshot:
 - Full suite: `50.2815s -> 26.4178s` (`-47.46%`)
