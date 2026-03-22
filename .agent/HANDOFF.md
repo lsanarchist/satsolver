@@ -3,31 +3,31 @@
 ## Current State
 
 - The repo still uses the queue-driven autonomous control plane rooted in `AGENT.md` and `.agent/*`, plus the machine-checkable queue validator.
-- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, `perf-008`, `perf-009`, `perf-010`, `perf-011`, `perf-012`, `perf-013`, `perf-014`, `perf-015`, `perf-016`, `perf-017`, `perf-018`, `perf-019`, `perf-020`, `perf-021`, `perf-022`, `perf-023`, `perf-024`, `perf-025`, `perf-026`, and `perf-027` are complete.
-- There is no active in-progress task; the next deterministic task is `perf-028`.
+- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, `perf-008`, `perf-009`, `perf-010`, `perf-011`, `perf-012`, `perf-013`, `perf-014`, `perf-015`, `perf-016`, `perf-017`, `perf-018`, `perf-019`, `perf-020`, `perf-021`, `perf-022`, `perf-023`, `perf-024`, `perf-025`, `perf-026`, `perf-027`, and `perf-028` are complete.
+- There is no active in-progress task; the next deterministic task is `perf-029`.
 
 ## What Changed This Run
 
-- Closed `perf-027` as a measurement-only profiling run with no solver change.
-- Added profiler-only short-deep depth-split counters plus tests so `tools/profile_solver.py` now reports `sub10 step-3/4` and `sub10 step-5+` learnt-large successes separately.
-- The surviving short-deep lane is now resolved in favor of `step-3/4` on the real target trio: `uuf125-010` was `2556 vs 573`, `uf125-01` was `21 vs 10`, and `uf125-010` was `225 vs 79` for `step-3/4` versus `step-5+`.
-- `jnh10` and `jnh1` stayed low-volume problem-large guardrails and showed no step-5+ learnt-large successes at all, so they do not argue for chasing the deeper tail.
-- The queue now advances to `perf-028`, a bounded `sub10 step-3/4` solver-core experiment.
+- Closed `perf-028` as a retained no-op after testing one bounded solver-core rewrite on the `sub10 step-3/4` learnt-large success lane.
+- The exact candidate was the earlier direct watched-slot relocation rewrite, gated only to learnt clauses whose successful large-clause replacement probe was both sub-10 and exact `step-3/4`.
+- The primary seven-case gate rejected it clearly, regressing from `31.7919s` to `32.8583s`, led by losses on `special/hard.cnf`, `large/test_6.cnf`, and `medium/test_4.cnf`.
+- The supplemental `satlib_more` guard slice was only marginally positive overall, `0.3771s -> 0.3759s`, so it was not strong enough to justify the broader repeat-aware suite.
+- The queue now advances to `perf-029`, a measurement task that splits `sub10 step-3/4` into exact `step-3` versus `step-4` before another solver-core edit.
 
 ## Current Focus
 
-- Start `perf-028` next: test one bounded solver-core change that only touches `sub10 step-3/4` learnt-large successful relocations.
+- Start `perf-029` next: restore profiler evidence by splitting the surviving `sub10 step-3/4` learnt-large lane into exact `step-3` versus `step-4`.
 
 ## Recommended Next Tasks
 
-- `perf-028` — target the sub-10 step-3/4 learnt-large success lane after the depth split
+- `perf-029` — split the sub-10 step-3/4 learnt-large lane by exact step after the narrow rewrite reject
 
 ## Verification From This Run
 
-- `python -m unittest discover -s tests -p 'test_profile_solver.py' -q` — passed (`15/15` green, including the new short-deep depth-split coverage)
-- `python tools/profile_solver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf` — passed and showed the target trio favoring `sub10 step-3/4` over `sub10 step-5+` in every case
-- `python tools/codex_verify.py` — passed while `perf-027` was active (`75/75` tests green, compile/checker/wrapper smoke all green)
-- `python tools/agent_queue_check.py` — passed after the final control-plane sync; queue now resolves to `current_or_next_task='perf-028'`
+- `python tools/codex_verify.py` — passed on the temporary `perf-028` candidate (`75/75` tests green, compile/checker/wrapper smoke all green)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf028_step34_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf` — rejected the candidate on the primary early gate (`31.7919s -> 32.8583s`)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf028_step34_baseline/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf` — supplemental slice was only marginally positive overall (`0.3771s -> 0.3759s`)
+- `python tools/agent_queue_check.py` — passed after the final control-plane sync; queue now resolves to `current_or_next_task='perf-029'`
 - `python tools/codex_verify.py` — passed after the final control-plane sync
 - `git diff --check` — passed
 
@@ -39,10 +39,10 @@
 - Reuse the queue checker when adjusting `.agent/STATE.yaml` or `.agent/TASK_QUEUE.yaml`.
 - The default verifier covers `satsolver_fast.py`, but `satsolver_pysat.py` remains outside the default gate because it requires an optional external environment.
 - External libraries or solvers may be used as short-lived research references only; do not retain them in the submission path or make them a default verifier dependency.
-- Do not update `benchmark_summary.md` or `experiments.jsonl` for `perf-027`; this run kept no solver change.
-- `perf-027` added two new counters to `tools/profile_solver.py`: `learnt_large_success_sub10_step3_4` and `learnt_large_success_sub10_step5_plus`.
-- The overlap lane is still ruled out by `perf-024`, the broader short-but-deep aggregate is ruled out by `perf-026`, and the remaining live direction is now the narrower `sub10 step-3/4` lane rather than the step-5+ tail.
-- Keep `jnh10` and `jnh1` in the supplemental slice as problem-large guardrails; do not let `perf-028` drift back into mixed-family, long-clause, or whole-aggregate short-deep rewrites.
+- Do not update `benchmark_summary.md` or `experiments.jsonl` for `perf-028`; this run kept no solver change.
+- `perf-027` added `sub10 step-3/4` and `sub10 step-5+` counters, and `perf-028` now rules out applying the direct watched-slot rewrite across the whole `sub10 step-3/4` aggregate.
+- The overlap lane is still ruled out by `perf-024`, the broader short-but-deep aggregate is ruled out by `perf-026`, and the exact `step-3/4` aggregate is now ruled out for this direct watched-slot rewrite too.
+- Keep `jnh10` and `jnh1` in the supplemental slice as problem-large guardrails; do not let `perf-029` drift back into mixed-family, long-clause, or solver-core edits before the exact `step-3` versus `step-4` split is measured.
 
 ## Immediate Constraints
 

@@ -40,6 +40,49 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-028-sub10-step34-learnt-large-success-path`
+
+- Status: completed
+- Task family: native-only learnt-large propagation bookkeeping experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-028`, by testing one bounded solver-core change that only touches sub-10-literal step-3/4 learnt-large successful relocations on the supplemental learnt-large target trio
+- Assumptions:
+  - `perf-027` narrowed the surviving short-deep lane to `sub10 step-3/4`, so this run should avoid reopening the rejected broader `step-3+` lane from `perf-026`.
+  - The smallest plausible candidate is the earlier direct watched-slot rewrite, gated only to learnt clauses whose successful replacement probe is both sub-10 and exactly step-3/4.
+  - A retained-noop outcome is valid if either early gate rejects the candidate before the broader repeat-aware exact-CLI suite.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-028` in progress in the control plane and record the active bounded experiment in `PLANS.md`.
+- [x] Implement and benchmark one sub-10 step-3/4 learnt-large successful-probe bookkeeping candidate against the focused seven-case and supplemental `satlib_more` slices.
+- [x] Keep or revert the candidate based on same-day evidence, then sync the control plane, verify, and commit.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed on the temporary candidate before the performance gates: the repo compiled, the queue check passed, all 75 tests passed, and both default wrapper smoke paths remained green
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf028_step34_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- candidate rejected on the primary early gate: the seven-case two-order average regressed from `31.7919s` to `32.8583s`, with the largest stable losses on `special/hard.cnf`, `large/test_6.cnf`, and `medium/test_4.cnf`
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf028_step34_baseline/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- mixed but not enough to rescue the keep: the supplemental slice improved only marginally from `0.3771s` to `0.3759s`, with `uuf125-010` slightly positive but `jnh1` still unstable
+- `python tools/agent_queue_check.py`
+- passed after reverting the candidate and syncing the control plane: the queue now resolves deterministically to `current_or_next_task='perf-029'`
+- `python tools/codex_verify.py`
+- passed after reverting the candidate and syncing the control plane: the repo recompiled, the queue check passed, all 75 tests passed, and both default wrapper smoke paths remained green
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Tested one bounded solver-core candidate by applying the earlier direct watched-slot rewrite only to learnt clauses whose successful large-clause replacement probe was both sub-10 and exact `step-3/4`.
+- Reverted the candidate and kept no solver change because the primary seven-case gate regressed clearly even after the exact-depth narrowing, while the supplemental target-family slice was only barely positive.
+- The durable lesson is that the whole `sub10 step-3/4` aggregate is still too wide for that bookkeeping rewrite. The next sensible step is to restore measurement and split that aggregate one level deeper, `step-3` versus `step-4`, before another solver-core candidate.
+
+### Remaining risks
+
+- The narrow reject rules out only this direct watched-slot rewrite on the aggregate `step-3/4` lane. It does not prove that both exact steps are equally bad, so the next task should restore profiler evidence before trying another solver-core edit.
+
 ## 2026-03-22 `perf-027-short-deep-depth-split`
 
 - Status: completed
