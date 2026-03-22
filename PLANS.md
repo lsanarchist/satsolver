@@ -40,6 +40,49 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-023-sat-heavy-learnt-large-success-path`
+
+- Status: completed
+- Task family: native-only learnt-large propagation bookkeeping experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-023`, by testing one bounded learnt-large successful-probe bookkeeping candidate on the `uuf125-010` and `uf*` supplemental family while keeping `jnh10` and `jnh1` as problem-large guardrails
+- Assumptions:
+  - `perf-022` already split the supplemental slice into a real learnt-large family and separate problem-large guardrails, so this run should target the learnt-large family directly instead of another homogeneous slice-wide tweak.
+  - The most plausible bounded lane is a selective successful-probe bookkeeping cleanup on deeper learnt-large probes, not another failure-tail branch reorder or a broad relocation rewrite.
+  - A retained-noop outcome is valid if the early gates reject the candidate before the repeat-aware full suite.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-023` in progress in the control plane and record the active successful-probe experiment in `PLANS.md`.
+- [x] Implement and benchmark one narrowly targeted SAT-heavy learnt-large successful-probe bookkeeping candidate against the focused seven-case and supplemental `satlib_more` slices.
+- [x] Keep or revert the candidate based on same-day evidence, then sync the control plane, verify, and commit.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed on the temporary candidate before the performance gates: the candidate compiled, passed the queue check, passed all 73 tests, and stayed checker-valid on both default wrapper smoke paths
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf023_deepprobe_baseline.LEc9o4/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- candidate rejected on the primary early gate: the focused seven-case two-order average regressed from `34.9357s` to `35.1656s`, led by stable losses on `large/test_6.cnf`, `medium/test_4.cnf`, and `large/test_8.cnf`
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf023_deepprobe_baseline.LEc9o4/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- mixed result: the targeted supplemental slice improved overall from `0.4030s` to `0.3883s`, driven mainly by `satlib_more/uuf125-010.cnf`, but `satlib_more/jnh1.cnf` still regressed in both orders and `satlib_more/uf125-010.cnf` split direction
+- `python tools/agent_queue_check.py`
+- passed after reverting the candidate and syncing the control plane: the queue now resolves deterministically to `current_or_next_task='perf-024'`
+- `python tools/codex_verify.py`
+- passed after reverting the candidate and syncing the control plane: the repo compiled, the queue check passed, all 73 tests passed, and both default wrapper smoke paths remained green
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Tested one bounded learnt-large successful-probe bookkeeping candidate by using the direct watched-slot rewrite only on learnt clauses that were either `len10+` or reached step-3+ successful probes.
+- Rejected the candidate and retained no solver change. The rewrite did help the targeted supplemental slice overall, which is good evidence that the learnt-large success-path lane is still live, but it still lost the primary seven-case gate and therefore did not earn the repeat-aware full-suite run.
+- The durable lesson is that the broader OR-gated rewrite is still too wide for the dense anchors. The next task should narrow further to the true long-and-deep overlap (`len10+` and step-3+ successful probes) instead of applying the direct rewrite to every long or every deep learnt-large success.
+
+### Remaining risks
+
+- This run preserved forward motion on the learnt-large success-path lane, but it did not prove that the narrower long-and-deep subset will be enough; the next candidate still has to satisfy the primary seven-case gate before it is worth a full-suite keep attempt.
+
 ## 2026-03-22 `perf-022-supplemental-learnt-large-profile`
 
 - Status: completed
