@@ -3,7 +3,7 @@ project: satsolver
 mode: autonomous_queue
 current_phase: 2
 current_task_id: null
-last_completed_task_id: perf-025
+last_completed_task_id: perf-026
 repo_health: green_verified
 working_assumptions:
   - AGENT.md plus .agent/* are the authoritative autonomous control plane.
@@ -12,14 +12,14 @@ working_assumptions:
   - External libraries may be used only as short-lived research references; retained solver code and default verification remain standard-library only.
 blockers: []
 recent_files:
+  - satsolver_core.py
   - tools/profile_solver.py
-  - tests/test_profile_solver.py
   - PLANS.md
   - .agent/STATE.yaml
   - .agent/TASK_QUEUE.yaml
   - .agent/HANDOFF.md
   - .agent/WORKLOG.md
-next_task_hint: perf-026
+next_task_hint: perf-027
 notes:
   - The repo previously had AGENTS.md plus PLANS.md guidance but no repo-local queue control plane.
   - Routine verification now checks queue consistency before unit tests and solver smoke cases.
@@ -50,3 +50,4 @@ notes:
   - Perf-023 kept no solver change: a selective learnt-large success-path rewrite for long or deep probes improved the supplemental satlib_more slice overall, led by uuf125-010, but still regressed the primary seven-case gate, so the next follow-up should narrow further to the truly overlapping long-and-deep subset instead of keeping the broader OR-gated rewrite.
   - Perf-024 kept no solver change: narrowing the rewrite to the overlapping len10+ and step-3+ learnt-large success lane regressed both the primary seven-case gate and the supplemental slice, so the next follow-up should measure the remaining non-overlap buckets before trying another solver-core success-path edit.
   - Perf-025 kept no solver change: refreshed learnt-large success-bucket counters showed the surviving perf-023 non-overlap signal is the short-but-deep sub-10-literal step-3+ lane across uuf125-010 and the uf* pair, while jnh10 and jnh1 remain low-volume problem-large guardrails.
+  - Perf-026 kept no solver change: applying the direct watched-slot rewrite across the whole short-but-deep sub-10 step-3+ learnt-large lane was too wide, barely moving the focused seven-case slice while regressing the supplemental satlib_more guard slice, so the next follow-up should split that lane by exact depth before another solver-core edit.

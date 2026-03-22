@@ -40,6 +40,49 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-026-short-but-deep-learnt-large-success-path`
+
+- Status: completed
+- Task family: native-only learnt-large propagation bookkeeping experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-026`, by testing one bounded solver-core change that only touches sub-10-literal step-3+ learnt-large successful relocations on the supplemental learnt-large target trio
+- Assumptions:
+  - `perf-025` resolved the surviving non-overlap lane in favor of sub-10 step-3+ learnt-large successes, so this run should stay narrowly focused there instead of reopening long-clause, overlap, or mixed-family rewrites.
+  - The smallest plausible candidate is the earlier direct watched-slot rewrite, gated only to learnt clauses whose successful replacement probe is both sub-10 and step-3+.
+  - A retained-noop outcome is valid if the focused seven-case or supplemental `satlib_more` gate rejects the candidate before the repeat-aware full-suite run.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-026` in progress in the control plane and record the active bounded experiment in `PLANS.md`.
+- [x] Implement and benchmark one sub-10 step-3+ learnt-large successful-probe bookkeeping candidate against the focused seven-case and supplemental `satlib_more` slices.
+- [x] Keep or revert the candidate based on same-day evidence, then sync the control plane, verify, and commit.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed on the temporary candidate before the performance gates: the repo compiled, the queue check passed, all 75 tests passed, and both default wrapper smoke paths remained green
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf026_shortdeep_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- mixed but too small to trust by itself: the focused seven-case two-order average improved only marginally from `33.6689s` to `33.5759s`, with `large/test_6.cnf` and `special/hard.cnf` splitting direction across forward and reverse order
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf026_shortdeep_baseline/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- candidate rejected on the target-family gate: the supplemental slice regressed from `0.3869s` to `0.4523s`, with the largest stable damage on `satlib_more/jnh10.cnf` and a major forward loss on `satlib_more/uuf125-010.cnf`
+- `python tools/codex_verify.py`
+- passed after reverting the candidate and syncing the control plane: the repo recompiled, the queue check passed, all 75 tests passed, and both default wrapper smoke paths remained green
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync: the queue now resolves deterministically to `current_or_next_task='perf-027'`
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Tested one bounded solver-core candidate by applying the earlier direct watched-slot rewrite only to learnt clauses whose successful large-clause replacement probe was both sub-10 and step-3+.
+- Rejected the candidate and retained no solver change. The primary seven-case gate moved only slightly in the right direction, which was too small and split by order to justify trust on its own, while the more relevant supplemental target-family gate regressed clearly overall.
+- The durable lesson is that the whole short-but-deep aggregate is still too wide. The next sensible step is to reintroduce measurement and split that aggregate by exact depth, step-3/4 versus step-5+, before another solver-core candidate.
+
+### Remaining risks
+
+- The short-but-deep lane is still the best remaining hypothesis from `perf-025`, but this run shows that treating all step-3+ successes as one family is too coarse. The next task should narrow by exact depth before any more solver edits.
+
 ## 2026-03-22 `perf-025-non-overlap-learnt-large-success-buckets`
 
 - Status: completed
