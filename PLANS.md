@@ -40,6 +40,49 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-024-long-and-deep-learnt-large-success-path`
+
+- Status: completed
+- Task family: native-only learnt-large propagation bookkeeping experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-024`, by testing one narrower learnt-large successful-probe bookkeeping candidate that only touches the overlapping `len10+` and step-3+ success-path subset on the supplemental `uuf125-010` and `uf*` family
+- Assumptions:
+  - `perf-023` already showed the learnt-large success-path lane is real, but the broader `len10+ or step-3+` rule was too wide for the dense anchors.
+  - The smallest faithful narrowing is to keep the direct watched-slot rewrite only for learnt clauses that satisfy both filters at once: long (`len10+`) and deep (step-3+ successful probe).
+  - A retained-noop outcome is valid if the primary seven-case gate still rejects the narrower rule before the repeat-aware full suite.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-024` in progress in the control plane and record the active long-and-deep experiment in `PLANS.md`.
+- [x] Implement and benchmark one narrowed learnt-large successful-probe bookkeeping candidate against the focused seven-case and supplemental `satlib_more` slices.
+- [x] Keep or revert the candidate based on same-day evidence, then sync the control plane, verify, and commit.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed on the temporary candidate before the performance gates: the candidate compiled, passed the queue check, passed all 73 tests, and stayed checker-valid on both default wrapper smoke paths
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf024_longdeep_baseline.vA1sej/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- candidate rejected on the primary early gate: the focused seven-case two-order average regressed from `26.2060s` to `26.2748s`, with the largest stable damage on `special/hard.cnf` and `medium/test_4.cnf`
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf024_longdeep_baseline.vA1sej/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- candidate rejected on the supplemental slice too: the two-order average regressed from `0.3201s` to `0.3316s`, including a clear `satlib_more/uuf125-010.cnf` loss in both orders
+- `python tools/agent_queue_check.py`
+- passed after reverting the candidate and syncing the control plane: the queue now resolves deterministically to `current_or_next_task='perf-025'`
+- `python tools/codex_verify.py`
+- passed after reverting the candidate and syncing the control plane: the repo compiled, the queue check passed, all 73 tests passed, and both default wrapper smoke paths remained green
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Tested one narrower learnt-large successful-probe bookkeeping candidate by using the direct watched-slot rewrite only on learnt clauses that were both `len10+` and step-3+ successful probes.
+- Rejected the candidate and retained no solver change. Unlike `perf-023`, this overlap-only lane did not even preserve the targeted supplemental win: it regressed both the primary seven-case gate and the supplemental slice, which means the earlier `perf-023` improvement did not come from the true long-and-deep overlap.
+- The durable lesson is that the next follow-up should profile the remaining non-overlap learnt-large success buckets before another solver-core edit. The meaningful split is now between long-but-shallow and short-but-deep successes, not between broad vs overlap rewrites.
+
+### Remaining risks
+
+- The learnt-large success-path lane is not dead yet, but it is no longer safe to guess which sub-bucket matters. The next task should reintroduce measurement before another solver-core change so we do not keep oscillating between rejected rewrites.
+
 ## 2026-03-22 `perf-023-sat-heavy-learnt-large-success-path`
 
 - Status: completed
