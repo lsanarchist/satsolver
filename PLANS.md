@@ -40,6 +40,53 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-032-dense-step3-learnt-large-bookkeeping`
+
+- Status: completed
+- Task family: native-only learnt-large propagation bookkeeping experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-032`, by testing one bounded dense-UNSAT solver-core change aimed at exact `sub10 step-3` learnt-large bookkeeping on `special/hard.cnf` and `large/test_6.cnf`
+- Assumptions:
+  - `perf-031` showed that exact `sub10 step-3` traffic is dominated by the dense UNSAT anchors, so this run should optimize that exact anchor lane first rather than reopening the whole focused slice equally.
+  - `perf-030` already ruled out the direct watched-slot rewrite across the exact `step-3` aggregate, so this run should choose a different same-search bookkeeping deletion inside the current traversal shape.
+  - A retained-noop outcome is valid if any early gate rejects the candidate before the broader repeat-aware exact-CLI suite.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-032` in progress in the control plane and record the active bounded experiment in `PLANS.md`.
+- [x] Implement and benchmark one exact `sub10 step-3` dense-UNSAT bookkeeping candidate against the anchor pair, focused seven-case slice, and supplemental `satlib_more` guard slice.
+- [x] Keep or revert the candidate based on same-day evidence, then sync the control plane, verify, and commit.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed on the temporary candidate before the performance gates: the repo compiled, the queue check passed, all `75/75` tests passed, and both default wrapper smoke paths remained green
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf032_dense_step3_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf`
+- mixed but positive on the dense anchor pair alone: the two-order average improved from `25.1356s` to `24.9710s`, led by consistent `large/test_6.cnf` wins while `special/hard.cnf` split direction and regressed in reverse order
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf032_dense_step3_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- candidate rejected on the focused seven-case gate: the two-order average regressed from `30.1872s` to `30.4647s`, with losses spreading beyond the dense anchor pair into `large/test_10.cnf`, `medium/test_4.cnf`, and smaller tail movement
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf032_dense_step3_baseline/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- candidate also rejected on the supplemental slice: the two-order average regressed from `0.3643s` to `0.3799s`, with the clearest damage on the SAT-side `uf*` pair
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf`
+- passed on the temporary candidate and showed unchanged dense hard-case search counters (`72,886/59,201` on `large/test_6.cnf`, `54,245/44,619` on `special/hard.cnf`), so the mixed anchor result looks like same-search bookkeeping rather than heuristic drift
+- `python tools/agent_queue_check.py`
+- passed after reverting the candidate and syncing the control plane: the queue now resolves deterministically to `current_or_next_task='perf-033'`
+- `python tools/codex_verify.py`
+- passed after reverting the candidate and syncing the control plane: the repo recompiled, the queue check passed, all `75/75` tests passed, and both default wrapper smoke paths remained green
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Tested one bounded solver-core candidate by keeping the existing watched-slot swap and destination append, but using the popped last watcher directly on exact `sub10 step-3` learnt-large successes so the source list could skip a redundant self-assignment when the relocating clause was already last.
+- Reverted the candidate and kept no solver change because the focused seven-case gate and the supplemental `satlib_more` slice both regressed, even though the dense anchor pair alone improved slightly.
+- The durable lesson is that this same-search bookkeeping deletion is still too broad for retention: it helps `large/test_6.cnf`, hurts `special/hard.cnf`, and does not generalize to the rest of the focused or supplemental guard slices. The next sensible step is to measure exact step-3 source-pop tail-position behavior on the dense anchors before trying another solver-core candidate on this lane.
+
+### Remaining risks
+
+- The reject rules out this exact step-3 source-list self-assignment skip, but it does not prove that the dense step-3 lane is exhausted. The next task should restore measurement on tail-position behavior before trying a different bookkeeping idea there.
+
 ## 2026-03-22 `perf-031-step3-hotspot-profile-refresh`
 
 - Status: completed
