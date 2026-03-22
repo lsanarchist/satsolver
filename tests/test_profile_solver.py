@@ -616,6 +616,11 @@ class ProfileSolverTests(unittest.TestCase):
                 + stats.learnt_large_success_sub10_step1_2
                 + stats.learnt_large_success_sub10_step3_plus,
             )
+            self.assertEqual(
+                stats.learnt_large_success_sub10_step3_plus,
+                stats.learnt_large_success_sub10_step3_4
+                + stats.learnt_large_success_sub10_step5_plus,
+            )
             self.assertGreater(stats.large_relocations + stats.large_units + stats.large_conflicts, 0)
             self.assertEqual(stats.watch_relocations, stats.ternary_relocations + stats.large_relocations)
             self.assertEqual(stats.watch_units, stats.ternary_units + stats.large_units)
@@ -724,7 +729,7 @@ class ProfileSolverTests(unittest.TestCase):
 
     def test_profile_solver_splits_learnt_large_success_buckets(self) -> None:
         solver = profile_solver.ProfiledSolver(
-            15,
+            22,
             restart_base=64,
             next_reduce=256,
             var_decay=0.95,
@@ -733,18 +738,26 @@ class ProfileSolverTests(unittest.TestCase):
 
         solver.add_learnt_clause([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], lbd=2)
         solver.add_learnt_clause([11, 12, 13, 14, 15], lbd=2)
+        solver.add_learnt_clause([16, 17, 18, 19, 20, 21, 22], lbd=2)
 
         self.assertTrue(solver.enqueue(-1, None))
         self.assertTrue(solver.enqueue(-11, None))
         self.assertTrue(solver.enqueue(-13, None))
         self.assertTrue(solver.enqueue(-14, None))
+        self.assertTrue(solver.enqueue(-16, None))
+        self.assertTrue(solver.enqueue(-18, None))
+        self.assertTrue(solver.enqueue(-19, None))
+        self.assertTrue(solver.enqueue(-20, None))
+        self.assertTrue(solver.enqueue(-21, None))
 
         self.assertIsNone(solver.propagate())
-        self.assertEqual(solver.learnt_large_relocations, 2)
+        self.assertEqual(solver.learnt_large_relocations, 3)
         self.assertEqual(solver.learnt_large_success_len10_plus_step1_2, 1)
         self.assertEqual(solver.learnt_large_success_len10_plus_step3_plus, 0)
         self.assertEqual(solver.learnt_large_success_sub10_step1_2, 0)
-        self.assertEqual(solver.learnt_large_success_sub10_step3_plus, 1)
+        self.assertEqual(solver.learnt_large_success_sub10_step3_plus, 2)
+        self.assertEqual(solver.learnt_large_success_sub10_step3_4, 1)
+        self.assertEqual(solver.learnt_large_success_sub10_step5_plus, 1)
 
 
 if __name__ == "__main__":

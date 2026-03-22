@@ -40,6 +40,50 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-027-short-deep-depth-split`
+
+- Status: completed
+- Task family: native-only learnt-large profiling refresh
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-027`, by splitting the surviving short-but-deep learnt-large success lane into exact `step-3/4` versus `step-5+` buckets before another solver-core experiment
+- Assumptions:
+  - `perf-026` already rejected the whole short-but-deep aggregate as too wide, so this run should restore measurement before any further solver-core change.
+  - The current profiler exposes `learnt_large_success_sub10_step3_plus`, but not the finer `step-3/4` versus `step-5+` split needed for the next bounded candidate.
+  - A completed measurement-only outcome is valid if it adds the missing counters, verifies them, and leaves the queue with a narrower next experiment.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-027` in progress in the control plane and record the active profiling task in `PLANS.md`.
+- [x] Add profiler-only short-deep depth-split counters and tests, then run the supplemental `satlib_more` profile sweep.
+- [x] Update the queue with the measured split, verify the final state, and commit.
+
+### Verification
+
+- `python -m unittest discover -s tests -p 'test_profile_solver.py' -q`
+- passed: the updated profiler invariants and direct learnt-large success-bucket test stayed green, and the profiler test file still ran 15/15 green
+- `python tools/profile_solver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- passed: the surviving short-but-deep lane was dominated by `step-3/4` rather than `step-5+` in every real target case, with `uuf125-010` at `2556 vs 573` (`81.69%` vs `18.31%`), `uf125-01` at `21 vs 10` (`67.74%` vs `32.26%`), and `uf125-010` at `225 vs 79` (`74.01%` vs `25.99%`); `jnh10` and `jnh1` stayed low-volume guardrails and showed no step-5+ learnt-large successes at all
+- `python tools/codex_verify.py`
+- passed while `perf-027` was active: the repo compiled, the queue check passed, all 75 tests passed, and both default wrapper smoke paths remained green
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync: the queue now resolves deterministically to `current_or_next_task='perf-028'`
+- `python tools/codex_verify.py`
+- passed after the final control-plane sync: the repo recompiled, the queue check passed, all 75 tests passed, and both default wrapper smoke paths remained green
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Closed `perf-027` as a measurement-only profiling run with no solver change.
+- Added profiler-only short-deep depth-split counters in `tools/profile_solver.py` plus matching regression coverage in `tests/test_profile_solver.py`, so the repo can now separate `sub10 step-3/4` from `sub10 step-5+` learnt-large successes instead of treating all `step-3+` work as one bucket.
+- The queue question is now answered: the remaining short-but-deep signal is dominated by `sub10 step-3/4`, while `step-5+` is a smaller tail on the real learnt-large target trio. The problem-large guardrails `jnh10` and `jnh1` still do not justify chasing the `step-5+` tail.
+- The queue therefore advances to `perf-028`, a bounded solver-core experiment that should touch only the `sub10 step-3/4` learnt-large success lane before re-running the usual focused and supplemental gates.
+
+### Remaining risks
+
+- The new counters explain which exact short-deep sublane survived `perf-026`, but they do not guarantee that a `step-3/4` rewrite will clear the primary seven-case gate. The next task still has to stay narrow and verify both early gates before earning a full repeat-aware exact-CLI suite run.
+
 ## 2026-03-22 `perf-026-short-but-deep-learnt-large-success-path`
 
 - Status: completed
