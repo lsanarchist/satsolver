@@ -40,6 +40,44 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-013-post-keep-conflict-profile-refresh`
+
+- Status: completed
+- Task family: native-only dense-UNSAT profiling refresh
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-013`, by refreshing the dense-UNSAT conflict-analysis profile after the retained `perf-012` metadata-boundary keep and use that evidence to choose the next bounded experiment
+- Assumptions:
+  - `perf-012` changed the analyze-to-finalization boundary but kept dense hard-case decisions and conflicts unchanged, so this run should re-measure the retained solver before stacking another solver-core change.
+  - The right deliverable for this run is profiling evidence plus a narrower next task, not another speculative patch bundled into the same turn.
+  - A measurement-only outcome is valid as long as the repo state, plan log, and queue all move forward deterministically.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-013` in progress in the control plane and record the active profiling task in `PLANS.md`.
+- [x] Run the required dense-UNSAT profiling commands on the retained solver and summarize the new dominant surfaces.
+- [x] Update the control plane with the refreshed profiling evidence, queue the next bounded experiment, verify the final state, and commit.
+
+### Verification
+
+- `python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/perf013_profile_large6.txt | head -n 45`
+- passed: after the `perf-012` keep, the retained large/test_6 profile still ranks `propagate()` first (`18.759s`), then `analyze()` (`2.992s`), then `_minimize_learnt_and_prepare()` (`1.247s`); list churn (`append` `2.615s`, `pop` `1.465s`) remains concentrated in the propagation-heavy path rather than in another standalone finalization pass
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf`
+- passed: the retained solver still shows overwhelmingly original-clause ternary reason traffic inside conflict analysis (`analyze_reason_3=930,068 / 1,057,846` on `large/test_6.cnf`, `657,031 / 770,039` on `special/hard.cnf`), but the much larger runtime center is still propagation-side original-ternary relocation plus units (`61.01%`/`38.31%` of problem-ternary outcomes on `large/test_6.cnf`, `53.91%`/`45.21%` on `special/hard.cnf`) with mixed problem-ternary watch batches still high (`0.6193`, `0.7078`)
+- `python tools/codex_verify.py`
+- passed: the measurement-only control-plane updates compile, pass the queue check, pass all 73 tests, and clear both default wrapper smoke paths
+
+### Outcome
+
+- Refreshed the dense-UNSAT profile on the retained post-`perf-012` solver and used it to reset the next optimization target from repo evidence instead of intuition.
+- The merged conflict-analysis boundary keep did what it was supposed to do: there is no longer a separate `prepare_learnt_clause()` hotspot, and the remaining conflict-analysis cost is concentrated in `analyze()` plus `_minimize_learnt_and_prepare()`. But the larger balance is now even clearer: `propagate()` is still the dominant end-to-end cost by a wide margin, and the main concentrated propagation work remains original problem-ternary relocation plus unit handling rather than rare conflict tails or deleted-watch cleanup.
+- Because previous narrow ternary `analyze()` unrolls, `prepare_learnt_clause()` rewrites, family flags, watcher splits, and side-state schemes have already failed, the queue now advances to `perf-014`, a bounded propagation task that targets original problem-ternary relocation or unit work without reviving the already-rejected watcher-family-order or extra side-state lanes.
+
+### Remaining risks
+
+- The refreshed evidence points back to propagation, but earlier broad problem-ternary rewrites and physical family splits were unstable, so the next task still needs to stay narrowly scoped and benchmark-gated.
+- This measurement run did not itself change solver code, so the retained baseline remains `31.9532s` until `perf-014` proves another concrete improvement.
+
 ## 2026-03-22 `perf-012-post-minimization-learnt-metadata`
 
 - Status: completed

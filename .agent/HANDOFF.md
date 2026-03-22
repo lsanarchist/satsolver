@@ -3,32 +3,30 @@
 ## Current State
 
 - The repo now has a queue-driven autonomous control plane rooted in `AGENT.md` and `.agent/*`, plus a machine-checkable queue validator.
-- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, `perf-008`, `perf-009`, `perf-010`, `perf-011`, and `perf-012` are complete.
+- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, `perf-008`, `perf-009`, `perf-010`, `perf-011`, `perf-012`, and `perf-013` are complete.
 - The queue has been reopened with a rolling native-only optimization program.
-- There is no active in-progress task; the next deterministic task is `perf-013`.
+- There is no active in-progress task; the next deterministic task is `perf-014`.
 
 ## What Changed This Run
 
-- Kept one same-clause-content conflict-analysis boundary change in `satsolver_core.py`: `analyze()` now uses the learnt-compaction pass itself to finalize best backtrack level and LBD metadata, removing the separate post-minimization `prepare_learnt_clause()` pass.
-- The seven-case exact-CLI hotspot slice improved from `30.2756s` to `29.8805s`, the structural fast-exit guardrail stayed slightly positive (`0.0748s -> 0.0725s`), and the repeat-aware exact-CLI 59-case suite improved from `32.2896s` to `31.9532s` with `59/59` correct outputs.
-- `tools/profile_solver.py` now mirrors the retained boundary, and the dense hard-case profiler counters stayed unchanged at `72,886` decisions / `59,201` conflicts on `large/test_6.cnf` and `54,245` decisions / `44,619` conflicts on `special/hard.cnf`, so this looks like deleted bookkeeping work rather than heuristic drift.
+- Closed `perf-013` as a measurement-only profiling refresh after the retained `perf-012` keep; no solver code changed in this run.
+- Fresh profiling on `large/test_6.cnf` still shows `propagate()` dominating end-to-end time (`18.759s`), with `analyze()` (`2.992s`) and `_minimize_learnt_and_prepare()` (`1.247s`) now the remaining conflict-analysis-side costs after the deleted finalization pass.
+- `tools/profile_solver.py` still shows overwhelmingly ternary original-clause reason traffic in conflict analysis, but the bigger optimization surface remains propagation-side original problem-ternary relocation plus unit work: on `large/test_6.cnf` the problem-ternary outcomes were `61.01%` relocation, `38.31%` unit, `0.68%` conflict, and on `special/hard.cnf` they were `53.91%` relocation, `45.21%` unit, `0.88%` conflict.
+- The queue now advances to `perf-014`, a bounded propagation experiment that should target original problem-ternary relocation or unit handling without reviving already-rejected watcher-family-order, physical watch-split, or extra side-state lanes.
 
 ## Current Focus
 
-- Start `perf-013` next: refresh the dense-UNSAT conflict-analysis profile after the new metadata-boundary keep before choosing another solver-core experiment.
+- Start `perf-014` next: test one bounded propagation change around original problem-ternary relocation or unit handling on the refreshed dense-UNSAT hotspot slice.
 
 ## Recommended Next Tasks
 
-- `perf-013` — refresh dense-UNSAT conflict-analysis profiling after the metadata-boundary keep
+- `perf-014` — probe original problem-ternary relocation or unit propagation after the profile refresh
 
 ## Verification From This Run
 
-- `python tools/codex_verify.py` — passed on the temporary candidate before the performance gate
-- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf012_metadata_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf` — passed (`30.2756s` baseline versus `29.8805s` candidate)
-- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf012_metadata_baseline/satsolver.py --candidate-cli-script satsolver.py special/pigeonhole.cnf special/tseitin.cnf` — passed (`0.0748s` baseline versus `0.0725s` candidate)
-- `python tools/codex_verify.py --benchmark-mode cli --repeat 2` — passed (`59/59` correct, `32.2896s` retained same-day baseline versus `31.9532s` candidate)
-- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf` — passed; dense hard-case decisions and conflicts stayed unchanged on both cases
-- `python tools/agent_queue_check.py` — passed; queue now resolves to `current_or_next_task='perf-013'`
+- `python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/perf013_profile_large6.txt | head -n 45` — passed; `propagate()` stayed dominant (`18.759s`) and there is no longer a separate `prepare_learnt_clause()` hotspot after `perf-012`
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf` — passed; conflict-analysis reason traffic stayed heavily ternary, while the larger concentrated surface remained problem-ternary relocation plus unit work
+- `python tools/agent_queue_check.py` — passed; queue now resolves to `current_or_next_task='perf-014'`
 - `python tools/codex_verify.py` — passed
 - `git diff --check` — passed
 
@@ -49,7 +47,8 @@
 - `perf-010` showed that even a same-content ternary-first branch reorder inside `minimize_learnt()` still regressed the seven-case exact-CLI gate overall, so reason-size branch ordering itself is not a promising bookkeeping surface.
 - `perf-011` showed that peeling the first two learnt literals out of `prepare_learnt_clause()` also regressed the seven-case exact-CLI gate overall, so future learnt-finalization work should move away from pure loop-shape cleanup.
 - `perf-012` kept the first win in this recent conflict-analysis sequence by deleting a whole post-minimization metadata pass while leaving the dense hard-case decision/conflict counters unchanged. The retained repeat-aware exact-CLI baseline is now `31.9532s` over `59` cases.
-- The next run should therefore start with `perf-013`, refreshing the dense-UNSAT profile after this keep before choosing another bounded same-search candidate.
+- `perf-013` refreshed the retained profile and confirmed that the next bounded experiment should move back to propagation, specifically original problem-ternary relocation or unit handling, not another tiny conflict-analysis cleanup.
+- The next run should therefore start with `perf-014`, using the refreshed propagation evidence to test one narrowly scoped candidate on the seven-case hotspot slice plus the structural fast-exit guardrail.
 
 ## Immediate Constraints
 
