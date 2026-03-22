@@ -40,6 +40,52 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-001-portfolio-gate-revalidation`
+
+- Status: completed
+- Task family: benchmark-driven portfolio-threshold revalidation
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-001`, by revalidating the current portfolio gating thresholds against same-day evidence and either keeping a threshold change or recording a retained-noop conclusion with rationale
+- Assumptions:
+  - The current gate still appears to collapse to a single live benchmark case, so the first bounded revalidation should test whether a nearby threshold broadening earns enough same-day hotspot improvement to justify a broader exact-CLI run.
+  - Temporary scratch candidates in `/tmp` are acceptable for rejected performance probes as long as the retained repo is restored cleanly and the durable outcome is recorded here.
+  - `python tools/codex_verify.py` remains the retained-code verification gate, while `tools/hotspot_compare.py` and exact-CLI repeat runs provide the same-day performance evidence for keep/reject decisions.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-001` active in the queue state and capture the current portfolio-gate shape from the live corpus.
+- [x] Build a bounded scratch candidate that broadens the portfolio gate in one plausible way and compare it against the retained solver on a same-day hotspot slice.
+- [x] If the hotspot signal is promising, run the broader exact-CLI repeat-aware gate; otherwise keep a retained-noop conclusion and document why the current thresholds remain.
+- [x] Run retained-code verification and record the final outcome.
+
+### Verification
+
+- `python - <<'PY' ... corpus scan for current portfolio hits and near-miss all-ternary cases ... PY`
+- passed: current retained gate still matches only `large/test_8.cnf`; the nearest dense miss is `special/hard.cnf` at density `4.25`, while low-density near misses are `large/test_1.cnf`, `large/test_7.cnf`, and `large/test_9.cnf`
+- `python -m py_compile /tmp/scratch_satsolver_portfolio_minclauses800.py`
+- passed
+- `python /tmp/scratch_satsolver_portfolio_minclauses800.py small/test_1.cnf /tmp/perf001_sat.txt`
+- `python tools/checker.py small/test_1.cnf /tmp/perf001_sat.txt`
+- passed
+- `python /tmp/scratch_satsolver_portfolio_minclauses800.py special/tseitin.cnf /tmp/perf001_unsat.txt`
+- `python tools/checker.py special/tseitin.cnf /tmp/perf001_unsat.txt --bruteforce-var-limit 0`
+- passed
+- `python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script /tmp/scratch_satsolver_portfolio_minclauses800.py --repeat 2 large/test_1.cnf large/test_7.cnf large/test_8.cnf large/test_9.cnf`
+- passed: candidate regressed the two-order average from `0.4872s` to `0.6538s`, with the newly admitted cases roughly doubling in runtime and `large/test_8.cnf` also slightly worse
+- `python tools/codex_verify.py`
+- passed: retained solver still compiles, passes 73 tests, and clears both `satsolver.py` and `satsolver_fast.py` smoke checks
+
+### Outcome
+
+- Revalidated the live portfolio gate against today’s corpus and confirmed that the retained thresholds still narrow the portfolio path to exactly one benchmark case: `large/test_8.cnf`.
+- Tested one bounded threshold broadening by lowering only the clause-count gate from `1000` to `800`, which admitted `large/test_1.cnf`, `large/test_7.cnf`, and `large/test_9.cnf`.
+- Rejected that broadened candidate immediately because the same-day exact-CLI hotspot slice regressed decisively, so the retained solver keeps the current portfolio thresholds unchanged.
+
+### Remaining risks
+
+- This revalidation only ruled out the most plausible low-clause broadening; if future solver-core changes materially alter process-launch or portfolio-worker cost, the threshold space may deserve another focused rescan.
+
 ## 2026-03-22 `tool-001-wrapper-verification`
 
 - Status: completed

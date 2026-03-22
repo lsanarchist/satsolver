@@ -34,3 +34,10 @@
 - Files changed: `tools/codex_verify.py`, `tests/test_codex_verify.py`, `AGENT.md`, `AGENTS.md`, `README.md`, `docs/codex/operator-guide.md`, `PLANS.md`, `.agent/STATE.yaml`, `.agent/TASK_QUEUE.yaml`, `.agent/HANDOFF.md`, `.agent/DECISIONS.md`, `.agent/WORKLOG.md`
 - Verification: `python -m unittest discover -s tests -p 'test_codex_verify.py' -q` — passed; `python tools/codex_verify.py` — passed
 - Follow-up: Continue with `perf-001`, the same-day benchmark revalidation of the portfolio gating thresholds.
+
+## 2026-03-22 12:51 UTC — perf-001
+- Status: done
+- Summary: Revalidated the retained portfolio thresholds with same-day corpus inspection and a bounded broadened-threshold exact-CLI A/B, then kept the current gate unchanged because the candidate regressed decisively.
+- Files changed: `PLANS.md`, `.agent/STATE.yaml`, `.agent/TASK_QUEUE.yaml`, `.agent/HANDOFF.md`, `.agent/WORKLOG.md`
+- Verification: `python - <<'PY' ... corpus scan for current portfolio hits and near misses ... PY` — passed; `python -m py_compile /tmp/scratch_satsolver_portfolio_minclauses800.py` — passed; `python /tmp/scratch_satsolver_portfolio_minclauses800.py small/test_1.cnf /tmp/perf001_sat.txt` and `python tools/checker.py small/test_1.cnf /tmp/perf001_sat.txt` — passed; `python /tmp/scratch_satsolver_portfolio_minclauses800.py special/tseitin.cnf /tmp/perf001_unsat.txt` and `python tools/checker.py special/tseitin.cnf /tmp/perf001_unsat.txt --bruteforce-var-limit 0` — passed; `python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script /tmp/scratch_satsolver_portfolio_minclauses800.py --repeat 2 large/test_1.cnf large/test_7.cnf large/test_8.cnf large/test_9.cnf` — candidate rejected; `python tools/codex_verify.py` — passed
+- Follow-up: No queued tasks remain. Add a new task to `.agent/TASK_QUEUE.yaml` before the next autonomous run.
