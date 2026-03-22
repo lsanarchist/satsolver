@@ -3,30 +3,31 @@
 ## Current State
 
 - The repo still uses the queue-driven autonomous control plane rooted in `AGENT.md` and `.agent/*`, plus the machine-checkable queue validator.
-- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, `perf-008`, `perf-009`, `perf-010`, `perf-011`, `perf-012`, `perf-013`, `perf-014`, `perf-015`, `perf-016`, `perf-017`, `perf-018`, `perf-019`, and `perf-020` are complete.
-- There is no active in-progress task; the next deterministic task is `perf-021`.
+- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, `perf-008`, `perf-009`, `perf-010`, `perf-011`, `perf-012`, `perf-013`, `perf-014`, `perf-015`, `perf-016`, `perf-017`, `perf-018`, `perf-019`, `perf-020`, and `perf-021` are complete.
+- There is no active in-progress task; the next deterministic task is `perf-022`.
 
 ## What Changed This Run
 
-- Closed `perf-020` as a measurement-only guard-refresh run; no solver code changed.
-- The key finding is that the `perf-019` broad-suite reject was not mainly caused by some brand-new non-hotspot family. The existing focused seven-case slice already accounted for almost all of the full-suite regression (`+0.4541s`), while all non-focused cases netted to only `-0.0026s`.
-- The strongest secondary non-focused gross regressions did cluster in `satlib_more`, so future learnt-large relocation experiments now carry one compact supplemental guard slice: `satlib_more/uuf125-010.cnf`, `satlib_more/jnh10.cnf`, `satlib_more/uf125-01.cnf`, `satlib_more/uf125-010.cnf`, and `satlib_more/jnh1.cnf`.
-- A fresh retained-baseline repeat-aware exact-CLI rerun stayed `59/59` correct and kept the same slow-case ordering, even though the absolute total drifted noisily on this machine.
+- Closed `perf-021` as a retained no-op after testing one bounded learnt-large no-replacement tail reorder and reverting it.
+- The candidate preserved the dense hard-case search counters, so it looked like same-search bookkeeping, but it still regressed both early gates: the focused seven-case slice (`27.5844s -> 27.6377s`) and the supplemental `satlib_more` slice (`0.3721s -> 0.3774s`).
+- That means future learnt-large work should move away from failure-tail branch-order tweaks and instead profile the supplemental `satlib_more` cases directly before choosing the next candidate.
+- The queue now advances to `perf-022`, a measurement-only supplemental-slice profiling run.
 
 ## Current Focus
 
-- Start `perf-021` next: test one bounded learnt-large relocation candidate against the existing focused seven-case slice, the supplemental satlib_more slice, and the repeat-aware full suite.
+- Start `perf-022` next: profile the supplemental `satlib_more` learnt-large guard slice before another solver-core experiment.
 
 ## Recommended Next Tasks
 
-- `perf-021` — test the next learnt-large relocation idea against the refreshed guard slices
+- `perf-022` — profile the supplemental satlib_more learnt-large guard slice before the next candidate
 
 ## Verification From This Run
 
-- `python - <<'PY'` parse of `/tmp/perf019_baseline_cli_repeat2.txt` vs `/tmp/sat-codex-benchmark-6_2z0guq.txt` — passed; focused seven-case delta `+0.4541s`, non-focused delta `-0.0026s`, supplemental satlib_more gross regressions identified
-- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf` — passed; dense hard-case decisions/conflicts and learnt-large shares stayed unchanged
-- `python tools/codex_verify.py --benchmark-mode cli --repeat 2` — passed; retained solver stayed `59/59` correct at `30.3111s` representative / `60.6223s` measured on this rerun
-- `python tools/agent_queue_check.py` — passed; queue now resolves to `current_or_next_task='perf-021'`
+- `python tools/codex_verify.py` — passed on the temporary candidate before the performance gates
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf021_largeunit_baseline.fb3ecr/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf` — candidate rejected; focused seven-case gate regressed (`27.5844s -> 27.6377s`)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf021_largeunit_baseline.fb3ecr/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/jnh10.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh1.cnf` — candidate rejected; supplemental `satlib_more` gate regressed (`0.3721s -> 0.3774s`)
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf` — passed; dense hard-case decisions/conflicts stayed unchanged
+- `python tools/agent_queue_check.py` — passed; queue now resolves to `current_or_next_task='perf-022'`
 - `python tools/codex_verify.py` — passed after the final control-plane sync
 - `git diff --check` — passed
 
@@ -38,9 +39,9 @@
 - Reuse the queue checker when adjusting `.agent/STATE.yaml` or `.agent/TASK_QUEUE.yaml`.
 - The default verifier covers `satsolver_fast.py`, but `satsolver_pysat.py` remains outside the default gate because it requires an optional external environment.
 - External libraries or solvers may be used as short-lived research references only; do not retain them in the submission path or make them a default verifier dependency.
-- Do not update `benchmark_summary.md` or `experiments.jsonl` for `perf-020`; no performance keep survived this run.
-- For future learnt-large relocation experiments, treat the existing seven-case slice as the primary early gate and the supplemental `satlib_more` slice as a secondary early-warning slice, not as a replacement for the full-suite repeat-aware exact-CLI gate.
-- `special/hard.cnf` remains the single biggest sensitivity inside the focused seven-case lane, so do not overfit the next candidate to `large/test_6.cnf` alone.
+- Do not update `benchmark_summary.md` or `experiments.jsonl` for `perf-021`; no performance keep survived this run.
+- The main new lesson is that a large-clause failure-tail unit-first reorder is not the same kind of winner as the earlier ternary tail keep. Even without search drift, it lost both the dense focused slice and the supplemental `satlib_more` slice.
+- `perf-022` should use `tools/profile_solver.py` directly on `satlib_more/uuf125-010.cnf`, `satlib_more/jnh10.cnf`, `satlib_more/uf125-01.cnf`, `satlib_more/uf125-010.cnf`, and `satlib_more/jnh1.cnf` so the next learnt-large candidate is driven by the cases that actually pushed back here.
 
 ## Immediate Constraints
 

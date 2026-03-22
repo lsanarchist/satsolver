@@ -3,7 +3,7 @@ project: satsolver
 mode: autonomous_queue
 current_phase: 2
 current_task_id: null
-last_completed_task_id: perf-020
+last_completed_task_id: perf-021
 repo_health: green_verified
 working_assumptions:
   - AGENT.md plus .agent/* are the authoritative autonomous control plane.
@@ -18,7 +18,7 @@ recent_files:
   - .agent/HANDOFF.md
   - .agent/DECISIONS.md
   - .agent/WORKLOG.md
-next_task_hint: perf-021
+next_task_hint: perf-022
 notes:
   - The repo previously had AGENTS.md plus PLANS.md guidance but no repo-local queue control plane.
   - Routine verification now checks queue consistency before unit tests and solver smoke cases.
@@ -44,3 +44,4 @@ notes:
   - Perf-018 kept no solver change: the retained post-perf-017 profile still shows propagate() dominating end-to-end time, with original problem-ternary relocation still primary and learnt-large relocation still the next secondary watcher-churn bucket on the dense UNSAT hotspots.
   - Perf-019 kept no solver change: directly rewriting successful learnt-large relocation swaps won the focused seven-case and structural guardrails but regressed the repeat-aware 59-case exact-CLI suite, so future learnt-large work needs a broader exact-CLI guard slice before another keep attempt.
   - Perf-020 kept no solver change: the perf-019 broad-suite regression came almost entirely from repeat-aware movement inside the existing focused seven-case slice, with only a small secondary satlib_more tail outside it, so future learnt-large work should keep the seven-case slice as primary and add a compact satlib_more guard slice before the full-suite keep gate.
+  - Perf-021 kept no solver change: reordering the learnt-large no-replacement tail to favor the common unit-or-satisfied path preserved dense hard-case search counters but still regressed both the focused seven-case slice and the supplemental satlib_more slice, so future learnt-large work should move away from failure-tail branch-order tweaks and profile the supplemental satlib_more cases directly before the next candidate.

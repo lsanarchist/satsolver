@@ -450,7 +450,7 @@ tasks:
   - id: perf-021
     phase: 2
     priority: 42
-    status: todo
+    status: done
     title: Test the next learnt-large relocation idea against the refreshed guard slices
     size: L
     depends_on:
@@ -466,3 +466,19 @@ tasks:
       - python tools/hotspot_compare.py --baseline-cli-script <baseline>/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/jnh10.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh1.cnf
       - python tools/profile_solver.py large/test_6.cnf special/hard.cnf
       - python tools/codex_verify.py --benchmark-mode cli --repeat 2
+  - id: perf-022
+    phase: 2
+    priority: 41
+    status: todo
+    title: Profile the supplemental satlib_more learnt-large guard slice before the next candidate
+    size: M
+    depends_on:
+      - perf-021
+    goal: Use the newly added supplemental satlib_more guard slice to measure which learnt-large outcomes and clause-shape buckets dominate those cases, so the next bounded learnt-large candidate is chosen from actual supplemental-case evidence rather than just the dense UNSAT anchors.
+    deliverables:
+      - refreshed `PLANS.md` notes for the supplemental satlib_more guard slice
+      - updated next-task recommendation grounded in supplemental learnt-large profile evidence
+      - no solver change required if this run is measurement-only
+    verify:
+      - python tools/profile_solver.py satlib_more/uuf125-010.cnf satlib_more/jnh10.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh1.cnf
+      - python tools/codex_verify.py

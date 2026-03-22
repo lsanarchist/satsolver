@@ -40,6 +40,51 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-021-learnt-large-unit-first-tail`
+
+- Status: completed
+- Task family: native-only learnt-large propagation experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-021`, by testing one bounded learnt-large large-clause tail candidate against the focused seven-case slice, the supplemental `satlib_more` slice, and the repeat-aware full suite
+- Assumptions:
+  - The large-clause no-replacement tail is still a valid learnt-large lane because active large-clause traffic is entirely learnt-clause work on the dense anchors, and failed large scans still overwhelmingly end in units rather than conflicts.
+  - A branch-order-only large-tail candidate can still be same-search if the dense hard-case decision and conflict counters remain unchanged.
+  - A retained-noop outcome is valid if the focused or supplemental guard slices already reject the candidate before the full suite.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-021` in progress in the control plane and record the active learnt-large tail experiment in `PLANS.md`.
+- [x] Implement and benchmark one bounded learnt-large unit-first tail candidate against the focused seven-case and supplemental `satlib_more` guard slices.
+- [x] Keep or revert the candidate based on same-day evidence, then sync the control plane, verify, and commit.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed on the temporary candidate before the performance gates: the candidate compiled, passed the queue check, passed all 73 tests, and stayed checker-valid on both default wrapper smoke paths
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf021_largeunit_baseline.fb3ecr/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- candidate rejected: the focused seven-case two-order average regressed from `27.5844s` to `27.6377s`, with the largest stable damage on forward `large/test_6.cnf` and smaller givebacks on `medium/test_3.cnf` and `satlib_more/uuf150-01.cnf`
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf021_largeunit_baseline.fb3ecr/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/jnh10.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh1.cnf`
+- candidate rejected again: the supplemental `satlib_more` slice also regressed from `0.3721s` to `0.3774s`, mainly because `uf125-010` and `jnh1` lost more than the UNSAT-side wins recovered
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf`
+- passed: the dense hard-case search counters stayed unchanged at `72,886/59,201` decisions/conflicts on `large/test_6.cnf` and `54,245/44,619` on `special/hard.cnf`, so this still looked like same-search bookkeeping
+- `python tools/agent_queue_check.py`
+- passed after reverting the candidate and syncing the control plane: the queue now resolves deterministically to `current_or_next_task='perf-022'`
+- `python tools/codex_verify.py`
+- passed after the final control-plane sync: the repo compiles, the queue check passes, all 73 tests pass, and both default wrapper smoke paths remain green
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Tested one bounded learnt-large failure-tail candidate by reordering the no-replacement large-clause tail to favor the overwhelmingly common unit-or-satisfied path over the rarer conflict return, mirroring the earlier kept ternary tail style.
+- Rejected the candidate and retained no solver change. Even though the dense hard-case decision/conflict counters stayed unchanged, the candidate still regressed both the focused seven-case slice (`27.5844s -> 27.6377s`) and the supplemental `satlib_more` slice (`0.3721s -> 0.3774s`), so it did not earn the full repeat-aware suite.
+- The durable lesson is that future learnt-large work should move away from failure-tail branch-order changes and instead profile the supplemental `satlib_more` guard cases directly before picking the next bounded candidate.
+
+### Remaining risks
+
+- The next learnt-large candidate still needs to explain the SAT-heavy supplemental regressions, not just the dense UNSAT anchors, before another solver-core edit is worth attempting.
+
 ## 2026-03-22 `perf-020-learnt-large-guard-slice-refresh`
 
 - Status: completed
