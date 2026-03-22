@@ -40,6 +40,51 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-010-conflict-analysis-bookkeeping`
+
+- Status: completed
+- Task family: native-only dense-UNSAT conflict-analysis bookkeeping experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-010`, by testing one same-clause-content conflict-analysis bookkeeping optimization on the dense UNSAT hotspot slice without reopening the minimization-relaxation lane
+- Assumptions:
+  - `perf-009` closed the relaxed-minimization selector lane for now, so this run should preserve learnt clause contents and search behavior as much as possible.
+  - The freshest reason-bucket evidence still says the dominant minimization fast path should be ternary-first, with binary reasons comparatively rare on the dense UNSAT bottlenecks.
+  - A retained-noop outcome is acceptable if even this narrower same-search bookkeeping change loses on the seven-case exact-CLI gate.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-010` in progress in the control plane and keep repo state aligned before coding.
+- [x] Test one bounded same-content candidate in `minimize_learnt()` by making the dominant ternary path the first size check.
+- [x] Run the default verifier plus the seven-case hotspot gate, then keep or revert the candidate based on same-day evidence.
+- [x] Update the control plane with the verified outcome and queue the next sensible follow-up.
+
+### Verification
+
+- `python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/perf010_profile_large6.txt | head -n 45`
+- passed: the retained baseline still showed `analyze()` (`3.045s`) plus `minimize_learnt()` (`0.949s`) as the current conflict-analysis bookkeeping surface, with `prepare_learnt_clause()` smaller but still visible at `0.347s`
+- `python tools/codex_verify.py`
+- passed on the temporary candidate before the performance gate
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf010_ternaryfirst_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- candidate rejected: the seven-case two-order average regressed from `30.6097s` to `32.9908s`; `special/hard.cnf` improved in forward order, but `large/test_6.cnf` regressed in both orders and the reverse half also lost on `special/hard.cnf`, `large/test_10.cnf`, `medium/test_4.cnf`, `medium/test_3.cnf`, `satlib_more/uuf150-01.cnf`, and `large/test_8.cnf`
+- `python tools/agent_queue_check.py`
+- passed: the final queue state resolves cleanly to `current_or_next_task='perf-011'`
+- `python tools/codex_verify.py`
+- passed: the reverted retained baseline plus final control-plane edits compile, pass the queue check, pass all 73 tests, and clear both default wrapper smoke paths
+- `git diff --check`
+- passed
+
+### Outcome
+
+- Tested one intentionally tiny same-clause-content bookkeeping candidate: reorder `minimize_learnt()` so the dominant ternary reason path is checked before the rarer binary path, without changing the resulting learnt clause contents.
+- Rejected the candidate after the seven-case exact-CLI hotspot gate still moved the wrong way overall. The main failure was `large/test_6.cnf`, which regressed in both orders (`14.5023s -> 17.8421s`, `14.8687s -> 15.8587s`), and the reverse order broad losses outweighed the forward wins on `special/hard.cnf` and `large/test_10.cnf`.
+- No solver code was retained. The durable lesson is that even same-content reason-size branch-order cleanups inside `minimize_learnt()` are too weak or too unstable to trust on this solver, so the queue now advances to `perf-011` and should move to a different conflict-analysis bookkeeping surface.
+
+### Remaining risks
+
+- This reject closes the `minimize_learnt()` reason-size branch-order lane only for now; it does not prove that all same-search conflict-analysis bookkeeping work is exhausted.
+- The next task should avoid more reason-size ordering tweaks and instead probe post-minimization learnt finalization or another bookkeeping surface with a clearer structural payoff.
+
 ## 2026-03-22 `perf-009-dense-unsat-conflict-analysis`
 
 - Status: completed

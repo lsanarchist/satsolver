@@ -3,29 +3,29 @@
 ## Current State
 
 - The repo now has a queue-driven autonomous control plane rooted in `AGENT.md` and `.agent/*`, plus a machine-checkable queue validator.
-- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, `perf-008`, and `perf-009` are complete.
+- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, `perf-008`, `perf-009`, and `perf-010` are complete.
 - The queue has been reopened with a rolling native-only optimization program.
-- There is no active in-progress task; the next deterministic task is `perf-010`.
+- There is no active in-progress task; the next deterministic task is `perf-011`.
 
 ## What Changed This Run
 
-- Ran a fresh selector probe on the dense conflict-analysis path, then tested exactly one bounded minimization candidate: keep literals whose reason clause is learnt and length `10+` instead of scanning those long reasons inside `minimize_learnt()`.
-- Rejected the candidate after the seven-case exact-CLI hotspot gate regressed from `35.7221s` to `51.1322s`, with broad dense-UNSAT losses and a SAT guardrail blow-up on `large/test_8.cnf` from about `0.38s` to about `5.07s`.
-- No solver code was retained. The durable lesson is that even low-yield long learnt-reason removals still matter to search quality, so the queue now advances to `perf-010` and should stay away from more minimization-relaxation rules for now.
+- Tested one same-clause-content conflict-analysis bookkeeping candidate by making `minimize_learnt()` check ternary reasons before binary reasons, since the current dense UNSAT reason mix is still overwhelmingly ternary.
+- Rejected the candidate after the seven-case exact-CLI hotspot gate regressed from `30.6097s` to `32.9908s`; `special/hard.cnf` improved in forward order, but `large/test_6.cnf` regressed in both orders and the reverse half lost broadly.
+- No solver code was retained. The durable lesson is that even same-content reason-size branch-order cleanups inside `minimize_learnt()` are too weak or too unstable to trust here, so the queue now advances to `perf-011`.
 
 ## Current Focus
 
-- Start `perf-010` next: target same-search conflict-analysis bookkeeping now that the relaxed-minimization selector lane has been rejected.
+- Start `perf-011` next: probe learnt-finalization bookkeeping now that the minimize branch-order lane has been rejected.
 
 ## Recommended Next Tasks
 
-- `perf-010` — target same-search conflict-analysis bookkeeping after the minimization-selector reject
+- `perf-011` — probe learnt-finalization bookkeeping after the minimize-branch-order reject
 
 ## Verification From This Run
 
-- `python - <<'PY' ... MeasureSolver selector probe over large/test_6.cnf and special/hard.cnf ... PY` — passed; learnt `10+` reasons were the only clearly low-yield minimization bucket (`4,012 / 36,846` removals on `large/test_6.cnf`, `1,885 / 21,289` on `special/hard.cnf`)
+- `python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/perf010_profile_large6.txt | head -n 45` — passed; the retained baseline still showed `analyze()` plus `minimize_learnt()` as the current conflict-analysis bookkeeping surface
 - `python tools/codex_verify.py` — passed on the temporary candidate before the performance gate
-- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf009_minlearn10_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf` — candidate rejected (`35.7221s` baseline versus `51.1322s` candidate)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf010_ternaryfirst_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf` — candidate rejected (`30.6097s` baseline versus `32.9908s` candidate)
 - `python tools/agent_queue_check.py` — passed
 - `python tools/codex_verify.py` — passed
 - `git diff --check` — passed
@@ -44,7 +44,8 @@
 - `perf-007` confirmed that the main remaining native-only gap is the dense search-heavy UNSAT core, not the structural fast-exit families: PySAT cut the seven-case hotspot slice from `24.6944s` to `1.2486s`, while the retained solver still beat it on `special/pigeonhole.cnf` and `special/tseitin.cnf` by about `49x`.
 - `perf-008` showed that a true watcher split is not “just layout” in this solver: even though it removed mixed problem-ternary batches and preserved the structural fast-exit families, it perturbed propagation order enough to inflate `large/test_6.cnf` from `59,201` to `81,161` conflicts.
 - `perf-009` showed that even the apparently low-yield learnt `10+` minimization removals still matter to search quality: skipping only those scans regressed every heavy dense case and blew up `large/test_8.cnf` into the `5s` range.
-- The next run should therefore avoid more minimization-relaxation rules and instead test one same-clause-content conflict-analysis bookkeeping change in `perf-010`.
+- `perf-010` showed that even a same-content ternary-first branch reorder inside `minimize_learnt()` still regressed the seven-case exact-CLI gate overall, so reason-size branch ordering itself is not a promising bookkeeping surface.
+- The next run should therefore move away from `minimize_learnt()` branch-order tweaks and instead test one learnt-finalization bookkeeping change in `perf-011`.
 
 ## Immediate Constraints
 
@@ -69,3 +70,4 @@
 - The current solver still owns the structural fast-exit families (`special/pigeonhole.cnf`, `special/tseitin.cnf`) even though the optional PySAT reference is dramatically faster on the dense search-heavy UNSAT hotspot slice.
 - Changing the watched-clause family order can materially change the dense UNSAT search path, so future watcher-layout experiments should assume they are heuristic changes, not neutral refactors.
 - Even low-yield long learnt-reason removals can be important search signal, so relaxed minimization selectors should be treated as SAT-guardrail-sensitive rather than as safe bookkeeping cuts.
+- Even same-content reason-size branch-order changes inside `minimize_learnt()` can regress the dense exact-CLI gate, so future conflict-analysis bookkeeping should target a different surface than ternary-vs-binary branch ordering.
