@@ -54,7 +54,7 @@ This repository is a benchmark-driven, standard-library Python SAT solver. The d
 - Exact-CLI benchmark verification: `python tools/codex_verify.py --benchmark-mode cli --repeat 2`
 - Full module benchmark: `python benchmark_suite.py satsolver /tmp/bench.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16`
 - Full exact-CLI benchmark: `python benchmark_suite.py satsolver /tmp/bench_cli.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script satsolver.py`
-- Hotspot comparison: `python tools/hotspot_compare.py --baseline-cli-script <baseline>/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf medium/test_4.cnf large/test_10.cnf large/test_8.cnf`
+- Hotspot comparison: `python tools/hotspot_compare.py --baseline-cli-script <baseline>/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
 
 ## Conventions
 

@@ -48,3 +48,10 @@
 - Files changed: `AGENT.md`, `AGENTS.md`, `PLANS.md`, `.agent/DECISIONS.md`, `.agent/HANDOFF.md`, `.agent/STATE.yaml`, `.agent/TASK_QUEUE.yaml`, `.agent/WORKLOG.md`
 - Verification: `python tools/agent_queue_check.py` — passed; `python tools/codex_verify.py` — passed; `git diff --check` — passed
 - Follow-up: Start `perf-003` next to refresh the same-day native-only exact-CLI baseline and hotspot slice before attempting further solver optimizations.
+
+## 2026-03-22 13:59 UTC — perf-003
+- Status: done
+- Summary: Refreshed the same-day repeat-aware exact-CLI baseline, selected a new seven-case hotspot slice covering 90.82% of total runtime, and retargeted future performance tasks to that slice.
+- Files changed: `AGENTS.md`, `PLANS.md`, `.agent/HANDOFF.md`, `.agent/STATE.yaml`, `.agent/TASK_QUEUE.yaml`, `.agent/WORKLOG.md`
+- Verification: `python tools/codex_verify.py --benchmark-mode cli --repeat 2 --benchmark-output /tmp/perf003_cli_benchmark.txt` — passed; `python tools/agent_queue_check.py` — passed; `python tools/codex_verify.py` — passed; `git diff --check` — passed
+- Follow-up: Start `perf-004` next and keep the candidate evaluation centered on the refreshed seven-case exact-CLI hotspot slice.

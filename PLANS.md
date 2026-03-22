@@ -40,6 +40,47 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-003-native-cli-baseline-refresh`
+
+- Status: completed
+- Task family: benchmark-driven native-only baseline refresh
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-003`, by refreshing the same-day exact-CLI native-only baseline, selecting the current hotspot slice, and grounding the next optimization targets in fresh evidence
+- Assumptions:
+  - The most useful first step is a same-day repeat-aware exact-CLI benchmark on the retained standard-library solver across the default benchmark folders.
+  - The hotspot slice should be chosen from representative exact-CLI time contribution, not from stale historical notes alone.
+  - This task is primarily measurement and planning, so the retained solver code may stay unchanged if the refreshed evidence is the only durable outcome.
+- Escalations: none
+
+### Plan
+
+- [x] Run a same-day repeat-aware exact-CLI benchmark for the retained solver and capture a machine-readable report.
+- [x] Summarize the heaviest representative cases and choose a refreshed hotspot slice with rationale.
+- [x] Translate the fresh baseline into concrete next native-only optimization recommendations and update the control plane.
+- [x] Run the required verification gates and record the final outcome.
+
+### Verification
+
+- `python tools/codex_verify.py --benchmark-mode cli --repeat 2 --benchmark-output /tmp/perf003_cli_benchmark.txt`
+- passed: exact-CLI report landed at `/tmp/perf003_cli_benchmark.txt`, with `59/59` correct, `32.2896s` representative total, `64.5793s` measured total, and `64.8235s` wall clock
+- `python tools/agent_queue_check.py`
+- passed: final control-plane edits still resolve to `current_or_next_task='perf-004'`
+- `python tools/codex_verify.py`
+- passed: compile, queue check, 73 tests, and both main plus alternate-wrapper smoke paths stayed green after the hotspot-slice sync
+- `git diff --check`
+- passed
+
+### Outcome
+
+- Refreshed the same-day repeat-aware exact-CLI baseline for the retained native-only solver and confirmed that runtime is now heavily concentrated in a small UNSAT-dominant slice.
+- The top two cases, `large/test_6.cnf` (`14.1187s`) and `special/hard.cnf` (`9.4353s`), account for `72.95%` of the exact-CLI total by themselves, while the top five cases reach `88.24%`.
+- Chose a refreshed seven-case hotspot slice of `large/test_6.cnf`, `special/hard.cnf`, `large/test_10.cnf`, `medium/test_4.cnf`, `medium/test_3.cnf`, `satlib_more/uuf150-01.cnf`, and `large/test_8.cnf`, which together cover `90.82%` of the exact-CLI total while still preserving a SAT-like guardrail via `large/test_8.cnf`.
+- Synced that seven-case slice into the future hotspot-compare verification commands for `perf-004`, `perf-005`, and `perf-006`, and pointed the next run at `perf-004` because the current baseline still argues for propagation or clause-database work before branching-policy exploration.
+
+### Remaining risks
+
+- The refreshed slice is still benchmark-only evidence; the next run needs a concrete bounded solver candidate before we can tell whether propagation or clause-database changes actually beat the retained baseline.
+
 ## 2026-03-22 `perf-002-native-optimization-queue`
 
 - Status: completed
