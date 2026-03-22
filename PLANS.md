@@ -40,6 +40,58 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-007-external-gap-targets`
+
+- Status: completed
+- Task family: external-reference performance gap analysis
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-007`, by using optional external solver references to sharpen the next native-only optimization target without retaining any non-standard-library dependency
+- Assumptions:
+  - The repo already has one suitable short-lived external reference path in `satsolver_pysat.py` backed by `.venv-external-sat`, so the highest-signal comparison is to remeasure that path on the refreshed hotspot slice instead of inventing a new adapter.
+  - The current seven-case exact-CLI hotspot slice remains the right first gate for dense search-heavy gap analysis, but one or two structural-presolver cases should also be checked so the next native-only task does not blindly chase an area where the current solver already has unique strengths.
+  - This task is primarily research and queue refinement, so a retained-noop on solver code is acceptable as long as the next native-only task is narrowed from same-day evidence.
+- Escalations: none
+
+### Plan
+
+- [x] Revalidate the optional PySAT comparison path on small SAT and UNSAT smoke cases in the external environment.
+- [x] Run a same-day external-reference comparison on the refreshed hotspot slice and targeted structural-presolver cases.
+- [x] Translate the observed gap into one concrete next native-only task, then update the control plane and verification log.
+
+### Verification
+
+- `.venv-external-sat/bin/python satsolver_pysat.py small/test_1.cnf /tmp/perf007_pysat_small_sat.txt && python tools/checker.py small/test_1.cnf /tmp/perf007_pysat_small_sat.txt`
+- passed: the optional external wrapper still produced a valid SAT model on the shared DIMACS/output path
+- `.venv-external-sat/bin/python satsolver_pysat.py special/tseitin.cnf /tmp/perf007_pysat_small_unsat.txt && python tools/checker.py special/tseitin.cnf /tmp/perf007_pysat_small_unsat.txt --bruteforce-var-limit 0`
+- passed: the external wrapper still produced a valid UNSAT result in the external environment
+- `python - <<'PY' ... backend sweep across minisat22, glucose4, cadical195, mergesat3, kissat404 on large/test_6.cnf and special/hard.cnf ... PY`
+- passed: `minisat22` remained the strongest local PySAT backend on the two heaviest dense UNSAT cases (`0.5813s` total versus `1.0239s` for `glucose4`, `1.1116s` for `kissat404`, `1.1983s` for `cadical195`, and `2.4508s` for `mergesat3`)
+- `SATSOLVER_PYSAT_BACKEND=minisat22 python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script satsolver_pysat.py --candidate-python-executable .venv-external-sat/bin/python large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- passed: the refreshed seven-case exact-CLI comparison stayed fully checker-valid and showed a huge dense-UNSAT ceiling gap, with the retained solver at `24.6944s` versus PySAT at `1.2486s` on the two-order average; the current solver only kept the SAT guardrail edge on `large/test_8.cnf` (about `0.2841s` versus `0.3218s`)
+- `SATSOLVER_PYSAT_BACKEND=minisat22 python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script satsolver_pysat.py --candidate-python-executable .venv-external-sat/bin/python special/pigeonhole.cnf special/tseitin.cnf`
+- passed: the structural fast-exit slice confirmed the opposite side of the story, with the retained solver at `0.0702s` versus PySAT at `3.4322s` on the two-order average
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf`
+- passed: dense UNSAT profiling still shows massive mixed watch-family traffic on the hard cases, including `problem_ternary_mixed_batch_share=0.6193` on `large/test_6.cnf` and `0.7078` on `special/hard.cnf`, plus millions of problem-ternary visits and high learnt-large coexistence inside those batches
+- `python tools/agent_queue_check.py`
+- passed: final queue edits resolve cleanly to `current_or_next_task='perf-008'`
+- `python tools/codex_verify.py`
+- passed: the retained native-only solver plus control-plane updates still compile, pass the queue check, pass all 73 tests, and clear both default wrapper smoke paths
+- `git diff --check`
+- passed
+
+### Outcome
+
+- Revalidated the optional PySAT comparison path and confirmed that `minisat22` is still the strongest local external backend worth using as a speed ceiling in this repo.
+- Fresh same-day exact-CLI evidence shows that the retained native-only solver still trails a mature external backend badly on dense search-heavy UNSAT families: the refreshed seven-case slice fell from `24.6944s` to `1.2486s` under PySAT, with the biggest gaps on `large/test_6.cnf` (`11.9414s` average versus `0.3395s`) and `special/hard.cnf` (`8.0909s` versus `0.2627s`).
+- The same evidence also reconfirmed that the current repo-specific structural presolvers are real strengths, not dead weight: the retained solver crushed PySAT on `special/pigeonhole.cnf` and `special/tseitin.cnf` (`0.0702s` versus `3.4322s` two-order average).
+- Combined with the refreshed profiler counters, that points the next native-only task away from more wrapper work or structural fast-exit changes and toward the dense UNSAT CDCL core, specifically the mixed watch-family traversal where problem ternary traffic and learnt-large watchers are still heavily interleaved.
+- Completed `perf-007` as a research-only queue-refinement task with no retained solver-code change, and added `perf-008` as the next concrete native-only experiment: test a true watch-family split on the dense UNSAT hotspot slice while preserving the SAT guardrail and structural fast-exit families.
+
+### Remaining risks
+
+- PySAT is only a ceiling reference, not a search-trace oracle, so the next native-only task still needs to validate its candidate directly on the repo's exact-CLI slices instead of cargo-culting external-solver behavior.
+- The profiler strongly suggests a watch-family split lane, but previous lighter-weight propagation micro-optimizations have often lost on `large/test_8.cnf`, so the new structural and SAT guardrail slices must remain part of the next experiment's gate.
+
 ## 2026-03-22 `perf-006-wrapper-startup-overhead`
 
 - Status: completed

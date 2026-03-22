@@ -41,3 +41,9 @@
 - Context: The project now has an open-ended user request to keep optimizing the solver indefinitely while still preserving the standard-library-only submission path.
 - Decision: Represent that direction as a rolling queue of bounded benchmark-driven tasks, and allow external libraries or solvers only as short-lived research references that must never become retained submission dependencies.
 - Consequence: Future runs can keep making deterministic progress on native-only performance work without weakening the queue discipline or the standard-library constraint.
+
+## D-008 — 2026-03-22
+
+- Context: Fresh same-day external-reference comparison showed that the retained solver still wins the repo-specific structural fast-exit families but trails a mature external backend massively on the dense UNSAT hotspot slice.
+- Decision: Treat the external PySAT path as a research ceiling only, and aim the next native-only queue tasks at dense-UNSAT CDCL watch traversal and downstream conflict-analysis rather than at wrapper/startup cleanup or structural fast-exit rewrites.
+- Consequence: The queue now preserves the existing structural presolvers as strengths while focusing future native-only experiments on the dense search-heavy core where the remaining gap is largest.
