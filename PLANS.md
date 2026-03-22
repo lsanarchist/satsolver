@@ -40,6 +40,48 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-022-supplemental-learnt-large-profile`
+
+- Status: completed
+- Task family: native-only learnt-large profiling refresh
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-022`, by profiling the supplemental `satlib_more` learnt-large guard slice before choosing the next bounded solver-core candidate
+- Assumptions:
+  - This run is measurement-only unless the queue evidence proves stale enough to require a control-plane correction; no solver-core edit is expected.
+  - The most useful output is a direct profile of the supplemental `satlib_more` cases so the next learnt-large candidate targets the case family that actually regressed in `perf-021`.
+  - A completed profiling run is valid if it narrows the next task deterministically and leaves the repo and queue synchronized.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-022` in progress in the control plane and record the active profiling task in `PLANS.md`.
+- [x] Run `tools/profile_solver.py` on the supplemental `satlib_more` guard slice and summarize the dominant learnt-large outcomes, clause-shape buckets, and any meaningful SAT/UNSAT split.
+- [x] Update the control plane with the refreshed evidence, verify the final state, and commit.
+
+### Verification
+
+- `python tools/profile_solver.py satlib_more/uuf125-010.cnf satlib_more/jnh10.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh1.cnf`
+- passed: the slice split into two profiler families instead of one shared learnt-large lane. `satlib_more/jnh10.cnf` and `satlib_more/jnh1.cnf` were dominated by problem-large relocation (`81.32%` and `87.22%` problem-large relocation pop share, with only `1.19%` and `3.20%` learnt-large relocation pop share), while `satlib_more/uuf125-010.cnf`, `satlib_more/uf125-01.cnf`, and `satlib_more/uf125-010.cnf` carried the real learnt-large traffic (`24.11%`, `6.33%`, and `17.49%` learnt-large relocation pop share)
+- `python tools/codex_verify.py`
+- passed while `perf-022` was active: the repo compiled, the queue check passed, all 73 tests passed, and both default wrapper smoke paths remained green
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync: the queue now resolves deterministically to `current_or_next_task='perf-023'`
+- `python tools/codex_verify.py`
+- passed after the final control-plane sync: the repo compiled, the queue check passed, all 73 tests passed, and both default wrapper smoke paths remained green
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Closed `perf-022` as a measurement-only profiling run with no solver change.
+- The supplemental `satlib_more` guard slice is heterogeneous. The `jnh*` cases are mostly problem-large relocation with step-1/2 successful probes and very little learnt-large pressure, so they should be treated as guardrails rather than as the main learnt-large target family.
+- The real supplemental learnt-large cases are `satlib_more/uuf125-010.cnf`, `satlib_more/uf125-01.cnf`, and `satlib_more/uf125-010.cnf`. Among those, the SAT-side `uf*` pair puts much more weight on `len10+` clauses and deeper successful probes than the dense UNSAT anchors: `uf125-01` was `45.05%` `len10+` with `66.29%` of successful probes at step `3+`, and `uf125-010` was `36.10%` `len10+` with `46.01%` of successful probes at step `3+`.
+- The queue therefore advances to `perf-023`, a bounded successful-probe bookkeeping task that should target the `uuf125-010` and `uf*` learnt-large family while keeping `jnh10` and `jnh1` as problem-large guardrails.
+
+### Remaining risks
+
+- The supplemental slice is now better understood, but any next solver-core keep still has to satisfy the existing focused seven-case gate and the full repeat-aware exact-CLI suite, not just the reprofiled supplemental cases.
+
 ## 2026-03-22 `perf-021-learnt-large-unit-first-tail`
 
 - Status: completed
