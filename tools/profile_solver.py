@@ -150,6 +150,8 @@ class RunStats:
     learnt_large_success_sub10_step3_plus: int
     learnt_large_success_sub10_step3_4: int
     learnt_large_success_sub10_step3: int
+    learnt_large_success_sub10_step3_source_pop_last_slot: int
+    learnt_large_success_sub10_step3_source_pop_overwrite: int
     learnt_large_success_sub10_step4: int
     learnt_large_success_sub10_step5_plus: int
     max_large_probe: int
@@ -348,6 +350,8 @@ class ProfiledSolver(satsolver.Solver):
         self.learnt_large_success_sub10_step3_plus = 0
         self.learnt_large_success_sub10_step3_4 = 0
         self.learnt_large_success_sub10_step3 = 0
+        self.learnt_large_success_sub10_step3_source_pop_last_slot = 0
+        self.learnt_large_success_sub10_step3_source_pop_overwrite = 0
         self.learnt_large_success_sub10_step4 = 0
         self.learnt_large_success_sub10_step5_plus = 0
         self.max_large_probe = 0
@@ -654,6 +658,12 @@ class ProfiledSolver(satsolver.Solver):
                                 if probe_steps == 3:
                                     self.learnt_large_success_sub10_step3_4 += 1
                                     self.learnt_large_success_sub10_step3 += 1
+                                    # Separate the exact step-3 tail self-assignment case from
+                                    # removals that still overwrite the current slot from elsewhere.
+                                    if index == watchers_len - 1:
+                                        self.learnt_large_success_sub10_step3_source_pop_last_slot += 1
+                                    else:
+                                        self.learnt_large_success_sub10_step3_source_pop_overwrite += 1
                                 elif probe_steps == 4:
                                     self.learnt_large_success_sub10_step3_4 += 1
                                     self.learnt_large_success_sub10_step4 += 1
@@ -1228,6 +1238,8 @@ def build_run_stats(
             learnt_large_success_sub10_step3_plus=0,
             learnt_large_success_sub10_step3_4=0,
             learnt_large_success_sub10_step3=0,
+            learnt_large_success_sub10_step3_source_pop_last_slot=0,
+            learnt_large_success_sub10_step3_source_pop_overwrite=0,
             learnt_large_success_sub10_step4=0,
             learnt_large_success_sub10_step5_plus=0,
             max_large_probe=0,
@@ -1401,6 +1413,12 @@ def build_run_stats(
         learnt_large_success_sub10_step3_plus=solver.learnt_large_success_sub10_step3_plus,
         learnt_large_success_sub10_step3_4=solver.learnt_large_success_sub10_step3_4,
         learnt_large_success_sub10_step3=solver.learnt_large_success_sub10_step3,
+        learnt_large_success_sub10_step3_source_pop_last_slot=(
+            solver.learnt_large_success_sub10_step3_source_pop_last_slot
+        ),
+        learnt_large_success_sub10_step3_source_pop_overwrite=(
+            solver.learnt_large_success_sub10_step3_source_pop_overwrite
+        ),
         learnt_large_success_sub10_step4=solver.learnt_large_success_sub10_step4,
         learnt_large_success_sub10_step5_plus=solver.learnt_large_success_sub10_step5_plus,
         max_large_probe=solver.max_large_probe,
@@ -1669,6 +1687,18 @@ def main() -> int:
         learnt_large_success_sub10_step3_share = (
             stats.learnt_large_success_sub10_step3 / stats.learnt_large_success_sub10_step3_4
             if stats.learnt_large_success_sub10_step3_4
+            else 0.0
+        )
+        learnt_large_success_sub10_step3_source_pop_last_slot_share = (
+            stats.learnt_large_success_sub10_step3_source_pop_last_slot
+            / stats.learnt_large_success_sub10_step3
+            if stats.learnt_large_success_sub10_step3
+            else 0.0
+        )
+        learnt_large_success_sub10_step3_source_pop_overwrite_share = (
+            stats.learnt_large_success_sub10_step3_source_pop_overwrite
+            / stats.learnt_large_success_sub10_step3
+            if stats.learnt_large_success_sub10_step3
             else 0.0
         )
         learnt_large_success_sub10_step4_share = (
@@ -1999,10 +2029,18 @@ def main() -> int:
                 f"learnt_large_success_sub10_step3_plus_share={learnt_large_success_sub10_step3_plus_share:.4f} "
                 f"learnt_large_success_sub10_step3_4={stats.learnt_large_success_sub10_step3_4} "
                 f"learnt_large_success_sub10_step3={stats.learnt_large_success_sub10_step3} "
+                f"learnt_large_success_sub10_step3_source_pop_last_slot="
+                f"{stats.learnt_large_success_sub10_step3_source_pop_last_slot} "
+                f"learnt_large_success_sub10_step3_source_pop_overwrite="
+                f"{stats.learnt_large_success_sub10_step3_source_pop_overwrite} "
                 f"learnt_large_success_sub10_step4={stats.learnt_large_success_sub10_step4} "
                 f"learnt_large_success_sub10_step5_plus={stats.learnt_large_success_sub10_step5_plus} "
                 f"learnt_large_success_sub10_step3_4_share={learnt_large_success_sub10_step3_4_share:.4f} "
                 f"learnt_large_success_sub10_step3_share={learnt_large_success_sub10_step3_share:.4f} "
+                f"learnt_large_success_sub10_step3_source_pop_last_slot_share="
+                f"{learnt_large_success_sub10_step3_source_pop_last_slot_share:.4f} "
+                f"learnt_large_success_sub10_step3_source_pop_overwrite_share="
+                f"{learnt_large_success_sub10_step3_source_pop_overwrite_share:.4f} "
                 f"learnt_large_success_sub10_step4_share={learnt_large_success_sub10_step4_share:.4f} "
                 f"learnt_large_success_sub10_step5_plus_share={learnt_large_success_sub10_step5_plus_share:.4f} "
                 f"max_large_probe={stats.max_large_probe} avg_learnt_before={avg_learnt_before:.2f} "

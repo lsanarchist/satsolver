@@ -626,6 +626,11 @@ class ProfileSolverTests(unittest.TestCase):
                 stats.learnt_large_success_sub10_step3
                 + stats.learnt_large_success_sub10_step4,
             )
+            self.assertEqual(
+                stats.learnt_large_success_sub10_step3,
+                stats.learnt_large_success_sub10_step3_source_pop_last_slot
+                + stats.learnt_large_success_sub10_step3_source_pop_overwrite,
+            )
             self.assertGreater(stats.large_relocations + stats.large_units + stats.large_conflicts, 0)
             self.assertEqual(stats.watch_relocations, stats.ternary_relocations + stats.large_relocations)
             self.assertEqual(stats.watch_units, stats.ternary_units + stats.large_units)
@@ -768,8 +773,35 @@ class ProfileSolverTests(unittest.TestCase):
         self.assertEqual(solver.learnt_large_success_sub10_step3_plus, 3)
         self.assertEqual(solver.learnt_large_success_sub10_step3_4, 2)
         self.assertEqual(solver.learnt_large_success_sub10_step3, 1)
+        self.assertEqual(solver.learnt_large_success_sub10_step3_source_pop_last_slot, 1)
+        self.assertEqual(solver.learnt_large_success_sub10_step3_source_pop_overwrite, 0)
         self.assertEqual(solver.learnt_large_success_sub10_step4, 1)
         self.assertEqual(solver.learnt_large_success_sub10_step5_plus, 1)
+
+    def test_profile_solver_splits_exact_step3_tail_positions(self) -> None:
+        solver = profile_solver.ProfiledSolver(
+            9,
+            restart_base=64,
+            next_reduce=256,
+            var_decay=0.95,
+            clause_decay=0.999,
+        )
+
+        solver.add_learnt_clause([1, 2, 3, 4, 5], lbd=2)
+        solver.add_learnt_clause([1, 6, 7, 8, 9], lbd=2)
+
+        self.assertTrue(solver.enqueue(-1, None))
+        self.assertTrue(solver.enqueue(-3, None))
+        self.assertTrue(solver.enqueue(-4, None))
+        self.assertTrue(solver.enqueue(-7, None))
+        self.assertTrue(solver.enqueue(-8, None))
+
+        self.assertIsNone(solver.propagate())
+        self.assertEqual(solver.learnt_large_relocations, 2)
+        self.assertEqual(solver.learnt_large_success_sub10_step3, 2)
+        self.assertEqual(solver.learnt_large_success_sub10_step3_4, 2)
+        self.assertEqual(solver.learnt_large_success_sub10_step3_source_pop_last_slot, 1)
+        self.assertEqual(solver.learnt_large_success_sub10_step3_source_pop_overwrite, 1)
 
 
 if __name__ == "__main__":

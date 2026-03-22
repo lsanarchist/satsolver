@@ -3,7 +3,7 @@ project: satsolver
 mode: autonomous_queue
 current_phase: 2
 current_task_id: null
-last_completed_task_id: perf-032
+last_completed_task_id: perf-033
 repo_health: green_verified
 working_assumptions:
   - AGENT.md plus .agent/* are the authoritative autonomous control plane.
@@ -13,13 +13,13 @@ working_assumptions:
 blockers: []
 recent_files:
   - tools/profile_solver.py
-  - satsolver_core.py
+  - tests/test_profile_solver.py
   - PLANS.md
   - .agent/STATE.yaml
   - .agent/TASK_QUEUE.yaml
   - .agent/HANDOFF.md
   - .agent/WORKLOG.md
-next_task_hint: perf-033
+next_task_hint: perf-034
 notes:
   - The repo previously had AGENTS.md plus PLANS.md guidance but no repo-local queue control plane.
   - Routine verification now checks queue consistency before unit tests and solver smoke cases.
@@ -57,3 +57,4 @@ notes:
   - Perf-030 kept no solver change: even narrowing the direct watched-slot rewrite to the exact sub-10 step-3 learnt-large lane regressed both the primary seven-case and supplemental guard slices, so the next follow-up should re-profile exact step-3 traffic on the focused hotspot cases before another solver-core candidate.
   - Perf-031 kept no solver change: exact sub-10 step-3 learnt-large traffic on the focused seven-case slice is dominated by special/hard.cnf and large/test_6.cnf, which together account for about 78.9 percent of the total, so the next solver-core candidate should target those dense UNSAT anchors first and treat the rest of the slice as guardrails.
   - Perf-032 kept no solver change: skipping exact step-3 source-list self-assignment on the dense anchors stayed same-search but still regressed the focused and supplemental guard slices, so the next follow-up should profile source-pop tail-position behavior on special/hard.cnf and large/test_6.cnf before another solver-core edit.
+  - Perf-033 kept no solver change: exact dense-anchor step-3 source-pop tail-position profiling showed that last-slot self-assignment cases are only about 18 to 19 percent of the lane on both anchors, so the next dense-UNSAT solver-core experiment should target the dominant non-last overwrite path instead.

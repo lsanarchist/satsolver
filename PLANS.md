@@ -40,6 +40,48 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-033-step3-tail-position-profile`
+
+- Status: completed
+- Task family: native-only learnt-large profiling refresh
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-033`, by profiling exact `sub10 step-3` source-pop tail-position behavior on `special/hard.cnf` and `large/test_6.cnf`
+- Assumptions:
+  - `perf-032` rejected the dense exact-step self-assignment skip as a retained solver keep, so this run should stay measurement-only and explain how often that tail case actually occurs on the dense anchors.
+  - The current profiler already identifies exact `sub10 step-3` learnt-large relocations, so the missing last-slot versus overwrite split should be a profiler-only update with no solver-behavior change.
+  - A completed measurement-only outcome is valid if it separates exact step-3 last-slot removals from overwrite removals on the dense anchors and leaves the queue with a narrower next experiment.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-033` in progress in the control plane and record the active profiling task in `PLANS.md`.
+- [x] Add profiler-only exact `sub10 step-3` tail-position counters plus regression coverage, then profile the dense anchors.
+- [x] Close the measurement run, queue the next deterministic task, verify the final state, and commit.
+
+### Verification
+
+- `python -m unittest discover -s tests -p 'test_profile_solver.py' -q`
+- passed: the profiler test file stayed green at `16/16`, including the new exact `sub10 step-3` tail-position coverage and the stronger invariant that exact `step-3` counts equal `last-slot + overwrite`
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf`
+- passed: exact `sub10 step-3` dense-anchor traffic is dominated by non-last overwrites on both anchors, not by the tail self-assignment case. `large/test_6.cnf` reported `94,161` exact `step-3` hits split into `17,207` last-slot versus `76,954` overwrite, and `special/hard.cnf` reported `109,933` split into `20,980` last-slot versus `88,953` overwrite
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync: the queue now resolves deterministically to `current_or_next_task='perf-034'`
+- `python tools/codex_verify.py`
+- passed after the final control-plane sync: the repo recompiled, the queue check passed, all `76/76` tests passed, and both default wrapper smoke paths remained green
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Closed `perf-033` as a measurement-only profiling run with no solver change.
+- Added profiler-only exact `sub10 step-3` source-pop tail-position counters in `tools/profile_solver.py`, plus regression coverage in `tests/test_profile_solver.py`, so the repo can now separate last-slot self-assignment removals from non-last overwrite removals on the dense anchors.
+- The tail-position question is now answered clearly. Across the two dense anchors together, exact `step-3` hits split `38,187` last-slot versus `165,907` overwrite, so only about `18.7%` of the lane is the self-assignment tail while about `81.3%` is still the non-last overwrite path.
+- The queue therefore advances to `perf-034`, which should target the dominant exact `step-3` non-last overwrite path on the dense anchors and keep the newly measured last-slot tail as a guardrail rather than as the primary optimization lane.
+
+### Remaining risks
+
+- The new counters explain which exact `step-3` sublane dominates, but they do not guarantee that a source-pop overwrite rewrite will survive the focused seven-case and supplemental guard slices. The next solver-core task still has to stay narrow and benchmark-driven.
+
 ## 2026-03-22 `perf-032-dense-step3-learnt-large-bookkeeping`
 
 - Status: completed
