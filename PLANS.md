@@ -40,6 +40,44 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-018-post-keep-propagation-profile-refresh`
+
+- Status: completed
+- Task family: native-only dense-UNSAT propagation profiling refresh
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-018`, by refreshing the dense-UNSAT propagation profile after the retained `perf-017` relocation-bookkeeping keep and use that evidence to choose the next bounded experiment
+- Assumptions:
+  - `perf-017` changed only hot-path relocation bookkeeping and kept the dense hard-case decision/conflict counters unchanged, so this run should re-measure the retained solver before stacking another propagation edit on top of it.
+  - The right deliverable for this run is refreshed propagation evidence plus a narrower next task, not another speculative patch bundled into the same turn.
+  - A measurement-only outcome is valid as long as the repo state, plan log, and queue all move forward deterministically.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-018` in progress in the control plane and record the active profiling task in `PLANS.md`.
+- [x] Run the required dense-UNSAT profiling commands on the retained solver and summarize the new dominant propagation surfaces after `perf-017`.
+- [x] Update the control plane with the refreshed profiling evidence, queue the next bounded experiment, verify the final state, and commit.
+
+### Verification
+
+- `python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/perf018_profile_large6.txt | head -n 45`
+- passed: the retained post-`perf-017` solver still ranks `propagate()` first by a wide margin (`17.087s` on this run), with `analyze()` (`2.799s`) and `_minimize_learnt_and_prepare()` (`1.160s`) still secondary and list churn (`append` `2.492s`, `pop` `1.428s`) still concentrated in the same propagation-heavy path; the absolute times are noisier than the repeat-aware exact-CLI suite, but the hotspot ordering is unchanged
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf`
+- passed: the retained solver still shows unchanged dense hard-case search counters (`72,886/59,201` on `large/test_6.cnf`, `54,245/44,619` on `special/hard.cnf`), unchanged original problem-ternary shares (`61.01%` relocation / `38.31%` unit / `0.68%` conflict, `53.91%` / `45.21%` / `0.88%`), and the same watcher-pop split where original problem-ternary relocation remains primary while learnt-large relocation is still the next secondary bucket (`26.12%` on `large/test_6.cnf`, `38.33%` on `special/hard.cnf`)
+- `python tools/codex_verify.py`
+- passed: the measurement-only control-plane updates compile, pass the queue check, pass all 73 tests, and clear both default wrapper smoke paths
+
+### Outcome
+
+- Refreshed the dense-UNSAT propagation profile on the retained post-`perf-017` solver and used it to choose the next bounded experiment from current repo evidence instead of intuition.
+- The `perf-017` keep did what it was supposed to do: the dense hard-case decision/conflict counters stayed unchanged, `propagate()` is still the dominant runtime center, and original problem-ternary relocation remains the largest remaining surface within the non-satisfied original-ternary path. But the next distinct secondary watcher-churn bucket is now also clearer: learnt-large relocation still accounts for a meaningful share of pops on both dense anchors, especially `special/hard.cnf`.
+- The queue therefore advances to `perf-019`, a bounded propagation task that should test one concrete learnt-large relocation bookkeeping deletion on the dominant step-1/2 successful probe path without reopening the already-rejected scan-head unroll, reduction-policy, physical split-list, or extra side-state lanes.
+
+### Remaining risks
+
+- The profiling commands are useful for surface ranking and counter stability, but their absolute runtimes are noisier than the repeat-aware exact-CLI suite, so future keep/reject decisions still need the normal exact-CLI gates.
+- Original problem-ternary relocation is still the single biggest bucket, so `perf-019` should only move to learnt-large relocation because the recent original-ternary lane has already yielded both keeps and strong local boundaries, not because that primary bucket is “solved.”
+
 ## 2026-03-22 `perf-017-problem-ternary-relocation-bookkeeping`
 
 - Status: completed

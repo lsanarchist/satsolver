@@ -3,34 +3,30 @@
 ## Current State
 
 - The repo now has a queue-driven autonomous control plane rooted in `AGENT.md` and `.agent/*`, plus a machine-checkable queue validator.
-- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, `perf-008`, `perf-009`, `perf-010`, `perf-011`, `perf-012`, `perf-013`, `perf-014`, `perf-015`, `perf-016`, and `perf-017` are complete.
+- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, `perf-008`, `perf-009`, `perf-010`, `perf-011`, `perf-012`, `perf-013`, `perf-014`, `perf-015`, `perf-016`, `perf-017`, and `perf-018` are complete.
 - The queue has been reopened with a rolling native-only optimization program.
-- There is no active in-progress task; the next deterministic task is `perf-018`.
+- There is no active in-progress task; the next deterministic task is `perf-019`.
 
 ## What Changed This Run
 
-- Closed `perf-017` as a kept propagation win after testing one bounded original problem-ternary relocation bookkeeping change in `satsolver_core.py` and mirroring it in `tools/profile_solver.py`.
-- The retained change keeps the same ternary relocation semantics but uses the already-known `candidate_literal` directly when rewriting the watched slot and choosing the destination watch list. It improved the seven-case exact-CLI hotspot gate from `28.4207s` to `27.8720s`, improved the structural fast-exit guardrail from `0.0810s` to `0.0639s`, and improved the same-day repeat-aware exact-CLI 59-case suite from `31.5160s` to `29.7607s`, still `59/59` correct.
-- `tools/profile_solver.py` on the retained candidate showed unchanged dense hard-case decisions/conflicts on both anchors (`72,886/59,201` on `large/test_6.cnf`, `54,245/44,619` on `special/hard.cnf`), which makes this a same-search bookkeeping win rather than a search-path perturbation.
-- The queue now advances to `perf-018`, a measurement refresh that should re-profile the retained solver after this keep before the next bounded propagation experiment.
+- Closed `perf-018` as a measurement-only propagation refresh after the retained `perf-017` keep; no solver code changed in this run.
+- Fresh profiling still shows `propagate()` dominating end-to-end time (`17.087s` in `cProfile` on this run for `large/test_6.cnf`), with `analyze()` (`2.799s`) and `_minimize_learnt_and_prepare()` (`1.160s`) still secondary and list churn still concentrated in the propagation-heavy path.
+- `tools/profile_solver.py` still shows unchanged dense hard-case decisions/conflicts and unchanged original problem-ternary shares on both anchors, so the recent keep did not change the search path. Original problem-ternary relocation remains primary, while learnt-large relocation is still the next secondary watcher-churn bucket at `26.12%` of pops on `large/test_6.cnf` and `38.33%` on `special/hard.cnf`.
+- The queue now advances to `perf-019`, which should test one bounded learnt-large relocation bookkeeping change rather than another original-ternary branch-shape tweak.
 
 ## Current Focus
 
-- Start `perf-018` next: refresh the dense-UNSAT propagation profile after the retained relocation-bookkeeping keep.
+- Start `perf-019` next: test one bounded learnt-large relocation bookkeeping change on the refreshed dense-UNSAT hotspot slice.
 
 ## Recommended Next Tasks
 
-- `perf-018` — refresh dense-UNSAT propagation profiling after the relocation bookkeeping keep
+- `perf-019` — probe learnt-large relocation bookkeeping after the post-keep profile refresh
 
 ## Verification From This Run
 
-- `python tools/codex_verify.py` — passed on the temporary candidate before the performance gates
-- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf017_relocbook_baseline.gYxgu4/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf` — passed; seven-case two-order average improved from `28.4207s` to `27.8720s`
-- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf017_relocbook_baseline.gYxgu4/satsolver.py --candidate-cli-script satsolver.py special/pigeonhole.cnf special/tseitin.cnf` — passed; structural fast-exit guardrail improved from `0.0810s` to `0.0639s`
-- `python benchmark_suite.py satsolver /tmp/perf017_baseline_cli_repeat2.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script /tmp/perf017_relocbook_baseline.gYxgu4/satsolver.py --python-executable /usr/bin/python --repeat 2` — passed; frozen same-day baseline stayed `59/59` correct at `31.5160s` representative / `63.0320s` measured
-- `python tools/codex_verify.py --benchmark-mode cli --repeat 2` — passed; retained candidate stayed `59/59` correct and improved the repeat-aware exact-CLI 59-case suite to `29.7607s` representative / `59.5215s` measured
-- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf` — passed; dense hard-case decisions/conflicts stayed unchanged on the retained candidate, which identifies the win as bookkeeping deletion rather than search-path drift
-- `python tools/agent_queue_check.py` — passed; queue now resolves to `current_or_next_task='perf-018'`
+- `python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/perf018_profile_large6.txt | head -n 45` — passed; `propagate()` still dominates (`17.087s`) with the same overall hotspot ordering after `perf-017`
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf` — passed; dense hard-case decisions/conflicts stayed unchanged, original problem-ternary relocation remained primary, and learnt-large relocation remained the next secondary watcher-pop bucket
+- `python tools/agent_queue_check.py` — passed; queue now resolves to `current_or_next_task='perf-019'`
 - `python tools/codex_verify.py` — passed
 - `git diff --check` — passed
 
@@ -56,7 +52,8 @@
 - `perf-015` refreshed the retained propagation profile and confirmed that original problem-ternary relocation, especially the ordinary `candidate=UNASSIGNED` plus `other=UNASSIGNED` case, is still the larger remaining surface than units after the unit-first keep.
 - `perf-016` showed that splitting the dominant `candidate=UNASSIGNED` relocation branch away from the rarer `candidate=TRUE` case is not enough by itself: the dense hard-case decisions/conflicts stayed unchanged but the seven-case hotspot slice still regressed by about `0.94s`, so future relocation work should target deleted bookkeeping rather than more candidate-state branch tests.
 - `perf-017` kept exactly that narrower relocation lane: using the already-known `candidate_literal` directly on ternary relocation improved both the focused seven-case gate and the broad repeat-aware exact-CLI 59-case suite while keeping the dense hard-case decisions/conflicts unchanged.
-- The next run should therefore start with `perf-018`, re-profiling the retained solver after this keep before choosing the next bounded propagation experiment.
+- `perf-018` confirmed that the recent keep did not change the search path and that original problem-ternary relocation is still primary while learnt-large relocation remains the next secondary watcher-churn bucket.
+- The next run should therefore start with `perf-019`, testing one bounded learnt-large relocation bookkeeping deletion on the dominant step-1/2 successful probe path without reopening rejected scan-head unroll, reduction-policy, physical split-list, or extra side-state lanes.
 
 ## Immediate Constraints
 
