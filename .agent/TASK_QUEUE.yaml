@@ -149,7 +149,7 @@ tasks:
   - id: perf-004
     phase: 2
     priority: 90
-    status: todo
+    status: done
     title: Explore propagation and clause-storage micro-optimizations
     size: L
     depends_on:

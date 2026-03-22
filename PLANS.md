@@ -40,6 +40,53 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-004-propagation-clause-storage`
+
+- Status: completed
+- Task family: native-only propagation and clause-database experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-004`, by testing one bounded propagation or clause-storage micro-optimization against the refreshed seven-case exact-CLI hotspot slice
+- Assumptions:
+  - The best candidate should come from the current `propagate()` or `reduce_database()` shape plus the latest keep/reject history, not from stale generic SAT heuristics.
+  - A retained-noop conclusion is acceptable if the bounded candidate loses cleanly on same-day exact-CLI evidence.
+  - The refreshed seven-case slice is the right focused A/B gate before any broader exact-CLI rerun.
+- Escalations: none
+
+### Plan
+
+- [x] Inspect the current propagation and clause-database hot paths plus recent experiment history to choose one non-redundant bounded candidate.
+- [x] Implement or stage the candidate, validate correctness locally, and run the refreshed seven-case hotspot A/B.
+- [x] If the hotspot signal is promising, run the broader exact-CLI repeat-aware gate; otherwise revert to a retained-noop conclusion.
+- [x] Update the control plane with the verified outcome.
+
+### Verification
+
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf medium/test_4.cnf large/test_8.cnf`
+- passed: the current retained baseline still shows `reduce_database()` operating on only a few hundred candidates per reduction, while learnt-large watch traffic remains real but secondary to original ternary propagation
+- `python -m cProfile -s tottime satsolver.py medium/test_4.cnf /tmp/perf004_profile_medium4.txt | head -n 40`
+- passed: `reduce_database()` stayed tiny (`0.021s` tottime, `0.052s` cumtime) versus `propagate()` (`2.145s` tottime), so the only justified clause-storage experiment was a retention-policy classifier change rather than reduction bookkeeping cleanup
+- `python tools/codex_verify.py`
+- passed: the temporary candidate compiled, passed the queue check, passed all 73 tests, and stayed valid on the main plus alternate-wrapper smoke cases
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf004_lenbucket_baseline.TE0c9p/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- candidate rejected: the coarse `10+`-literal learnt-clause penalty regressed the seven-case two-order average from `30.0666s` to `72.6652s`, roughly doubled `large/test_6.cnf`, and exploded `large/test_8.cnf` from about `0.31s` to `25s..27s`
+- `python tools/agent_queue_check.py`
+- passed: the final queue state resolves cleanly to `current_or_next_task='perf-005'`
+- `python tools/codex_verify.py`
+- passed: the retained solver baseline plus final control-plane edits compile, pass the queue check, pass all 73 tests, and clear both wrapper smoke paths after the revert
+- `git diff --check`
+- passed
+
+### Outcome
+
+- Profiled the refreshed hotspot baseline before changing code and confirmed that direct `reduce_database()` bookkeeping remains too small to justify another locked-set or schedule cleanup branch on its own.
+- Tested one bounded clause-storage classifier: within each LBD bucket, demote `10+`-literal learnt clauses behind shorter candidates while keeping the existing top-half retention schedule unchanged.
+- Rejected that candidate immediately after the refreshed seven-case exact-CLI gate regressed catastrophically, especially on `large/test_8.cnf`, so no solver code was retained.
+- Completed `perf-004` as a retained-noop conclusion and advanced the queue to `perf-005`, which now becomes the next deterministic heuristic lane.
+
+### Remaining risks
+
+- The clause-database lane still lacks a winning native-only classifier, and `large/test_8.cnf` is highly sensitive to extra learnt-clause load. Future storage experiments should use the SAT-like guardrail early rather than trusting UNSAT-only wins.
+
 ## 2026-03-22 `perf-003-native-cli-baseline-refresh`
 
 - Status: completed
