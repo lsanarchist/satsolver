@@ -166,7 +166,7 @@ tasks:
   - id: perf-005
     phase: 2
     priority: 85
-    status: todo
+    status: done
     title: Explore branching and restart heuristic changes
     size: L
     depends_on:

@@ -62,3 +62,10 @@
 - Files changed: `PLANS.md`, `.agent/HANDOFF.md`, `.agent/STATE.yaml`, `.agent/TASK_QUEUE.yaml`, `.agent/WORKLOG.md`
 - Verification: `python tools/profile_solver.py large/test_6.cnf special/hard.cnf medium/test_4.cnf large/test_8.cnf` — passed; `python -m cProfile -s tottime satsolver.py medium/test_4.cnf /tmp/perf004_profile_medium4.txt | head -n 40` — passed; `python tools/codex_verify.py` — passed; `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf004_lenbucket_baseline.TE0c9p/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf` — candidate rejected (`30.0666s -> 72.6652s` two-order average, `large/test_8.cnf` exploded to `25s..27s`); `python tools/agent_queue_check.py` — passed; `python tools/codex_verify.py` — passed; `git diff --check` — passed
 - Follow-up: Continue with `perf-005`; treat `large/test_8.cnf` as an early guardrail for any future learnt-database or clause-retention experiments.
+
+## 2026-03-22 14:21 UTC — perf-005
+- Status: done
+- Summary: Tested one bounded restart-policy classifier that triggered early root restarts after low-LBD conflicts late in the current Luby window, then retained no solver change after the seven-case exact-CLI A/B regressed on every measured case.
+- Files changed: `PLANS.md`, `.agent/HANDOFF.md`, `.agent/STATE.yaml`, `.agent/TASK_QUEUE.yaml`, `.agent/WORKLOG.md`
+- Verification: `python tools/codex_verify.py` — passed; `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf005_restart_baseline.c4riuk/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf` — candidate rejected (`34.7641s -> 56.2904s` two-order average, `large/test_8.cnf` rose to about `7.5s`); `python tools/agent_queue_check.py` — passed; `python tools/codex_verify.py` — passed; `git diff --check` — passed
+- Follow-up: Continue with `perf-006`; treat `large/test_8.cnf` as an early guardrail for future restart-policy experiments too.

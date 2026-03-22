@@ -40,6 +40,48 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-005-branching-restart-heuristics`
+
+- Status: completed
+- Task family: native-only branching and restart heuristic experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-005`, by testing one bounded branching or restart heuristic change against the refreshed seven-case exact-CLI hotspot slice
+- Assumptions:
+  - The next viable heuristic experiment should avoid already-rejected branch-frontier, heap, and simple parameter-sweep lanes.
+  - A retained-noop conclusion is acceptable if the bounded heuristic candidate loses cleanly on same-day exact-CLI evidence.
+  - The refreshed seven-case slice remains the right first gate before any broader exact-CLI rerun.
+- Escalations: none
+
+### Plan
+
+- [x] Inspect current branching and restart behavior plus recent keep/reject history to choose one non-duplicate heuristic candidate.
+- [x] Implement or stage the candidate, validate correctness locally, and run the refreshed seven-case hotspot A/B.
+- [x] If the hotspot signal is promising, run the broader exact-CLI repeat-aware gate; otherwise revert to a retained-noop conclusion.
+- [x] Update the control plane with the verified outcome.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed: the temporary candidate compiled, passed the queue check, passed all 73 tests, and stayed valid on the main plus alternate-wrapper smoke cases
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf005_restart_baseline.c4riuk/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- candidate rejected: the low-LBD early-restart trigger regressed the seven-case two-order average from `34.7641s` to `56.2904s`, made every hotspot case slower, and still inflated `large/test_8.cnf` from about `0.35s` to about `7.5s`
+- `python tools/agent_queue_check.py`
+- passed: the final queue state resolves cleanly to `current_or_next_task='perf-006'`
+- `python tools/codex_verify.py`
+- passed: the retained solver baseline plus final control-plane edits compile, pass the queue check, pass all 73 tests, and clear both wrapper smoke paths after the revert
+- `git diff --check`
+- passed
+
+### Outcome
+
+- Chose a bounded restart-policy experiment instead of revisiting already-rejected branch-frontier or heap schemes: trigger an early root restart only when a conflict learns an `LBD <= 3` clause after at least half of the current Luby window has elapsed.
+- Rejected that heuristic immediately after the refreshed seven-case exact-CLI gate regressed decisively on every measured case, including a fresh SAT-side blow-up on `large/test_8.cnf`.
+- Retained no solver code from `perf-005` and advanced the queue to `perf-006`, which now becomes the next deterministic wrapper/startup lane.
+
+### Remaining risks
+
+- The branching/restart lane still lacks a winning classifier-based change, and `large/test_8.cnf` remains highly sensitive to restart-policy drift even when a candidate is aimed at dense UNSAT cases.
+
 ## 2026-03-22 `perf-004-propagation-clause-storage`
 
 - Status: completed
