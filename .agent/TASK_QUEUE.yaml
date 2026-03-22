@@ -378,7 +378,7 @@ tasks:
   - id: perf-017
     phase: 2
     priority: 48
-    status: todo
+    status: done
     title: Probe original problem-ternary relocation bookkeeping after the branch-shape reject
     size: L
     depends_on:
@@ -394,3 +394,20 @@ tasks:
       - python tools/hotspot_compare.py --baseline-cli-script <baseline>/satsolver.py --candidate-cli-script satsolver.py special/pigeonhole.cnf special/tseitin.cnf
       - python tools/profile_solver.py large/test_6.cnf special/hard.cnf
       - python tools/codex_verify.py --benchmark-mode cli --repeat 2
+  - id: perf-018
+    phase: 2
+    priority: 46
+    status: todo
+    title: Refresh dense-UNSAT propagation profiling after the relocation bookkeeping keep
+    size: M
+    depends_on:
+      - perf-017
+    goal: Re-profile the retained solver after perf-017, confirm how the dominant original problem-ternary relocation and unit surfaces changed after the kept bookkeeping deletion on `large/test_6.cnf` and `special/hard.cnf`, and queue one evidence-backed next propagation target before another solver-core edit.
+    deliverables:
+      - refreshed `PLANS.md` profiling notes for the retained post-perf-017 solver
+      - updated next-task recommendation grounded in post-perf-017 propagation evidence
+      - no solver change required if this run is measurement-only
+    verify:
+      - python tools/profile_solver.py large/test_6.cnf special/hard.cnf
+      - python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/perf018_profile_large6.txt | head -n 45
+      - python tools/codex_verify.py

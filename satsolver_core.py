@@ -395,8 +395,10 @@ class Solver:
                     candidate_literal = lits[2]
                     candidate_value = literal_values[candidate_literal]
                     if candidate_value != FALSE:
-                        lits[1], lits[2] = lits[2], lits[1]
-                        all_watchers[literal_watch_index[lits[1]]].append(clause_id)
+                        false_watched_literal = lits[1]
+                        lits[1] = candidate_literal
+                        lits[2] = false_watched_literal
+                        all_watchers[literal_watch_index[candidate_literal]].append(clause_id)
                         watchers_len -= 1
                         watchers[index] = watchers[watchers_len]
                         watchers.pop()

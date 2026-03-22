@@ -537,8 +537,10 @@ class ProfiledSolver(satsolver.Solver):
                                 self.problem_ternary_false_other_relocations += 1
                             else:
                                 self.problem_ternary_unassigned_other_relocations += 1
-                        lits[1], lits[2] = lits[2], lits[1]
-                        all_watchers[literal_watch_index[lits[1]]].append(clause_id)
+                        false_watched_literal = lits[1]
+                        lits[1] = candidate_literal
+                        lits[2] = false_watched_literal
+                        all_watchers[literal_watch_index[candidate_literal]].append(clause_id)
                         self.watcher_list_appends += 1
                         self.watcher_list_pops += 1
                         if clause.learnt:
