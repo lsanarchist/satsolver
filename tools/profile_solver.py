@@ -550,21 +550,7 @@ class ProfiledSolver(satsolver.Solver):
                         watchers.pop()
                         continue
 
-                    if other_value == satsolver.FALSE:
-                        self.watch_conflicts += 1
-                        self.ternary_conflicts += 1
-                        if clause.learnt:
-                            if normalized:
-                                self.learnt_ternary_normalized_conflicts += 1
-                            self.learnt_ternary_conflicts += 1
-                        else:
-                            if normalized:
-                                self.problem_ternary_normalized_conflicts += 1
-                            self.problem_ternary_conflicts += 1
-                        self.qhead = qhead
-                        self.processed_literals += qhead - start_qhead
-                        return clause_id
-                    if other_value == satsolver.UNASSIGNED:
+                    if other_value != satsolver.FALSE:
                         variable = literal_var[other_literal]
                         value = literal_sign[other_literal]
                         values[variable] = value
@@ -587,8 +573,21 @@ class ProfiledSolver(satsolver.Solver):
                                 self.problem_ternary_normalized_units += 1
                             self.problem_ternary_units += 1
                         trail_len += 1
-                    index += 1
-                    continue
+                        index += 1
+                        continue
+                    self.watch_conflicts += 1
+                    self.ternary_conflicts += 1
+                    if clause.learnt:
+                        if normalized:
+                            self.learnt_ternary_normalized_conflicts += 1
+                        self.learnt_ternary_conflicts += 1
+                    else:
+                        if normalized:
+                            self.problem_ternary_normalized_conflicts += 1
+                        self.problem_ternary_conflicts += 1
+                    self.qhead = qhead
+                    self.processed_literals += qhead - start_qhead
+                    return clause_id
 
                 self.large_watch_visits += 1
                 if clause_size == 4:

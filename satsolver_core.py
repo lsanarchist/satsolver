@@ -402,10 +402,7 @@ class Solver:
                         watchers.pop()
                         continue
 
-                    if other_value == FALSE:
-                        self.qhead = qhead
-                        return clause_id
-                    if other_value == UNASSIGNED:
+                    if other_value != FALSE:
                         variable = literal_var[other_literal]
                         value = literal_sign[other_literal]
                         values[variable] = value
@@ -416,8 +413,10 @@ class Solver:
                         saved_phase[variable] = other_literal > 0
                         trail.append(other_literal)
                         trail_len += 1
-                    index += 1
-                    continue
+                        index += 1
+                        continue
+                    self.qhead = qhead
+                    return clause_id
 
                 found_replacement = False
                 for replacement in range(2, len(lits)):

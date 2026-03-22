@@ -323,7 +323,7 @@ tasks:
   - id: perf-014
     phase: 2
     priority: 54
-    status: todo
+    status: done
     title: Probe original problem-ternary relocation or unit propagation after the profile refresh
     size: L
     depends_on:
@@ -339,3 +339,20 @@ tasks:
       - python tools/hotspot_compare.py --baseline-cli-script <baseline>/satsolver.py --candidate-cli-script satsolver.py special/pigeonhole.cnf special/tseitin.cnf
       - python tools/profile_solver.py large/test_6.cnf special/hard.cnf
       - python tools/codex_verify.py --benchmark-mode cli --repeat 2
+  - id: perf-015
+    phase: 2
+    priority: 52
+    status: todo
+    title: Refresh dense-UNSAT propagation profiling after the unit-first keep
+    size: M
+    depends_on:
+      - perf-014
+    goal: Re-profile the retained solver after perf-014, confirm how much original problem-ternary relocation still dominates after the unit-first tail keep on `large/test_6.cnf` and `special/hard.cnf`, and queue one evidence-backed next propagation target before attempting another solver-core experiment.
+    deliverables:
+      - refreshed `PLANS.md` profiling notes for the retained solver
+      - updated next-task recommendation grounded in post-perf-014 propagation evidence
+      - no solver change required if this run is measurement-only
+    verify:
+      - python tools/profile_solver.py large/test_6.cnf special/hard.cnf
+      - python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/perf015_profile_large6.txt | head -n 45
+      - python tools/codex_verify.py

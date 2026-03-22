@@ -40,6 +40,51 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-014-problem-ternary-unit-first`
+
+- Status: completed
+- Task family: native-only dense-UNSAT propagation experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-014`, by testing one bounded propagation change on the original problem-ternary relocation or unit path using the refreshed post-`perf-012`/`perf-013` profiler evidence
+- Assumptions:
+  - `perf-013` confirmed that `propagate()` is still the dominant cost and that original problem-ternary relocation plus unit handling remains the largest concentrated surface on `large/test_6.cnf` and `special/hard.cnf`.
+  - Previous family hoists, physical watch splits, true-candidate hold behavior, and extra watched-position side-state have already failed, so this run should stay inside the current watch traversal shape.
+  - Within the `candidate_value == FALSE` original-ternary tail, units dominate conflicts heavily on the dense hotspots, so making the unit path the direct fallthrough is a bounded same-search candidate worth testing before another broader propagation rewrite.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-014` in progress in the control plane and record the active propagation experiment in `PLANS.md`.
+- [x] Implement one narrowly scoped original problem-ternary propagation candidate and evaluate it on the hotspot and structural guardrail slices.
+- [x] Keep or revert the candidate based on same-day evidence, then sync the control plane, verify, and commit.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed on the temporary candidate before the performance gates: the patched solver compiled, passed all 73 tests, and stayed checker-valid on both default wrapper smoke paths
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf014_unitfirst_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- passed: the seven-case two-order exact-CLI hotspot average improved from `29.5292s` to `28.8116s`; the candidate won both directions overall, helped `large/test_6.cnf`, `special/hard.cnf`, `medium/test_3.cnf`, and `large/test_8.cnf` in both orders, and only gave back a small amount on `medium/test_4.cnf` forward plus `large/test_10.cnf` reverse
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf014_unitfirst_baseline/satsolver.py --candidate-cli-script satsolver.py special/pigeonhole.cnf special/tseitin.cnf`
+- passed: the structural fast-exit guardrail stayed slightly positive overall (`0.0671s -> 0.0658s`) even though `special/tseitin.cnf` individually regressed while `special/pigeonhole.cnf` improved more strongly
+- `python tools/codex_verify.py --benchmark-mode cli --repeat 2`
+- passed: the retained candidate stayed `59/59` correct and produced a fresh repeat-aware exact-CLI 59-case total of `31.8378s` representative / `63.6755s` measured
+- `python benchmark_suite.py satsolver /tmp/perf014_baseline_cli_repeat2.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script /tmp/perf014_unitfirst_baseline/satsolver.py --python-executable /usr/bin/python --repeat 2`
+- passed: the frozen same-day baseline stayed `59/59` correct at `32.5124s` representative / `65.0247s` measured, so the retained candidate improved the broad exact-CLI suite by `0.6746s`
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf`
+- passed: the retained candidate kept the dense hard-case search counters unchanged at `72,886` decisions / `59,201` conflicts on `large/test_6.cnf` and `54,245` decisions / `44,619` conflicts on `special/hard.cnf`, while the original problem-ternary relocation-plus-unit profile shape remained dominant
+
+### Outcome
+
+- Kept one narrowly scoped same-search propagation change in `satsolver_core.py`: after a ternary clause already knows its candidate literal is `FALSE`, `propagate()` now takes the overwhelmingly common unit path directly and leaves the rare conflict return as the final fallthrough instead of checking the conflict tail first.
+- The win is broad enough to retain. The refreshed seven-case exact-CLI hotspot improved from `29.5292s` to `28.8116s`, the structural fast-exit guardrail stayed slightly positive (`0.0671s -> 0.0658s`), and the same-day repeat-aware exact-CLI 59-case suite improved from `32.5124s` to `31.8378s`, all still `59/59` correct.
+- The profiler made the keep much safer: the dense hard-case decision and conflict counts stayed unchanged on both `large/test_6.cnf` and `special/hard.cnf`, so this looks like a genuine same-search propagation bookkeeping win rather than another heuristic drift.
+- Completed `perf-014` as a kept propagation change, mirrored the retained branch order in `tools/profile_solver.py`, updated the durable benchmark narrative, and advanced the queue to `perf-015`, which should refresh the dense-UNSAT propagation profile after this keep before choosing the next bounded relocation-focused experiment.
+
+### Remaining risks
+
+- The keep is real but still modest, so nearby propagation micro-changes should continue to require the full same-day baseline-vs-candidate exact-CLI suite instead of trusting the hotspot slice alone.
+- This change only shortens the candidate-false ternary tail; the larger original problem-ternary relocation path is still the dominant remaining propagation surface and needs fresh post-keep profiling before another experiment.
+
 ## 2026-03-22 `perf-013-post-keep-conflict-profile-refresh`
 
 - Status: completed
