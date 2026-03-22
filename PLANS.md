@@ -40,6 +40,55 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-019-learnt-large-relocation-bookkeeping`
+
+- Status: completed
+- Task family: native-only learnt-large propagation bookkeeping experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-019`, by testing one bounded learnt-large relocation bookkeeping deletion on the refreshed dense-UNSAT hotspot slice after the retained `perf-017` keep and the `perf-018` profile refresh
+- Assumptions:
+  - `perf-018` already narrowed the next lane to the secondary learnt-large relocation bucket, so this run should stay on that exact surface instead of reopening broader watcher-layout or reduction-policy experiments.
+  - The dominant successful learnt-large relocation path is still the step-1/2 probe case, so the best first candidate is a same-search bookkeeping deletion rather than new scan-head branching.
+  - A retained-noop outcome is valid if the candidate still loses on the repeat-aware exact-CLI suite even after the focused hotspot and structural gates look positive.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-019` in progress in the control plane and record the active learnt-large relocation bookkeeping experiment in `PLANS.md`.
+- [x] Implement and evaluate one narrowly scoped learnt-large relocation bookkeeping candidate against the hotspot and structural guardrail slices.
+- [x] Keep or revert the candidate based on same-day evidence, then sync the control plane, verify, and commit.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed on the temporary candidate before the performance gates: the candidate compiled, passed the queue check, passed all 73 tests, and stayed checker-valid on both default wrapper smoke paths
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf019_largebook_baseline.9uppKV/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- passed: the focused seven-case two-order exact-CLI hotspot average improved from `26.4626s` to `25.8086s`, led by a solid `large/test_6.cnf` win
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf019_largebook_baseline.9uppKV/satsolver.py --candidate-cli-script satsolver.py special/pigeonhole.cnf special/tseitin.cnf`
+- passed: the structural fast-exit guardrail also improved overall (`0.0657s -> 0.0564s`)
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf`
+- passed: the dense hard-case search counters stayed unchanged at `72,886/59,201` decisions/conflicts on `large/test_6.cnf` and `54,245/44,619` on `special/hard.cnf`, so the candidate still looked like same-search bookkeeping
+- `python benchmark_suite.py satsolver /tmp/perf019_baseline_cli_repeat2.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script /tmp/perf019_largebook_baseline.9uppKV/satsolver.py --python-executable /usr/bin/python --repeat 2`
+- passed: the frozen same-day baseline stayed `59/59` correct at `28.8865s` representative / `57.7730s` measured
+- `python tools/codex_verify.py --benchmark-mode cli --repeat 2`
+- passed as a correctness run but rejected as a keep gate: the candidate stayed `59/59` correct yet regressed the repeat-aware exact-CLI suite to `29.3380s` representative / `58.6760s` measured, so the solver change was reverted
+- `python tools/agent_queue_check.py`
+- passed after reverting the candidate and syncing the control plane: the queue now resolves deterministically to `current_or_next_task='perf-020'`
+- `python tools/codex_verify.py`
+- passed after reverting the candidate and syncing the control plane: the repo compiles, the queue check passes, all 73 tests pass, and both default wrapper smoke paths remain green
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Tested one bounded learnt-large relocation bookkeeping deletion by rewriting the successful large-clause relocation swap to use the already-known `candidate_literal` directly, mirroring the earlier retained ternary relocation style.
+- Rejected the candidate and retained no solver change. Even though the focused seven-case hotspot and structural guardrail both improved and the dense hard-case search counters stayed unchanged, the stronger repeat-aware 59-case exact-CLI suite regressed from `28.8865s` to `29.3380s`.
+- The durable lesson is that the current seven-case slice is not sufficient by itself for learnt-large relocation work. Future experiments on this lane need a refreshed broader exact-CLI guard before another keep attempt.
+
+### Remaining risks
+
+- Focused learnt-large wins can still lose on the broader exact-CLI suite even when dense hard-case counters remain unchanged, so future tasks on this lane should widen their guard slices before retaining solver-core edits.
+
 ## 2026-03-22 `perf-018-post-keep-propagation-profile-refresh`
 
 - Status: completed

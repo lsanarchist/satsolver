@@ -2,32 +2,35 @@
 
 ## Current State
 
-- The repo now has a queue-driven autonomous control plane rooted in `AGENT.md` and `.agent/*`, plus a machine-checkable queue validator.
-- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, `perf-008`, `perf-009`, `perf-010`, `perf-011`, `perf-012`, `perf-013`, `perf-014`, `perf-015`, `perf-016`, `perf-017`, and `perf-018` are complete.
-- The queue has been reopened with a rolling native-only optimization program.
-- There is no active in-progress task; the next deterministic task is `perf-019`.
+- The repo still uses the queue-driven autonomous control plane rooted in `AGENT.md` and `.agent/*`, plus the machine-checkable queue validator.
+- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, `perf-008`, `perf-009`, `perf-010`, `perf-011`, `perf-012`, `perf-013`, `perf-014`, `perf-015`, `perf-016`, `perf-017`, `perf-018`, and `perf-019` are complete.
+- There is no active in-progress task; the next deterministic task is `perf-020`.
 
 ## What Changed This Run
 
-- Closed `perf-018` as a measurement-only propagation refresh after the retained `perf-017` keep; no solver code changed in this run.
-- Fresh profiling still shows `propagate()` dominating end-to-end time (`17.087s` in `cProfile` on this run for `large/test_6.cnf`), with `analyze()` (`2.799s`) and `_minimize_learnt_and_prepare()` (`1.160s`) still secondary and list churn still concentrated in the propagation-heavy path.
-- `tools/profile_solver.py` still shows unchanged dense hard-case decisions/conflicts and unchanged original problem-ternary shares on both anchors, so the recent keep did not change the search path. Original problem-ternary relocation remains primary, while learnt-large relocation is still the next secondary watcher-churn bucket at `26.12%` of pops on `large/test_6.cnf` and `38.33%` on `special/hard.cnf`.
-- The queue now advances to `perf-019`, which should test one bounded learnt-large relocation bookkeeping change rather than another original-ternary branch-shape tweak.
+- Closed `perf-019` as a retained no-op after testing one bounded learnt-large relocation bookkeeping deletion and reverting it.
+- The candidate improved the focused seven-case exact-CLI hotspot (`26.4626s -> 25.8086s`) and the structural fast-exit guardrail (`0.0657s -> 0.0564s`), and it preserved the dense hard-case search counters.
+- The stronger repeat-aware 59-case exact-CLI suite still regressed (`28.8865s -> 29.3380s`), so no solver code was kept.
+- The queue now advances to `perf-020`, which should refresh the broader exact-CLI guard slice for future learnt-large relocation work before another solver-core change.
 
 ## Current Focus
 
-- Start `perf-019` next: test one bounded learnt-large relocation bookkeeping change on the refreshed dense-UNSAT hotspot slice.
+- Start `perf-020` next: refresh the broader exact-CLI guard cases that future learnt-large relocation experiments must satisfy.
 
 ## Recommended Next Tasks
 
-- `perf-019` — probe learnt-large relocation bookkeeping after the post-keep profile refresh
+- `perf-020` — refresh learnt-large exact-CLI guard slices after the broad-suite reject
 
 ## Verification From This Run
 
-- `python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/perf018_profile_large6.txt | head -n 45` — passed; `propagate()` still dominates (`17.087s`) with the same overall hotspot ordering after `perf-017`
-- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf` — passed; dense hard-case decisions/conflicts stayed unchanged, original problem-ternary relocation remained primary, and learnt-large relocation remained the next secondary watcher-pop bucket
-- `python tools/agent_queue_check.py` — passed; queue now resolves to `current_or_next_task='perf-019'`
-- `python tools/codex_verify.py` — passed
+- `python tools/codex_verify.py` — passed on the temporary candidate before the performance gates
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf019_largebook_baseline.9uppKV/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf` — passed; focused seven-case gate improved (`26.4626s -> 25.8086s`)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf019_largebook_baseline.9uppKV/satsolver.py --candidate-cli-script satsolver.py special/pigeonhole.cnf special/tseitin.cnf` — passed; structural guardrail improved (`0.0657s -> 0.0564s`)
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf` — passed; dense hard-case decisions/conflicts stayed unchanged
+- `python benchmark_suite.py satsolver /tmp/perf019_baseline_cli_repeat2.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script /tmp/perf019_largebook_baseline.9uppKV/satsolver.py --python-executable /usr/bin/python --repeat 2` — passed; frozen baseline `59/59` correct at `28.8865s` representative / `57.7730s` measured
+- `python tools/codex_verify.py --benchmark-mode cli --repeat 2` — passed as a correctness run but rejected as a keep gate; candidate `59/59` correct at `29.3380s` representative / `58.6760s` measured
+- `python tools/agent_queue_check.py` — passed; queue now resolves to `current_or_next_task='perf-020'`
+- `python tools/codex_verify.py` — passed again after the candidate revert and control-plane sync
 - `git diff --check` — passed
 
 ## Notes For The Next Run
@@ -38,22 +41,9 @@
 - Reuse the queue checker when adjusting `.agent/STATE.yaml` or `.agent/TASK_QUEUE.yaml`.
 - The default verifier covers `satsolver_fast.py`, but `satsolver_pysat.py` remains outside the default gate because it requires an optional external environment.
 - External libraries or solvers may be used as short-lived research references only; do not retain them in the submission path or make them a default verifier dependency.
-- After each performance experiment, either split the next evidence-backed task into `.agent/TASK_QUEUE.yaml` or record a retained-noop conclusion; do not collapse the queue back into one endless vague task.
-- The retained baseline now totals `29.7607s` representative exact-CLI time over `59` cases, and the seven-case slice still covers the dominant majority of that total while keeping `large/test_8.cnf` as the SAT-like guardrail.
-- `perf-006` showed that the remaining tiny exact-CLI floor is now dominated by Python startup on this machine, so future wrapper/startup work should be skeptical unless a materially different environment or a clearly new surface area appears.
-- `perf-007` confirmed that the main remaining native-only gap is the dense search-heavy UNSAT core, not the structural fast-exit families: PySAT cut the seven-case hotspot slice from `24.6944s` to `1.2486s`, while the retained solver still beat it on `special/pigeonhole.cnf` and `special/tseitin.cnf` by about `49x`.
-- `perf-008` showed that a true watcher split is not “just layout” in this solver: even though it removed mixed problem-ternary batches and preserved the structural fast-exit families, it perturbed propagation order enough to inflate `large/test_6.cnf` from `59,201` to `81,161` conflicts.
-- `perf-009` showed that even the apparently low-yield learnt `10+` minimization removals still matter to search quality: skipping only those scans regressed every heavy dense case and blew up `large/test_8.cnf` into the `5s` range.
-- `perf-010` showed that even a same-content ternary-first branch reorder inside `minimize_learnt()` still regressed the seven-case exact-CLI gate overall, so reason-size branch ordering itself is not a promising bookkeeping surface.
-- `perf-011` showed that peeling the first two learnt literals out of `prepare_learnt_clause()` also regressed the seven-case exact-CLI gate overall, so future learnt-finalization work should move away from pure loop-shape cleanup.
-- `perf-012` kept the first win in this recent conflict-analysis sequence by deleting a whole post-minimization metadata pass while leaving the dense hard-case decision/conflict counters unchanged. The retained repeat-aware exact-CLI baseline is now `31.9532s` over `59` cases.
-- `perf-013` refreshed the retained profile and confirmed that the next bounded experiment should move back to propagation, specifically original problem-ternary relocation or unit handling, not another tiny conflict-analysis cleanup.
-- `perf-014` kept a same-search propagation change by making the original/learnt ternary `candidate=FALSE` tail unit-first; the retained repeat-aware exact-CLI baseline is now `31.8378s` over `59` cases.
-- `perf-015` refreshed the retained propagation profile and confirmed that original problem-ternary relocation, especially the ordinary `candidate=UNASSIGNED` plus `other=UNASSIGNED` case, is still the larger remaining surface than units after the unit-first keep.
-- `perf-016` showed that splitting the dominant `candidate=UNASSIGNED` relocation branch away from the rarer `candidate=TRUE` case is not enough by itself: the dense hard-case decisions/conflicts stayed unchanged but the seven-case hotspot slice still regressed by about `0.94s`, so future relocation work should target deleted bookkeeping rather than more candidate-state branch tests.
-- `perf-017` kept exactly that narrower relocation lane: using the already-known `candidate_literal` directly on ternary relocation improved both the focused seven-case gate and the broad repeat-aware exact-CLI 59-case suite while keeping the dense hard-case decisions/conflicts unchanged.
-- `perf-018` confirmed that the recent keep did not change the search path and that original problem-ternary relocation is still primary while learnt-large relocation remains the next secondary watcher-churn bucket.
-- The next run should therefore start with `perf-019`, testing one bounded learnt-large relocation bookkeeping deletion on the dominant step-1/2 successful probe path without reopening rejected scan-head unroll, reduction-policy, physical split-list, or extra side-state lanes.
+- Do not update `benchmark_summary.md` or `experiments.jsonl` for `perf-019`; no performance keep survived this run.
+- The `perf-019` reject means future learnt-large relocation work should not trust the focused seven-case slice alone, even when the dense hard-case counters stay unchanged.
+- `perf-020` should use the broad repeat-aware exact-CLI evidence to name the extra guard cases or slices that future learnt-large relocation experiments must carry before another solver-core edit.
 
 ## Immediate Constraints
 
@@ -72,12 +62,9 @@
 - The retained portfolio thresholds still intentionally gate only `large/test_8.cnf` until a same-day broader threshold change wins cleanly.
 - Same-day exact-CLI evidence is stronger than stale benchmark history when timing signals are close.
 - External solvers or libraries may inform research, but only native-only wins belong in the retained solver path.
-- `large/test_8.cnf` is an important SAT-like guardrail for learnt-database experiments because extra retained clause load can destabilize it dramatically.
-- `large/test_8.cnf` is also an important guardrail for restart-policy experiments because even conservative restart drift can destabilize it badly.
-- On the current machine, Python interpreter startup is now the dominant floor on tiny exact-CLI runs, so most remaining wrapper-path deltas are likely to be small and noisy.
-- The current solver still owns the structural fast-exit families (`special/pigeonhole.cnf`, `special/tseitin.cnf`) even though the optional PySAT reference is dramatically faster on the dense search-heavy UNSAT hotspot slice.
+- `large/test_8.cnf` remains an important SAT-like guardrail for learnt-database and restart-sensitive changes.
+- On the current machine, Python interpreter startup is the dominant floor on tiny exact-CLI runs, so most remaining wrapper-path deltas are likely to be small and noisy.
+- The current solver still owns the structural fast-exit families (`special/pigeonhole.cnf`, `special/tseitin.cnf`) even though optional external references are dramatically faster on the dense search-heavy UNSAT hotspot slice.
 - Changing the watched-clause family order can materially change the dense UNSAT search path, so future watcher-layout experiments should assume they are heuristic changes, not neutral refactors.
-- Even low-yield long learnt-reason removals can be important search signal, so relaxed minimization selectors should be treated as SAT-guardrail-sensitive rather than as safe bookkeeping cuts.
-- Even same-content reason-size branch-order changes inside `minimize_learnt()` can regress the dense exact-CLI gate, so future conflict-analysis bookkeeping should target a different surface than ternary-vs-binary branch ordering.
-- Even pure `prepare_learnt_clause()` loop-shape cleanup can regress the dense exact-CLI gate, so future learnt-finalization work should target a different metadata surface instead of another first-literals peel or similar loop rewrite.
-- A whole-pass post-minimization metadata deletion can still win cleanly when it preserves learnt contents and dense hard-case search counters, so future boundary work should prefer that style over smaller primitive substitutions or isolated final-pass rewrites.
+- Even low-yield long learnt-reason removals can be important search signal, so relaxed minimization selectors should be treated as SAT-guardrail-sensitive rather than safe bookkeeping cuts.
+- Learnt-large relocation work now needs a broader exact-CLI guard slice than the focused seven-case hotspot before a solver-core keep is safe.

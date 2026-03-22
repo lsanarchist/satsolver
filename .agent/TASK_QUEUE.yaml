@@ -414,7 +414,7 @@ tasks:
   - id: perf-019
     phase: 2
     priority: 44
-    status: todo
+    status: done
     title: Probe learnt-large relocation bookkeeping after the post-keep profile refresh
     size: L
     depends_on:
@@ -430,3 +430,20 @@ tasks:
       - python tools/hotspot_compare.py --baseline-cli-script <baseline>/satsolver.py --candidate-cli-script satsolver.py special/pigeonhole.cnf special/tseitin.cnf
       - python tools/profile_solver.py large/test_6.cnf special/hard.cnf
       - python tools/codex_verify.py --benchmark-mode cli --repeat 2
+  - id: perf-020
+    phase: 2
+    priority: 43
+    status: todo
+    title: Refresh learnt-large exact-CLI guard slices after the broad-suite reject
+    size: M
+    depends_on:
+      - perf-019
+    goal: Use the perf-019 mismatch between the focused hotspot win and the repeat-aware 59-case exact-CLI regression to identify which extra non-hotspot exact-CLI guard cases future learnt-large relocation experiments must satisfy before another solver-core keep attempt.
+    deliverables:
+      - refreshed `PLANS.md` notes naming the broader exact-CLI guard cases for learnt-large relocation work
+      - updated next-task recommendation grounded in the broad-suite regression evidence
+      - no solver change required if this run is measurement-only
+    verify:
+      - python tools/profile_solver.py large/test_6.cnf special/hard.cnf
+      - python tools/codex_verify.py --benchmark-mode cli --repeat 2
+      - python tools/codex_verify.py

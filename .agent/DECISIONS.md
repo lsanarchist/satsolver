@@ -65,3 +65,9 @@
 - Context: Recent `prepare_learnt_clause()` loop rewrites and primitive substitutions kept losing even when they reduced visible profiler costs, but `perf-012` won by computing best backtrack level and LBD metadata during the learnt-compaction pass itself.
 - Decision: Prefer conflict-analysis boundary changes that delete a whole post-minimization pass while preserving learnt clause contents and search counters, rather than smaller `prepare_learnt_clause()` loop-shape or primitive-substitution cleanups.
 - Consequence: Future queue tasks can keep exploring same-search analyze-to-finalization boundary work, but should treat isolated final-pass rewrites as low-priority unless they remove materially more work than those rejected micro-optimizations did.
+
+## D-012 — 2026-03-22
+
+- Context: `perf-019` improved the focused seven-case exact-CLI hotspot and the structural fast-exit guardrail, and it preserved dense hard-case decisions/conflicts, but it still regressed the stronger repeat-aware 59-case exact-CLI suite.
+- Decision: Treat future learnt-large relocation experiments as needing a broader exact-CLI guard slice than the focused seven-case hotspot before any solver-core keep is accepted.
+- Consequence: Follow-on queue tasks on the learnt-large lane should refresh or widen their exact-CLI guard cases before another keep attempt, even when the dense hotspot counters look stable.
