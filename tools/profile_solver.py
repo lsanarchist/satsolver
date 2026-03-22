@@ -149,6 +149,8 @@ class RunStats:
     learnt_large_success_sub10_step1_2: int
     learnt_large_success_sub10_step3_plus: int
     learnt_large_success_sub10_step3_4: int
+    learnt_large_success_sub10_step3: int
+    learnt_large_success_sub10_step4: int
     learnt_large_success_sub10_step5_plus: int
     max_large_probe: int
     analyze_reason_traversals: int
@@ -345,6 +347,8 @@ class ProfiledSolver(satsolver.Solver):
         self.learnt_large_success_sub10_step1_2 = 0
         self.learnt_large_success_sub10_step3_plus = 0
         self.learnt_large_success_sub10_step3_4 = 0
+        self.learnt_large_success_sub10_step3 = 0
+        self.learnt_large_success_sub10_step4 = 0
         self.learnt_large_success_sub10_step5_plus = 0
         self.max_large_probe = 0
         self.analyze_reason_traversals = 0
@@ -647,8 +651,12 @@ class ProfiledSolver(satsolver.Solver):
                                 self.learnt_large_success_sub10_step1_2 += 1
                             else:
                                 self.learnt_large_success_sub10_step3_plus += 1
-                                if probe_steps <= 4:
+                                if probe_steps == 3:
                                     self.learnt_large_success_sub10_step3_4 += 1
+                                    self.learnt_large_success_sub10_step3 += 1
+                                elif probe_steps == 4:
+                                    self.learnt_large_success_sub10_step3_4 += 1
+                                    self.learnt_large_success_sub10_step4 += 1
                                 else:
                                     self.learnt_large_success_sub10_step5_plus += 1
                         else:
@@ -1219,6 +1227,8 @@ def build_run_stats(
             learnt_large_success_sub10_step1_2=0,
             learnt_large_success_sub10_step3_plus=0,
             learnt_large_success_sub10_step3_4=0,
+            learnt_large_success_sub10_step3=0,
+            learnt_large_success_sub10_step4=0,
             learnt_large_success_sub10_step5_plus=0,
             max_large_probe=0,
             analyze_reason_traversals=0,
@@ -1390,6 +1400,8 @@ def build_run_stats(
         learnt_large_success_sub10_step1_2=solver.learnt_large_success_sub10_step1_2,
         learnt_large_success_sub10_step3_plus=solver.learnt_large_success_sub10_step3_plus,
         learnt_large_success_sub10_step3_4=solver.learnt_large_success_sub10_step3_4,
+        learnt_large_success_sub10_step3=solver.learnt_large_success_sub10_step3,
+        learnt_large_success_sub10_step4=solver.learnt_large_success_sub10_step4,
         learnt_large_success_sub10_step5_plus=solver.learnt_large_success_sub10_step5_plus,
         max_large_probe=solver.max_large_probe,
         analyze_reason_traversals=solver.analyze_reason_traversals,
@@ -1652,6 +1664,16 @@ def main() -> int:
         learnt_large_success_sub10_step5_plus_share = (
             stats.learnt_large_success_sub10_step5_plus / stats.learnt_large_success_sub10_step3_plus
             if stats.learnt_large_success_sub10_step3_plus
+            else 0.0
+        )
+        learnt_large_success_sub10_step3_share = (
+            stats.learnt_large_success_sub10_step3 / stats.learnt_large_success_sub10_step3_4
+            if stats.learnt_large_success_sub10_step3_4
+            else 0.0
+        )
+        learnt_large_success_sub10_step4_share = (
+            stats.learnt_large_success_sub10_step4 / stats.learnt_large_success_sub10_step3_4
+            if stats.learnt_large_success_sub10_step3_4
             else 0.0
         )
         large_len4_share = (
@@ -1976,8 +1998,12 @@ def main() -> int:
                 f"learnt_large_success_sub10_step1_2_share={learnt_large_success_sub10_step1_2_share:.4f} "
                 f"learnt_large_success_sub10_step3_plus_share={learnt_large_success_sub10_step3_plus_share:.4f} "
                 f"learnt_large_success_sub10_step3_4={stats.learnt_large_success_sub10_step3_4} "
+                f"learnt_large_success_sub10_step3={stats.learnt_large_success_sub10_step3} "
+                f"learnt_large_success_sub10_step4={stats.learnt_large_success_sub10_step4} "
                 f"learnt_large_success_sub10_step5_plus={stats.learnt_large_success_sub10_step5_plus} "
                 f"learnt_large_success_sub10_step3_4_share={learnt_large_success_sub10_step3_4_share:.4f} "
+                f"learnt_large_success_sub10_step3_share={learnt_large_success_sub10_step3_share:.4f} "
+                f"learnt_large_success_sub10_step4_share={learnt_large_success_sub10_step4_share:.4f} "
                 f"learnt_large_success_sub10_step5_plus_share={learnt_large_success_sub10_step5_plus_share:.4f} "
                 f"max_large_probe={stats.max_large_probe} avg_learnt_before={avg_learnt_before:.2f} "
                 f"avg_learnt_after={avg_learnt_after:.2f} max_learnt_before={stats.max_learnt_before} "

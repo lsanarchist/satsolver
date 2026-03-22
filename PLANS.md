@@ -40,6 +40,48 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-029-sub10-step34-exact-step-split`
+
+- Status: completed
+- Task family: native-only learnt-large profiling refresh
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-029`, by splitting the surviving `sub10 step-3/4` learnt-large lane into exact `step-3` versus `step-4` counts before another solver-core experiment
+- Assumptions:
+  - `perf-028` ruled out applying the direct watched-slot rewrite across the whole `sub10 step-3/4` aggregate, so this run should restore measurement before any new solver-core candidate.
+  - The current profiler already exposes `learnt_large_success_sub10_step3_4`, which should be refined into exact `step-3` and `step-4` counters without changing solver behavior.
+  - A completed measurement-only outcome is valid if it adds the missing exact-step counters, verifies them, and leaves the queue with a narrower next experiment.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-029` in progress in the control plane and record the active profiling task in `PLANS.md`.
+- [x] Add profiler-only exact `step-3` and `step-4` learnt-large success counters plus regression coverage, then run the supplemental `satlib_more` profile sweep.
+- [x] Update the queue with the measured split, verify the final state, and commit.
+
+### Verification
+
+- `python -m unittest discover -s tests -p 'test_profile_solver.py' -q`
+- passed: the updated profiler invariants and direct learnt-large success-bucket test stayed green, and the profiler test file still ran `15/15` green
+- `python tools/profile_solver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- passed: the surviving `sub10 step-3/4` lane split in favor of exact `step-3` on the real target trio, with `uuf125-010` at `1713 vs 843`, `uf125-01` at `12 vs 9`, and `uf125-010` at `126 vs 99` for `step-3` versus `step-4`; `jnh10` stayed balanced at `2 vs 2`, while `jnh1` showed a small `step-4`-only tail at `0 vs 3`
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync: the queue now resolves deterministically to `current_or_next_task='perf-030'`
+- `python tools/codex_verify.py`
+- passed after the final control-plane sync: the repo recompiled, the queue check passed, all `75/75` tests passed, and both default wrapper smoke paths remained green
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Closed `perf-029` as a measurement-only profiling run with no solver change.
+- Added profiler-only exact-step counters in `tools/profile_solver.py` plus matching regression coverage in `tests/test_profile_solver.py`, so the repo can now separate `sub10 step-3` from `sub10 step-4` learnt-large successes instead of treating all `step-3/4` work as one bucket.
+- The queue question is now answered: the surviving exact-step signal is led by `step-3` across `uuf125-010` and the `uf*` pair, while `step-4` remains present mainly as a guardrail tail, especially on `jnh1`.
+- The queue therefore advances to `perf-030`, a bounded solver-core experiment that should touch only the exact `sub10 step-3` learnt-large success lane before re-running the usual focused and supplemental gates.
+
+### Remaining risks
+
+- The new counters explain which exact `sub10 step-3/4` sublane is strongest, but they do not guarantee that a `step-3` rewrite will clear the primary seven-case gate. The next task still has to stay narrow and treat `step-4` as a guardrail rather than reopening the whole rejected aggregate.
+
 ## 2026-03-22 `perf-028-sub10-step34-learnt-large-success-path`
 
 - Status: completed
