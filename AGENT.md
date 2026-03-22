@@ -8,6 +8,7 @@ Maintain a benchmark-driven, standard-library Python SAT solver that stays corre
 
 - Correctness and repeatability come before speculative speedups.
 - Solver changes are benchmark-driven: keep or reject them based on same-day evidence, not intuition alone.
+- Long-running optimization work is expressed as a rolling queue of small experiments, not as one vague endless task.
 - Prefer small, reviewable, reversible slices over broad rewrites.
 - Preserve forward progress for unattended runs by keeping queue state in repo files instead of chat history.
 - Use existing repo tools and tests before inventing new workflows.
@@ -38,6 +39,7 @@ Maintain a benchmark-driven, standard-library Python SAT solver that stays corre
 
 - The required invocation stays `python satsolver.py input.cnf output.txt`.
 - Submission-path code must remain standard-library only.
+- External libraries or solvers may be used only as short-lived research or comparison references; retained solver code and default verification must stay standard-library only.
 - `satsolver_core.py` is the preferred home for shared solving behavior; wrappers stay thin unless the task is explicitly wrapper-specific.
 - `tools/checker.py` is the correctness oracle for solver output format.
 - `python tools/codex_verify.py` is the default repo-wide verification gate after meaningful changes.
@@ -66,7 +68,7 @@ Maintain a benchmark-driven, standard-library Python SAT solver that stays corre
 
 - Phase 0: keep the autonomous queue control plane trustworthy, deterministic, and documented.
 - Phase 1: improve solver correctness, maintainability, and shared-code hygiene.
-- Phase 2: pursue benchmark-validated performance work and durable experiment reporting.
+- Phase 2: pursue a rolling benchmark-validated native-only performance queue, using external references only for non-retained research.
 - Phase 3: polish operator tooling, recovery paths, and secondary documentation.
 
 ## Acceptance Criteria

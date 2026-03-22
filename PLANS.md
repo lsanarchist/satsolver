@@ -40,6 +40,43 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-002-native-optimization-queue`
+
+- Status: completed
+- Task family: queue seeding for native-only performance research
+- Branch/worktree: current checkout
+- Prompt summary: create a long-running SAT-solver optimization direction that may use external libraries during research while keeping the final retained solver standard-library only
+- Assumptions:
+  - The control plane should not encode this as one endless vague task because queued work in this repo must stay bounded and verifiable.
+  - External libraries or solvers are acceptable only as short-lived comparison references; retained code and default verification must remain native-only.
+  - The best single-run slice is to reopen the queue with a deterministic performance program and leave the first concrete benchmark task ready for the next run.
+- Escalations: none
+
+### Plan
+
+- [x] Reframe the open-ended optimization goal as a rolling queue of bounded performance tasks.
+- [x] Sync the native-only policy and external-reference rule into the durable repo guidance.
+- [x] Reopen the queue, point the next run at the first exact-CLI baseline refresh task, and verify the control plane.
+
+### Verification
+
+- `python tools/agent_queue_check.py`
+- passed: the refreshed queue, state, and next-task hint are consistent
+- `python tools/codex_verify.py`
+- passed: compile, queue check, unit tests, and standard smoke checks all remained green after the queue refresh
+- `git diff --check`
+- passed
+
+### Outcome
+
+- Reopened the autonomous queue with a rolling native-only optimization program instead of leaving the repo without queued work.
+- Added concrete benchmark-driven tasks for baseline refresh, propagation experiments, heuristic experiments, wrapper-overhead work, and optional external-reference research.
+- Clarified in the durable docs that external libraries are allowed only as short-lived research references and that only native-only wins may be retained in the submission path.
+
+### Remaining risks
+
+- The new optimization lane still needs same-day baseline refresh work in `perf-003` before any specific solver-change experiment should be attempted.
+
 ## 2026-03-22 `perf-001-portfolio-gate-revalidation`
 
 - Status: completed

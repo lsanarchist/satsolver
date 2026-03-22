@@ -115,3 +115,101 @@ tasks:
       - python tools/codex_verify.py
       - python tools/hotspot_compare.py --baseline-cli-script <baseline>/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf medium/test_4.cnf large/test_10.cnf large/test_8.cnf
       - python tools/codex_verify.py --benchmark-mode cli --repeat 2
+  - id: perf-002
+    phase: 2
+    priority: 95
+    status: done
+    title: Seed a rolling native-only SAT optimization program
+    size: S
+    depends_on: []
+    goal: Reopen the queue with a long-running but bounded optimization program that keeps the retained solver standard-library only while allowing external references for short-lived research.
+    deliverables:
+      - updated native-only optimization guidance in AGENT.md and AGENTS.md
+      - reopened performance queue with small benchmark-driven tasks
+      - refreshed control-plane state and handoff
+    verify:
+      - python tools/agent_queue_check.py
+      - python tools/codex_verify.py
+  - id: perf-003
+    phase: 2
+    priority: 94
+    status: todo
+    title: Refresh the native-only exact-CLI baseline and hotspot slice
+    size: M
+    depends_on:
+      - perf-002
+    goal: Rebuild a same-day exact-CLI baseline for the retained standard-library solver, identify the hottest representative benchmarks, and record the next native-only optimization targets from fresh evidence.
+    deliverables:
+      - refreshed hotspot slice with rationale in PLANS.md
+      - exact-CLI baseline timings for the retained solver
+      - follow-on optimization recommendations grounded in same-day data
+    verify:
+      - python tools/codex_verify.py
+      - python tools/codex_verify.py --benchmark-mode cli --repeat 2
+  - id: perf-004
+    phase: 2
+    priority: 90
+    status: todo
+    title: Explore propagation and clause-storage micro-optimizations
+    size: L
+    depends_on:
+      - perf-003
+    goal: Test one bounded candidate that reduces propagation or clause-database overhead on the refreshed hotspot slice, keeping it only if same-day exact-CLI evidence wins cleanly.
+    deliverables:
+      - candidate code or retained-noop conclusion with rationale
+      - targeted regression coverage if behavior changes
+      - PLANS.md experiment notes
+    verify:
+      - python tools/codex_verify.py
+      - python tools/hotspot_compare.py --baseline-cli-script <baseline>/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf medium/test_4.cnf large/test_10.cnf large/test_8.cnf
+      - python tools/codex_verify.py --benchmark-mode cli --repeat 2
+  - id: perf-005
+    phase: 2
+    priority: 85
+    status: todo
+    title: Explore branching and restart heuristic changes
+    size: L
+    depends_on:
+      - perf-003
+    goal: Test one bounded change to branching or restart policy against the refreshed hotspot slice, keeping it only if the same-day exact-CLI data justifies it.
+    deliverables:
+      - candidate code or retained-noop conclusion with rationale
+      - targeted regression coverage if behavior changes
+      - PLANS.md experiment notes
+    verify:
+      - python tools/codex_verify.py
+      - python tools/hotspot_compare.py --baseline-cli-script <baseline>/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf medium/test_4.cnf large/test_10.cnf large/test_8.cnf
+      - python tools/codex_verify.py --benchmark-mode cli --repeat 2
+  - id: perf-006
+    phase: 2
+    priority: 80
+    status: todo
+    title: Measure and reduce native-only wrapper and startup overhead
+    size: M
+    depends_on:
+      - perf-003
+    goal: Identify avoidable CLI or wrapper overhead in the standard-library path and keep only wins that improve exact-CLI benchmark results without changing the required interface.
+    deliverables:
+      - candidate code or retained-noop conclusion with rationale
+      - updated smoke or regression coverage if the execution path changes
+      - PLANS.md experiment notes
+    verify:
+      - python tools/codex_verify.py
+      - python tools/hotspot_compare.py --baseline-cli-script <baseline>/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf medium/test_4.cnf large/test_10.cnf large/test_8.cnf
+      - python tools/codex_verify.py --benchmark-mode cli --repeat 2
+  - id: perf-007
+    phase: 2
+    priority: 70
+    status: todo
+    title: Use external solver references to derive native-only gap targets
+    size: M
+    depends_on:
+      - perf-003
+    goal: Compare the retained solver against optional external-library or non-native solver references as short-lived research tools, then translate any meaningful gap into native-only follow-on work without retaining those dependencies.
+    deliverables:
+      - external-reference notes in PLANS.md
+      - native-only follow-on task suggestions or retained-noop conclusion
+      - no retained non-standard-library submission dependency
+    verify:
+      - python tools/codex_verify.py
+      - any adapter-specific or external comparison command used for the research run

@@ -2,7 +2,7 @@
 
 ## Scope
 
-This repository is a benchmark-driven, standard-library Python SAT solver. The default autonomous task family is SAT solver maintenance: correctness fixes, tooling improvements, benchmark-driven performance experiments, and durable docs/report updates around those changes.
+This repository is a benchmark-driven, standard-library Python SAT solver. The default autonomous task family is SAT solver maintenance: correctness fixes, tooling improvements, benchmark-driven performance experiments, and durable docs/report updates around those changes. Long-running optimization work should be expressed as a rolling queue of bounded experiments rather than as one open-ended mega-task.
 
 ## Read First
 
@@ -44,8 +44,9 @@ This repository is a benchmark-driven, standard-library Python SAT solver. The d
 7. If the task can change solver behavior or performance, also run a same-day comparison path:
    - focused A/B: `python tools/hotspot_compare.py ...`
    - broader validation: `python tools/codex_verify.py --benchmark-mode cli --repeat 2`
-8. Update `.agent/STATE.yaml`, `.agent/TASK_QUEUE.yaml`, `.agent/HANDOFF.md`, and `.agent/WORKLOG.md` before finishing.
-9. Leave durable guidance in repo files, not only in the final chat message.
+8. After a performance experiment, either queue the next evidence-backed slice or record a retained-noop conclusion instead of leaving an endless vague task behind.
+9. Update `.agent/STATE.yaml`, `.agent/TASK_QUEUE.yaml`, `.agent/HANDOFF.md`, and `.agent/WORKLOG.md` before finishing.
+10. Leave durable guidance in repo files, not only in the final chat message.
 
 ## Commands
 
@@ -59,6 +60,7 @@ This repository is a benchmark-driven, standard-library Python SAT solver. The d
 
 - Keep the submission path standard-library only.
 - Preserve the required CLI contract: `python satsolver.py input.cnf output.txt`.
+- External solvers or libraries may be used only as research references; never retain them in the submission path or make them a default verification dependency.
 - Prefer shared solver changes in `satsolver_core.py`; keep wrappers thin unless the task is explicitly wrapper/startup related.
 - Treat `tools/checker.py` as the correctness oracle for solver output format.
 - Treat `AGENT.md` plus `.agent/*` as the authoritative autonomous control plane.

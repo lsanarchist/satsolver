@@ -3,41 +3,48 @@
 ## Current State
 
 - The repo now has a queue-driven autonomous control plane rooted in `AGENT.md` and `.agent/*`, plus a machine-checkable queue validator.
-- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, and `perf-001` are complete.
-- There is no active in-progress task and no remaining queued `todo` task.
+- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, and `perf-002` are complete.
+- The queue has been reopened with a rolling native-only optimization program.
+- There is no active in-progress task; the next deterministic task is `perf-003`.
 
 ## What Changed This Run
 
-- Revalidated the current portfolio gate against today’s corpus and confirmed that the retained thresholds still route only `large/test_8.cnf` through the portfolio path.
-- Tested one bounded scratch candidate that lowered the portfolio clause-count threshold from `1000` to `800`, which would have admitted `large/test_1.cnf`, `large/test_7.cnf`, and `large/test_9.cnf`.
-- Rejected that broadened candidate after the same-day exact-CLI hotspot slice regressed from `0.4872s` to `0.6538s`, so no solver code was kept.
+- Seeded a new performance queue for ongoing SAT optimization work instead of leaving the repo with no queued tasks.
+- Encoded the user’s long-running optimization goal as bounded benchmark-driven tasks so future runs can keep making deterministic progress.
+- Clarified that external solvers or libraries may be used during research only as non-retained references; the retained solver and default verification remain standard-library only.
 
 ## Current Focus
 
-- The queue is complete. Future identical prompts should stop cleanly unless new tasks are added to `.agent/TASK_QUEUE.yaml`.
+- Start `perf-003` next: refresh the same-day native-only exact-CLI baseline and pick the next hotspot slice from fresh evidence.
 
 ## Recommended Next Tasks
 
-- None. Add a new queued task before the next autonomous run.
+- `perf-003` — refresh the native-only exact-CLI baseline and hotspot slice
+- `perf-004` — test one propagation or clause-storage micro-optimization after the baseline refresh
+- `perf-005` — test one bounded branching or restart heuristic change after the baseline refresh
 
 ## Verification From This Run
 
-- `python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script /tmp/scratch_satsolver_portfolio_minclauses800.py --repeat 2 large/test_1.cnf large/test_7.cnf large/test_8.cnf large/test_9.cnf` — candidate rejected
+- `python tools/agent_queue_check.py` — passed
 - `python tools/codex_verify.py` — passed
+- `git diff --check` — passed
 
 ## Notes For The Next Run
 
 - Start with the read order in `.agent/RUNBOOK.md`.
 - Reconcile `STATE.yaml` against the repo tree before selecting a task.
-- If new work is queued later, keep `PLANS.md` updated for any multi-step or code-bearing task.
+- Keep `PLANS.md` updated for any multi-step or code-bearing task.
 - Reuse the queue checker when adjusting `.agent/STATE.yaml` or `.agent/TASK_QUEUE.yaml`.
 - The default verifier covers `satsolver_fast.py`, but `satsolver_pysat.py` remains outside the default gate because it requires an optional external environment.
+- External libraries or solvers may be used as short-lived research references only; do not retain them in the submission path or make them a default verifier dependency.
+- After each performance experiment, either split the next evidence-backed task into `.agent/TASK_QUEUE.yaml` or record a retained-noop conclusion; do not collapse the queue back into one endless vague task.
 
 ## Immediate Constraints
 
 - Keep the submission path standard-library only.
 - Preserve `python satsolver.py input.cnf output.txt`.
 - Do not update `benchmark_summary.md` or `experiments.jsonl` unless a performance result is kept.
+- External comparison tooling is allowed only for research and must not become a retained submission dependency.
 
 ## Repo Truths To Preserve
 
@@ -48,3 +55,4 @@
 - `tools/codex_verify.py` is expected to cover both `satsolver.py` and `satsolver_fast.py` smoke paths by default.
 - The retained portfolio thresholds still intentionally gate only `large/test_8.cnf` until a same-day broader threshold change wins cleanly.
 - Same-day exact-CLI evidence is stronger than stale benchmark history when timing signals are close.
+- External solvers or libraries may inform research, but only native-only wins belong in the retained solver path.

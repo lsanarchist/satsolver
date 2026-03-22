@@ -3,23 +3,28 @@ project: satsolver
 mode: autonomous_queue
 current_phase: 2
 current_task_id: null
-last_completed_task_id: perf-001
+last_completed_task_id: perf-002
 repo_health: green_verified
 working_assumptions:
   - AGENT.md plus .agent/* are the authoritative autonomous control plane.
   - PLANS.md remains the durable narrative log for multi-step autonomous work, but not the task-selection source of truth.
   - Fast verification defaults to python tools/codex_verify.py, which now includes tools/agent_queue_check.py and satsolver_fast.py smoke checks.
+  - External libraries may be used only as short-lived research references; retained solver code and default verification remain standard-library only.
 blockers: []
 recent_files:
+  - AGENT.md
+  - AGENTS.md
+  - .agent/DECISIONS.md
   - .agent/HANDOFF.md
   - .agent/STATE.yaml
   - .agent/TASK_QUEUE.yaml
   - .agent/WORKLOG.md
   - PLANS.md
-next_task_hint: null
+next_task_hint: perf-003
 notes:
   - The repo previously had AGENTS.md plus PLANS.md guidance but no repo-local queue control plane.
   - Routine verification now checks queue consistency before unit tests and solver smoke cases.
   - Shared DIMACS parsing and result-writing now live in satsolver_io.py for the thin wrappers.
   - Routine verification now also smoke-tests the standard-library alternate wrapper path via satsolver_fast.py.
   - The retained portfolio thresholds still gate only large/test_8.cnf after same-day revalidation; no broadened threshold change was kept.
+  - The queue now runs as a rolling native-only optimization program rather than as a single open-ended performance task.

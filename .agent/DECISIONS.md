@@ -35,3 +35,9 @@
 - Context: After the shared wrapper I/O extraction, routine verification still only smoke-tested the main submission CLI.
 - Decision: Make `python tools/codex_verify.py` cover `satsolver_fast.py` smoke checks by default, while keeping `satsolver_pysat.py` out of the default gate because it depends on an optional external environment.
 - Consequence: The standard-library alternate wrapper path is now exercised automatically on routine runs without making the default verifier depend on external tooling.
+
+## D-007 — 2026-03-22
+
+- Context: The project now has an open-ended user request to keep optimizing the solver indefinitely while still preserving the standard-library-only submission path.
+- Decision: Represent that direction as a rolling queue of bounded benchmark-driven tasks, and allow external libraries or solvers only as short-lived research references that must never become retained submission dependencies.
+- Consequence: Future runs can keep making deterministic progress on native-only performance work without weakening the queue discipline or the standard-library constraint.
