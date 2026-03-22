@@ -3,7 +3,7 @@ project: satsolver
 mode: autonomous_queue
 current_phase: 2
 current_task_id: null
-last_completed_task_id: perf-014
+last_completed_task_id: perf-015
 repo_health: green_verified
 working_assumptions:
   - AGENT.md plus .agent/* are the authoritative autonomous control plane.
@@ -12,16 +12,12 @@ working_assumptions:
   - External libraries may be used only as short-lived research references; retained solver code and default verification remain standard-library only.
 blockers: []
 recent_files:
-  - satsolver_core.py
-  - tools/profile_solver.py
   - PLANS.md
-  - benchmark_summary.md
-  - experiments.jsonl
   - .agent/STATE.yaml
   - .agent/TASK_QUEUE.yaml
   - .agent/HANDOFF.md
   - .agent/WORKLOG.md
-next_task_hint: perf-015
+next_task_hint: perf-016
 notes:
   - The repo previously had AGENTS.md plus PLANS.md guidance but no repo-local queue control plane.
   - Routine verification now checks queue consistency before unit tests and solver smoke cases.
@@ -41,3 +37,4 @@ notes:
   - Perf-012 kept a solver change: computing backtrack/LBD metadata during post-minimization compaction improved the seven-case exact-CLI slice and the repeat-aware 59-case exact-CLI suite while keeping the dense hard-case decision/conflict counters unchanged.
   - Perf-013 kept no solver change: the retained post-perf-012 profile still shows propagate() dominating end-to-end time, with original problem-ternary relocation and unit handling remaining the biggest concentrated surface on the dense UNSAT hotspots.
   - Perf-014 kept a solver change: taking the overwhelmingly common unit path directly in the ternary candidate-false tail improved both the seven-case exact-CLI hotspot slice and the same-day repeat-aware 59-case exact-CLI suite while keeping the dense hard-case decision/conflict counters unchanged.
+  - Perf-015 kept no solver change: the retained post-perf-014 profile still shows propagate() dominating end-to-end time, with original problem-ternary relocation still the larger remaining surface than units on the dense UNSAT hotspots.

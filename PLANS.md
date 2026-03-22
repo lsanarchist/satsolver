@@ -40,6 +40,44 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-015-post-keep-propagation-profile-refresh`
+
+- Status: completed
+- Task family: native-only dense-UNSAT propagation profiling refresh
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-015`, by refreshing the dense-UNSAT propagation profile after the retained `perf-014` unit-first ternary-tail keep and use that evidence to choose the next bounded experiment
+- Assumptions:
+  - `perf-014` changed only a narrow ternary `candidate=FALSE` tail and kept the dense hard-case decision/conflict counters unchanged, so this run should re-measure the retained solver before stacking another propagation change on top.
+  - The right deliverable for this run is refreshed propagation evidence plus a narrower next task, not another speculative patch bundled into the same turn.
+  - A measurement-only outcome is valid as long as the repo state, plan log, and queue all move forward deterministically.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-015` in progress in the control plane and record the active profiling task in `PLANS.md`.
+- [x] Run the required dense-UNSAT profiling commands on the retained solver and summarize the new dominant propagation surfaces.
+- [x] Update the control plane with the refreshed profiling evidence, queue the next bounded experiment, verify the final state, and commit.
+
+### Verification
+
+- `python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/perf015_profile_large6.txt | head -n 45`
+- passed: after the `perf-014` keep, the retained `large/test_6.cnf` profile still ranks `propagate()` first (`16.142s`), then `analyze()` (`2.665s`), then `_minimize_learnt_and_prepare()` (`1.109s`); list churn is still concentrated in the propagation-heavy path (`append` `2.357s`, `pop` `1.345s`) rather than in a newly dominant side path
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf`
+- passed: the retained solver still shows original problem-ternary relocation as the larger remaining non-satisfied path on both dense hotspots (`61.01%` relocation / `38.31%` unit / `0.68%` conflict on `large/test_6.cnf`, `53.91%` / `45.21%` / `0.88%` on `special/hard.cnf`), with the bulk of relocation still on the ordinary `candidate=UNASSIGNED` plus `other=UNASSIGNED` path and the dense hard-case decisions/conflicts still unchanged at `72,886/59,201` and `54,245/44,619`
+- `python tools/codex_verify.py`
+- passed: the measurement-only control-plane updates compile, pass the queue check, pass all 73 tests, and clear both default wrapper smoke paths
+
+### Outcome
+
+- Refreshed the dense-UNSAT propagation profile on the retained post-`perf-014` solver and used it to reset the next optimization target from repo evidence instead of intuition.
+- The `perf-014` unit-first keep did what it was supposed to do: the dense hard-case search counters stayed unchanged and `propagate()` dropped materially in `cProfile`, but the bigger balance is now even clearer. `propagate()` is still the dominant end-to-end cost by a wide margin, and within the original problem-ternary non-satisfied path the larger remaining surface is still relocation, not units or conflicts.
+- The profiler also narrows the next lane cleanly: the dominant relocation path is still the ordinary `candidate=UNASSIGNED` plus `other=UNASSIGNED` case, while true-candidate relocation, rescue-tail `other=FALSE` cases, family hoists, watched-position side arrays, lazy normalization, and physical watch-list splits are already rejected. The queue therefore advances to `perf-016`, a bounded same-search propagation task that should target original problem-ternary relocation on the current watch traversal shape without reopening those dead ends.
+
+### Remaining risks
+
+- The refreshed evidence still points to propagation, but earlier broad problem-ternary rewrites and watch-layout changes were unstable, so the next task still needs to stay narrowly scoped and benchmark-gated.
+- This measurement run did not itself change solver code, so the retained repeat-aware exact-CLI baseline remains `31.8378s` until `perf-016` proves another concrete improvement.
+
 ## 2026-03-22 `perf-014-problem-ternary-unit-first`
 
 - Status: completed
