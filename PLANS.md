@@ -40,6 +40,49 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-011-learnt-finalization-bookkeeping`
+
+- Status: completed
+- Task family: native-only dense-UNSAT learnt-finalization bookkeeping experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-011`, by testing one bounded same-clause-content bookkeeping optimization in `prepare_learnt_clause()` or adjacent learnt finalization on the dense UNSAT hotspot slice
+- Assumptions:
+  - `perf-010` closed the `minimize_learnt()` reason-size branch-order lane for now, so this run should move to adjacent learnt-finalization bookkeeping instead of retrying the same selector surface.
+  - `prepare_learnt_clause()` is still visible enough in the retained baseline profile to justify one bounded loop-shape cleanup before moving elsewhere.
+  - A retained-noop outcome is acceptable if this narrower finalization cleanup still loses on the seven-case exact-CLI gate.
+- Escalations: none
+
+### Plan
+
+- [x] Keep `perf-011` aligned with the queue and record the active experiment in `PLANS.md` before editing.
+- [x] Test one bounded `prepare_learnt_clause()` bookkeeping candidate that preserves learnt clause contents while reducing per-literal loop work.
+- [x] Run the default verifier plus the seven-case hotspot gate, then keep or revert the candidate based on same-day evidence.
+- [x] Update the control plane with the verified outcome and queue the next sensible follow-up.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed on the temporary candidate before the performance gate
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf011_prepare_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- candidate rejected: the seven-case two-order average regressed from `29.3900s` to `30.4121s`; `large/test_6.cnf` lost badly in forward order (`13.5296s -> 14.9891s`), `special/hard.cnf` and `medium/test_4.cnf` also lost overall, and the small forward gains on `large/test_10.cnf` plus `satlib_more/uuf150-01.cnf` were not enough to compensate
+- `python tools/agent_queue_check.py`
+- passed: the final queue state resolves cleanly to `current_or_next_task='perf-012'`
+- `python tools/codex_verify.py`
+- passed: the reverted retained baseline plus final control-plane edits compile, pass the queue check, pass all 73 tests, and clear both default wrapper smoke paths
+- `git diff --check`
+- passed
+
+### Outcome
+
+- Tested one intentionally tiny learnt-finalization bookkeeping candidate in `prepare_learnt_clause()`: peel the first two learnt literals out of the main loop so the loop only handles indices `2+`, eliminating the per-iteration `index != 0` branch while preserving the resulting learnt clause contents.
+- Rejected the candidate after the seven-case exact-CLI hotspot gate still regressed overall. The main failure was `large/test_6.cnf`, which lost `1.46s` in forward order, while the reverse order only barely improved that same case and still regressed `special/hard.cnf`, `satlib_more/uuf150-01.cnf`, and the overall two-order average.
+- No solver code was retained. The durable lesson is that `prepare_learnt_clause()` loop-shape cleanup alone is too weak or too unstable to justify keeping, so the queue now advances to `perf-012` and should target a different post-minimization learnt-metadata surface.
+
+### Remaining risks
+
+- This reject only closes the specific “peel the first two literals” loop-shape cleanup inside `prepare_learnt_clause()`; it does not prove that all learnt-finalization bookkeeping work is exhausted.
+- The next task should stay same-clause-content but move away from pure loop-shape cleanup and toward a different post-minimization learnt-metadata or analyze-to-finalization boundary surface.
+
 ## 2026-03-22 `perf-010-conflict-analysis-bookkeeping`
 
 - Status: completed

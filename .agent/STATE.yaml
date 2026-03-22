@@ -3,7 +3,7 @@ project: satsolver
 mode: autonomous_queue
 current_phase: 2
 current_task_id: null
-last_completed_task_id: perf-010
+last_completed_task_id: perf-011
 repo_health: green_verified
 working_assumptions:
   - AGENT.md plus .agent/* are the authoritative autonomous control plane.
@@ -12,13 +12,13 @@ working_assumptions:
   - External libraries may be used only as short-lived research references; retained solver code and default verification remain standard-library only.
 blockers: []
 recent_files:
-  - .agent/DECISIONS.md
+  - satsolver_core.py
   - PLANS.md
   - .agent/STATE.yaml
   - .agent/TASK_QUEUE.yaml
   - .agent/HANDOFF.md
   - .agent/WORKLOG.md
-next_task_hint: perf-011
+next_task_hint: perf-012
 notes:
   - The repo previously had AGENTS.md plus PLANS.md guidance but no repo-local queue control plane.
   - Routine verification now checks queue consistency before unit tests and solver smoke cases.
@@ -34,3 +34,4 @@ notes:
   - Perf-008 kept no solver change: a true problem-ternary watcher split preserved the structural fast-exit families but changed the dense UNSAT search path badly enough to blow up large/test_6.cnf from 59,201 to 81,161 conflicts.
   - Perf-009 kept no solver change: even skipping minimization scans only for learnt 10+-literal reasons regressed the seven-case exact-CLI gate badly, including a large/test_8.cnf blow-up from about 0.38s to about 5.07s.
   - Perf-010 kept no solver change: even a same-content ternary-first branch reorder inside minimize_learnt() regressed the seven-case exact-CLI gate overall, so future conflict-analysis bookkeeping should move away from reason-size branch-order tweaks.
+  - Perf-011 kept no solver change: peeling the first two literals out of prepare_learnt_clause() regressed the seven-case exact-CLI gate overall, so future learnt-finalization work should move away from pure loop-shape cleanup.

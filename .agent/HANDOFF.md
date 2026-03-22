@@ -3,30 +3,29 @@
 ## Current State
 
 - The repo now has a queue-driven autonomous control plane rooted in `AGENT.md` and `.agent/*`, plus a machine-checkable queue validator.
-- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, `perf-008`, `perf-009`, and `perf-010` are complete.
+- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, `perf-008`, `perf-009`, `perf-010`, and `perf-011` are complete.
 - The queue has been reopened with a rolling native-only optimization program.
-- There is no active in-progress task; the next deterministic task is `perf-011`.
+- There is no active in-progress task; the next deterministic task is `perf-012`.
 
 ## What Changed This Run
 
-- Tested one same-clause-content conflict-analysis bookkeeping candidate by making `minimize_learnt()` check ternary reasons before binary reasons, since the current dense UNSAT reason mix is still overwhelmingly ternary.
-- Rejected the candidate after the seven-case exact-CLI hotspot gate regressed from `30.6097s` to `32.9908s`; `special/hard.cnf` improved in forward order, but `large/test_6.cnf` regressed in both orders and the reverse half lost broadly.
-- No solver code was retained. The durable lesson is that even same-content reason-size branch-order cleanups inside `minimize_learnt()` are too weak or too unstable to trust here, so the queue now advances to `perf-011`.
+- Tested one same-clause-content learnt-finalization bookkeeping candidate in `prepare_learnt_clause()` by peeling the first two learnt literals out of the main loop and leaving the loop to handle only indices `2+`.
+- Rejected the candidate after the seven-case exact-CLI hotspot gate regressed from `29.3900s` to `30.4121s`; the main loss was `large/test_6.cnf` in forward order (`13.5296s -> 14.9891s`), and the small wins on `large/test_10.cnf` plus `satlib_more/uuf150-01.cnf` were not enough to recover the overall average.
+- No solver code was retained. The durable lesson is that pure `prepare_learnt_clause()` loop-shape cleanup is too weak or too unstable to trust here, so the queue now advances to `perf-012`.
 
 ## Current Focus
 
-- Start `perf-011` next: probe learnt-finalization bookkeeping now that the minimize branch-order lane has been rejected.
+- Start `perf-012` next: probe post-minimization learnt-metadata bookkeeping now that the pure `prepare_learnt_clause()` loop-shape lane has also been rejected.
 
 ## Recommended Next Tasks
 
-- `perf-011` — probe learnt-finalization bookkeeping after the minimize-branch-order reject
+- `perf-012` — probe post-minimization learnt-metadata bookkeeping after the loop-shape reject
 
 ## Verification From This Run
 
-- `python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/perf010_profile_large6.txt | head -n 45` — passed; the retained baseline still showed `analyze()` plus `minimize_learnt()` as the current conflict-analysis bookkeeping surface
 - `python tools/codex_verify.py` — passed on the temporary candidate before the performance gate
-- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf010_ternaryfirst_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf` — candidate rejected (`30.6097s` baseline versus `32.9908s` candidate)
-- `python tools/agent_queue_check.py` — passed
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf011_prepare_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf` — candidate rejected (`29.3900s` baseline versus `30.4121s` candidate)
+- `python tools/agent_queue_check.py` — passed; queue now resolves to `current_or_next_task='perf-012'`
 - `python tools/codex_verify.py` — passed
 - `git diff --check` — passed
 
@@ -45,7 +44,8 @@
 - `perf-008` showed that a true watcher split is not “just layout” in this solver: even though it removed mixed problem-ternary batches and preserved the structural fast-exit families, it perturbed propagation order enough to inflate `large/test_6.cnf` from `59,201` to `81,161` conflicts.
 - `perf-009` showed that even the apparently low-yield learnt `10+` minimization removals still matter to search quality: skipping only those scans regressed every heavy dense case and blew up `large/test_8.cnf` into the `5s` range.
 - `perf-010` showed that even a same-content ternary-first branch reorder inside `minimize_learnt()` still regressed the seven-case exact-CLI gate overall, so reason-size branch ordering itself is not a promising bookkeeping surface.
-- The next run should therefore move away from `minimize_learnt()` branch-order tweaks and instead test one learnt-finalization bookkeeping change in `perf-011`.
+- `perf-011` showed that peeling the first two learnt literals out of `prepare_learnt_clause()` also regressed the seven-case exact-CLI gate overall, so future learnt-finalization work should move away from pure loop-shape cleanup.
+- The next run should therefore stay same-clause-content but move to `perf-012`, targeting a different post-minimization learnt-metadata or analyze-to-finalization boundary surface.
 
 ## Immediate Constraints
 
@@ -71,3 +71,4 @@
 - Changing the watched-clause family order can materially change the dense UNSAT search path, so future watcher-layout experiments should assume they are heuristic changes, not neutral refactors.
 - Even low-yield long learnt-reason removals can be important search signal, so relaxed minimization selectors should be treated as SAT-guardrail-sensitive rather than as safe bookkeeping cuts.
 - Even same-content reason-size branch-order changes inside `minimize_learnt()` can regress the dense exact-CLI gate, so future conflict-analysis bookkeeping should target a different surface than ternary-vs-binary branch ordering.
+- Even pure `prepare_learnt_clause()` loop-shape cleanup can regress the dense exact-CLI gate, so future learnt-finalization work should target a different metadata surface instead of another first-literals peel or similar loop rewrite.
