@@ -454,92 +454,90 @@ class Solver:
         self.qhead = qhead
         return None
 
-    def minimize_learnt(self, learnt: list[int], token: int) -> list[int]:
-        if len(learnt) <= 2:
-            return learnt
+    def _minimize_learnt_and_prepare(
+        self,
+        learnt: list[int],
+        token: int,
+    ) -> tuple[list[int], int, int]:
+        if len(learnt) == 1:
+            return learnt, 0, 1
 
+        # Reuse the compaction pass to finalize backtrack/LBD metadata for survivors.
         levels = self.level
         reasons = self.reason
         seen = self.seen
         clauses = self.clauses
+        self.lbd_token += 1
+        lbd_token = self.lbd_token
+        lbd_marks = self.lbd_marks
         write_index = 1
+        first_level = levels[abs(learnt[0])]
+        lbd_marks[first_level] = lbd_token
+        lbd = 1
+        best_index = 1
+        best_level = 0
 
         for read_index in range(1, len(learnt)):
             literal = learnt[read_index]
             reason_clause_id = reasons[abs(literal)]
+            keep_literal = False
             if reason_clause_id is None:
-                learnt[write_index] = literal
-                write_index += 1
-                continue
+                keep_literal = True
+            else:
+                reason_lits = clauses[reason_clause_id].lits
+                neg_literal = -literal
+                reason_size = len(reason_lits)
 
-            reason_lits = clauses[reason_clause_id].lits
-            neg_literal = -literal
-            reason_size = len(reason_lits)
+                if reason_size == 2:
+                    first, second = reason_lits
+                    other_variable = abs(second if first == neg_literal else first)
+                    keep_literal = levels[other_variable] != 0 and seen[other_variable] != token
+                elif reason_size == 3:
+                    first, second, third = reason_lits
+                    if first == neg_literal:
+                        first_variable = abs(second)
+                        second_variable = abs(third)
+                    elif second == neg_literal:
+                        first_variable = abs(first)
+                        second_variable = abs(third)
+                    else:
+                        first_variable = abs(first)
+                        second_variable = abs(second)
 
-            if reason_size == 2:
-                first, second = reason_lits
-                other_variable = abs(second if first == neg_literal else first)
-                if levels[other_variable] != 0 and seen[other_variable] != token:
-                    learnt[write_index] = literal
-                    write_index += 1
-                continue
-
-            if reason_size == 3:
-                first, second, third = reason_lits
-                if first == neg_literal:
-                    first_variable = abs(second)
-                    second_variable = abs(third)
-                elif second == neg_literal:
-                    first_variable = abs(first)
-                    second_variable = abs(third)
+                    keep_literal = (
+                        (levels[first_variable] != 0 and seen[first_variable] != token)
+                        or (levels[second_variable] != 0 and seen[second_variable] != token)
+                    )
                 else:
-                    first_variable = abs(first)
-                    second_variable = abs(second)
+                    keep_literal = False
+                    for reason_literal in reason_lits:
+                        if reason_literal == neg_literal:
+                            continue
+                        variable = abs(reason_literal)
+                        if levels[variable] != 0 and seen[variable] != token:
+                            keep_literal = True
+                            break
 
-                if (
-                    (levels[first_variable] != 0 and seen[first_variable] != token)
-                    or (levels[second_variable] != 0 and seen[second_variable] != token)
-                ):
-                    learnt[write_index] = literal
-                    write_index += 1
-                continue
-
-            redundant = True
-            for reason_literal in reason_lits:
-                if reason_literal == neg_literal:
-                    continue
-                variable = abs(reason_literal)
-                if levels[variable] != 0 and seen[variable] != token:
-                    redundant = False
-                    break
-
-            if not redundant:
+            if keep_literal:
                 learnt[write_index] = literal
+                decision_level = levels[abs(literal)]
+                if lbd_marks[decision_level] != lbd_token:
+                    lbd_marks[decision_level] = lbd_token
+                    lbd += 1
+                if decision_level > best_level:
+                    best_level = decision_level
+                    best_index = write_index
                 write_index += 1
 
         del learnt[write_index:]
-        return learnt
-
-    def prepare_learnt_clause(self, learnt: list[int]) -> tuple[int, int]:
-        self.lbd_token += 1
-        token = self.lbd_token
-        marks = self.lbd_marks
-        levels = self.level
-        best_index = 1
-        best_level = levels[abs(learnt[1])]
-        lbd = 0
-
-        for index, literal in enumerate(learnt):
-            decision_level = levels[abs(literal)]
-            if marks[decision_level] != token:
-                marks[decision_level] = token
-                lbd += 1
-            if index != 0 and decision_level > best_level:
-                best_level = decision_level
-                best_index = index
-
+        if write_index == 1:
+            return learnt, 0, 1
         learnt[1], learnt[best_index] = learnt[best_index], learnt[1]
-        return best_level, lbd
+        return learnt, best_level, lbd
+
+    def minimize_learnt(self, learnt: list[int], token: int) -> list[int]:
+        learnt, _, _ = self._minimize_learnt_and_prepare(learnt, token)
+        return learnt
 
     def analyze(self, conflict_clause_id: int) -> tuple[list[int], int, int]:
         learnt = [0]
@@ -604,13 +602,8 @@ class Solver:
                 break
             current_clause_id = reason_clause_id
 
-        learnt = self.minimize_learnt(learnt, token)
-
+        learnt, best_level, lbd = self._minimize_learnt_and_prepare(learnt, token)
         self.var_inc = var_inc
-        if len(learnt) == 1:
-            return learnt, 0, 1
-
-        best_level, lbd = self.prepare_learnt_clause(learnt)
         return learnt, best_level, lbd
 
     def pick_branch_literal(self) -> int:

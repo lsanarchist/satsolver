@@ -59,3 +59,9 @@
 - Context: `perf-009` tried the narrowest plausible relaxed-minimization selector, skipping scans only for learnt `10+`-literal reasons, after fresh dense-UNSAT counters showed that bucket removed very few literals.
 - Decision: Treat minimization-result relaxations as SAT-guardrail-sensitive heuristic changes, not as safe bookkeeping cleanup, and prefer same-clause-content conflict-analysis work before revisiting selector-based minimization shortcuts.
 - Consequence: Future queue tasks should avoid more “skip these minimization checks” rules for now and instead focus on overhead reductions that preserve the learnt clause contents.
+
+## D-011 — 2026-03-22
+
+- Context: Recent `prepare_learnt_clause()` loop rewrites and primitive substitutions kept losing even when they reduced visible profiler costs, but `perf-012` won by computing best backtrack level and LBD metadata during the learnt-compaction pass itself.
+- Decision: Prefer conflict-analysis boundary changes that delete a whole post-minimization pass while preserving learnt clause contents and search counters, rather than smaller `prepare_learnt_clause()` loop-shape or primitive-substitution cleanups.
+- Consequence: Future queue tasks can keep exploring same-search analyze-to-finalization boundary work, but should treat isolated final-pass rewrites as low-priority unless they remove materially more work than those rejected micro-optimizations did.

@@ -40,6 +40,52 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-012-post-minimization-learnt-metadata`
+
+- Status: completed
+- Task family: native-only dense-UNSAT learnt-metadata bookkeeping experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-012`, by testing one bounded same-clause-content bookkeeping change at the post-minimization analyze-to-finalization boundary on the dense UNSAT hotspot slice
+- Assumptions:
+  - `perf-011` closed the pure `prepare_learnt_clause()` loop-shape lane for now, so this run should carry metadata across the boundary rather than trying another isolated final-pass rewrite.
+  - The retained baseline profile still shows both `minimize_learnt()` and `prepare_learnt_clause()` as visible conflict-analysis costs on `large/test_6.cnf`, which makes a pass-elimination candidate more plausible than another primitive substitution.
+  - A retained-noop outcome is acceptable if folding learnt metadata into the minimization compaction still loses on the seven-case exact-CLI gate.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-012` in progress in the control plane and record the active experiment in `PLANS.md` before editing.
+- [x] Test one bounded same-content candidate that computes post-minimization backtrack and LBD metadata during compaction instead of in a separate final pass.
+- [x] Run the default verifier plus the seven-case hotspot gate, then keep or revert the candidate based on same-day evidence.
+- [x] Update the control plane with the verified outcome and queue the next sensible follow-up.
+
+### Verification
+
+- `python -m cProfile -s tottime satsolver.py large/test_6.cnf /tmp/perf012_profile_large6.txt | head -n 50`
+- passed: the retained baseline still showed `analyze()` (`2.206s`), `minimize_learnt()` (`0.674s`), and `prepare_learnt_clause()` (`0.246s`) as the current post-minimization bookkeeping surface on `large/test_6.cnf`
+- `python tools/codex_verify.py`
+- passed on the temporary candidate before the performance gates
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf012_metadata_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- passed: the seven-case two-order average improved from `30.2756s` to `29.8805s`; the main gain was forward `large/test_6.cnf` (`17.1869s -> 15.0066s`), while reverse `large/test_6.cnf` still regressed and kept this branch in the “promising but needs broader validation” bucket
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf012_metadata_baseline/satsolver.py --candidate-cli-script satsolver.py special/pigeonhole.cnf special/tseitin.cnf`
+- passed: the structural fast-exit guardrail stayed healthy and improved slightly overall (`0.0748s -> 0.0725s`)
+- `python tools/codex_verify.py --benchmark-mode cli --repeat 2`
+- passed: the repeat-aware exact-CLI 59-case suite stayed `59/59` correct and improved the retained same-day representative total from `32.2896s` to `31.9532s` (`64.5793s -> 63.9064s` measured)
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf`
+- passed: the dense hard-case search counters stayed unchanged at `72,886` decisions / `59,201` conflicts on `large/test_6.cnf` and `54,245` decisions / `44,619` conflicts on `special/hard.cnf`, which supports treating this as a same-search bookkeeping win instead of heuristic drift
+
+### Outcome
+
+- Kept one same-clause-content post-minimization boundary change: `analyze()` now uses the learnt-clause compaction pass itself to finalize best backtrack level and LBD metadata, removing the separate `prepare_learnt_clause()` pass while preserving the resulting learnt clause contents.
+- The focused seven-case gate improved modestly but credibly (`30.2756s -> 29.8805s`), and the broader repeat-aware exact-CLI 59-case suite also improved on the retained same-day baseline (`32.2896s -> 31.9532s`) with `59/59` correct outputs.
+- The profiler strengthened the keep decision: `large/test_6.cnf` and `special/hard.cnf` kept the same decision and conflict counts as the retained baseline, so this looks like deleted bookkeeping work at the analyze-to-finalization boundary rather than a changed search path.
+- Completed `perf-012` as a kept solver-core win, updated the retained benchmark narrative, and advanced the queue to `perf-013`, which should refresh the dense-UNSAT conflict-analysis profile after this new boundary keep before choosing the next bounded experiment.
+
+### Remaining risks
+
+- The focused hotspot improvement is still somewhat uneven because reverse-order `large/test_6.cnf` remained slower, so future work should not assume every nearby boundary rewrite will inherit this win automatically.
+- The next task should refresh the dense-UNSAT profile and exact surfaces after this keep instead of immediately stacking another speculative metadata change on top of it.
+
 ## 2026-03-22 `perf-011-learnt-finalization-bookkeeping`
 
 - Status: completed
