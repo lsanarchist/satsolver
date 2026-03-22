@@ -3,31 +3,31 @@
 ## Current State
 
 - The repo still uses the queue-driven autonomous control plane rooted in `AGENT.md` and `.agent/*`, plus the machine-checkable queue validator.
-- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, `perf-008`, `perf-009`, `perf-010`, `perf-011`, `perf-012`, `perf-013`, `perf-014`, `perf-015`, `perf-016`, `perf-017`, `perf-018`, `perf-019`, `perf-020`, `perf-021`, `perf-022`, `perf-023`, and `perf-024` are complete.
-- There is no active in-progress task; the next deterministic task is `perf-025`.
+- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, `perf-008`, `perf-009`, `perf-010`, `perf-011`, `perf-012`, `perf-013`, `perf-014`, `perf-015`, `perf-016`, `perf-017`, `perf-018`, `perf-019`, `perf-020`, `perf-021`, `perf-022`, `perf-023`, `perf-024`, and `perf-025` are complete.
+- There is no active in-progress task; the next deterministic task is `perf-026`.
 
 ## What Changed This Run
 
-- Closed `perf-024` as a retained no-op after testing one narrower learnt-large successful-probe bookkeeping candidate and reverting it.
-- The candidate used the direct watched-slot rewrite only on learnt clauses that satisfied the true long-and-deep overlap: `len10+` and step-3+ successful probes.
-- That narrower rule was still not a win. It slightly regressed the primary focused seven-case gate overall (`26.2060s -> 26.2748s`) and also regressed the supplemental `satlib_more` slice (`0.3201s -> 0.3316s`), with `satlib_more/uuf125-010.cnf` worse in both orders.
-- The durable lesson is that the overlap lane itself is not where the earlier `perf-023` supplemental gains came from. The next sensible step is to profile the remaining non-overlap success buckets so the following solver-core candidate targets the actual surviving sublane instead of guessing between long-but-shallow and short-but-deep work.
-- The queue now advances to `perf-025`, a measurement-only non-overlap profiling task.
+- Closed `perf-025` as a measurement-only profiling run with no solver change.
+- Added profiler-only learnt-large success-bucket counters plus tests so `tools/profile_solver.py` now reports the four cross-split learnt-large success lanes directly instead of only separate clause-length and probe-depth marginals.
+- The non-overlap question is now resolved in favor of the short-but-deep lane on the real learnt-large target trio: `uuf125-010` was `3129 > 1861`, `uf125-01` was `31 > 17`, and `uf125-010` was `304 > 210` for short-but-deep vs long-but-shallow learnt-large successful relocations.
+- `jnh10` and `jnh1` stayed low-volume learnt-large cases (`19` and `62` learnt-large relocations total) and remain problem-large guardrails rather than primary learnt-large targets.
+- The queue now advances to `perf-026`, a bounded short-but-deep solver-core experiment.
 
 ## Current Focus
 
-- Start `perf-025` next: profile the remaining non-overlap learnt-large success buckets before another solver-core edit.
+- Start `perf-026` next: test one bounded solver-core change that only touches sub-10-literal step-3+ learnt-large successful relocations.
 
 ## Recommended Next Tasks
 
-- `perf-025` — profile the non-overlap learnt-large success buckets after the overlap reject
+- `perf-026` — target the short-but-deep learnt-large success lane after the non-overlap profile
 
 ## Verification From This Run
 
-- `python tools/codex_verify.py` — passed on the temporary candidate before the performance gates
-- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf024_longdeep_baseline.vA1sej/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf` — candidate rejected on the primary early gate (`26.2060s -> 26.2748s`)
-- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf024_longdeep_baseline.vA1sej/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf` — candidate rejected on the supplemental slice too (`0.3201s -> 0.3316s`)
-- `python tools/agent_queue_check.py` — passed after the final control-plane sync; queue now resolves to `current_or_next_task='perf-025'`
+- `python -m unittest discover -s tests -p 'test_profile_solver.py' -q` — passed (`15/15` green, including the new learnt-large success bucket coverage)
+- `python tools/profile_solver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf` — passed and showed the target trio favoring short-but-deep over long-but-shallow in every case
+- `python tools/codex_verify.py` — passed while `perf-025` was active (`75/75` tests green, compile/checker/wrapper smoke all green)
+- `python tools/agent_queue_check.py` — passed after the final control-plane sync; queue now resolves to `current_or_next_task='perf-026'`
 - `python tools/codex_verify.py` — passed after the final control-plane sync
 - `git diff --check` — passed
 
@@ -39,10 +39,10 @@
 - Reuse the queue checker when adjusting `.agent/STATE.yaml` or `.agent/TASK_QUEUE.yaml`.
 - The default verifier covers `satsolver_fast.py`, but `satsolver_pysat.py` remains outside the default gate because it requires an optional external environment.
 - External libraries or solvers may be used as short-lived research references only; do not retain them in the submission path or make them a default verifier dependency.
-- Do not update `benchmark_summary.md` or `experiments.jsonl` for `perf-024`; no performance keep survived this run.
-- `perf-024` showed that the overlap lane itself is not a winner: even the narrowed `len10+` and step-3+ rewrite lost both the primary focused gate and the supplemental slice.
-- `perf-025` should therefore be a profiling run, not another immediate solver edit. The next run should determine whether the surviving potential from `perf-023` came from long-but-shallow or short-but-deep learnt-large successes.
-- Keep `jnh10` and `jnh1` in the supplemental slice as problem-large guardrails; do not let the next learnt-large task drift back into a mixed-family rewrite.
+- Do not update `benchmark_summary.md` or `experiments.jsonl` for `perf-025`; this run kept no solver change.
+- `perf-025` added four new learnt-large success counters to `tools/profile_solver.py`: `learnt_large_success_len10_plus_step1_2`, `learnt_large_success_len10_plus_step3_plus`, `learnt_large_success_sub10_step1_2`, and `learnt_large_success_sub10_step3_plus`.
+- The overlap lane is still ruled out by `perf-024`, and the remaining non-overlap evidence now points to `sub10 + step3+`, not `len10+ + step1/2`.
+- Keep `jnh10` and `jnh1` in the supplemental slice as problem-large guardrails; do not let `perf-026` drift back into a mixed-family or long-clause rewrite.
 
 ## Immediate Constraints
 

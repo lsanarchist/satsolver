@@ -40,6 +40,50 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-025-non-overlap-learnt-large-success-buckets`
+
+- Status: completed
+- Task family: native-only learnt-large profiling refresh
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-025`, by measuring which remaining non-overlap learnt-large successful-probe sublane still matters after the overlap-only rewrite lost both early gates
+- Assumptions:
+  - `perf-024` already ruled out the true overlap lane, so this run should restore measurement before any further solver-core change.
+  - The repo profiler already exposes clause-length and probe-depth marginals, but not the cross-split needed to distinguish long-but-shallow from short-but-deep learnt-large successes.
+  - A completed measurement-only outcome is valid if it adds the missing counters, verifies them, and leaves the queue with a narrower next solver experiment.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-025` in progress in the control plane and record the active profiling task in `PLANS.md`.
+- [x] Add profiler-only counters and tests for the learnt-large non-overlap successful-probe buckets, then run the supplemental `satlib_more` profile sweep.
+- [x] Update the queue with the measured winner or retained no-op conclusion, verify the final state, and commit.
+
+### Verification
+
+- `python -m unittest discover -s tests -p 'test_profile_solver.py' -q`
+- passed: the new helper boundaries and direct learnt-large relocation bucket test both passed, and the profiler test file now runs 15/15 green
+- `python tools/profile_solver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- passed: the targeted learnt-large family favored the short-but-deep non-overlap lane in every real target case, with `uuf125-010` at `3129 > 1861`, `uf125-01` at `31 > 17`, and `uf125-010` at `304 > 210` for short-but-deep vs long-but-shallow successful relocations; `jnh10` and `jnh1` stayed low-volume learnt-large guardrails with just `19` and `62` learnt-large relocations total
+- `python tools/codex_verify.py`
+- passed while `perf-025` was active: the repo compiled, the queue check passed, all 75 tests passed, and both default wrapper smoke paths remained green
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync: the queue now resolves deterministically to `current_or_next_task='perf-026'`
+- `python tools/codex_verify.py`
+- passed after the final control-plane sync: the repo recompiled, the queue check passed, all 75 tests passed, and both default wrapper smoke paths remained green
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Closed `perf-025` as a measurement-only profiling run with no solver change.
+- Added profiler-only learnt-large success bucket counters and tests in `tools/profile_solver.py` plus `tests/test_profile_solver.py` so the queue can now separate long-but-shallow, overlap, neither, and short-but-deep learnt-large successful relocations instead of inferring them from separate marginals.
+- The queue question is now answered: after the overlap-only reject, the surviving non-overlap lane is the short-but-deep sub-10-literal step-3+ family, not the long-but-shallow `len10+` step-1/2 family. The target trio (`uuf125-010`, `uf125-01`, `uf125-010`) all favored short-but-deep, while `jnh10` and `jnh1` remained problem-large guardrails rather than primary learnt-large targets.
+- The queue therefore advances to `perf-026`, a bounded solver-core experiment that should touch only the short-but-deep learnt-large success path before re-running the usual focused and supplemental gates.
+
+### Remaining risks
+
+- The new counters explain which non-overlap lane survived `perf-023`, but they do not guarantee that a short-but-deep rewrite will win the primary seven-case gate. The next task still has to stay narrow and revalidate both the focused and supplemental slices before earning a full repeat-aware exact-CLI suite run.
+
 ## 2026-03-22 `perf-024-long-and-deep-learnt-large-success-path`
 
 - Status: completed

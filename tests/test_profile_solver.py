@@ -28,6 +28,14 @@ class ProfileSolverTests(unittest.TestCase):
         self.assertEqual(profile_solver.large_probe_success_bucket(4), 2)
         self.assertEqual(profile_solver.large_probe_success_bucket(5), 3)
 
+    def test_learnt_large_success_bucket_boundaries(self) -> None:
+        self.assertEqual(profile_solver.learnt_large_success_bucket(10, 1), 0)
+        self.assertEqual(profile_solver.learnt_large_success_bucket(10, 2), 0)
+        self.assertEqual(profile_solver.learnt_large_success_bucket(10, 3), 1)
+        self.assertEqual(profile_solver.learnt_large_success_bucket(9, 1), 2)
+        self.assertEqual(profile_solver.learnt_large_success_bucket(9, 2), 2)
+        self.assertEqual(profile_solver.learnt_large_success_bucket(9, 3), 3)
+
     def test_profile_solver_collects_ternary_watch_and_minimization_stats(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             case_path = Path(temp_dir) / "cube_unsat.cnf"
@@ -601,6 +609,13 @@ class ProfileSolverTests(unittest.TestCase):
                 + stats.large_probe_success_step3_4
                 + stats.large_probe_success_step5_plus,
             )
+            self.assertEqual(
+                stats.learnt_large_relocations,
+                stats.learnt_large_success_len10_plus_step1_2
+                + stats.learnt_large_success_len10_plus_step3_plus
+                + stats.learnt_large_success_sub10_step1_2
+                + stats.learnt_large_success_sub10_step3_plus,
+            )
             self.assertGreater(stats.large_relocations + stats.large_units + stats.large_conflicts, 0)
             self.assertEqual(stats.watch_relocations, stats.ternary_relocations + stats.large_relocations)
             self.assertEqual(stats.watch_units, stats.ternary_units + stats.large_units)
@@ -706,6 +721,30 @@ class ProfileSolverTests(unittest.TestCase):
             + solver.large_probe_success_step3_4
             + solver.large_probe_success_step5_plus,
         )
+
+    def test_profile_solver_splits_learnt_large_success_buckets(self) -> None:
+        solver = profile_solver.ProfiledSolver(
+            15,
+            restart_base=64,
+            next_reduce=256,
+            var_decay=0.95,
+            clause_decay=0.999,
+        )
+
+        solver.add_learnt_clause([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], lbd=2)
+        solver.add_learnt_clause([11, 12, 13, 14, 15], lbd=2)
+
+        self.assertTrue(solver.enqueue(-1, None))
+        self.assertTrue(solver.enqueue(-11, None))
+        self.assertTrue(solver.enqueue(-13, None))
+        self.assertTrue(solver.enqueue(-14, None))
+
+        self.assertIsNone(solver.propagate())
+        self.assertEqual(solver.learnt_large_relocations, 2)
+        self.assertEqual(solver.learnt_large_success_len10_plus_step1_2, 1)
+        self.assertEqual(solver.learnt_large_success_len10_plus_step3_plus, 0)
+        self.assertEqual(solver.learnt_large_success_sub10_step1_2, 0)
+        self.assertEqual(solver.learnt_large_success_sub10_step3_plus, 1)
 
 
 if __name__ == "__main__":
