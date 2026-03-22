@@ -40,6 +40,51 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-006-wrapper-startup-overhead`
+
+- Status: completed
+- Task family: native-only wrapper and startup measurement
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-006`, by measuring remaining wrapper and startup overhead on the refreshed exact-CLI path and keeping only a clearly justified native-only win
+- Assumptions:
+  - The remaining exact-CLI wrapper lane is narrow because the repo has already kept CLI-mode import gating, runtime-`typing` cleanup, and targeted CLI-local aliasing while rejecting many broader wrapper-surface trims.
+  - A retained-noop conclusion is acceptable if fresh measurement shows the remaining repo-local wrapper cost is too small or too exhausted to justify another low-confidence patch.
+  - The startup-sensitive tiny SAT/UNSAT cases are still the right place to estimate wrapper overhead, while the seven-case hotspot slice remains the guardrail against weakening the real exact-CLI path.
+- Escalations: none
+
+### Plan
+
+- [x] Re-read the wrapper/startup keep/reject history and inspect the current exact-CLI wrapper shape for any non-duplicate candidate.
+- [x] Measure the current exact-CLI startup floor directly and compare interpreter-only, import-only, and tiny full-CLI timings.
+- [x] Conclude the task with either one bounded wrapper candidate or a retained-noop result grounded in the fresh measurements.
+- [x] Update the control plane with the verified outcome.
+
+### Verification
+
+- `python - <<'PY' ... repeated tiny exact-CLI timings for small/test_1.cnf, special/tseitin.cnf, and large/test_8.cnf ... PY`
+- passed: current exact-CLI means were about `0.0532s` on `small/test_1.cnf`, `0.0382s` on `special/tseitin.cnf`, and `0.4148s` on `large/test_8.cnf`, confirming that the startup-sensitive cases are still well below the dense UNSAT bottlenecks
+- `python -X importtime -c 'import satsolver' 2>&1 | tail -n 40`
+- passed: retained wrapper import time was only about `4.0ms` on top of Python/site startup, with `satsolver_core` around `3.4ms` cumulative and `satsolver_io` around `0.2ms`
+- `python - <<'PY' ... repeated subprocess timings for python -c pass, python -c 'import satsolver', and python satsolver.py small/test_1.cnf /tmp/_probe.txt ... PY`
+- passed: `python -c pass` averaged about `27.5ms`, `python -c 'import satsolver'` about `31.2ms`, and the full small SAT CLI about `36.0ms`, leaving only a few milliseconds of repo-local wrapper plus solve-path overhead beyond interpreter startup and import
+- `python tools/agent_queue_check.py`
+- passed: the final queue state resolves cleanly to `current_or_next_task='perf-007'`
+- `python tools/codex_verify.py`
+- passed: retained solver baseline plus final control-plane edits compile, pass the queue check, pass all 73 tests, and clear both wrapper smoke paths
+- `git diff --check`
+- passed
+
+### Outcome
+
+- Re-read the current wrapper/startup history and confirmed that the repo has already exhausted the most plausible exact-CLI surface trims: CLI-mode import gating, runtime-`typing` cleanup, targeted CLI-local aliasing, and no-root-pure wrapper selection are already kept, while broader alias, import-surface, parse-summary, and output-path rewrites are already rejected.
+- Measured the current startup floor directly and found that most of the smallest exact-CLI runtime is now outside meaningful repo-local control on this machine: Python process startup alone is about `27.5ms`, `import satsolver` adds only about `3.7ms`, and the full `small/test_1.cnf` CLI path averages only about `36.0ms`.
+- Completed `perf-006` as a retained-noop conclusion because the remaining repo-local wrapper overhead is too small, too noisy, and too exhaustively mined to justify another low-confidence patch.
+- Advanced the queue to `perf-007`, where any further speed gains are more likely to come from external-reference gap analysis than from more exact-CLI wrapper trimming.
+
+### Remaining risks
+
+- The retained measurements are machine-specific, so a future environment with materially different Python startup cost or filesystem behavior could reopen a wrapper lane. On the current machine, though, the remaining exact-CLI floor is dominated by interpreter startup rather than repo-local wrapper logic.
+
 ## 2026-03-22 `perf-005-branching-restart-heuristics`
 
 - Status: completed

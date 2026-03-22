@@ -183,7 +183,7 @@ tasks:
   - id: perf-006
     phase: 2
     priority: 80
-    status: todo
+    status: done
     title: Measure and reduce native-only wrapper and startup overhead
     size: M
     depends_on:

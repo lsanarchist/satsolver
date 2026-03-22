@@ -69,3 +69,10 @@
 - Files changed: `PLANS.md`, `.agent/HANDOFF.md`, `.agent/STATE.yaml`, `.agent/TASK_QUEUE.yaml`, `.agent/WORKLOG.md`
 - Verification: `python tools/codex_verify.py` — passed; `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf005_restart_baseline.c4riuk/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf` — candidate rejected (`34.7641s -> 56.2904s` two-order average, `large/test_8.cnf` rose to about `7.5s`); `python tools/agent_queue_check.py` — passed; `python tools/codex_verify.py` — passed; `git diff --check` — passed
 - Follow-up: Continue with `perf-006`; treat `large/test_8.cnf` as an early guardrail for future restart-policy experiments too.
+
+## 2026-03-22 14:28 UTC — perf-006
+- Status: done
+- Summary: Re-measured the remaining exact-CLI wrapper and startup floor, confirmed that interpreter startup now dominates the tiny-case path on this machine, and retained no solver change because the obvious native-only wrapper trims are already exhausted.
+- Files changed: `PLANS.md`, `.agent/HANDOFF.md`, `.agent/STATE.yaml`, `.agent/TASK_QUEUE.yaml`, `.agent/WORKLOG.md`
+- Verification: `python - <<'PY' ... repeated tiny exact-CLI timings for small/test_1.cnf, special/tseitin.cnf, and large/test_8.cnf ... PY` — passed (`0.0532s`, `0.0382s`, `0.4148s` means); `python -X importtime -c 'import satsolver' 2>&1 | tail -n 40` — passed (`satsolver_core` about `3.4ms`, `satsolver_io` about `0.2ms`, `satsolver` about `4.0ms` cumulative); `python - <<'PY' ... repeated subprocess timings for python -c pass, python -c 'import satsolver', and python satsolver.py small/test_1.cnf /tmp/_probe.txt ... PY` — passed (`27.5ms`, `31.2ms`, `36.0ms` means); `python tools/agent_queue_check.py` — passed; `python tools/codex_verify.py` — passed; `git diff --check` — passed
+- Follow-up: Continue with `perf-007`, using optional external solver references only to sharpen the next native-only optimization target rather than revisiting the already-thin wrapper lane.
