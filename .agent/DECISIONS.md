@@ -29,3 +29,9 @@
 - Context: `satsolver.py` and `satsolver_fast.py` duplicated the same DIMACS parsing and result-writing logic, which made wrapper maintenance noisier and risked drift.
 - Decision: Introduce `satsolver_io.py` as the shared standard-library helper for DIMACS parsing and result writing, and keep the solver wrappers thin by delegating to it.
 - Consequence: Wrapper behavior stays centralized without changing the required CLI contract or solver-core ownership boundaries.
+
+## D-006 — 2026-03-22
+
+- Context: After the shared wrapper I/O extraction, routine verification still only smoke-tested the main submission CLI.
+- Decision: Make `python tools/codex_verify.py` cover `satsolver_fast.py` smoke checks by default, while keeping `satsolver_pysat.py` out of the default gate because it depends on an optional external environment.
+- Consequence: The standard-library alternate wrapper path is now exercised automatically on routine runs without making the default verifier depend on external tooling.

@@ -62,6 +62,7 @@ This repository is a benchmark-driven, standard-library Python SAT solver. The d
 - Prefer shared solver changes in `satsolver_core.py`; keep wrappers thin unless the task is explicitly wrapper/startup related.
 - Treat `tools/checker.py` as the correctness oracle for solver output format.
 - Treat `AGENT.md` plus `.agent/*` as the authoritative autonomous control plane.
+- Treat `python tools/codex_verify.py` as covering both the main submission CLI and the standard-library alternate wrapper smoke path.
 - Treat same-day exact-CLI evidence as stronger than stale historical artifacts when the timing signal is small.
 - Update `benchmark_summary.md` and `experiments.jsonl` only when a performance result is kept or when the task explicitly asks for durable reporting.
 - Keep benchmark artifacts and scratch outputs out of the repo unless the task explicitly wants a retained artifact.

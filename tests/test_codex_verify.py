@@ -88,6 +88,62 @@ class CodexVerifyTests(unittest.TestCase):
             steps[queue_step].command,
         )
 
+    def test_iter_alternate_solver_scripts_skips_primary_solver(self) -> None:
+        self.assertEqual(
+            ("satsolver_fast.py",),
+            codex_verify.iter_alternate_solver_scripts("satsolver.py"),
+        )
+        self.assertEqual(
+            (),
+            codex_verify.iter_alternate_solver_scripts("./satsolver_fast.py"),
+        )
+
+    def test_build_steps_includes_alternate_wrapper_smokes(self) -> None:
+        steps, _ = codex_verify.build_steps(
+            python_executable="python",
+            solver_script="satsolver.py",
+            module_name="satsolver",
+            benchmark_mode="none",
+            benchmark_folders=["small"],
+            benchmark_output=None,
+            brute_force_var_limit=16,
+            repeat=1,
+        )
+
+        descriptions = [step.description for step in steps]
+        self.assertIn(
+            "Run alternate wrapper (satsolver_fast.py) SAT smoke case",
+            descriptions,
+        )
+        self.assertIn(
+            "Validate alternate wrapper (satsolver_fast.py) UNSAT smoke output",
+            descriptions,
+        )
+        alt_sat_step = next(
+            step
+            for step in steps
+            if step.description == "Run alternate wrapper (satsolver_fast.py) SAT smoke case"
+        )
+        self.assertEqual("satsolver_fast.py", alt_sat_step.command[1])
+
+    def test_build_steps_does_not_duplicate_primary_when_fast_wrapper_is_primary(self) -> None:
+        steps, _ = codex_verify.build_steps(
+            python_executable="python",
+            solver_script="satsolver_fast.py",
+            module_name="satsolver",
+            benchmark_mode="none",
+            benchmark_folders=["small"],
+            benchmark_output=None,
+            brute_force_var_limit=16,
+            repeat=1,
+        )
+
+        descriptions = [step.description for step in steps]
+        self.assertNotIn(
+            "Run alternate wrapper (satsolver_fast.py) SAT smoke case",
+            descriptions,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

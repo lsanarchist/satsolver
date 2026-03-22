@@ -40,6 +40,42 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `tool-001-wrapper-verification`
+
+- Status: completed
+- Task family: verification tooling
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `tool-001`, by expanding routine verification coverage for the alternate standard-library wrapper path after the shared `satsolver_io.py` extraction
+- Assumptions:
+  - The smallest useful slice is to make `python tools/codex_verify.py` smoke-test `satsolver_fast.py` in addition to the main submission CLI.
+  - `satsolver_pysat.py` should remain outside the default gate because it depends on an optional external environment.
+  - This is primarily a tooling-and-wiring task, so `python tools/codex_verify.py` remains the primary verification gate.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `tool-001` active in the queue state and inspect the existing verification helper flow.
+- [x] Extend `tools/codex_verify.py` to cover the alternate standard-library wrapper smoke path.
+- [x] Add regression coverage for the new verification flow and update durable docs if needed.
+- [x] Run verification and record the final outcome.
+
+### Verification
+
+- `python -m unittest discover -s tests -p 'test_codex_verify.py' -q`
+- passed: 7 tests
+- `python tools/codex_verify.py`
+- passed: compile, queue check, 73 tests, submission smoke checks, and `satsolver_fast.py` smoke checks all completed successfully
+
+### Outcome
+
+- Expanded `tools/codex_verify.py` so the routine verification gate now smoke-tests `satsolver_fast.py` alongside the main submission CLI.
+- Added regression coverage for the alternate-wrapper step generation in `tests/test_codex_verify.py`.
+- Updated repo docs and contracts so the default verification scope explicitly includes the standard-library alternate wrapper path.
+
+### Remaining risks
+
+- The default verification gate still excludes `satsolver_pysat.py` because that wrapper depends on an optional external environment.
+
 ## 2026-03-22 `sat-001-shared-io-helper`
 
 - Status: completed

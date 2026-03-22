@@ -27,3 +27,10 @@
 - Files changed: `satsolver_io.py`, `satsolver.py`, `satsolver_fast.py`, `satsolver_pysat.py`, `tests/test_solver_io.py`, `AGENT.md`, `AGENTS.md`, `README.md`, `PLANS.md`, `.agent/STATE.yaml`, `.agent/TASK_QUEUE.yaml`, `.agent/HANDOFF.md`, `.agent/DECISIONS.md`, `.agent/WORKLOG.md`
 - Verification: `python tools/agent_queue_check.py` — passed; `python -m unittest discover -s tests -q` — passed; `python tools/codex_verify.py` — passed
 - Follow-up: Continue with `tool-001`, the wrapper-verification expansion that now builds on `satsolver_io.py`.
+
+## 2026-03-22 12:45 UTC — tool-001
+- Status: done
+- Summary: Expanded the default verification helper so it smoke-tests `satsolver_fast.py` alongside the main submission CLI, and added regression coverage for the alternate-wrapper verification flow.
+- Files changed: `tools/codex_verify.py`, `tests/test_codex_verify.py`, `AGENT.md`, `AGENTS.md`, `README.md`, `docs/codex/operator-guide.md`, `PLANS.md`, `.agent/STATE.yaml`, `.agent/TASK_QUEUE.yaml`, `.agent/HANDOFF.md`, `.agent/DECISIONS.md`, `.agent/WORKLOG.md`
+- Verification: `python -m unittest discover -s tests -p 'test_codex_verify.py' -q` — passed; `python tools/codex_verify.py` — passed
+- Follow-up: Continue with `perf-001`, the same-day benchmark revalidation of the portfolio gating thresholds.

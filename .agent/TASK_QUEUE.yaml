@@ -86,7 +86,7 @@ tasks:
   - id: tool-001
     phase: 2
     priority: 70
-    status: todo
+    status: done
     title: Expand codex verification coverage for alternate wrappers
     size: M
     depends_on:

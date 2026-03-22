@@ -17,6 +17,7 @@ DEFAULT_BENCHMARK_FOLDERS = (
     "satlib_subset",
     "satlib_more",
 )
+DEFAULT_ALTERNATE_SOLVER_SCRIPTS = ("satsolver_fast.py",)
 SMOKE_SAT_CASE = "small/test_1.cnf"
 SMOKE_UNSAT_CASE = "special/tseitin.cnf"
 IGNORED_PARTS = {".git", "__pycache__"}
@@ -76,6 +77,69 @@ def run_step(step: CommandStep, *, cwd: Path) -> None:
     subprocess.run(step.command, cwd=cwd, check=True)
 
 
+def build_smoke_steps(
+    *,
+    python_executable: str,
+    solver_script: str,
+    sat_case: str,
+    unsat_case: str,
+    description_prefix: str = "",
+) -> list[CommandStep]:
+    with tempfile.NamedTemporaryFile(
+        prefix=f"sat-codex-{Path(solver_script).stem}-sat-",
+        suffix=".txt",
+        delete=False,
+    ) as sat_handle:
+        sat_output = sat_handle.name
+    with tempfile.NamedTemporaryFile(
+        prefix=f"sat-codex-{Path(solver_script).stem}-unsat-",
+        suffix=".txt",
+        delete=False,
+    ) as unsat_handle:
+        unsat_output = unsat_handle.name
+
+    label = f"{description_prefix} " if description_prefix else ""
+    return [
+        CommandStep(
+            f"Run {label}SAT smoke case",
+            (python_executable, solver_script, sat_case, sat_output),
+        ),
+        CommandStep(
+            f"Validate {label}SAT smoke output",
+            (
+                python_executable,
+                "tools/checker.py",
+                sat_case,
+                sat_output,
+            ),
+        ),
+        CommandStep(
+            f"Run {label}UNSAT smoke case",
+            (python_executable, solver_script, unsat_case, unsat_output),
+        ),
+        CommandStep(
+            f"Validate {label}UNSAT smoke output",
+            (
+                python_executable,
+                "tools/checker.py",
+                unsat_case,
+                unsat_output,
+                "--bruteforce-var-limit",
+                "0",
+            ),
+        ),
+    ]
+
+
+def iter_alternate_solver_scripts(primary_solver_script: str) -> tuple[str, ...]:
+    primary_name = Path(primary_solver_script).name
+    return tuple(
+        script
+        for script in DEFAULT_ALTERNATE_SOLVER_SCRIPTS
+        if Path(script).name != primary_name
+    )
+
+
 def build_steps(
     *,
     python_executable: str,
@@ -102,52 +166,24 @@ def build_steps(
             (python_executable, "-m", "unittest", "discover", "-s", "tests", "-q"),
         ),
     ]
-
-    with tempfile.NamedTemporaryFile(
-        prefix="sat-codex-smoke-sat-",
-        suffix=".txt",
-        delete=False,
-    ) as sat_handle:
-        sat_output = sat_handle.name
-    with tempfile.NamedTemporaryFile(
-        prefix="sat-codex-smoke-unsat-",
-        suffix=".txt",
-        delete=False,
-    ) as unsat_handle:
-        unsat_output = unsat_handle.name
-
     steps.extend(
-        [
-            CommandStep(
-                "Run SAT smoke case",
-                (python_executable, solver_script, SMOKE_SAT_CASE, sat_output),
-            ),
-            CommandStep(
-                "Validate SAT smoke output",
-                (
-                    python_executable,
-                    "tools/checker.py",
-                    SMOKE_SAT_CASE,
-                    sat_output,
-                ),
-            ),
-            CommandStep(
-                "Run UNSAT smoke case",
-                (python_executable, solver_script, SMOKE_UNSAT_CASE, unsat_output),
-            ),
-            CommandStep(
-                "Validate UNSAT smoke output",
-                (
-                    python_executable,
-                    "tools/checker.py",
-                    SMOKE_UNSAT_CASE,
-                    unsat_output,
-                    "--bruteforce-var-limit",
-                    "0",
-                ),
-            ),
-        ]
+        build_smoke_steps(
+            python_executable=python_executable,
+            solver_script=solver_script,
+            sat_case=SMOKE_SAT_CASE,
+            unsat_case=SMOKE_UNSAT_CASE,
+        )
     )
+    for alternate_solver_script in iter_alternate_solver_scripts(solver_script):
+        steps.extend(
+            build_smoke_steps(
+                python_executable=python_executable,
+                solver_script=alternate_solver_script,
+                sat_case=SMOKE_SAT_CASE,
+                unsat_case=SMOKE_UNSAT_CASE,
+                description_prefix=f"alternate wrapper ({alternate_solver_script})",
+            )
+        )
 
     if benchmark_mode != "none":
         if benchmark_report is None:

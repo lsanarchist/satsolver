@@ -40,5 +40,6 @@ python tools/codex_verify.py
 
 - Queue/control-plane check: `python tools/agent_queue_check.py`
 - Fast verification: `python tools/codex_verify.py`
+  Includes queue validation, unit tests, and smoke checks for both `satsolver.py` and `satsolver_fast.py`.
 - Exact-CLI benchmark verification: `python tools/codex_verify.py --benchmark-mode cli --repeat 2`
 - Full exact-CLI benchmark: `python benchmark_suite.py satsolver /tmp/bench_cli.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script satsolver.py`

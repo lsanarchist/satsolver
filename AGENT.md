@@ -22,7 +22,7 @@ Maintain a benchmark-driven, standard-library Python SAT solver that stays corre
 - `satsolver_pysat.py` is an optional external-library wrapper that must stay outside the standard-library submission path.
 - `benchmark_suite.py` runs validated module-mode or exact-CLI benchmarks across the benchmark folders.
 - `tools/checker.py` is the output-format and small-UNSAT correctness oracle.
-- `tools/codex_verify.py` is the default verification gate: compile, unit tests, SAT smoke, UNSAT smoke, and optional benchmark modes.
+- `tools/codex_verify.py` is the default verification gate: compile, queue consistency, unit tests, submission smoke checks, alternate-wrapper smoke checks, and optional benchmark modes.
 - `tools/hotspot_compare.py` and `tools/profile_solver.py` are the focused performance investigation tools.
 - `tests/` covers solver regressions, validation tools, benchmark tooling, profiler helpers, and optional wrapper behavior.
 
@@ -57,6 +57,7 @@ Maintain a benchmark-driven, standard-library Python SAT solver that stays corre
 ## Verification Policy Summary
 
 - Default gate for almost all tasks: `python tools/codex_verify.py`
+  It now covers queue consistency plus smoke checks for both `satsolver.py` and the standard-library alternate wrapper `satsolver_fast.py`.
 - Solver-behavior or performance changes: `python tools/codex_verify.py`, then `python tools/hotspot_compare.py ...`, then `python tools/codex_verify.py --benchmark-mode cli --repeat 2` when the focused signal is promising.
 - Tooling or docs changes that do not affect solver behavior still run `python tools/codex_verify.py` unless the task is strictly editorial and clearly isolated.
 - Do not mark a task done unless its defined verification passes.
