@@ -40,6 +40,46 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-031-step3-hotspot-profile-refresh`
+
+- Status: completed
+- Task family: native-only learnt-large profiling refresh
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-031`, by profiling exact `sub10 step-3` learnt-large relocation traffic on the focused seven-case hotspot slice after the `perf-030` reject
+- Assumptions:
+  - `perf-030` ruled out applying the direct watched-slot rewrite across the whole exact `sub10 step-3` aggregate, so this run should restore measurement before any new solver-core candidate.
+  - The current profiler already exposes exact `sub10 step-3` counters, so a measurement-only run may not need code changes if the seven-case hotspot profile is already sufficiently explanatory.
+  - A completed measurement-only outcome is valid if it names where exact `step-3` traffic is materially present inside the focused hotspot slice and leaves the queue with a narrower next experiment.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-031` in progress in the control plane and record the active profiling task in `PLANS.md`.
+- [x] Run the focused seven-case hotspot profile and determine how much exact `sub10 step-3` learnt-large traffic each case actually contributes.
+- [x] Update the queue with the measured split, verify the final state, and commit.
+
+### Verification
+
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- passed: exact `sub10 step-3` learnt-large traffic was material across the whole focused slice, but it concentrated overwhelmingly in the dense UNSAT anchors, with `special/hard.cnf` at `109,933`, `large/test_6.cnf` at `94,161`, and the other five cases at `15,010` or below each
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync: the queue now resolves deterministically to `current_or_next_task='perf-032'`
+- `python tools/codex_verify.py`
+- passed after the final control-plane sync: the repo recompiled, the queue check passed, all `75/75` tests passed, and both default wrapper smoke paths remained green
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Closed `perf-031` as a measurement-only profiling run with no solver change.
+- The focused seven-case hotspot profile showed that exact `sub10 step-3` learnt-large traffic is not evenly spread across the slice: `special/hard.cnf` plus `large/test_6.cnf` alone contributed `204,094 / 258,637` exact step-3 hits, about `78.9%` of the total.
+- The remaining five cases are much smaller tails by volume, though they still matter as guardrails: `medium/test_4.cnf` and `large/test_10.cnf` were each about `5%` of the total, `large/test_8.cnf` was a SAT-side guardrail at `14,675`, and `satlib_more/uuf150-01.cnf` plus `medium/test_3.cnf` were small exact-step tails.
+- The queue therefore advances to `perf-032`, a bounded dense-UNSAT solver-core experiment that should target exact `sub10 step-3` learnt-large bookkeeping on `special/hard.cnf` and `large/test_6.cnf` first while keeping the rest of the focused slice and the supplemental `satlib_more` cases as guardrails.
+
+### Remaining risks
+
+- The new profile explains where the exact `step-3` volume lives, but it does not prove which alternative bookkeeping idea will help there. The next task still needs a different solver-core candidate than the already-rejected direct watched-slot rewrite.
+
 ## 2026-03-22 `perf-030-sub10-step3-learnt-large-success-path`
 
 - Status: completed
