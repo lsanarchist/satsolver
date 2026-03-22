@@ -1,0 +1,117 @@
+schema_version: 1
+selection_policy:
+  continue_in_progress_first: true
+  pick_status: todo
+  dependencies_must_be_done: true
+  tie_breaker:
+    - priority_desc
+    - phase_asc
+    - id_asc
+statuses:
+  - todo
+  - in_progress
+  - blocked
+  - done
+  - dropped
+tasks:
+  - id: cp-001
+    phase: 0
+    priority: 100
+    status: done
+    title: Bootstrap the repo-local autonomous queue control plane
+    size: M
+    depends_on: []
+    goal: Create a deterministic repo-native control plane rooted in AGENT.md and .agent/* so repeated prompts can advance from repo state instead of human task management.
+    deliverables:
+      - AGENT.md
+      - .agent/README.md
+      - .agent/RUNBOOK.md
+      - .agent/STATE.yaml
+      - .agent/TASK_QUEUE.yaml
+      - .agent/HANDOFF.md
+      - .agent/DECISIONS.md
+      - .agent/WORKLOG.md
+      - .agent/TEST_GATES.md
+      - QUEUE_PROMPT.md
+    verify:
+      - python tools/codex_verify.py
+  - id: cp-002
+    phase: 0
+    priority: 95
+    status: done
+    title: Sync legacy workflow docs and agent instructions to the queue control plane
+    size: S
+    depends_on:
+      - cp-001
+    goal: Align the existing repo docs and Codex-facing instructions with AGENT.md and .agent/* so future runs do not see competing operating models.
+    deliverables:
+      - AGENTS.md
+      - README.md
+      - docs/codex/operator-guide.md
+      - docs/codex/queued-task-template.md
+      - PLANS.md
+    verify:
+      - python tools/codex_verify.py
+  - id: cp-003
+    phase: 0
+    priority: 90
+    status: done
+    title: Add a control-plane consistency checker and tests
+    size: M
+    depends_on:
+      - cp-001
+      - cp-002
+    goal: Add a small standard-library validator that checks TASK_QUEUE selection invariants and STATE/TASK_QUEUE cross-consistency so autonomous runs can fail fast on stale queue state.
+    deliverables:
+      - tools/agent_queue_check.py
+      - tests/test_agent_queue_check.py
+      - any small doc updates needed to explain how to run the checker
+    verify:
+      - python -m unittest discover -s tests -q
+      - python tools/codex_verify.py
+  - id: sat-001
+    phase: 1
+    priority: 80
+    status: todo
+    title: Deduplicate shared DIMACS parsing and result-writing helpers
+    size: M
+    depends_on: []
+    goal: Move duplicate parsing and output-format code shared by satsolver.py and satsolver_fast.py into one standard-library helper module without changing solver behavior.
+    deliverables:
+      - shared helper module for DIMACS parsing and result writing
+      - updated submission and comparison wrappers
+      - regression tests covering the shared helper path
+    verify:
+      - python tools/codex_verify.py
+  - id: tool-001
+    phase: 2
+    priority: 70
+    status: todo
+    title: Expand codex verification coverage for alternate wrappers
+    size: M
+    depends_on:
+      - sat-001
+    goal: Extend the verification helper or tests so shared wrapper behavior stays covered after helper deduplication and future wrapper changes.
+    deliverables:
+      - updated tools/codex_verify.py or targeted tests
+      - regression coverage for wrapper smoke behavior
+    verify:
+      - python -m unittest discover -s tests -q
+      - python tools/codex_verify.py
+  - id: perf-001
+    phase: 2
+    priority: 60
+    status: todo
+    title: Revalidate portfolio gating thresholds with same-day benchmark evidence
+    size: L
+    depends_on:
+      - sat-001
+    goal: Recheck the shared portfolio gating constants against representative hotspot and exact-CLI benchmarks, keeping or updating them only with clear same-day evidence.
+    deliverables:
+      - code or retained-noop conclusion with rationale
+      - PLANS.md verification notes
+      - benchmark_summary.md and experiments.jsonl updates only if a result is kept
+    verify:
+      - python tools/codex_verify.py
+      - python tools/hotspot_compare.py --baseline-cli-script <baseline>/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf medium/test_4.cnf large/test_10.cnf large/test_8.cnf
+      - python tools/codex_verify.py --benchmark-mode cli --repeat 2

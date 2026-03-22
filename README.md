@@ -26,14 +26,18 @@ python tools/codex_verify.py
 
 ## Codex Workflow
 
-- `AGENTS.md`: repo-specific agent instructions and definition of done
+- `AGENT.md`: master project contract for the repo-local autonomous queue
+- `.agent/`: state, task queue, runbook, handoff, decisions, worklog, and test gates
+- `AGENTS.md`: Codex-facing shim that should stay aligned with `AGENT.md`
 - `PLANS.md`: durable plan and execution log for queued autonomous tasks
+- `QUEUE_PROMPT.md`: stable repeated prompt for future queue-driven runs
 - `skills/autonomous-sat-maintenance/SKILL.md`: reusable repo-local skill for benchmark-driven solver work
 - `docs/codex/operator-guide.md`: operator instructions for future queued runs
-- `docs/codex/queued-task-template.md`: prompt template for future queued Codex tasks
+- `docs/codex/queued-task-template.md`: bridge doc that points operators to `QUEUE_PROMPT.md`
 
 ## Verification Commands
 
+- Queue/control-plane check: `python tools/agent_queue_check.py`
 - Fast verification: `python tools/codex_verify.py`
 - Exact-CLI benchmark verification: `python tools/codex_verify.py --benchmark-mode cli --repeat 2`
 - Full exact-CLI benchmark: `python benchmark_suite.py satsolver /tmp/bench_cli.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script satsolver.py`

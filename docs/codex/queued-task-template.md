@@ -1,44 +1,9 @@
-# Queued Task Template
+# Queue Prompt Bridge
 
-Use this as the initial prompt for future queued Codex runs in this repository.
+The canonical repeated prompt now lives in `QUEUE_PROMPT.md`.
 
-## Task
+Use that file for future autonomous runs so the agent reads `AGENT.md` and `.agent/*`, continues any current in-progress task, or deterministically selects the next eligible queued task.
 
-- Family: autonomous SAT solver maintenance
-- Objective:
-- Why it matters:
-- Expected outputs: code diff, docs, tests, report
-- Priority:
+If you need a one-line reminder, use:
 
-## Context To Read First
-
-- `AGENTS.md`
-- `PLANS.md`
-- `skills/autonomous-sat-maintenance/SKILL.md`
-- `benchmark_summary.md`
-- `experiments.jsonl`
-
-## Constraints
-
-- Keep changes small, reviewable, and reversible.
-- Prefer existing tools, scripts, and dependencies over adding new ones.
-- Use a dedicated worktree and branch when possible.
-- Resolve routine ambiguity autonomously.
-- Escalate only for destructive actions, missing secrets, approval-gated network access, or product-direction forks.
-- Leave durable guidance in repo files, not only in the chat response.
-
-## Execution
-
-1. Create or update the active `PLANS.md` section before editing.
-2. Follow `AGENTS.md` and the local skill.
-3. Run `python tools/codex_verify.py` after meaningful edits.
-4. If solver behavior or performance can change, run a same-day hotspot comparison and the appropriate benchmark path.
-5. Update `benchmark_summary.md` and `experiments.jsonl` only for kept or explicitly requested results.
-6. Finish with files changed, checks run, remaining risks, and the next sensible follow-up.
-
-## Done When
-
-- `PLANS.md` captures the task and outcome.
-- Relevant code, docs, and tests are updated.
-- Verification passes.
-- The final report is precise and reviewable.
+> Continue the implementation using the repo control plane in `AGENT.md` and `.agent/*`. Read `AGENT.md`, `.agent/RUNBOOK.md`, `.agent/STATE.yaml`, `.agent/TASK_QUEUE.yaml`, `.agent/HANDOFF.md`, `.agent/DECISIONS.md`, and `.agent/TEST_GATES.md`. If `STATE.yaml` has a current in-progress task, continue it. Otherwise pick the highest-priority task whose status is `todo` and whose dependencies are done. Implement one coherent task end-to-end, run the relevant verification, update the control-plane files, and stop. Do not ask for next steps if there is any unblocked `todo` task.

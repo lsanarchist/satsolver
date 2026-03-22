@@ -6,11 +6,16 @@ This repository is a benchmark-driven, standard-library Python SAT solver. The d
 
 ## Read First
 
-1. `README.md`
-2. `PLANS.md`
-3. `skills/autonomous-sat-maintenance/SKILL.md`
-4. `benchmark_summary.md` when the task is performance-sensitive
-5. `experiments.jsonl` when prior keep/reject context matters
+1. `AGENT.md`
+2. `.agent/STATE.yaml`
+3. `.agent/TASK_QUEUE.yaml`
+4. `.agent/HANDOFF.md`
+5. `.agent/RUNBOOK.md`
+6. `README.md`
+7. `PLANS.md`
+8. `skills/autonomous-sat-maintenance/SKILL.md`
+9. `benchmark_summary.md` when the task is performance-sensitive
+10. `experiments.jsonl` when prior keep/reject context matters
 
 ## Repo Layout
 
@@ -29,14 +34,17 @@ This repository is a benchmark-driven, standard-library Python SAT solver. The d
 
 ## Default Workflow
 
-1. Add or update the active task section at the top of `PLANS.md` before editing.
-2. For queued or minimally supervised SAT-maintenance work, open `skills/autonomous-sat-maintenance/SKILL.md` and follow its lane selection and validation rules.
-3. Keep the change small, reviewable, and reversible.
-4. Run `python tools/codex_verify.py` after meaningful edits.
-5. If the task can change solver behavior or performance, also run a same-day comparison path:
+1. Treat `.agent/TASK_QUEUE.yaml` as the source of truth for task selection.
+2. If `.agent/STATE.yaml.current_task_id` points to an `in_progress` task, continue it first; otherwise pick the next eligible `todo` task deterministically.
+3. Add or update the active task section at the top of `PLANS.md` before non-trivial editing.
+4. For queued or minimally supervised SAT-maintenance work, open `skills/autonomous-sat-maintenance/SKILL.md` and follow its lane selection and validation rules.
+5. Keep the change small, reviewable, and reversible.
+6. Run `python tools/codex_verify.py` after meaningful edits.
+7. If the task can change solver behavior or performance, also run a same-day comparison path:
    - focused A/B: `python tools/hotspot_compare.py ...`
    - broader validation: `python tools/codex_verify.py --benchmark-mode cli --repeat 2`
-6. Leave durable guidance in repo files, not only in the final chat message.
+8. Update `.agent/STATE.yaml`, `.agent/TASK_QUEUE.yaml`, `.agent/HANDOFF.md`, and `.agent/WORKLOG.md` before finishing.
+9. Leave durable guidance in repo files, not only in the final chat message.
 
 ## Commands
 
@@ -52,6 +60,7 @@ This repository is a benchmark-driven, standard-library Python SAT solver. The d
 - Preserve the required CLI contract: `python satsolver.py input.cnf output.txt`.
 - Prefer shared solver changes in `satsolver_core.py`; keep wrappers thin unless the task is explicitly wrapper/startup related.
 - Treat `tools/checker.py` as the correctness oracle for solver output format.
+- Treat `AGENT.md` plus `.agent/*` as the authoritative autonomous control plane.
 - Treat same-day exact-CLI evidence as stronger than stale historical artifacts when the timing signal is small.
 - Update `benchmark_summary.md` and `experiments.jsonl` only when a performance result is kept or when the task explicitly asks for durable reporting.
 - Keep benchmark artifacts and scratch outputs out of the repo unless the task explicitly wants a retained artifact.
@@ -69,6 +78,7 @@ This repository is a benchmark-driven, standard-library Python SAT solver. The d
 
 A queued autonomous task is done when:
 
+- `.agent/STATE.yaml`, `.agent/TASK_QUEUE.yaml`, `.agent/HANDOFF.md`, and `.agent/WORKLOG.md` match repo reality.
 - `PLANS.md` reflects the final plan, assumptions, verification, and outcome.
 - The code, docs, and tests needed for the task are updated.
 - `python tools/codex_verify.py` passes.

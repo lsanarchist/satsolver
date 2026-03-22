@@ -2,7 +2,7 @@
 
 ## What This Workflow Does
 
-- Gives queued Codex tasks a fixed starting point in `AGENTS.md`, `PLANS.md`, and `skills/autonomous-sat-maintenance/SKILL.md`.
+- Gives queued Codex tasks a deterministic starting point in `AGENT.md`, `.agent/*`, and `QUEUE_PROMPT.md`.
 - Standardizes routine verification through `tools/codex_verify.py`.
 - Keeps durable context in repo files instead of relying on hidden chat history.
 - Uses existing benchmark and validation tools instead of introducing a parallel workflow stack.
@@ -11,12 +11,13 @@
 
 1. Create an isolated worktree when the task is more than a tiny doc tweak.
    - `git worktree add ../satsolver-<slug> -b codex/<slug> HEAD`
-2. Start Codex in that worktree and use `docs/codex/queued-task-template.md` as the queued prompt.
-3. Let Codex create or update the active section in `PLANS.md`.
+2. Start Codex in that worktree and paste the stable prompt from `QUEUE_PROMPT.md`.
+3. Let Codex read `AGENT.md` and `.agent/*`, select work from `.agent/TASK_QUEUE.yaml`, and keep `PLANS.md` updated for multi-step context.
 4. Review the final diff plus the reported checks before merging.
 
 ## Default Commands
 
+- Queue/control-plane check: `python tools/agent_queue_check.py`
 - Fast verification: `python tools/codex_verify.py`
 - Exact-CLI benchmark verification: `python tools/codex_verify.py --benchmark-mode cli --repeat 2`
 - Focused same-day comparison: `python tools/hotspot_compare.py --baseline-cli-script <baseline>/satsolver.py --candidate-cli-script satsolver.py ...`
@@ -38,6 +39,8 @@
 
 - Dirty worktree before the run:
   - Commit or stash unrelated work, or start a new worktree.
+- Queue state disagrees with the repo:
+  - Run `python tools/agent_queue_check.py`, then reconcile `.agent/STATE.yaml` and `.agent/TASK_QUEUE.yaml` with reality before touching code.
 - `python tools/codex_verify.py` fails:
   - Fix compile, unit-test, or smoke-check failures before benchmarking.
 - Hotspot comparison is positive but the broader benchmark is noisy or negative:

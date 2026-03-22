@@ -94,6 +94,10 @@ def build_steps(
             tuple(build_compile_command(python_executable, ROOT)),
         ),
         CommandStep(
+            "Validate agent queue control plane",
+            (python_executable, "tools/agent_queue_check.py"),
+        ),
+        CommandStep(
             "Run unit tests",
             (python_executable, "-m", "unittest", "discover", "-s", "tests", "-q"),
         ),

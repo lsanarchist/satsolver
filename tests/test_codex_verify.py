@@ -66,6 +66,28 @@ class CodexVerifyTests(unittest.TestCase):
         self.assertIn("--repeat", command)
         self.assertEqual("2", command[-1])
 
+    def test_build_steps_runs_agent_queue_check_before_unit_tests(self) -> None:
+        steps, benchmark_report = codex_verify.build_steps(
+            python_executable="python",
+            solver_script="satsolver.py",
+            module_name="satsolver",
+            benchmark_mode="none",
+            benchmark_folders=["small"],
+            benchmark_output=None,
+            brute_force_var_limit=16,
+            repeat=1,
+        )
+
+        self.assertIsNone(benchmark_report)
+        descriptions = [step.description for step in steps]
+        queue_step = descriptions.index("Validate agent queue control plane")
+        tests_step = descriptions.index("Run unit tests")
+        self.assertLess(queue_step, tests_step)
+        self.assertEqual(
+            ("python", "tools/agent_queue_check.py"),
+            steps[queue_step].command,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
