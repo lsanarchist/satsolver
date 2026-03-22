@@ -40,6 +40,54 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-034-step3-overwrite-bookkeeping`
+
+- Status: completed
+- Task family: native-only learnt-large propagation bookkeeping experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-034`, by testing one bounded dense-UNSAT solver-core change that only affects exact `sub10 step-3` learnt-large non-last source-pop overwrite removals on `special/hard.cnf` and `large/test_6.cnf`
+- Assumptions:
+  - `perf-033` showed that about `81%` of the dense-anchor exact `step-3` lane is non-last overwrite traffic, so this run should target that dominant source-pop sublane rather than revisiting the last-slot tail.
+  - `perf-032` already rejected a broader source-pop rewrite that also touched the tail self-assignment case, so this run should keep the tail on the baseline path and only modify non-last overwrite removals.
+  - A retained-noop outcome is valid if any early gate rejects the candidate before the broader repeat-aware exact-CLI suite.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-034` in progress in the control plane and record the active bounded experiment in `PLANS.md`.
+- [x] Implement and benchmark one exact `sub10 step-3` dense-anchor overwrite-only bookkeeping candidate against the anchor pair, focused seven-case slice, and supplemental `satlib_more` guard slice.
+- [x] Keep or revert the candidate based on same-day evidence, then sync the control plane, verify, and commit.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed on the temporary candidate before the performance gates: the repo compiled, the queue check passed, all `76/76` tests passed, and both default wrapper smoke paths remained green
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf034_overwrite_baseline.TQC446/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf`
+- mildly negative on the dense anchor pair: the two-order average regressed from `20.7470s` to `20.7828s`, with `special/hard.cnf` worse in both orders while `large/test_6.cnf` split direction
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf034_overwrite_baseline.TQC446/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- candidate rejected on the focused seven-case gate: the two-order average regressed from `25.6051s` to `26.0817s`, with losses on both dense anchors plus `large/test_10.cnf`, `medium/test_4.cnf`, and `medium/test_3.cnf`
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf034_overwrite_baseline.TQC446/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- candidate also rejected on the supplemental slice: the two-order average regressed from `0.3289s` to `0.3409s`, with the clearest damage on `uuf125-010` and mixed guardrail movement elsewhere
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf`
+- passed on the temporary candidate and kept the dense hard-case search counters unchanged at `72,886/59,201` on `large/test_6.cnf` and `54,245/44,619` on `special/hard.cnf`, so this reject is another same-search bookkeeping loss rather than heuristic drift
+- `python tools/agent_queue_check.py`
+- passed after reverting the candidate and syncing the control plane: the queue now resolves deterministically to `current_or_next_task='perf-035'`
+- `python tools/codex_verify.py`
+- passed after reverting the candidate and syncing the control plane: the repo recompiled, the queue check passed, all `76/76` tests passed, and both default wrapper smoke paths remained green
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Tested one bounded solver-core candidate by keeping the last-slot tail on the baseline path but switching exact `sub10 step-3` learnt-large non-last removals to a pop-first overwrite path, mirrored in `tools/profile_solver.py`.
+- Reverted the candidate and kept no solver change because the dense anchor pair was already slightly negative, the focused seven-case gate regressed clearly, and the supplemental `satlib_more` slice regressed too.
+- The durable lesson is that the dominant exact `step-3` non-last overwrite lane is still not a keep for this pop-first source-pop rewrite. The candidate-only dense-anchor profile kept decisions and conflicts unchanged, so this is another same-search bookkeeping miss rather than a heuristic change.
+- The queue therefore advances to `perf-035`, a measurement task that should split the exact `step-3` non-last overwrite lane by source-slot depth on the dense anchors before another solver-core edit.
+
+### Remaining risks
+
+- This reject rules out one overwrite-only source-pop rewrite, but it does not prove the whole dense exact `step-3` overwrite lane is exhausted. The next task should measure where inside that overwrite lane the source index actually lives before another bookkeeping experiment.
+
 ## 2026-03-22 `perf-033-step3-tail-position-profile`
 
 - Status: completed
