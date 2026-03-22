@@ -16,6 +16,7 @@ Maintain a benchmark-driven, standard-library Python SAT solver that stays corre
 
 - `satsolver.py` is the required submission CLI: it parses DIMACS, routes solving, validates internal models, and writes `SAT` or `UNSAT`.
 - `satsolver_core.py` contains the shared CDCL implementation, watched literals, activity heuristics, restart logic, root-pure preprocessing, and portfolio gating constants.
+- `satsolver_io.py` contains the shared DIMACS parsing and result-writing helpers used by the thin wrappers.
 - `satsolver_fast.py` is an alternate comparison wrapper over the shared core with a lighter preprocessing path.
 - `satsolver_blaze.py` is a legacy comparison solver kept for benchmark reference.
 - `satsolver_pysat.py` is an optional external-library wrapper that must stay outside the standard-library submission path.

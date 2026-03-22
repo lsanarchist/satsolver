@@ -11,6 +11,7 @@ import os
 import sys
 
 import satsolver as base
+import satsolver_io as io
 
 IMPORT_ERROR: Exception | None = None
 
@@ -25,15 +26,15 @@ DEFAULT_BACKEND = os.environ.get("SATSOLVER_PYSAT_BACKEND", "minisat22")
 
 
 def parse_dimacs(text: str) -> tuple[int, list[list[int]]]:
-    return base.parse_dimacs(text)
+    return io.parse_dimacs(text)
 
 
 def parse_dimacs_file(path: str) -> tuple[int, list[list[int]]]:
-    return base.parse_dimacs_file(path)
+    return io.parse_dimacs_file(path)
 
 
 def write_result(path: str, model: list[int] | None) -> None:
-    base.write_result(path, model)
+    io.write_result(path, model, format_model=base.format_model)
 
 
 def _build_model(num_vars: int, literals: list[int] | None) -> list[int]:

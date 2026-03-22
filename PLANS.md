@@ -40,6 +40,44 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `sat-001-shared-io-helper`
+
+- Status: completed
+- Task family: solver maintainability refactor
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `sat-001`, by deduplicating shared DIMACS parsing and result-writing helpers across `satsolver.py` and `satsolver_fast.py`
+- Assumptions:
+  - A dedicated standard-library helper module for parsing and output formatting is the smallest reversible slice that removes the duplication without changing solver behavior.
+  - `satsolver_blaze.py` can stay untouched because its parser is separate legacy comparison code, while `satsolver_pysat.py` can safely use the same helper to avoid indirect dependence on `satsolver.py`.
+  - `python tools/codex_verify.py` remains the right verification gate because this is a behavior-preserving shared-code refactor.
+- Escalations: none
+
+### Plan
+
+- [x] Extract shared DIMACS parsing and result-writing helpers into a dedicated module.
+- [x] Update `satsolver.py`, `satsolver_fast.py`, and any overlapping wrapper call sites to use the shared helper without changing public APIs.
+- [x] Add targeted regression coverage for the shared helper path.
+- [x] Run verification and record the final outcome.
+
+### Verification
+
+- `python tools/agent_queue_check.py`
+- passed: live `.agent/STATE.yaml` and `.agent/TASK_QUEUE.yaml` remained consistent during the refactor
+- `python -m unittest discover -s tests -q`
+- passed: 70 tests
+- `python tools/codex_verify.py`
+- passed: compile, queue check, 70 tests, SAT smoke, and UNSAT smoke all completed successfully
+
+### Outcome
+
+- Added `satsolver_io.py` as the shared DIMACS parsing and result-writing helper for the thin wrapper modules.
+- Updated `satsolver.py`, `satsolver_fast.py`, and `satsolver_pysat.py` to use the shared helper without changing their public APIs.
+- Added regression coverage in `tests/test_solver_io.py` and refreshed the repo map in `AGENT.md`, `AGENTS.md`, and `README.md`.
+
+### Remaining risks
+
+- `satsolver_blaze.py` still carries its own legacy parser and output path, so future unification work should treat it as a separate comparison-solver task instead of silently folding it into the new helper.
+
 ## 2026-03-22 `cp-003-queue-consistency-checker`
 
 - Status: completed

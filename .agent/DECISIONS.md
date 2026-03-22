@@ -23,3 +23,9 @@
 - Context: The queue control plane needs a machine-checkable guard so stale `STATE.yaml` and `TASK_QUEUE.yaml` cannot silently drift during unattended runs.
 - Decision: Add `tools/agent_queue_check.py` as the repo-local control-plane consistency oracle and run it from `python tools/codex_verify.py` before unit tests.
 - Consequence: Routine verification now fails fast when queue state, task selection hints, or dependency status drift out of sync.
+
+## D-005 — 2026-03-22
+
+- Context: `satsolver.py` and `satsolver_fast.py` duplicated the same DIMACS parsing and result-writing logic, which made wrapper maintenance noisier and risked drift.
+- Decision: Introduce `satsolver_io.py` as the shared standard-library helper for DIMACS parsing and result writing, and keep the solver wrappers thin by delegating to it.
+- Consequence: Wrapper behavior stays centralized without changing the required CLI contract or solver-core ownership boundaries.

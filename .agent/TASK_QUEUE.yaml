@@ -72,7 +72,7 @@ tasks:
   - id: sat-001
     phase: 1
     priority: 80
-    status: todo
+    status: done
     title: Deduplicate shared DIMACS parsing and result-writing helpers
     size: M
     depends_on: []

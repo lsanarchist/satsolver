@@ -21,6 +21,7 @@ This repository is a benchmark-driven, standard-library Python SAT solver. The d
 
 - `satsolver.py`: required submission CLI entrypoint
 - `satsolver_core.py`: shared CDCL core
+- `satsolver_io.py`: shared DIMACS parsing and result-writing helpers
 - `satsolver_fast.py`: alternate wrapper used for comparisons
 - `satsolver_blaze.py`: legacy comparison solver
 - `satsolver_pysat.py`: optional external-library comparison solver

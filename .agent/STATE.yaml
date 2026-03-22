@@ -1,9 +1,9 @@
 schema_version: 1
 project: satsolver
 mode: autonomous_queue
-current_phase: 1
+current_phase: 2
 current_task_id: null
-last_completed_task_id: cp-003
+last_completed_task_id: sat-001
 repo_health: green_verified
 working_assumptions:
   - AGENT.md plus .agent/* are the authoritative autonomous control plane.
@@ -15,16 +15,18 @@ recent_files:
   - .agent/HANDOFF.md
   - .agent/STATE.yaml
   - .agent/TASK_QUEUE.yaml
-  - .agent/TEST_GATES.md
   - .agent/WORKLOG.md
+  - AGENT.md
+  - AGENTS.md
   - PLANS.md
   - README.md
-  - docs/codex/operator-guide.md
-  - tests/test_agent_queue_check.py
-  - tests/test_codex_verify.py
-  - tools/agent_queue_check.py
-  - tools/codex_verify.py
-next_task_hint: sat-001
+  - satsolver.py
+  - satsolver_fast.py
+  - satsolver_io.py
+  - satsolver_pysat.py
+  - tests/test_solver_io.py
+next_task_hint: tool-001
 notes:
   - The repo previously had AGENTS.md plus PLANS.md guidance but no repo-local queue control plane.
   - Routine verification now checks queue consistency before unit tests and solver smoke cases.
+  - Shared DIMACS parsing and result-writing now live in satsolver_io.py for the thin wrappers.

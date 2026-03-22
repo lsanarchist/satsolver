@@ -20,3 +20,10 @@
 - Files changed: `tools/agent_queue_check.py`, `tests/test_agent_queue_check.py`, `tools/codex_verify.py`, `tests/test_codex_verify.py`, `README.md`, `docs/codex/operator-guide.md`, `.agent/TEST_GATES.md`, `PLANS.md`, `.agent/STATE.yaml`, `.agent/TASK_QUEUE.yaml`, `.agent/HANDOFF.md`, `.agent/DECISIONS.md`, `.agent/WORKLOG.md`
 - Verification: `python tools/agent_queue_check.py` — passed; `python -m unittest discover -s tests -q` — passed; `python tools/codex_verify.py` — passed
 - Follow-up: Continue with `sat-001`, the shared DIMACS parsing and result-writing deduplication task.
+
+## 2026-03-22 12:40 UTC — sat-001
+- Status: done
+- Summary: Extracted shared DIMACS parsing and result-writing helpers into `satsolver_io.py`, switched the thin wrappers to that helper, and added regression coverage for the shared path.
+- Files changed: `satsolver_io.py`, `satsolver.py`, `satsolver_fast.py`, `satsolver_pysat.py`, `tests/test_solver_io.py`, `AGENT.md`, `AGENTS.md`, `README.md`, `PLANS.md`, `.agent/STATE.yaml`, `.agent/TASK_QUEUE.yaml`, `.agent/HANDOFF.md`, `.agent/DECISIONS.md`, `.agent/WORKLOG.md`
+- Verification: `python tools/agent_queue_check.py` — passed; `python -m unittest discover -s tests -q` — passed; `python tools/codex_verify.py` — passed
+- Follow-up: Continue with `tool-001`, the wrapper-verification expansion that now builds on `satsolver_io.py`.

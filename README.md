@@ -14,6 +14,7 @@ python tools/codex_verify.py
 
 - `satsolver.py`: required `python satsolver.py input.cnf output.txt` entrypoint
 - `satsolver_core.py`: shared CDCL solver core
+- `satsolver_io.py`: shared DIMACS parsing and result-writing helpers
 - `satsolver_fast.py`: alternate comparison wrapper over the shared core
 - `satsolver_blaze.py`: legacy comparison solver
 - `satsolver_pysat.py`: optional external-library comparison wrapper
