@@ -40,6 +40,46 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-016-problem-ternary-relocation-path`
+
+- Status: completed
+- Task family: native-only dense-UNSAT propagation experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-016`, by testing one bounded same-search propagation change on the dominant original problem-ternary relocation path after the retained `perf-014` unit-first keep and the `perf-015` profile refresh
+- Assumptions:
+  - `perf-015` confirmed that the bigger remaining propagation surface is still original problem-ternary relocation, especially the ordinary `candidate=UNASSIGNED` plus `other=UNASSIGNED` case, not the already-improved unit tail.
+  - Previously rejected family hoists, watched-position side arrays, lazy normalization, true-candidate hold behavior, and physical watch-list splits still rule out broader layout changes here, so this run should stay inside the current watch traversal shape.
+  - A retained-noop outcome is valid if the bounded relocation-path branch shaping still loses on the same-day exact-CLI hotspot gate.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-016` in progress in the control plane and record the active relocation experiment in `PLANS.md`.
+- [x] Implement and evaluate one narrowly scoped original problem-ternary relocation candidate against the hotspot and structural guardrail slices.
+- [x] Keep or revert the candidate based on same-day evidence, then sync the control plane, verify, and commit.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed on the temporary candidate before the performance gates: the branch-shaped relocation candidate compiled, passed the queue check, passed all 73 tests, and stayed checker-valid on both default wrapper smoke paths
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf016_relocsplit_baseline.wgX5tL/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- candidate rejected: the seven-case two-order exact-CLI hotspot average regressed from `28.2700s` to `29.2099s`; `large/test_6.cnf` lost in both orders, `special/hard.cnf` split directions, and the overall result was not close enough to justify broader retention work
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf016_relocsplit_baseline.wgX5tL/satsolver.py --candidate-cli-script satsolver.py special/pigeonhole.cnf special/tseitin.cnf`
+- passed: the structural fast-exit guardrail stayed slightly positive overall (`0.0652s -> 0.0645s`), so the loss is not coming from those families
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf`
+- passed on the temporary candidate: the dense hard-case search counters stayed unchanged at `72,886/59,201` decisions/conflicts on `large/test_6.cnf` and `54,245/44,619` on `special/hard.cnf`, which points to pure branch-overhead loss rather than a beneficial search-path change
+
+### Outcome
+
+- Tested one bounded original problem-ternary relocation candidate that split the dominant `candidate=UNASSIGNED` relocation path away from the rarer `candidate=TRUE` relocation path while preserving the current watch layout and the `candidate=FALSE` unit-first tail from `perf-014`.
+- Rejected the candidate and retained no solver code change. The real gate regressed clearly on the seven-case exact-CLI slice, and the profiler showed unchanged dense hard-case decisions and conflicts, so the branch split deleted no search work and only added cost on the retained baseline path.
+- Completed `perf-016` as a retained no-op, updated the durable queue state, and advanced the next task to `perf-017`, which should target concrete relocation bookkeeping removal on the dominant `candidate=UNASSIGNED` path instead of more candidate-state branch shaping.
+
+### Remaining risks
+
+- The relocation surface is still the right lane, but `perf-016` shows that simply teasing apart `UNASSIGNED` versus `TRUE` relocation branches is negative when it does not also remove real bookkeeping work.
+- The next experiment still needs full hotspot and structural guardrail coverage because even apparently same-search propagation micro-changes can move by nearly a second on the seven-case slice.
+
 ## 2026-03-22 `perf-015-post-keep-propagation-profile-refresh`
 
 - Status: completed

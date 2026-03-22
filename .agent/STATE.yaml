@@ -3,7 +3,7 @@ project: satsolver
 mode: autonomous_queue
 current_phase: 2
 current_task_id: null
-last_completed_task_id: perf-015
+last_completed_task_id: perf-016
 repo_health: green_verified
 working_assumptions:
   - AGENT.md plus .agent/* are the authoritative autonomous control plane.
@@ -17,7 +17,7 @@ recent_files:
   - .agent/TASK_QUEUE.yaml
   - .agent/HANDOFF.md
   - .agent/WORKLOG.md
-next_task_hint: perf-016
+next_task_hint: perf-017
 notes:
   - The repo previously had AGENTS.md plus PLANS.md guidance but no repo-local queue control plane.
   - Routine verification now checks queue consistency before unit tests and solver smoke cases.
@@ -38,3 +38,4 @@ notes:
   - Perf-013 kept no solver change: the retained post-perf-012 profile still shows propagate() dominating end-to-end time, with original problem-ternary relocation and unit handling remaining the biggest concentrated surface on the dense UNSAT hotspots.
   - Perf-014 kept a solver change: taking the overwhelmingly common unit path directly in the ternary candidate-false tail improved both the seven-case exact-CLI hotspot slice and the same-day repeat-aware 59-case exact-CLI suite while keeping the dense hard-case decision/conflict counters unchanged.
   - Perf-015 kept no solver change: the retained post-perf-014 profile still shows propagate() dominating end-to-end time, with original problem-ternary relocation still the larger remaining surface than units on the dense UNSAT hotspots.
+  - Perf-016 kept no solver change: splitting the dominant ternary relocation branch into explicit `candidate=UNASSIGNED` and `candidate=TRUE` cases preserved the dense hard-case decision/conflict counters but still regressed the seven-case exact-CLI gate, so future relocation work should remove bookkeeping rather than add more candidate-state branching.
