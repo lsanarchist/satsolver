@@ -3,32 +3,29 @@
 ## Current State
 
 - The repo now has a queue-driven autonomous control plane rooted in `AGENT.md` and `.agent/*`, plus a machine-checkable queue validator.
-- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, and `perf-007` are complete.
+- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, and `perf-008` are complete.
 - The queue has been reopened with a rolling native-only optimization program.
-- There is no active in-progress task; the next deterministic task is `perf-008`.
+- There is no active in-progress task; the next deterministic task is `perf-009`.
 
 ## What Changed This Run
 
-- Revalidated the optional PySAT comparison path in `.venv-external-sat`, including fresh SAT and UNSAT smoke checks plus a same-day backend sweep.
-- Confirmed that `minisat22` remains the strongest local PySAT backend and used it as the external ceiling for a fresh exact-CLI comparison on both the seven-case hotspot slice and a structural fast-exit slice.
-- Recorded `perf-007` as a research-only no-code run: the retained solver still wins `special/pigeonhole.cnf` and `special/tseitin.cnf`, but it trails PySAT badly on the dense UNSAT hotspot families, so the queue now advances to a watch-family split experiment in the native-only core.
+- Tested one true watch-family split by moving problem ternary clauses onto their own watcher lists, mirrored that change in the profiler, and added a routing regression while the candidate was under test.
+- Rejected the candidate after the seven-case exact-CLI hotspot gate regressed from `24.6075s` to `28.1011s`, even though the structural fast-exit slice stayed healthy and the SAT guardrail `large/test_8.cnf` improved slightly.
+- The decisive failure was search-path drift on `large/test_6.cnf`: the profiler showed the split removed mixed problem-ternary batches as intended, but it also raised that case from `59,201` to `81,161` conflicts, so no solver code was retained and the queue now advances to `perf-009`.
 
 ## Current Focus
 
-- Start `perf-008` next: test a watch-family split on the dense UNSAT hotspot slice while preserving the SAT guardrail and structural fast-exit families.
+- Start `perf-009` next: revisit dense-UNSAT conflict-analysis with the refreshed reason counters now that the watch-family lane has been rejected.
 
 ## Recommended Next Tasks
 
-- `perf-008` — test a true watch-family split on the dense UNSAT hotspot cases
-- `perf-009` — if the watch-family lane still loses, revisit dense-UNSAT conflict-analysis with the refreshed reason counters
+- `perf-009` — revisit dense-UNSAT conflict-analysis after the watch-family reject
 
 ## Verification From This Run
 
-- `.venv-external-sat/bin/python satsolver_pysat.py small/test_1.cnf /tmp/perf007_pysat_small_sat.txt && python tools/checker.py small/test_1.cnf /tmp/perf007_pysat_small_sat.txt` — passed
-- `.venv-external-sat/bin/python satsolver_pysat.py special/tseitin.cnf /tmp/perf007_pysat_small_unsat.txt && python tools/checker.py special/tseitin.cnf /tmp/perf007_pysat_small_unsat.txt --bruteforce-var-limit 0` — passed
-- `python - <<'PY' ... backend sweep across minisat22, glucose4, cadical195, mergesat3, kissat404 on large/test_6.cnf and special/hard.cnf ... PY` — passed (`minisat22` best at `0.5813s`)
-- `SATSOLVER_PYSAT_BACKEND=minisat22 python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script satsolver_pysat.py --candidate-python-executable .venv-external-sat/bin/python large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf` — passed (`24.6944s` baseline versus `1.2486s` external ceiling)
-- `SATSOLVER_PYSAT_BACKEND=minisat22 python tools/hotspot_compare.py --baseline-cli-script satsolver.py --candidate-cli-script satsolver_pysat.py --candidate-python-executable .venv-external-sat/bin/python special/pigeonhole.cnf special/tseitin.cnf` — passed (`0.0702s` baseline versus `3.4322s` external ceiling)
+- `python tools/codex_verify.py` — passed on the temporary candidate before the performance gate
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf008_watchsplit_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf` — candidate rejected (`24.6075s` baseline versus `28.1011s` candidate)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf008_watchsplit_baseline/satsolver.py --candidate-cli-script satsolver.py special/pigeonhole.cnf special/tseitin.cnf` — passed (`0.0757s` baseline versus `0.0604s` candidate)
 - `python tools/profile_solver.py large/test_6.cnf special/hard.cnf` — passed
 - `python tools/agent_queue_check.py` — passed
 - `python tools/codex_verify.py` — passed
@@ -46,7 +43,8 @@
 - The refreshed baseline totaled `32.2896s` representative exact-CLI time over `59` cases, and the seven-case slice still covers `90.82%` of that total while keeping `large/test_8.cnf` as the SAT-like guardrail.
 - `perf-006` showed that the remaining tiny exact-CLI floor is now dominated by Python startup on this machine, so future wrapper/startup work should be skeptical unless a materially different environment or a clearly new surface area appears.
 - `perf-007` confirmed that the main remaining native-only gap is the dense search-heavy UNSAT core, not the structural fast-exit families: PySAT cut the seven-case hotspot slice from `24.6944s` to `1.2486s`, while the retained solver still beat it on `special/pigeonhole.cnf` and `special/tseitin.cnf` by about `49x`.
-- The refreshed profiler still shows dense problem-ternary traffic interleaved with learnt-large watchers on the two hardest UNSAT cases, so `perf-008` should start from a true watch-family split rather than another wrapper tweak or structural-presolver rewrite.
+- `perf-008` showed that a true watcher split is not “just layout” in this solver: even though it removed mixed problem-ternary batches and preserved the structural fast-exit families, it perturbed propagation order enough to inflate `large/test_6.cnf` from `59,201` to `81,161` conflicts.
+- The next run should therefore leave the watch-family lane alone for now and move to the already-queued dense conflict-analysis slice in `perf-009`.
 
 ## Immediate Constraints
 
@@ -69,3 +67,4 @@
 - `large/test_8.cnf` is also an important guardrail for restart-policy experiments because even conservative restart drift can destabilize it badly.
 - On the current machine, Python interpreter startup is now the dominant floor on tiny exact-CLI runs, so most remaining wrapper-path deltas are likely to be small and noisy.
 - The current solver still owns the structural fast-exit families (`special/pigeonhole.cnf`, `special/tseitin.cnf`) even though the optional PySAT reference is dramatically faster on the dense search-heavy UNSAT hotspot slice.
+- Changing the watched-clause family order can materially change the dense UNSAT search path, so future watcher-layout experiments should assume they are heuristic changes, not neutral refactors.

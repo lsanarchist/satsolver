@@ -216,7 +216,7 @@ tasks:
   - id: perf-008
     phase: 2
     priority: 68
-    status: todo
+    status: done
     title: Test a watch-family split on dense UNSAT hotspots
     size: L
     depends_on:

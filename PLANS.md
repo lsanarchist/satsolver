@@ -40,6 +40,54 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-008-watch-family-split`
+
+- Status: completed
+- Task family: native-only dense-UNSAT propagation layout experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-008`, by testing one true split between problem-ternary watchers and the remaining watched-clause traffic, keeping it only if same-day exact-CLI evidence wins without weakening the SAT guardrail or structural fast-exit families
+- Assumptions:
+  - The freshest PySAT gap analysis and dense-UNSAT profiler counters both point at mixed watched-clause traversal, not wrapper overhead, as the next meaningful native-only lane.
+  - A real watcher-family split is different enough from prior branch-shape and payload micro-optimizations to justify one bounded experiment.
+  - A retained-noop outcome is acceptable if the split loses on the exact-CLI gates, even if the profiler looks cleaner.
+- Escalations: none
+
+### Plan
+
+- [x] Add a dedicated problem-ternary watcher lane in `satsolver_core.py` and mirror it in `tools/profile_solver.py`.
+- [x] Add a focused regression that proves problem ternary clauses attach to the dedicated watcher lane without changing solver correctness semantics.
+- [x] Run the default verifier plus the seven-case hotspot and structural fast-exit exact-CLI comparisons, then keep or revert the candidate based on same-day evidence.
+- [x] Update the control plane with the verified outcome and queue the next sensible follow-up.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed: the temporary watch-family split compiled, passed the queue check, passed all 74 tests, and stayed valid on the main plus alternate-wrapper smoke paths before the performance gate
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf008_watchsplit_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- candidate rejected: the seven-case two-order average regressed from `24.6075s` to `28.1011s`; `special/hard.cnf`, `large/test_10.cnf`, and `large/test_8.cnf` improved, but `large/test_6.cnf` worsened sharply in both orders (`12.0426s -> 16.2226s`, `11.9371s -> 16.8653s`)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf008_watchsplit_baseline/satsolver.py --candidate-cli-script satsolver.py special/pigeonhole.cnf special/tseitin.cnf`
+- passed: the structural fast-exit slice stayed healthy and even improved slightly (`0.0757s -> 0.0604s` two-order average), which narrowed the failure to the dense CDCL path instead of the presolver families
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf`
+- passed: the watch-family split eliminated mixed problem-ternary batches as intended (`problem_ternary_mixed_batch_share=0.0000`), but it also changed the dense search path: `large/test_6.cnf` jumped from the prior `59,201` conflicts to `81,161`, while `special/hard.cnf` improved from `44,619` to `39,511`
+- `python tools/agent_queue_check.py`
+- passed: the reverted retained baseline plus final control-plane edits resolve cleanly to `current_or_next_task='perf-009'`
+- `python tools/codex_verify.py`
+- passed: the reverted retained baseline plus final control-plane edits compile, pass the queue check, pass all 73 tests, and clear both default wrapper smoke paths
+- `git diff --check`
+- passed
+
+### Outcome
+
+- Tested one real watch-family split by moving problem ternary clauses onto their own watcher lists while leaving the remaining watched clauses on the existing lane, then mirrored that layout in the profiler and added a routing regression.
+- Rejected the candidate even though the profiler looked cleaner on the narrow metric it targeted. The dedicated lane removed mixed problem-ternary batches and preserved the structural fast-exit families, but the main dense exact-CLI gate still regressed decisively because `large/test_6.cnf` got much worse.
+- The profiler explains why this is a clean no-op conclusion instead of a “same search but slower” case: the split changed propagation order enough to change the search itself, inflating `large/test_6.cnf` from `72,886` decisions / `59,201` conflicts to `99,880` decisions / `81,161` conflicts even while helping `special/hard.cnf`.
+- Completed `perf-008` as a retained-noop conclusion and advanced the queue to `perf-009`, which now becomes the next deterministic dense-UNSAT lane.
+
+### Remaining risks
+
+- This reject does not prove that all watcher-family work is dead forever, but it does show that a true split is not “just layout” in this solver: changing which family runs first can materially perturb the search, especially on `large/test_6.cnf`.
+- The next native-only experiment should therefore move to the already-queued conflict-analysis lane instead of trying another watcher-family rearrangement immediately.
+
 ## 2026-03-22 `perf-007-external-gap-targets`
 
 - Status: completed

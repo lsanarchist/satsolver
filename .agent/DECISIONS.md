@@ -47,3 +47,9 @@
 - Context: Fresh same-day external-reference comparison showed that the retained solver still wins the repo-specific structural fast-exit families but trails a mature external backend massively on the dense UNSAT hotspot slice.
 - Decision: Treat the external PySAT path as a research ceiling only, and aim the next native-only queue tasks at dense-UNSAT CDCL watch traversal and downstream conflict-analysis rather than at wrapper/startup cleanup or structural fast-exit rewrites.
 - Consequence: The queue now preserves the existing structural presolvers as strengths while focusing future native-only experiments on the dense search-heavy core where the remaining gap is largest.
+
+## D-009 — 2026-03-22
+
+- Context: A true watch-family split removed mixed problem-ternary batches as intended, but it also changed the dense UNSAT search path enough to blow up `large/test_6.cnf` from `59,201` to `81,161` conflicts.
+- Decision: Treat future watcher-layout or family-order changes as heuristic experiments, not as neutral data-layout refactors, and require the same exact-CLI guardrails as other search-policy work.
+- Consequence: The queue should prefer conflict-analysis or other bounded core work next instead of assuming another watch-list rearrangement is a low-risk cleanup.
