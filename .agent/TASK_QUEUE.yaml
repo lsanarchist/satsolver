@@ -433,7 +433,7 @@ tasks:
   - id: perf-020
     phase: 2
     priority: 43
-    status: todo
+    status: done
     title: Refresh learnt-large exact-CLI guard slices after the broad-suite reject
     size: M
     depends_on:
@@ -447,3 +447,22 @@ tasks:
       - python tools/profile_solver.py large/test_6.cnf special/hard.cnf
       - python tools/codex_verify.py --benchmark-mode cli --repeat 2
       - python tools/codex_verify.py
+  - id: perf-021
+    phase: 2
+    priority: 42
+    status: todo
+    title: Test the next learnt-large relocation idea against the refreshed guard slices
+    size: L
+    depends_on:
+      - perf-020
+    goal: Use the refreshed perf-020 guard guidance to test one bounded learnt-large relocation candidate, requiring the existing focused seven-case slice, the supplemental satlib_more guard slice, and the repeat-aware 59-case exact-CLI suite before any solver-core keep.
+    deliverables:
+      - candidate code or retained-noop conclusion with rationale
+      - `PLANS.md` notes tied to the focused and supplemental learnt-large guard slices
+      - targeted profiler updates if learnt-large relocation bookkeeping changes
+    verify:
+      - python tools/codex_verify.py
+      - python tools/hotspot_compare.py --baseline-cli-script <baseline>/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf
+      - python tools/hotspot_compare.py --baseline-cli-script <baseline>/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/jnh10.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh1.cnf
+      - python tools/profile_solver.py large/test_6.cnf special/hard.cnf
+      - python tools/codex_verify.py --benchmark-mode cli --repeat 2

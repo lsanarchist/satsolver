@@ -71,3 +71,9 @@
 - Context: `perf-019` improved the focused seven-case exact-CLI hotspot and the structural fast-exit guardrail, and it preserved dense hard-case decisions/conflicts, but it still regressed the stronger repeat-aware 59-case exact-CLI suite.
 - Decision: Treat future learnt-large relocation experiments as needing a broader exact-CLI guard slice than the focused seven-case hotspot before any solver-core keep is accepted.
 - Consequence: Follow-on queue tasks on the learnt-large lane should refresh or widen their exact-CLI guard cases before another keep attempt, even when the dense hotspot counters look stable.
+
+## D-013 — 2026-03-22
+
+- Context: `perf-020` showed that the `perf-019` full-suite regression came almost entirely from repeat-aware movement inside the existing focused seven-case slice, while non-focused cases netted nearly flat and only a small `satlib_more` cluster stood out as secondary gross regressions.
+- Decision: Keep the existing seven-case learnt-large hotspot slice as the primary early gate, add a compact supplemental `satlib_more` guard slice (`uuf125-010`, `jnh10`, `uf125-01`, `uf125-010`, `jnh1`), and still require the repeat-aware 59-case exact-CLI suite before any keep.
+- Consequence: Future learnt-large tasks should not assume that every broad-suite miss implies a totally new hotspot family; instead they should use the focused slice plus the supplemental `satlib_more` slice as early gates and treat the full-suite repeat-aware benchmark as the final keep authority.

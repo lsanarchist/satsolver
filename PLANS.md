@@ -40,6 +40,50 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-020-learnt-large-guard-slice-refresh`
+
+- Status: completed
+- Task family: native-only learnt-large benchmark guard refresh
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-020`, by using the `perf-019` broad-suite reject to refresh the exact-CLI guard slice that future learnt-large relocation experiments must satisfy before another solver-core keep attempt
+- Assumptions:
+  - This run is measurement-only unless the queue evidence itself proves stale; no solver-core edit is expected.
+  - The most useful deliverable is a compact supplemental guard slice and a corrected lesson in the queue, not another candidate implementation.
+  - If the broad-suite mismatch turns out to come mainly from repeat-aware instability on already-focused cases, the queue should say that explicitly instead of pretending the problem is purely outside the existing hotspot slice.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-020` in progress in the control plane and record the active guard-refresh task in `PLANS.md`.
+- [x] Reconcile the `perf-019` full-suite regression against the focused seven-case slice, rerun the required measurement commands, and derive the supplemental learnt-large guard cases.
+- [x] Update the control plane with the refreshed guard-slice guidance, verify the final state, and commit.
+
+### Verification
+
+- `python - <<'PY'` (parse `/tmp/perf019_baseline_cli_repeat2.txt` vs `/tmp/sat-codex-benchmark-6_2z0guq.txt`)
+- passed: the `perf-019` full-suite regression came almost entirely from the existing focused seven-case slice (`+0.4541s`), while all non-focused cases netted to only `-0.0026s`; the largest gross non-focused regressions were `satlib_more/uuf125-010.cnf` (`+0.0325s`), `satlib_more/jnh10.cnf` (`+0.0188s`), `satlib_more/uf125-01.cnf` (`+0.0122s`), `satlib_more/uf125-010.cnf` (`+0.0097s`), and `satlib_more/jnh1.cnf` (`+0.0083s`)
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf`
+- passed: the retained solver still shows unchanged dense hard-case search counters (`72,886/59,201` on `large/test_6.cnf`, `54,245/44,619` on `special/hard.cnf`) and unchanged learnt-large shares (`26.12%` pop share on `large/test_6.cnf`, `38.33%` on `special/hard.cnf`)
+- `python tools/codex_verify.py --benchmark-mode cli --repeat 2`
+- passed: the retained solver stayed `59/59` correct on a fresh repeat-aware exact-CLI rerun (`30.3111s` representative / `60.6223s` measured); the absolute total drifted noisily relative to the `perf-019` frozen baseline, but the slow-case ordering stayed the same and still centered on the existing focused anchors plus `satlib_more/uuf125-010.cnf`
+- `python tools/agent_queue_check.py`
+- passed after the control-plane sync: the queue now resolves deterministically to `current_or_next_task='perf-021'`
+- `python tools/codex_verify.py`
+- passed after the final control-plane sync: the repo compiles, the queue check passes, all 73 tests pass, and both default wrapper smoke paths remain green
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Closed `perf-020` as a measurement-only guard-refresh run; no solver code changed.
+- The key correction is that `perf-019` did not really uncover a wholly different non-hotspot failure family. The broad-suite reject was dominated by repeat-aware reversals inside the existing seven-case slice, especially `special/hard.cnf`, while non-focused cases netted out almost flat.
+- Future learnt-large relocation work should therefore keep the existing seven-case slice as the primary early gate, but add one compact supplemental satlib-more guard slice to catch the main secondary gross regressions earlier: `satlib_more/uuf125-010.cnf`, `satlib_more/jnh10.cnf`, `satlib_more/uf125-01.cnf`, `satlib_more/uf125-010.cnf`, and `satlib_more/jnh1.cnf`.
+- The queue now advances to `perf-021`, which should test the next bounded learnt-large relocation idea against the focused seven-case slice, the supplemental satlib-more slice, and the full repeat-aware exact-CLI suite before any keep.
+
+### Remaining risks
+
+- The supplemental satlib-more slice is only an early warning for this lane; `python tools/codex_verify.py --benchmark-mode cli --repeat 2` remains the final keep gate because the absolute timings are still noisy.
+
 ## 2026-03-22 `perf-019-learnt-large-relocation-bookkeeping`
 
 - Status: completed

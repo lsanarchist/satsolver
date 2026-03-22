@@ -3,34 +3,31 @@
 ## Current State
 
 - The repo still uses the queue-driven autonomous control plane rooted in `AGENT.md` and `.agent/*`, plus the machine-checkable queue validator.
-- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, `perf-008`, `perf-009`, `perf-010`, `perf-011`, `perf-012`, `perf-013`, `perf-014`, `perf-015`, `perf-016`, `perf-017`, `perf-018`, and `perf-019` are complete.
-- There is no active in-progress task; the next deterministic task is `perf-020`.
+- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001`, `perf-002`, `perf-003`, `perf-004`, `perf-005`, `perf-006`, `perf-007`, `perf-008`, `perf-009`, `perf-010`, `perf-011`, `perf-012`, `perf-013`, `perf-014`, `perf-015`, `perf-016`, `perf-017`, `perf-018`, `perf-019`, and `perf-020` are complete.
+- There is no active in-progress task; the next deterministic task is `perf-021`.
 
 ## What Changed This Run
 
-- Closed `perf-019` as a retained no-op after testing one bounded learnt-large relocation bookkeeping deletion and reverting it.
-- The candidate improved the focused seven-case exact-CLI hotspot (`26.4626s -> 25.8086s`) and the structural fast-exit guardrail (`0.0657s -> 0.0564s`), and it preserved the dense hard-case search counters.
-- The stronger repeat-aware 59-case exact-CLI suite still regressed (`28.8865s -> 29.3380s`), so no solver code was kept.
-- The queue now advances to `perf-020`, which should refresh the broader exact-CLI guard slice for future learnt-large relocation work before another solver-core change.
+- Closed `perf-020` as a measurement-only guard-refresh run; no solver code changed.
+- The key finding is that the `perf-019` broad-suite reject was not mainly caused by some brand-new non-hotspot family. The existing focused seven-case slice already accounted for almost all of the full-suite regression (`+0.4541s`), while all non-focused cases netted to only `-0.0026s`.
+- The strongest secondary non-focused gross regressions did cluster in `satlib_more`, so future learnt-large relocation experiments now carry one compact supplemental guard slice: `satlib_more/uuf125-010.cnf`, `satlib_more/jnh10.cnf`, `satlib_more/uf125-01.cnf`, `satlib_more/uf125-010.cnf`, and `satlib_more/jnh1.cnf`.
+- A fresh retained-baseline repeat-aware exact-CLI rerun stayed `59/59` correct and kept the same slow-case ordering, even though the absolute total drifted noisily on this machine.
 
 ## Current Focus
 
-- Start `perf-020` next: refresh the broader exact-CLI guard cases that future learnt-large relocation experiments must satisfy.
+- Start `perf-021` next: test one bounded learnt-large relocation candidate against the existing focused seven-case slice, the supplemental satlib_more slice, and the repeat-aware full suite.
 
 ## Recommended Next Tasks
 
-- `perf-020` — refresh learnt-large exact-CLI guard slices after the broad-suite reject
+- `perf-021` — test the next learnt-large relocation idea against the refreshed guard slices
 
 ## Verification From This Run
 
-- `python tools/codex_verify.py` — passed on the temporary candidate before the performance gates
-- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf019_largebook_baseline.9uppKV/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf` — passed; focused seven-case gate improved (`26.4626s -> 25.8086s`)
-- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf019_largebook_baseline.9uppKV/satsolver.py --candidate-cli-script satsolver.py special/pigeonhole.cnf special/tseitin.cnf` — passed; structural guardrail improved (`0.0657s -> 0.0564s`)
-- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf` — passed; dense hard-case decisions/conflicts stayed unchanged
-- `python benchmark_suite.py satsolver /tmp/perf019_baseline_cli_repeat2.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script /tmp/perf019_largebook_baseline.9uppKV/satsolver.py --python-executable /usr/bin/python --repeat 2` — passed; frozen baseline `59/59` correct at `28.8865s` representative / `57.7730s` measured
-- `python tools/codex_verify.py --benchmark-mode cli --repeat 2` — passed as a correctness run but rejected as a keep gate; candidate `59/59` correct at `29.3380s` representative / `58.6760s` measured
-- `python tools/agent_queue_check.py` — passed; queue now resolves to `current_or_next_task='perf-020'`
-- `python tools/codex_verify.py` — passed again after the candidate revert and control-plane sync
+- `python - <<'PY'` parse of `/tmp/perf019_baseline_cli_repeat2.txt` vs `/tmp/sat-codex-benchmark-6_2z0guq.txt` — passed; focused seven-case delta `+0.4541s`, non-focused delta `-0.0026s`, supplemental satlib_more gross regressions identified
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf` — passed; dense hard-case decisions/conflicts and learnt-large shares stayed unchanged
+- `python tools/codex_verify.py --benchmark-mode cli --repeat 2` — passed; retained solver stayed `59/59` correct at `30.3111s` representative / `60.6223s` measured on this rerun
+- `python tools/agent_queue_check.py` — passed; queue now resolves to `current_or_next_task='perf-021'`
+- `python tools/codex_verify.py` — passed after the final control-plane sync
 - `git diff --check` — passed
 
 ## Notes For The Next Run
@@ -41,9 +38,9 @@
 - Reuse the queue checker when adjusting `.agent/STATE.yaml` or `.agent/TASK_QUEUE.yaml`.
 - The default verifier covers `satsolver_fast.py`, but `satsolver_pysat.py` remains outside the default gate because it requires an optional external environment.
 - External libraries or solvers may be used as short-lived research references only; do not retain them in the submission path or make them a default verifier dependency.
-- Do not update `benchmark_summary.md` or `experiments.jsonl` for `perf-019`; no performance keep survived this run.
-- The `perf-019` reject means future learnt-large relocation work should not trust the focused seven-case slice alone, even when the dense hard-case counters stay unchanged.
-- `perf-020` should use the broad repeat-aware exact-CLI evidence to name the extra guard cases or slices that future learnt-large relocation experiments must carry before another solver-core edit.
+- Do not update `benchmark_summary.md` or `experiments.jsonl` for `perf-020`; no performance keep survived this run.
+- For future learnt-large relocation experiments, treat the existing seven-case slice as the primary early gate and the supplemental `satlib_more` slice as a secondary early-warning slice, not as a replacement for the full-suite repeat-aware exact-CLI gate.
+- `special/hard.cnf` remains the single biggest sensitivity inside the focused seven-case lane, so do not overfit the next candidate to `large/test_6.cnf` alone.
 
 ## Immediate Constraints
 
@@ -63,8 +60,8 @@
 - Same-day exact-CLI evidence is stronger than stale benchmark history when timing signals are close.
 - External solvers or libraries may inform research, but only native-only wins belong in the retained solver path.
 - `large/test_8.cnf` remains an important SAT-like guardrail for learnt-database and restart-sensitive changes.
-- On the current machine, Python interpreter startup is the dominant floor on tiny exact-CLI runs, so most remaining wrapper-path deltas are likely to be small and noisy.
+- On the current machine, repeat-aware exact-CLI totals are still noisy enough that case ordering is usually more stable than one raw rerun total.
 - The current solver still owns the structural fast-exit families (`special/pigeonhole.cnf`, `special/tseitin.cnf`) even though optional external references are dramatically faster on the dense search-heavy UNSAT hotspot slice.
 - Changing the watched-clause family order can materially change the dense UNSAT search path, so future watcher-layout experiments should assume they are heuristic changes, not neutral refactors.
 - Even low-yield long learnt-reason removals can be important search signal, so relaxed minimization selectors should be treated as SAT-guardrail-sensitive rather than safe bookkeeping cuts.
-- Learnt-large relocation work now needs a broader exact-CLI guard slice than the focused seven-case hotspot before a solver-core keep is safe.
+- Future learnt-large relocation work should use the focused seven-case slice plus the supplemental `satlib_more` slice (`uuf125-010`, `jnh10`, `uf125-01`, `uf125-010`, `jnh1`) before the full repeat-aware exact-CLI keep gate.
