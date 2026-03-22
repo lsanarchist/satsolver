@@ -53,3 +53,9 @@
 - Context: A true watch-family split removed mixed problem-ternary batches as intended, but it also changed the dense UNSAT search path enough to blow up `large/test_6.cnf` from `59,201` to `81,161` conflicts.
 - Decision: Treat future watcher-layout or family-order changes as heuristic experiments, not as neutral data-layout refactors, and require the same exact-CLI guardrails as other search-policy work.
 - Consequence: The queue should prefer conflict-analysis or other bounded core work next instead of assuming another watch-list rearrangement is a low-risk cleanup.
+
+## D-010 — 2026-03-22
+
+- Context: `perf-009` tried the narrowest plausible relaxed-minimization selector, skipping scans only for learnt `10+`-literal reasons, after fresh dense-UNSAT counters showed that bucket removed very few literals.
+- Decision: Treat minimization-result relaxations as SAT-guardrail-sensitive heuristic changes, not as safe bookkeeping cleanup, and prefer same-clause-content conflict-analysis work before revisiting selector-based minimization shortcuts.
+- Consequence: Future queue tasks should avoid more “skip these minimization checks” rules for now and instead focus on overhead reductions that preserve the learnt clause contents.

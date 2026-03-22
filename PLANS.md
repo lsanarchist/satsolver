@@ -40,6 +40,52 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-22 `perf-009-dense-unsat-conflict-analysis`
+
+- Status: completed
+- Task family: native-only dense-UNSAT conflict-analysis experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-009`, by using the refreshed dense-UNSAT reason counters to test one bounded conflict-analysis or learnt-minimization change without weakening the structural fast-exit cases
+- Assumptions:
+  - The watch-family lane is closed for now after `perf-008`, so this run should stay inside conflict analysis rather than revisiting propagation layout.
+  - The strongest fresh selector signal is inside `minimize_learnt()`: learnt-only `10+`-literal reasons are expensive to scan but remove very few literals on `large/test_6.cnf` and `special/hard.cnf`.
+  - A retained-noop outcome is acceptable if this narrow selector still loses on the seven-case exact-CLI gate.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-009` in progress in the control plane and keep repo state aligned before coding.
+- [x] Test one bounded candidate in `minimize_learnt()` aimed only at learnt `10+`-literal reasons, keeping the rest of the conflict-analysis path unchanged.
+- [x] Run the default verifier plus the seven-case hotspot and structural fast-exit comparisons, then keep or revert the candidate based on same-day evidence.
+- [x] Update the control plane with the verified outcome and queue the next sensible follow-up.
+
+### Verification
+
+- `python - <<'PY' ... MeasureSolver selector probe over large/test_6.cnf and special/hard.cnf ... PY`
+- passed: the fresh bucket split showed that problem-side minimization checks are entirely ternary on both cases, while the only low-yield bucket is learnt `10+` reasons (`36,846` checks / `4,012` removals on `large/test_6.cnf`, `21,289` checks / `1,885` removals on `special/hard.cnf`)
+- `python tools/codex_verify.py`
+- passed on the temporary candidate before the performance gate
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf009_minlearn10_baseline/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- candidate rejected: the seven-case two-order average regressed from `35.7221s` to `51.1322s`; the worst damage hit the SAT guardrail `large/test_8.cnf` (`0.3848s -> 5.0747s` average), with dense UNSAT regressions on `large/test_6.cnf` (`18.2279s -> 23.3683s`) and `special/hard.cnf` (`10.9885s -> 16.0478s`)
+- `python tools/agent_queue_check.py`
+- passed: the final queue state resolves cleanly to `current_or_next_task='perf-010'`
+- `python tools/codex_verify.py`
+- passed: the reverted retained baseline plus final control-plane edits compile, pass the queue check, pass all 73 tests, and clear both default wrapper smoke paths
+- `git diff --check`
+- passed
+
+### Outcome
+
+- Measured the current dense-UNSAT minimization selector mix directly and used that fresh evidence to test exactly one narrow candidate: skip full redundancy scans only for learnt `10+`-literal reason clauses inside `minimize_learnt()`.
+- Rejected the candidate decisively. Even though those long learnt reasons rarely remove literals on the dense UNSAT cases, keeping them unminimized still destabilized the search badly enough to hurt both the dense hotspot slice and the SAT guardrail.
+- The strongest failure signal was `large/test_8.cnf`, which rose from about `0.38s` to about `5.07s`, but the candidate also regressed `large/test_6.cnf`, `special/hard.cnf`, `large/test_10.cnf`, and `satlib_more/uuf150-01.cnf`. No solver code was retained.
+- Completed `perf-009` as a retained-noop conclusion and advanced the queue to `perf-010`, which now narrows the conflict-analysis lane to same-clause-content bookkeeping instead of more minimization-relaxation rules.
+
+### Remaining risks
+
+- This reject closes the relaxed-minimization selector lane only for now; it does not prove that all conflict-analysis work is exhausted.
+- `large/test_8.cnf` remains highly sensitive to even narrow minimization relaxations, so future conflict-analysis tasks should treat it as an early guardrail, not just a final check.
+
 ## 2026-03-22 `perf-008-watch-family-split`
 
 - Status: completed

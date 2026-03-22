@@ -3,7 +3,7 @@ project: satsolver
 mode: autonomous_queue
 current_phase: 2
 current_task_id: null
-last_completed_task_id: perf-008
+last_completed_task_id: perf-009
 repo_health: green_verified
 working_assumptions:
   - AGENT.md plus .agent/* are the authoritative autonomous control plane.
@@ -18,7 +18,7 @@ recent_files:
   - .agent/TASK_QUEUE.yaml
   - .agent/HANDOFF.md
   - .agent/WORKLOG.md
-next_task_hint: perf-009
+next_task_hint: perf-010
 notes:
   - The repo previously had AGENTS.md plus PLANS.md guidance but no repo-local queue control plane.
   - Routine verification now checks queue consistency before unit tests and solver smoke cases.
@@ -32,3 +32,4 @@ notes:
   - Perf-006 kept no solver change: fresh startup measurements show the remaining exact-CLI floor is now dominated by interpreter startup, with only a few milliseconds of repo-local wrapper cost left on tiny cases.
   - Perf-007 kept no solver change: refreshed PySAT gap analysis showed the retained solver still wins the structural fast-exit families but trails a mature external backend by roughly 20x on the dense seven-case UNSAT-heavy hotspot slice.
   - Perf-008 kept no solver change: a true problem-ternary watcher split preserved the structural fast-exit families but changed the dense UNSAT search path badly enough to blow up large/test_6.cnf from 59,201 to 81,161 conflicts.
+  - Perf-009 kept no solver change: even skipping minimization scans only for learnt 10+-literal reasons regressed the seven-case exact-CLI gate badly, including a large/test_8.cnf blow-up from about 0.38s to about 5.07s.
