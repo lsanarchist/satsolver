@@ -40,6 +40,45 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-23 `perf-061-index14plus-source-index-profile`
+
+- Status: completed
+- Task family: native-only learnt-large propagation profiling
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-061`, by measuring how the surviving exact `sub10 step-3` deep-overwrite `index 14+` lane splits between exact source index `14` and source index `15+`
+- Assumptions:
+  - `perf-060` rejected the whole exact `index 14+` aggregate, so this run should stay measurement-only and leave the retained solver path unchanged.
+  - The next bounded candidate should only target the dominant surviving tail once the profiler proves whether exact `index 14+` is mostly exact `index 14` or still mostly `index 15+`.
+  - A retained-noop outcome is valid if the new counters only narrow the lane and produce no solver change.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-061` in progress in `PLANS.md` and the control plane.
+- [x] Add profiler-only exact `index 14` versus `index 15+` deep-overwrite counters plus regression coverage.
+- [x] Measure the dense anchors and supplemental guard slice, then sync the queue and verification state.
+
+### Verification
+
+- `python -m unittest discover -s tests -p 'test_profile_solver.py' -q`
+- passed (`30/30` green, including the new exact `index 14` versus `index 15+` deep-tail split test)
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- passed and reported dense-anchor exact `index 14+` deep overwrites `358` at exact index `14` versus `1,334` at `index 15+`; the only non-zero supplemental target-trio traffic was `uuf125-010` at `0` versus `13`, while `uf125-01`, `uf125-010`, `jnh10`, and `jnh1` stayed at zero exact `index 14+` hits
+- `python tools/profile_solver.py large/test_6.cnf | rg -o "learnt_large_success_sub10_step3_source_pop_overwrite_deep_index(14_plus|14|15_plus)=[0-9]+"`
+- passed and reported exact `index 14+` deep overwrites `630` at exact index `14` versus `493` at `index 15+` for `large/test_6.cnf`
+- `python tools/profile_solver.py special/hard.cnf | rg -o "learnt_large_success_sub10_step3_source_pop_overwrite_deep_index(14_plus|14|15_plus)=[0-9]+"`
+- passed and reported exact `index 14+` deep overwrites `1,062` at exact index `14` versus `841` at `index 15+` for `special/hard.cnf`, confirming dense-anchor totals `358` versus `1,334` after exact-index subtraction
+- `python tools/profile_solver.py satlib_more/uuf125-010.cnf | rg -o "learnt_large_success_sub10_step3_source_pop_overwrite_deep_index(14_plus|14|15_plus)=[0-9]+"`
+- passed and reported exact `index 14+` deep overwrites `13` overall, split `0` at exact index `14` versus `13` at `index 15+`, which means all surviving supplemental target-trio traffic sits in the `index 15+` bucket
+
+### Outcome
+
+- Added profiler-only exact `index 14` versus `index 15+` counters and regression coverage, then measured that the surviving exact `index 14+` tail is still dominated by `index 15+`, so no solver change was kept.
+
+### Remaining risks
+
+- The surviving tail is now smaller and sparser again, so the next exact `index 15+` candidate still needs dense-anchor, focused seven-case, and supplemental-slice gates before any keep.
+
 ## 2026-03-23 `perf-060-index14plus-deep-overwrite-bookkeeping`
 
 - Status: completed
