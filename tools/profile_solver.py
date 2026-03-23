@@ -176,6 +176,8 @@ class RunStats:
     learnt_large_success_sub10_step3_source_pop_overwrite_deep_index12_plus: int
     learnt_large_success_sub10_step3_source_pop_overwrite_deep_index12: int
     learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13_plus: int
+    learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13: int
+    learnt_large_success_sub10_step3_source_pop_overwrite_deep_index14_plus: int
     learnt_large_success_sub10_step4: int
     learnt_large_success_sub10_step5_plus: int
     max_large_probe: int
@@ -400,6 +402,8 @@ class ProfiledSolver(satsolver.Solver):
         self.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index12_plus = 0
         self.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index12 = 0
         self.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13_plus = 0
+        self.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13 = 0
+        self.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index14_plus = 0
         self.learnt_large_success_sub10_step4 = 0
         self.learnt_large_success_sub10_step5_plus = 0
         self.max_large_probe = 0
@@ -762,6 +766,10 @@ class ProfiledSolver(satsolver.Solver):
                                                                                         self.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index12 += 1
                                                                                     else:
                                                                                         self.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13_plus += 1
+                                                                                        if index == 13:
+                                                                                            self.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13 += 1
+                                                                                        else:
+                                                                                            self.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index14_plus += 1
                                 elif probe_steps == 4:
                                     self.learnt_large_success_sub10_step3_4 += 1
                                     self.learnt_large_success_sub10_step4 += 1
@@ -1362,6 +1370,8 @@ def build_run_stats(
             learnt_large_success_sub10_step3_source_pop_overwrite_deep_index12_plus=0,
             learnt_large_success_sub10_step3_source_pop_overwrite_deep_index12=0,
             learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13_plus=0,
+            learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13=0,
+            learnt_large_success_sub10_step3_source_pop_overwrite_deep_index14_plus=0,
             learnt_large_success_sub10_step4=0,
             learnt_large_success_sub10_step5_plus=0,
             max_large_probe=0,
@@ -1612,6 +1622,12 @@ def build_run_stats(
         ),
         learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13_plus=(
             solver.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13_plus
+        ),
+        learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13=(
+            solver.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13
+        ),
+        learnt_large_success_sub10_step3_source_pop_overwrite_deep_index14_plus=(
+            solver.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index14_plus
         ),
         learnt_large_success_sub10_step4=solver.learnt_large_success_sub10_step4,
         learnt_large_success_sub10_step5_plus=solver.learnt_large_success_sub10_step5_plus,
@@ -2039,6 +2055,18 @@ def main() -> int:
             if stats.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index12_plus
             else 0.0
         )
+        learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13_share = (
+            stats.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13
+            / stats.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13_plus
+            if stats.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13_plus
+            else 0.0
+        )
+        learnt_large_success_sub10_step3_source_pop_overwrite_deep_index14_plus_share = (
+            stats.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index14_plus
+            / stats.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13_plus
+            if stats.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13_plus
+            else 0.0
+        )
         learnt_large_success_sub10_step4_share = (
             stats.learnt_large_success_sub10_step4 / stats.learnt_large_success_sub10_step3_4
             if stats.learnt_large_success_sub10_step3_4
@@ -2419,6 +2447,10 @@ def main() -> int:
                 f"{stats.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index12} "
                 f"learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13_plus="
                 f"{stats.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13_plus} "
+                f"learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13="
+                f"{stats.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13} "
+                f"learnt_large_success_sub10_step3_source_pop_overwrite_deep_index14_plus="
+                f"{stats.learnt_large_success_sub10_step3_source_pop_overwrite_deep_index14_plus} "
                 f"learnt_large_success_sub10_step4={stats.learnt_large_success_sub10_step4} "
                 f"learnt_large_success_sub10_step5_plus={stats.learnt_large_success_sub10_step5_plus} "
                 f"learnt_large_success_sub10_step3_4_share={learnt_large_success_sub10_step3_4_share:.4f} "
@@ -2475,6 +2507,10 @@ def main() -> int:
                 f"{learnt_large_success_sub10_step3_source_pop_overwrite_deep_index12_share:.4f} "
                 f"learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13_plus_share="
                 f"{learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13_plus_share:.4f} "
+                f"learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13_share="
+                f"{learnt_large_success_sub10_step3_source_pop_overwrite_deep_index13_share:.4f} "
+                f"learnt_large_success_sub10_step3_source_pop_overwrite_deep_index14_plus_share="
+                f"{learnt_large_success_sub10_step3_source_pop_overwrite_deep_index14_plus_share:.4f} "
                 f"learnt_large_success_sub10_step4_share={learnt_large_success_sub10_step4_share:.4f} "
                 f"learnt_large_success_sub10_step5_plus_share={learnt_large_success_sub10_step5_plus_share:.4f} "
                 f"max_large_probe={stats.max_large_probe} avg_learnt_before={avg_learnt_before:.2f} "

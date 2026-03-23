@@ -40,6 +40,45 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-23 `perf-059-index13plus-source-index-profile`
+
+- Status: completed
+- Task family: native-only learnt-large propagation profiling
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-059`, by measuring how the surviving exact `sub10 step-3` deep-overwrite `index 13+` lane splits between exact source index `13` and source index `14+`
+- Assumptions:
+  - `perf-058` rejected the whole exact `index 13+` aggregate, so this run should stay measurement-only and leave the retained solver path unchanged.
+  - The next bounded candidate should only target the dominant surviving tail once the profiler proves whether exact `index 13+` is mostly exact `index 13` or still mostly `index 14+`.
+  - A retained-noop outcome is valid if the new counters only narrow the lane and produce no solver change.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-059` in progress in `PLANS.md` and the control plane.
+- [x] Add profiler-only exact `index 13` versus `index 14+` deep-overwrite counters plus regression coverage.
+- [x] Measure the dense anchors and supplemental guard slice, then sync the queue and verification state.
+
+### Verification
+
+- `python -m unittest discover -s tests -p 'test_profile_solver.py' -q`
+- passed (`29/29` green, including the new exact `index 13` versus `index 14+` deep-tail split test)
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- passed and reported dense-anchor exact `index 13+` deep overwrites `574` at exact index `13` versus `1,692` at `index 14+`; the only non-zero supplemental target-trio traffic was `uuf125-010` at `4` versus `13`, while `uf125-01`, `uf125-010`, `jnh10`, and `jnh1` stayed at zero exact `index 13+` hits
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync; the queue now resolves to `current_or_next_task='perf-060'`
+- `python tools/codex_verify.py`
+- passed after the final control-plane sync (`89/89` tests green plus compile, queue, checker, and wrapper smoke checks)
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Added profiler-only exact `index 13` versus `index 14+` counters and regression coverage, then measured that the surviving exact `index 13+` tail is still dominated by `index 14+`, so no solver change was kept.
+
+### Remaining risks
+
+- The surviving tail is now smaller and sparser, so the next exact `index 14+` candidate still needs dense-anchor, focused seven-case, and supplemental-slice gates before any keep.
+
 ## 2026-03-23 `perf-058-index13plus-deep-overwrite-bookkeeping`
 
 - Status: completed
