@@ -964,7 +964,7 @@ tasks:
   - id: perf-050
     phase: 2
     priority: 20
-    status: todo
+    status: done
     title: Test the exact index-9-plus deep overwrite tail after the perf-049 profile
     size: L
     depends_on:
@@ -980,3 +980,20 @@ tasks:
       - python tools/hotspot_compare.py --baseline-cli-script <baseline>/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf
       - python tools/hotspot_compare.py --baseline-cli-script <baseline>/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf
       - python tools/codex_verify.py --benchmark-mode cli --repeat 2
+  - id: perf-051
+    phase: 2
+    priority: 20
+    status: todo
+    title: Profile the exact index-9-plus deep overwrite tail after the perf-050 reject
+    size: M
+    depends_on:
+      - perf-050
+    goal: Measure how the surviving exact `sub10 step-3` deep-overwrite `index 9+` lane splits between exact source index `9` and source index `10+` across the dense anchors and the supplemental `satlib_more` guard slice, so the next bounded solver-core candidate can target the real remaining tail instead of treating all `index 9+` cases as one bucket.
+    deliverables:
+      - profiler-only exact `index 9` versus `index 10+` deep-overwrite counters plus tests if the current profiler cannot separate them for exact `step-3` overwrites
+      - `PLANS.md` notes tied to the `perf-050` reject
+      - retained-noop measurement summary naming the next exact tail sublane to try
+    verify:
+      - python -m unittest discover -s tests -p 'test_profile_solver.py' -q
+      - python tools/profile_solver.py large/test_6.cnf special/hard.cnf satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf
+      - python tools/codex_verify.py
