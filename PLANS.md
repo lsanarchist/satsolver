@@ -40,6 +40,48 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-23 `perf-037-deep-overwrite-source-index-profile`
+
+- Status: completed
+- Task family: native-only learnt-large profiling refresh
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-037`, by profiling how the surviving exact `sub10 step-3` deeper overwrite lane splits between source index `2` and source index `3+` across the dense anchors and the supplemental `satlib_more` guard slice
+- Assumptions:
+  - `perf-036` already rejected the pop-first rewrite across the whole deeper `index 2+` exact `step-3` overwrite aggregate, so this run should stay measurement-only and explain whether the remaining lane is really concentrated at exact index `2` or in the deeper `index 3+` tail.
+  - The current profiler already separates exact `step-3` last-slot, overwrite, shallow, and deep cases, so the missing information should be a profiler-only split inside the deep overwrite bucket plus regression coverage.
+  - A completed measurement-only outcome is valid if it names the dominant exact deep-overwrite sublane and leaves the queue with one narrower next solver-core experiment.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-037` in progress in the control plane and record the active profiling task in `PLANS.md`.
+- [x] Add profiler-only exact deep-overwrite source-index counters plus regression coverage, then profile the dense anchors and supplemental guard slice.
+- [x] Close the measurement run, queue the next deterministic task, verify the final state, and commit.
+
+### Verification
+
+- `python -m unittest discover -s tests -p 'test_profile_solver.py' -q`
+- passed: the profiler test file stayed green at `18/18`, including a new natural-propagation case that forces one exact deep overwrite at source index `2` and one at source index `3+`
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- passed: the exact deep overwrite lane is dominated by source index `3+` rather than exact index `2` on both dense anchors and the real supplemental target trio. Dense anchors combined `29,299` exact index `2` versus `79,296` exact index `3+` deep overwrites (`26.98%` / `73.02%`), while `uuf125-010`, `uf125-01`, and `uf125-010` combined `250` versus `649` (`27.81%` / `72.19%`)
+- `python tools/codex_verify.py`
+- passed after the final control-plane sync (`78/78` tests green plus compile/checker/wrapper smoke checks)
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync; the queue now resolves to `current_or_next_task='perf-038'`
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Closed `perf-037` as a measurement-only profiling run with no solver change.
+- Added profiler-only exact deep-overwrite source-index counters inside the existing exact `sub10 step-3` deep overwrite bucket in `tools/profile_solver.py`, plus regression coverage in `tests/test_profile_solver.py`, so the repo can now separate exact source index `2` from the deeper `index 3+` tail.
+- The source-index question is now answered clearly. Across `large/test_6.cnf` and `special/hard.cnf` together, exact deep overwrites split `29,299` at exact index `2` versus `79,296` at `index 3+`. Across the supplemental target trio `uuf125-010`, `uf125-01`, and `uf125-010`, the split was `250` versus `649`.
+- The queue therefore advances to `perf-038`, which should test one bounded solver-core candidate only on the exact `sub10 step-3` deep overwrite `index 3+` sublane while keeping exact index `2`, shallow, and last-slot behavior on the retained baseline path.
+
+### Remaining risks
+
+- The `index 3+` deep lane is now clearly dominant, but `perf-037` is still measurement-only. The next solver-core candidate must satisfy the dense anchors, the focused seven-case hotspot slice, and the supplemental `satlib_more` guard slice before any keep.
+
 ## 2026-03-23 `perf-036-deeper-step3-overwrite-bookkeeping`
 
 - Status: completed
