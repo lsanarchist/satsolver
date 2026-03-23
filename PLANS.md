@@ -40,6 +40,51 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-23 `perf-064-index16plus-deep-overwrite-bookkeeping`
+
+- Status: completed
+- Task family: native-only learnt-large propagation bookkeeping experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-064`, by testing one bounded solver-core candidate that only touches exact `sub10 step-3` learnt-large non-last deep-overwrite removals when the source watcher index is `16+`
+- Assumptions:
+  - `perf-063` showed that the surviving exact `index 15+` deep-overwrite tail is still dominated by exact `index 16+` on the dense anchors, and the only non-zero supplemental target-trio traffic remains `uuf125-010` at `3` exact `index 15` hits versus `10` `index 16+` hits.
+  - The smallest faithful candidate is still the earlier pop-first watcher-removal rewrite, but gated only to exact `sub10 step-3` learnt-large non-last deep-overwrite removals at source index `16+` so the edit stays same-search and bookkeeping-only.
+  - A retained-noop outcome is valid if any early gate rejects the candidate before the repeat-aware exact-CLI suite.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-064` in progress in the control plane and record the active bounded experiment in `PLANS.md`.
+- [x] Implement and benchmark one exact `sub10 step-3` deep-overwrite `index 16+` bookkeeping candidate against the dense anchor pair, focused seven-case slice, and supplemental `satlib_more` guard slice.
+- [x] Keep or revert the candidate based on same-day evidence, then sync the control plane, verify, and commit.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed on the temporary candidate (`91/91` tests green plus compile, queue, checker, and wrapper smoke checks)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf064_index16plus_baseline.kedCah/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf`
+- candidate regressed the dense anchor pair two-order average (`19.9193s -> 20.1643s`)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf064_index16plus_baseline.kedCah/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- candidate regressed the focused seven-case gate (`24.3913s -> 25.0239s`)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf064_index16plus_baseline.kedCah/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- candidate improved the supplemental slice (`0.3242s -> 0.3161s`) but not enough to offset the primary-gate regressions
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf`
+- candidate kept the same dense-anchor search counts as the retained baseline: `72,886/59,201` decisions/conflicts on `large/test_6.cnf` and `54,245/44,619` on `special/hard.cnf`
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync; the queue now resolves to `current_or_next_task='perf-065'`
+- `python tools/codex_verify.py`
+- passed after the final control-plane sync (`91/91` tests green plus compile, queue, checker, and wrapper smoke checks)
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Tested the bounded exact `index 16+` pop-first watcher-removal rewrite, reverted it, and kept no solver change because the dense anchors and focused seven-case gate both regressed even though the supplemental slice improved slightly.
+
+### Remaining risks
+
+- The exact `index 16+` aggregate is still too broad and mixed for a keep, so the next run should stay measurement-only and split it into exact `index 16` versus `index 17+` before another solver-core edit.
+
 ## 2026-03-23 `perf-063-index15plus-source-index-profile`
 
 - Status: completed
