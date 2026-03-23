@@ -40,6 +40,48 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-23 `perf-047-index7plus-source-index-profile`
+
+- Status: completed
+- Task family: native-only learnt-large profiling refresh
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-047`, by profiling how the surviving exact `sub10 step-3` deep-overwrite `index 7+` lane splits between exact source index `7` and source index `8+` across the dense anchors and the supplemental `satlib_more` guard slice
+- Assumptions:
+  - `perf-046` already rejected the pop-first rewrite across the whole exact `index 7+` deep-overwrite aggregate, so this run should stay measurement-only and explain whether the remaining tail is really concentrated at exact index `7` or in the deeper `index 8+` tail.
+  - The current profiler already separates exact `step-3` last-slot, overwrite, shallow, deep, exact `index 2`, aggregate `index 3+`, exact `index 3`, aggregate `index 4+`, exact `index 4`, aggregate `index 5+`, exact `index 5`, aggregate `index 6+`, exact `index 6`, and aggregate `index 7+` cases, so the missing information should be a profiler-only split inside the `index 7+` bucket plus regression coverage.
+  - A completed measurement-only outcome is valid if it names the dominant exact tail sublane and leaves the queue with one narrower next solver-core experiment.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-047` in progress in the control plane and record the active profiling task in `PLANS.md`.
+- [x] Add profiler-only exact `index 7` versus `index 8+` deep-overwrite counters plus regression coverage, then profile the dense anchors and supplemental guard slice.
+- [x] Close the measurement run, queue the next deterministic task, verify the final state, and commit.
+
+### Verification
+
+- `python -m unittest discover -s tests -p 'test_profile_solver.py' -q`
+- passed (`23/23` green, including the new exact `index 7` versus `index 8+` deep-tail split test)
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- passed and reported dense-anchor exact `index 7+` deep overwrites `5,616` at exact index `7` versus `12,140` at `index 8+`, plus supplemental target-trio `45` versus `115`; `jnh10` and `jnh1` stayed at zero exact `index 7+` hits
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync; the queue now resolves to `current_or_next_task='perf-048'`
+- `python tools/codex_verify.py`
+- passed after the final control-plane sync (`83/83` tests green plus compile, checker, queue, and wrapper smoke checks)
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Closed `perf-047` as a retained measurement-only profiling run with no solver change.
+- Added profiler-only exact `index 7` versus `index 8+` counters inside the exact `sub10 step-3` deep-overwrite `index 7+` lane in `tools/profile_solver.py`, with regression coverage in `tests/test_profile_solver.py`.
+- The surviving tail is still dominated by exact source index `8+`, not exact index `7`, on both the dense anchors and the real supplemental target trio: dense anchors split `17,756` total exact `index 7+` hits into `5,616` at exact index `7` versus `12,140` at `index 8+`, while the supplemental target trio split `160` into `45` versus `115`.
+- `jnh10` and `jnh1` remained pure guardrails with zero exact `index 7+` hits, so the next deterministic queue task is `perf-048`, a bounded solver-core candidate that should touch only the exact `index 8+` tail.
+
+### Remaining risks
+
+- The exact `index 8+` tail is now the narrowest surviving solver-core lane, but it is only measured so far. The next candidate still has to clear the dense anchors, focused seven-case slice, supplemental `satlib_more` guard slice, and the repeat-aware exact-CLI keep gate before it can be retained.
+
 ## 2026-03-23 `perf-046-index7plus-deep-overwrite-bookkeeping`
 
 - Status: completed
