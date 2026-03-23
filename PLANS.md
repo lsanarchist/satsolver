@@ -40,6 +40,43 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-23 `perf-060-index14plus-deep-overwrite-bookkeeping`
+
+- Status: completed
+- Task family: native-only learnt-large propagation bookkeeping experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-060`, by testing one bounded solver-core candidate that only touches exact `sub10 step-3` learnt-large non-last deep-overwrite removals when the source watcher index is `14+`
+- Assumptions:
+  - `perf-059` showed that the surviving exact `index 13+` deep-overwrite tail is still dominated by exact `index 14+` on the dense anchors, and only `uuf125-010` carries any non-zero supplemental target-trio traffic in that lane.
+  - The smallest faithful candidate is still the earlier pop-first watcher-removal rewrite, but gated only to exact `sub10 step-3` learnt-large non-last deep-overwrite removals at source index `14+` so the edit stays same-search and bookkeeping-only.
+  - A retained-noop outcome is valid if any early gate rejects the candidate before the repeat-aware exact-CLI suite.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-060` in progress in the control plane and record the active bounded experiment in `PLANS.md`.
+- [x] Implement and benchmark one exact `sub10 step-3` deep-overwrite `index 14+` bookkeeping candidate against the dense anchor pair, focused seven-case slice, and supplemental `satlib_more` guard slice.
+- [x] Keep or revert the candidate based on same-day evidence, then sync the control plane, verify, and commit.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed on the temporary candidate (`89/89` tests green plus compile, queue, checker, and wrapper smoke checks)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf060_index14plus_baseline.uyASAS/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf`
+- candidate regressed the dense anchor pair two-order average (`20.4652s -> 21.5069s`)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf060_index14plus_baseline.uyASAS/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- candidate only edged the focused seven-case gate slightly (`26.1259s -> 26.0903s`), with mixed forward and reverse order results
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf060_index14plus_baseline.uyASAS/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- candidate regressed the supplemental slice (`0.3387s -> 0.3411s`), so there was no reason to run the repeat-aware exact-CLI full suite
+
+### Outcome
+
+- Tested the bounded exact `index 14+` pop-first watcher-removal rewrite, reverted it, and kept no solver change because the dense anchors regressed clearly, the supplemental slice regressed slightly, and the focused seven-case slice was only marginally positive.
+
+### Remaining risks
+
+- The exact `index 14+` aggregate is still too broad and mixed for a keep, so the next run should stay measurement-only and split it into exact `index 14` versus `index 15+` before another solver-core edit.
+
 ## 2026-03-23 `perf-059-index13plus-source-index-profile`
 
 - Status: completed

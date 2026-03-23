@@ -3,30 +3,33 @@
 ## Current State
 
 - The repo still uses the queue-driven autonomous control plane rooted in `AGENT.md` and `.agent/*`, plus the machine-checkable queue validator.
-- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001` through `perf-059` are complete.
-- There is no active in-progress task; the next deterministic task is `perf-060`.
+- `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001` through `perf-060` are complete.
+- There is no active in-progress task; the next deterministic task is `perf-061`.
 
 ## What Changed This Run
 
-- Closed `perf-059` as a retained measurement-only run with no solver change.
-- Added profiler-only exact `index 13` versus `index 14+` deep-overwrite counters plus regression coverage in `tools/profile_solver.py` and `tests/test_profile_solver.py`.
-- The dense anchors split exact `index 13+` deep overwrites `574` at exact index `13` versus `1,692` at `index 14+`.
-- The supplemental target trio only showed non-zero exact `index 13+` traffic on `uuf125-010`, which split `4` at exact index `13` versus `13` at `index 14+`; `uf125-01`, `uf125-010`, `jnh10`, and `jnh1` stayed at zero exact `index 13+` hits.
+- Closed `perf-060` as a retained no-op with no solver change.
+- Tested the bounded pop-first watcher-removal rewrite only on exact `sub10 step-3` learnt-large non-last deep-overwrite removals at source index `14+`, then reverted it.
+- The dense anchor pair regressed from `20.4652s` to `21.5069s`.
+- The focused seven-case slice only improved marginally from `26.1259s` to `26.0903s`, with mixed forward and reverse order results.
+- The supplemental `satlib_more` guard slice regressed from `0.3387s` to `0.3411s`, so the candidate never earned a full repeat-aware exact-CLI run.
 
 ## Current Focus
 
-- Start `perf-060` next: test one bounded solver-core candidate only on the exact `sub10 step-3` deep-overwrite `index 14+` lane, while keeping exact `index 13` and all shallower retained baseline behavior unchanged.
+- Start `perf-061` next: stay measurement-only and split the surviving exact `sub10 step-3` deep-overwrite `index 14+` lane into exact source index `14` versus `index 15+`.
 
 ## Recommended Next Tasks
 
-- `perf-060` — test the exact index-14-plus deep overwrite tail after the perf-059 profile
+- `perf-061` — profile the exact index-14-plus deep overwrite tail after the perf-060 reject
 
 ## Verification From This Run
 
-- `python -m unittest discover -s tests -p 'test_profile_solver.py' -q` — passed (`29/29` green, including the new exact `index 13` versus `index 14+` deep-tail split test)
-- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf` — passed and showed exact `index 14+` dominating exact `index 13` on the dense anchors (`1,692` vs `574`) and on the only non-zero supplemental target-trio case, `uuf125-010` (`13` vs `4`)
-- `python tools/agent_queue_check.py` — passed after the final control-plane sync; queue now resolves to `current_or_next_task='perf-060'`
-- `python tools/codex_verify.py` — passed after the final control-plane sync (`89/89` tests green plus compile, queue, checker, and wrapper smoke checks)
+- `python tools/codex_verify.py` — passed on the temporary candidate before revert (`89/89` tests green plus compile, queue, checker, and wrapper smoke checks)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf060_index14plus_baseline.uyASAS/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf` — rejected on the dense anchor pair (`20.4652s -> 21.5069s`)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf060_index14plus_baseline.uyASAS/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf` — only marginally positive on the focused seven-case gate (`26.1259s -> 26.0903s`) and too mixed to justify a keep
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf060_index14plus_baseline.uyASAS/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf` — supplemental slice regressed (`0.3387s -> 0.3411s`)
+- `python tools/agent_queue_check.py` — passed after the final control-plane sync; queue now resolves to `current_or_next_task='perf-061'`
+- `python tools/codex_verify.py` — passed after the final control-plane sync
 - `git diff --check` — passed after the final control-plane sync
 
 ## Notes For The Next Run
@@ -37,10 +40,10 @@
 - Reuse the queue checker when adjusting `.agent/STATE.yaml` or `.agent/TASK_QUEUE.yaml`.
 - The default verifier covers `satsolver_fast.py`, but `satsolver_pysat.py` remains outside the default gate because it requires an optional external environment.
 - External libraries or solvers may be used as short-lived research references only; do not retain them in the submission path or make them a default verifier dependency.
-- Do not update `benchmark_summary.md` or `experiments.jsonl` for `perf-059`; this run kept no solver change.
-- `perf-048` ruled out the whole exact `index 8+` aggregate, `perf-049` showed that the surviving `index 8+` tail is dominated by exact `index 9+`, `perf-050` showed that even the exact `index 9+` aggregate is still too broad for the retained pop-first rewrite, `perf-051` showed that the remaining exact `index 9+` tail is still dominated by exact `index 10+`, `perf-052` showed that even the exact `index 10+` aggregate is still too broad, `perf-053` showed that the surviving `index 10+` tail is itself dominated by exact `index 11+`, `perf-054` showed that even the exact `index 11+` aggregate is still too broad despite a positive dense-anchor and supplemental signal, `perf-055` showed that the remaining exact `index 11+` tail is itself dominated by exact `index 12+`, `perf-056` showed that even the exact `index 12+` aggregate is still too broad despite a positive supplemental signal, `perf-057` showed that the remaining exact `index 12+` tail is itself dominated by exact `index 13+`, `perf-058` showed that even the exact `index 13+` aggregate is still too broad despite a small positive dense-anchor signal, and `perf-059` now shows that the surviving exact `index 13+` tail is itself still dominated by exact `index 14+`.
+- Do not update `benchmark_summary.md` or `experiments.jsonl` for `perf-060`; this run kept no solver change.
+- `perf-048` ruled out the whole exact `index 8+` aggregate, `perf-049` showed that the surviving `index 8+` tail is dominated by exact `index 9+`, `perf-050` showed that even the exact `index 9+` aggregate is still too broad for the retained pop-first rewrite, `perf-051` showed that the remaining exact `index 9+` tail is still dominated by exact `index 10+`, `perf-052` showed that even the exact `index 10+` aggregate is still too broad, `perf-053` showed that the surviving `index 10+` tail is itself dominated by exact `index 11+`, `perf-054` showed that even the exact `index 11+` aggregate is still too broad despite a positive dense-anchor and supplemental signal, `perf-055` showed that the remaining exact `index 11+` tail is itself dominated by exact `index 12+`, `perf-056` showed that even the exact `index 12+` aggregate is still too broad despite a positive supplemental signal, `perf-057` showed that the remaining exact `index 12+` tail is itself dominated by exact `index 13+`, `perf-058` showed that even the exact `index 13+` aggregate is still too broad despite a small positive dense-anchor signal, `perf-059` showed that the surviving exact `index 13+` tail is itself still dominated by exact `index 14+`, and `perf-060` now shows that even the exact `index 14+` aggregate is still too mixed to keep because only the focused seven-case gate moved slightly positive while the dense anchors and supplemental slice regressed.
 - Keep `special/hard.cnf` and `large/test_6.cnf` as the dense exact-step anchor pair, and keep the supplemental `satlib_more` slice (`uuf125-010`, `uf125-01`, `uf125-010`, `jnh10`, `jnh1`) in view because the target trio still shows real deep-overwrite traffic while `jnh10` and `jnh1` remain mostly guardrails.
-- `perf-060` should test one bounded solver-core candidate only on the exact `sub10 step-3` deep-overwrite `index 14+` lane before any broader learnt-large bookkeeping rewrite is retried.
+- `perf-061` should stay measurement-only and split exact `index 14+` into exact `index 14` versus `index 15+` before any broader learnt-large bookkeeping rewrite is retried.
 
 ## Immediate Constraints
 
