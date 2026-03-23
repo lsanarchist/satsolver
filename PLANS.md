@@ -40,6 +40,47 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-23 `perf-049-index8plus-source-index-profile`
+
+- Status: completed
+- Task family: native-only learnt-large profiling refresh
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-049`, by profiling how the surviving exact `sub10 step-3` deep-overwrite `index 8+` lane splits between exact source index `8` and source index `9+` across the dense anchors and the supplemental `satlib_more` guard slice
+- Assumptions:
+  - `perf-048` already rejected the pop-first rewrite across the whole exact `index 8+` deep-overwrite aggregate, so this run should stay measurement-only and identify whether the remaining tail is really concentrated at exact index `8` or in the deeper `index 9+` tail.
+  - The current profiler already separates exact `step-3` last-slot, overwrite, shallow, deep, exact `index 2`, aggregate `index 3+`, exact `index 3`, aggregate `index 4+`, exact `index 4`, aggregate `index 5+`, exact `index 5`, aggregate `index 6+`, exact `index 6`, aggregate `index 7+`, exact `index 7`, and aggregate `index 8+` cases, so the missing information should be a profiler-only split inside the `index 8+` bucket plus regression coverage.
+  - A completed measurement-only outcome is valid if it names the dominant exact tail sublane and leaves the queue with one narrower next solver-core experiment.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-049` in progress in the control plane and record the active profiling task in `PLANS.md`.
+- [x] Add profiler-only exact `index 8` versus `index 9+` deep-overwrite counters plus regression coverage, then profile the dense anchors and supplemental guard slice.
+- [x] Close the measurement run, queue the next deterministic task, verify the final state, and commit.
+
+### Verification
+
+- `python -m unittest discover -s tests -p 'test_profile_solver.py' -q`
+- passed (`24/24` green, including the new exact `index 8` versus `index 9+` deep-tail split test)
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- passed and reported dense-anchor exact `index 8+` deep overwrites `3,793` at exact index `8` versus `8,347` at `index 9+`, plus supplemental target-trio exact `index 8+` deep overwrites `37` versus `78`; `jnh10` and `jnh1` stayed at zero exact `index 8+` hits
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync; the queue now resolves to `current_or_next_task='perf-050'`
+- `python tools/codex_verify.py`
+- passed after the final control-plane sync
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Added profiler-only exact `index 8` versus `index 9+` counters in `tools/profile_solver.py` plus regression coverage in `tests/test_profile_solver.py`, then kept the solver path unchanged.
+- The surviving exact `sub10 step-3` deep-overwrite `index 8+` tail is still dominated by the deeper `index 9+` side on both the dense anchors and the real supplemental target trio, so the queue now narrows to an exact `index 9+` solver-core candidate instead of treating all `index 8+` cases as one bucket.
+- The dense anchors split `31.24%` exact `index 8` versus `68.76%` exact `index 9+`, and the real supplemental target trio split `32.17%` versus `67.83%`, which is strong enough to justify the next narrowing step without another broad aggregate experiment.
+
+### Remaining risks
+
+- This run only sharpened the lane selection. The next solver-core experiment still has to clear the dense anchors, focused seven-case slice, and supplemental guard slice before it earns a full repeat-aware exact-CLI keep gate.
+
 ## 2026-03-23 `perf-048-index8plus-deep-overwrite-bookkeeping`
 
 - Status: completed
