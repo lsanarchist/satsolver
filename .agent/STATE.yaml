@@ -3,7 +3,7 @@ project: satsolver
 mode: autonomous_queue
 current_phase: 2
 current_task_id: null
-last_completed_task_id: perf-056
+last_completed_task_id: perf-057
 repo_health: green_verified
 working_assumptions:
   - AGENT.md plus .agent/* are the authoritative autonomous control plane.
@@ -17,7 +17,9 @@ recent_files:
   - .agent/TASK_QUEUE.yaml
   - .agent/HANDOFF.md
   - .agent/WORKLOG.md
-next_task_hint: perf-057
+  - tools/profile_solver.py
+  - tests/test_profile_solver.py
+next_task_hint: perf-058
 notes:
   - The repo previously had AGENTS.md plus PLANS.md guidance but no repo-local queue control plane.
   - Routine verification now checks queue consistency before unit tests and solver smoke cases.
@@ -79,3 +81,4 @@ notes:
   - Perf-054 kept no solver change: even narrowing the pop-first rewrite to the exact step-3 deep-overwrite index-11-plus aggregate improved the dense anchors and the supplemental satlib_more slice, but it still regressed the focused seven-case gate, so the next follow-up should split that index-11-plus tail by exact source index before another solver-core edit.
   - Perf-055 kept no solver change: exact index-11-plus deep-overwrite profiling now shows that the surviving step-3 deep tail is dominated by exact source index 12+ rather than exact index 11 on both the dense anchors and the real supplemental target trio, so the next bounded solver-core candidate should target only the index-12-plus tail.
   - Perf-056 kept no solver change: even narrowing the pop-first rewrite to the exact step-3 deep-overwrite index-12-plus aggregate improved the supplemental satlib_more slice, but it still regressed the dense anchors and the focused seven-case gate, so the next follow-up should split that index-12-plus tail by exact source index before another solver-core edit.
+  - Perf-057 kept no solver change: exact index-12-plus deep-overwrite profiling now shows that the surviving step-3 deep tail is dominated by exact source index 13+ rather than exact index 12 on both the dense anchors and the real supplemental target trio, so the next bounded solver-core candidate should target only the index-13-plus tail.
