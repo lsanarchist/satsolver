@@ -40,6 +40,52 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-23 `perf-052-index10plus-deep-overwrite-bookkeeping`
+
+- Status: completed
+- Task family: native-only learnt-large propagation bookkeeping experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-052`, by testing one bounded solver-core candidate that only touches exact `sub10 step-3` learnt-large non-last deep-overwrite removals when the source watcher index is `10+`
+- Assumptions:
+  - `perf-050` already rejected the pop-first rewrite across the whole exact `index 9+` aggregate, and `perf-051` now shows that the surviving exact `index 9+` tail is still dominated by exact `index 10+`, so this run should keep exact `index 9`, exact `index 8`, exact `index 7`, exact `index 6`, exact `index 5`, exact `index 4`, exact `index 3`, exact `index 2`, shallow, and last-slot behavior on the retained baseline path.
+  - The candidate should stay same-search and bookkeeping-only: use the same replacement literal and append target, but swap only the watcher-list removal sequence on the exact `index 10+` lane.
+  - A retained-noop outcome is valid if any early gate rejects the candidate before the repeat-aware exact-CLI suite.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-052` in progress in the control plane and record the active bounded experiment in `PLANS.md`.
+- [x] Implement and benchmark one exact `sub10 step-3` deep-overwrite `index 10+` bookkeeping candidate against the dense anchor pair, focused seven-case slice, and supplemental `satlib_more` guard slice.
+- [x] Keep or revert the candidate based on same-day evidence, then sync the control plane, verify, and commit.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed on the temporary candidate (`85/85` tests green plus compile, queue, checker, and wrapper smoke checks)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf052_index10plus_baseline.cJsalu/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf`
+- candidate improved the dense anchor pair two-order average (`21.9532s -> 21.7999s`)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf052_index10plus_baseline.cJsalu/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- candidate rejected on the focused seven-case gate (`26.5961s -> 27.1248s`), with the biggest givebacks on `special/hard.cnf`, `large/test_10.cnf`, and `large/test_8.cnf`
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf052_index10plus_baseline.cJsalu/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- supplemental slice was effectively flat-to-slightly positive (`0.3529s -> 0.3519s`), but not strong enough to offset the primary-gate regression
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync; the queue now resolves to `current_or_next_task='perf-053'`
+- `python tools/codex_verify.py`
+- passed after the final control-plane sync
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Closed `perf-052` as a retained no-op with no solver change.
+- Tested one bounded solver-core candidate in `satsolver_core.py`, mirrored in `tools/profile_solver.py`, that applied the pop-first watcher-removal rewrite only to exact `sub10 step-3` learnt-large non-last deep-overwrite removals at source index `10+`, then reverted it after the same-day evidence stayed mixed.
+- The exact `index 10+` lane is still too broad: the dense anchor pair improved slightly and the supplemental `satlib_more` slice was essentially flat, but the focused seven-case gate regressed clearly enough to stop before the repeat-aware exact-CLI full suite.
+- The queue therefore advances to `perf-053`, which should stay measurement-only and split the exact `index 10+` tail into exact source index `10` versus `index 11+` before another solver-core edit.
+
+### Remaining risks
+
+- The surviving exact `index 10+` aggregate is still the narrowest measured solver-core lane, but `perf-052` shows that even this aggregate can hide focused-slice losses. The next follow-up should not widen back out before splitting that tail again.
+
 ## 2026-03-23 `perf-051-index9plus-source-index-profile`
 
 - Status: completed
