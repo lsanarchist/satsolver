@@ -3,7 +3,7 @@ project: satsolver
 mode: autonomous_queue
 current_phase: 2
 current_task_id: null
-last_completed_task_id: perf-035
+last_completed_task_id: perf-036
 repo_health: green_verified
 working_assumptions:
   - AGENT.md plus .agent/* are the authoritative autonomous control plane.
@@ -12,14 +12,12 @@ working_assumptions:
   - External libraries may be used only as short-lived research references; retained solver code and default verification remain standard-library only.
 blockers: []
 recent_files:
-  - tools/profile_solver.py
-  - tests/test_profile_solver.py
   - PLANS.md
   - .agent/STATE.yaml
   - .agent/TASK_QUEUE.yaml
   - .agent/HANDOFF.md
   - .agent/WORKLOG.md
-next_task_hint: perf-036
+next_task_hint: perf-037
 notes:
   - The repo previously had AGENTS.md plus PLANS.md guidance but no repo-local queue control plane.
   - Routine verification now checks queue consistency before unit tests and solver smoke cases.
@@ -60,3 +58,4 @@ notes:
   - Perf-033 kept no solver change: exact dense-anchor step-3 source-pop tail-position profiling showed that last-slot self-assignment cases are only about 18 to 19 percent of the lane on both anchors, so the next dense-UNSAT solver-core experiment should target the dominant non-last overwrite path instead.
   - Perf-034 kept no solver change: even restricting the pop-first source-pop rewrite to the dominant exact step-3 non-last overwrite lane stayed same-search but still regressed the dense anchors, focused seven-case gate, and supplemental slice, so the next follow-up should profile where the overwrite source index actually lands before another solver-core edit.
   - Perf-035 kept no solver change: dense-anchor exact step-3 non-last overwrites skew deeper in the watcher list on both anchors, with only about one third of overwrite traffic in the first two slots and about two thirds at index 2 or deeper, so the next bounded rewrite should target the deeper overwrite tail instead of the whole overwrite lane.
+  - Perf-036 kept no solver change: even narrowing the pop-first rewrite to the deeper exact step-3 overwrite aggregate at watcher-list index 2 or deeper still regressed the dense anchors and focused seven-case gate despite a positive supplemental satlib_more slice, so the next follow-up should split that deeper lane by exact source index before another solver-core edit.
