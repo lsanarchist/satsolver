@@ -40,6 +40,57 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-23 `perf-040-index4plus-deep-overwrite-bookkeeping`
+
+- Status: completed
+- Task family: native-only learnt-large propagation bookkeeping experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-040`, by testing one bounded dense-UNSAT solver-core candidate that only touches exact `sub10 step-3` non-last deep-overwrite removals when the source watcher index is `4+`
+- Assumptions:
+  - `perf-034`, `perf-036`, and `perf-038` already rejected the same pop-first rewrite across the broader exact non-last overwrite, `index 2+`, and `index 3+` aggregates, so this run should leave exact index `3`, exact index `2`, shallow, and last-slot behavior on the retained baseline path.
+  - `perf-039` showed that the surviving exact `index 3+` tail is dominated by exact source index `4+` on both the dense anchors and the real supplemental target trio, so this is the narrowest plausible solver-core follow-up that still covers the dominant remaining tail.
+  - A retained-noop outcome is valid if any early gate rejects the candidate before the broader repeat-aware exact-CLI suite.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-040` in progress in the control plane and record the active bounded experiment in `PLANS.md`.
+- [x] Implement and benchmark one exact `sub10 step-3` deep-overwrite `index 4+` bookkeeping candidate against the dense anchor pair, focused seven-case slice, and supplemental `satlib_more` guard slice.
+- [x] Keep or revert the candidate based on same-day evidence, then sync the control plane, verify, and commit.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed on the temporary candidate while `perf-040` was active: the queue stayed consistent, all `79/79` tests stayed green, and both default wrapper smoke paths remained valid
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf040_index4plus_baseline.f0x6rd/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf`
+- passed as an early signal on the dense anchor pair: the two-order average improved from `22.4207s` to `22.3468s`, with `large/test_6.cnf` positive in both orders and `special/hard.cnf` splitting direction
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf040_index4plus_baseline.f0x6rd/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- passed on the focused seven-case gate: the two-order average improved from `27.4240s` to `27.0142s`, led by a strong reverse-order `large/test_6.cnf` win and small gains on `special/hard.cnf` forward plus `large/test_8.cnf`
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf040_index4plus_baseline.f0x6rd/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- rejected on the supplemental slice: the two-order average regressed from `0.3462s` to `0.3530s`, with the main giveback on `jnh1.cnf`, `jnh10.cnf`, and reverse `uuf125-010.cnf`
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf`
+- passed on the temporary candidate and kept the dense hard-case search counters unchanged at `72,886/59,201` on `large/test_6.cnf` and `54,245/44,619` on `special/hard.cnf`, so this branch still looked like same-search bookkeeping rather than heuristic drift
+- `python tools/codex_verify.py --benchmark-mode cli --repeat 2`
+- passed as a correctness run but rejected as the final keep gate: the candidate stayed `59/59` correct yet regressed the repeat-aware exact-CLI suite from the same-day baseline `30.4636s` representative / `60.9271s` measured to `31.6535s` representative / `63.3070s` measured
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync; the queue now resolves to `current_or_next_task='perf-041'`
+- `python tools/codex_verify.py`
+- passed after the final control-plane sync (`79/79` tests green plus compile/checker/wrapper smoke checks)
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Closed `perf-040` as a retained no-op with no solver change.
+- Tested one bounded solver-core candidate in `satsolver_core.py` that applied the earlier pop-first overwrite rewrite only to exact `sub10 step-3` learnt-large deep-overwrite removals at source index `4+`, mirrored in `tools/profile_solver.py`, then reverted it after the broad repeat-aware exact-CLI keep gate failed.
+- The candidate stayed same-search on the dense anchors and did win both the dense anchor pair and the focused seven-case gate, but it still lost the supplemental `satlib_more` slice and then lost the stronger repeat-aware exact-CLI suite by `+1.1899s` representative (`30.4636s -> 31.6535s`).
+- The broad-suite damage was concentrated back on the dense mixed guardrails rather than on a brand-new family: `special/hard.cnf` regressed by about `+0.5900s`, `large/test_6.cnf` by `+0.2871s`, `medium/test_3.cnf` by `+0.0788s`, `large/test_10.cnf` by `+0.0619s`, and `large/test_8.cnf` by `+0.0274s`.
+- The queue therefore advances to `perf-041`, which should stay measurement-only and split the exact `index 4+` deep-overwrite tail into exact source index `4` versus `index 5+` before another solver-core edit.
+
+### Remaining risks
+
+- The exact `index 4+` tail is still a live lane because `perf-040` improved the primary hotspot gates while staying same-search, but this run proves the aggregate is still too broad for a retained keep. The next candidate needs a narrower selector than “all exact `index 4+` deep overwrites.”
+
 ## 2026-03-23 `perf-039-index3plus-source-index-profile`
 
 - Status: completed
