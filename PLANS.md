@@ -40,6 +40,57 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-23 `perf-055-index11plus-source-index-profile`
+
+- Status: completed
+- Task family: native-only learnt-large profiling refresh
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-055`, by profiling how the surviving exact `sub10 step-3` deep-overwrite `index 11+` lane splits between exact source index `11` and source index `12+` across the dense anchors and the supplemental `satlib_more` guard slice
+- Assumptions:
+  - `perf-054` already rejected the pop-first rewrite across the whole exact `index 11+` deep-overwrite aggregate, so this run should stay measurement-only and identify whether the remaining tail is really concentrated at exact index `11` or in the deeper `index 12+` tail.
+  - The current profiler already separates exact `step-3` last-slot, overwrite, shallow, deep, exact `index 2`, aggregate `index 3+`, exact `index 3`, aggregate `index 4+`, exact `index 4`, aggregate `index 5+`, exact `index 5`, aggregate `index 6+`, exact `index 6`, aggregate `index 7+`, exact `index 7`, aggregate `index 8+`, exact `index 8`, aggregate `index 9+`, exact `index 9`, aggregate `index 10+`, exact `index 10`, and aggregate `index 11+` cases, so the missing information should be a profiler-only split inside the `index 11+` bucket plus regression coverage.
+  - A completed measurement-only outcome is valid if it names the dominant exact tail sublane and leaves the queue with one narrower next solver-core experiment.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-055` in progress in the control plane and record the active profiling task in `PLANS.md`.
+- [x] Add profiler-only exact `index 11` versus `index 12+` deep-overwrite counters plus regression coverage, then profile the dense anchors and supplemental guard slice.
+- [x] Close the measurement run, queue the next deterministic task, verify the final state, and commit.
+
+### Verification
+
+- `python -m unittest discover -s tests -p 'test_profile_solver.py' -q`
+- passed (`27/27` green, including the new exact `index 11` versus `index 12+` deep-tail split test)
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- passed and reported `large/test_6.cnf` exact `index 11+` deep overwrites `422` at exact index `11` versus `1,141` at `index 12+`
+- `python tools/profile_solver.py special/hard.cnf`
+- passed and reported exact `index 11+` deep overwrites `711` at exact index `11` versus `1,916` at `index 12+`, confirming dense-anchor totals `1,133` versus `3,057`
+- `python tools/profile_solver.py satlib_more/uuf125-010.cnf`
+- passed and reported exact `index 11+` deep overwrites `9` at exact index `11` versus `25` at `index 12+`
+- `python tools/profile_solver.py satlib_more/uf125-01.cnf`
+- passed and reported zero exact `index 11+` deep overwrites
+- `python tools/profile_solver.py satlib_more/uf125-010.cnf`
+- passed and reported zero exact `index 11+` deep overwrites, confirming supplemental target-trio totals `9` versus `25`
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync; the queue now resolves to `current_or_next_task='perf-056'`
+- `python tools/codex_verify.py`
+- passed after the final control-plane sync (`87/87` tests green plus compile, queue, checker, and wrapper smoke checks)
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Added profiler-only exact `index 11` versus `index 12+` counters and regression coverage for the remaining exact `sub10 step-3` deep-overwrite tail.
+- Measured that the surviving exact `index 11+` tail is still dominated by `index 12+`, not exact `index 11`, on both dense anchors: `large/test_6.cnf` plus `special/hard.cnf` combined to `1,133` exact `index 11` hits versus `3,057` `index 12+` hits.
+- The real supplemental target trio also favors the deeper tail: `uuf125-010`, `uf125-01`, and `uf125-010` combined to `9` exact `index 11` hits versus `25` `index 12+` hits, while `jnh10` and `jnh1` stayed at zero exact `index 11+` hits.
+- The queue therefore advances to `perf-056`, which should test one bounded solver-core candidate only on the exact `index 12+` tail.
+
+### Remaining risks
+
+- This run was measurement-only, so there is still no retained speedup.
+- The exact `index 12+` aggregate is narrower than `index 11+`, but it may still hide focused-slice losses until a bounded solver-core candidate is tested against the dense anchors, the focused seven-case slice, and the supplemental `satlib_more` guard slice.
+
 ## 2026-03-23 `perf-054-index11plus-deep-overwrite-bookkeeping`
 
 - Status: completed
