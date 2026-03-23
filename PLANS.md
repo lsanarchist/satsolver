@@ -40,6 +40,52 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-23 `perf-056-index12plus-deep-overwrite-bookkeeping`
+
+- Status: completed
+- Task family: native-only learnt-large propagation bookkeeping experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-056`, by testing one bounded solver-core candidate that only touches exact `sub10 step-3` learnt-large non-last deep-overwrite removals when the source watcher index is `12+`
+- Assumptions:
+  - `perf-055` showed that the surviving exact `index 11+` deep-overwrite tail is still dominated by exact `index 12+` on both dense anchors and the real supplemental target trio, so this run should keep exact `index 11`, exact `index 10`, exact `index 9`, exact `index 8`, exact `index 7`, exact `index 6`, exact `index 5`, exact `index 4`, exact `index 3`, exact `index 2`, shallow, and last-slot behavior on the retained baseline path.
+  - The smallest faithful candidate is the earlier pop-first watcher-removal rewrite, but gated only to exact `sub10 step-3` learnt-large non-last deep-overwrite removals at source index `12+` so the edit stays same-search and bookkeeping-only.
+  - A retained-noop outcome is valid if any early gate rejects the candidate before the repeat-aware exact-CLI suite.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-056` in progress in the control plane and record the active bounded experiment in `PLANS.md`.
+- [x] Implement and benchmark one exact `sub10 step-3` deep-overwrite `index 12+` bookkeeping candidate against the dense anchor pair, focused seven-case slice, and supplemental `satlib_more` guard slice.
+- [x] Keep or revert the candidate based on same-day evidence, then sync the control plane, verify, and commit.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed on the temporary candidate (`87/87` tests green plus compile, queue, checker, and wrapper smoke checks)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf056_index12plus_baseline.MuCvzT/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf`
+- candidate regressed the dense anchor pair two-order average (`20.7783s -> 21.4315s`)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf056_index12plus_baseline.MuCvzT/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- candidate rejected on the focused seven-case gate (`25.3949s -> 26.2127s`), with the largest stable givebacks on `large/test_6.cnf`, `medium/test_4.cnf`, and `large/test_8.cnf`
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf056_index12plus_baseline.MuCvzT/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- supplemental slice improved (`0.3757s -> 0.3602s`), but not enough to overcome the dense-anchor and focused-slice regressions
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync; the queue now resolves to `current_or_next_task='perf-057'`
+- `python tools/codex_verify.py`
+- passed after the final control-plane sync
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Tested one bounded exact `sub10 step-3` deep-overwrite `index 12+` bookkeeping candidate by applying the pop-first watcher-removal rewrite only on that lane, then reverted it.
+- The exact `index 12+` aggregate is still too broad for a retained keep: dense anchors regressed from `20.7783s` to `21.4315s`, and the focused seven-case gate regressed from `25.3949s` to `26.2127s`.
+- The positive supplemental `satlib_more` signal shows some real movement remains in this lane, but it is still mixed enough that the next run should split exact `index 12+` into exact source index `12` versus `index 13+` before another solver-core edit.
+
+### Remaining risks
+
+- No solver speedup was retained in this run.
+- The exact `index 12+` aggregate still contains useful supplemental-slice signal, so a broader “lane exhausted” conclusion would be premature until the tail is split once more.
+
 ## 2026-03-23 `perf-055-index11plus-source-index-profile`
 
 - Status: completed
