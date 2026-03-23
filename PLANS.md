@@ -40,6 +40,48 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-23 `perf-035-step3-overwrite-depth-profile`
+
+- Status: completed
+- Task family: native-only learnt-large profiling refresh
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-035`, by profiling exact `sub10 step-3` learnt-large non-last overwrite depth on `special/hard.cnf` and `large/test_6.cnf`
+- Assumptions:
+  - `perf-034` rejected the pop-first rewrite across the whole non-last overwrite lane, so this run should stay measurement-only and explain whether that lane is concentrated in shallow watcher slots or spread deeper into the list.
+  - The current profiler already separates exact `step-3` last-slot versus overwrite cases, so the missing information should be a profiler-only split inside the overwrite bucket plus regression coverage.
+  - A completed measurement-only outcome is valid if it names the dominant dense-anchor overwrite-depth sublane and leaves the queue with a narrower next solver-core experiment.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-035` in progress in the control plane and record the active profiling task in `PLANS.md`.
+- [x] Add profiler-only exact `sub10 step-3` overwrite-depth counters plus regression coverage, then profile the dense anchors.
+- [x] Close the measurement run, queue the next deterministic task, verify the final state, and commit.
+
+### Verification
+
+- `python -m unittest discover -s tests -p 'test_profile_solver.py' -q`
+- passed: the profiler test file stayed green at `17/17`, including a new natural-propagation case that forces one shallow exact `step-3` overwrite and one deeper exact `step-3` overwrite in the same watcher list
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf`
+- passed: the dense-anchor exact `sub10 step-3` overwrite lane is deeper-slot dominated on both anchors. `large/test_6.cnf` split `76,954` overwrites into `28,500` shallow versus `48,454` deep (`37.0%` / `63.0%`), and `special/hard.cnf` split `88,953` into `28,812` versus `60,141` (`32.4%` / `67.6%`)
+- `python tools/codex_verify.py`
+- passed while `perf-035` was active: the repo compiled, the queue check passed, all `77/77` tests passed, and both default wrapper smoke paths remained green
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync: the queue now resolves deterministically to `current_or_next_task='perf-036'`
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Closed `perf-035` as a measurement-only profiling run with no solver change.
+- Added profiler-only shallow-versus-deep counters inside the exact `sub10 step-3` non-last overwrite lane in `tools/profile_solver.py`, plus regression coverage in `tests/test_profile_solver.py`, so the repo can now separate head-of-list overwrites from deeper-slot overwrites on the dense anchors.
+- The overwrite-depth question is now answered clearly. Across `large/test_6.cnf` and `special/hard.cnf` together, exact `step-3` overwrites split `57,312` shallow versus `108,595` deep, so about `34.5%` of the lane is in the first two watcher slots while about `65.5%` sits deeper in the list.
+- The queue therefore advances to `perf-036`, which should test one bounded dense-anchor solver-core candidate that only touches the deeper exact `step-3` overwrite sublane and leaves shallow head-of-list overwrites on the retained baseline path.
+
+### Remaining risks
+
+- The new counters explain where the dominant exact `step-3` overwrite volume lives, but they do not prove that a deeper-slot-only bookkeeping rewrite will generalize beyond the dense anchors. The next solver-core task still needs the focused seven-case and supplemental guard slices before any keep.
+
 ## 2026-03-22 `perf-034-step3-overwrite-bookkeeping`
 
 - Status: completed

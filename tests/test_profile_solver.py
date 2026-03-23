@@ -631,6 +631,11 @@ class ProfileSolverTests(unittest.TestCase):
                 stats.learnt_large_success_sub10_step3_source_pop_last_slot
                 + stats.learnt_large_success_sub10_step3_source_pop_overwrite,
             )
+            self.assertEqual(
+                stats.learnt_large_success_sub10_step3_source_pop_overwrite,
+                stats.learnt_large_success_sub10_step3_source_pop_overwrite_shallow
+                + stats.learnt_large_success_sub10_step3_source_pop_overwrite_deep,
+            )
             self.assertGreater(stats.large_relocations + stats.large_units + stats.large_conflicts, 0)
             self.assertEqual(stats.watch_relocations, stats.ternary_relocations + stats.large_relocations)
             self.assertEqual(stats.watch_units, stats.ternary_units + stats.large_units)
@@ -802,6 +807,40 @@ class ProfileSolverTests(unittest.TestCase):
         self.assertEqual(solver.learnt_large_success_sub10_step3_4, 2)
         self.assertEqual(solver.learnt_large_success_sub10_step3_source_pop_last_slot, 1)
         self.assertEqual(solver.learnt_large_success_sub10_step3_source_pop_overwrite, 1)
+        self.assertEqual(solver.learnt_large_success_sub10_step3_source_pop_overwrite_shallow, 1)
+        self.assertEqual(solver.learnt_large_success_sub10_step3_source_pop_overwrite_deep, 0)
+
+    def test_profile_solver_splits_exact_step3_overwrite_depths(self) -> None:
+        solver = profile_solver.ProfiledSolver(
+            31,
+            restart_base=64,
+            next_reduce=256,
+            var_decay=0.95,
+            clause_decay=0.999,
+        )
+
+        solver.add_learnt_clause([1, 20, 21, 22, 23], lbd=2)
+        solver.add_learnt_clause([1, 2, 3, 4, 5], lbd=2)
+        solver.add_learnt_clause([1, 6, 7, 8, 9], lbd=2)
+        solver.add_learnt_clause([1, 24, 25, 26, 27], lbd=2)
+        solver.add_learnt_clause([1, 28, 29, 30, 31], lbd=2)
+
+        self.assertTrue(solver.enqueue(-1, None))
+        self.assertTrue(solver.enqueue(20, None))
+        self.assertTrue(solver.enqueue(-3, None))
+        self.assertTrue(solver.enqueue(-4, None))
+        self.assertTrue(solver.enqueue(-7, None))
+        self.assertTrue(solver.enqueue(-8, None))
+        self.assertTrue(solver.enqueue(24, None))
+        self.assertTrue(solver.enqueue(28, None))
+
+        self.assertIsNone(solver.propagate())
+        self.assertEqual(solver.learnt_large_relocations, 2)
+        self.assertEqual(solver.learnt_large_success_sub10_step3, 2)
+        self.assertEqual(solver.learnt_large_success_sub10_step3_source_pop_last_slot, 0)
+        self.assertEqual(solver.learnt_large_success_sub10_step3_source_pop_overwrite, 2)
+        self.assertEqual(solver.learnt_large_success_sub10_step3_source_pop_overwrite_shallow, 1)
+        self.assertEqual(solver.learnt_large_success_sub10_step3_source_pop_overwrite_deep, 1)
 
 
 if __name__ == "__main__":
