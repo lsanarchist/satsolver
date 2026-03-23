@@ -3,7 +3,7 @@ project: satsolver
 mode: autonomous_queue
 current_phase: 2
 current_task_id: null
-last_completed_task_id: perf-045
+last_completed_task_id: perf-046
 repo_health: green_verified
 working_assumptions:
   - AGENT.md plus .agent/* are the authoritative autonomous control plane.
@@ -12,14 +12,12 @@ working_assumptions:
   - External libraries may be used only as short-lived research references; retained solver code and default verification remain standard-library only.
 blockers: []
 recent_files:
-  - tools/profile_solver.py
-  - tests/test_profile_solver.py
   - PLANS.md
   - .agent/STATE.yaml
   - .agent/TASK_QUEUE.yaml
   - .agent/HANDOFF.md
   - .agent/WORKLOG.md
-next_task_hint: perf-046
+next_task_hint: perf-047
 notes:
   - The repo previously had AGENTS.md plus PLANS.md guidance but no repo-local queue control plane.
   - Routine verification now checks queue consistency before unit tests and solver smoke cases.
@@ -70,3 +68,4 @@ notes:
   - Perf-043 kept no solver change: exact index-5-plus deep-overwrite profiling now shows that the surviving step-3 deep tail is dominated by exact source index 6+ rather than exact index 5 on both the dense anchors and the real supplemental target trio, so the next bounded solver-core candidate should target only the index-6-plus tail.
   - Perf-044 kept no solver change: even narrowing the pop-first rewrite to the exact step-3 deep-overwrite index-6-plus aggregate kept the same dense-anchor search counts and won the focused/supplemental slices, but it still regressed the repeat-aware exact-CLI full suite, so the next follow-up should split that index-6-plus tail by exact source index before another solver-core edit.
   - Perf-045 kept no solver change: exact index-6-plus deep-overwrite profiling now shows that the surviving step-3 deep tail is dominated by exact source index 7+ rather than exact index 6 on both the dense anchors and the real supplemental target trio, so the next bounded solver-core candidate should target only the index-7-plus tail.
+  - Perf-046 kept no solver change: even narrowing the pop-first rewrite to the exact step-3 deep-overwrite index-7-plus aggregate still regressed the dense anchors, focused seven-case gate, and supplemental slice, so the next follow-up should split that index-7-plus tail by exact source index before another solver-core edit.
