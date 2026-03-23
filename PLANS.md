@@ -40,6 +40,52 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-23 `perf-038-index3plus-deep-overwrite-bookkeeping`
+
+- Status: completed
+- Task family: native-only learnt-large propagation bookkeeping experiment
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-038`, by testing one bounded dense-UNSAT solver-core candidate that only touches exact `sub10 step-3` non-last overwrite removals when the source watcher index is `3+`
+- Assumptions:
+  - `perf-034` rejected the pop-first rewrite across the whole exact `step-3` non-last overwrite lane, and `perf-036` rejected it again across the broader `index 2+` deep aggregate, so this run should leave exact index `2`, shallow, and last-slot behavior on the retained baseline path.
+  - `perf-037` showed that the surviving exact deep-overwrite lane is dominated by source index `3+` on both the dense anchors and the real supplemental target trio, so this is the narrowest plausible solver-core follow-up that still covers the dominant deep tail.
+  - A retained-noop outcome is valid if any early gate rejects the candidate before the broader repeat-aware exact-CLI suite.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-038` in progress in the control plane and record the active bounded experiment in `PLANS.md`.
+- [x] Implement and benchmark one exact `index 3+` deep-overwrite bookkeeping candidate against the dense anchor pair, focused seven-case slice, and supplemental `satlib_more` guard slice.
+- [x] Keep or revert the candidate based on same-day evidence, then sync the control plane, verify, and commit.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed on the temporary candidate while `perf-038` was active: the queue stayed consistent, all `78/78` tests stayed green, and both default wrapper smoke paths remained valid
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf038_index3plus_baseline.MONJWd/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf`
+- rejected on the dense anchor pair two-order average (`22.0216s -> 22.5323s`), with `special/hard.cnf` clearly worse in both orders and `large/test_6.cnf` splitting direction
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf038_index3plus_baseline.MONJWd/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf`
+- rejected on the focused seven-case gate (`27.4716s -> 27.6531s`), with the main recurring damage on `special/hard.cnf`, `large/test_8.cnf`, and `satlib_more/uuf150-01.cnf`
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf038_index3plus_baseline.MONJWd/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- rejected on the supplemental slice too (`0.3402s -> 0.3510s`), with the clearest losses on `jnh10.cnf` and `uf125-01.cnf`
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync; the queue now resolves to `current_or_next_task='perf-039'`
+- `python tools/codex_verify.py`
+- passed after reverting the candidate and syncing the control plane (`78/78` tests green plus compile/checker/wrapper smoke checks)
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Closed `perf-038` as a retained no-op with no solver change.
+- Tested one bounded dense-anchor candidate in `satsolver_core.py` that applied the earlier pop-first exact `step-3` rewrite only to exact deep-overwrite removals at source index `3+`, while leaving exact index `2`, shallow, and last-slot behavior on the retained baseline path, then reverted it after all early gates stayed negative.
+- The result sharpens the lane selection again: even the exact `index 3+` deep-overwrite aggregate is still too broad for a retained keep.
+- The queue therefore advances to `perf-039`, which should stay measurement-only and split the exact `index 3+` deep-overwrite lane into exact index `3` versus index `4+` before another solver-core edit.
+
+### Remaining risks
+
+- The rejected `index 3+` aggregate still contains the dominant deep-overwrite volume, but `perf-038` shows that even this narrower bucket can still mix incompatible behaviors across the dense anchors and supplemental guard slice.
+
 ## 2026-03-23 `perf-037-deep-overwrite-source-index-profile`
 
 - Status: completed
