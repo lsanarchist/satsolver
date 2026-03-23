@@ -40,6 +40,50 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-03-23 `perf-043-index5plus-source-index-profile`
+
+- Status: completed
+- Task family: native-only learnt-large profiling refresh
+- Branch/worktree: current checkout
+- Prompt summary: continue the next deterministic queue task, `perf-043`, by profiling how the surviving exact `sub10 step-3` deep-overwrite `index 5+` lane splits between exact source index `5` and source index `6+` across the dense anchors and the supplemental `satlib_more` guard slice
+- Assumptions:
+  - `perf-042` already rejected the pop-first rewrite across the whole exact `index 5+` deep-overwrite aggregate, so this run should stay measurement-only and explain whether the remaining tail is really concentrated at exact index `5` or in the deeper `index 6+` tail.
+  - The current profiler already separates exact `step-3` last-slot, overwrite, shallow, deep, exact `index 2`, aggregate `index 3+`, exact `index 3`, aggregate `index 4+`, exact `index 4`, and aggregate `index 5+` cases, so the missing information should be a profiler-only split inside the `index 5+` bucket plus regression coverage.
+  - A completed measurement-only outcome is valid if it names the dominant exact tail sublane and leaves the queue with one narrower next solver-core experiment.
+- Escalations: none
+
+### Plan
+
+- [x] Mark `perf-043` in progress in the control plane and record the active profiling task in `PLANS.md`.
+- [x] Add profiler-only exact `index 5` versus `index 6+` deep-overwrite counters plus regression coverage, then profile the dense anchors and supplemental guard slice.
+- [x] Close the measurement run, queue the next deterministic task, verify the final state, and commit.
+
+### Verification
+
+- `python -m unittest discover -s tests -p 'test_profile_solver.py' -q`
+- passed (`21/21` green, including the new exact `index 5` versus `index 6+` deep-tail split test)
+- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf`
+- passed and reported dense-anchor exact `index 5+` deep overwrites `12,205` at exact index `5` versus `26,141` at `index 6+`, plus supplemental target-trio `92` versus `211`; `jnh10` and `jnh1` stayed at zero exact `index 5+` overwrites
+- `python tools/codex_verify.py`
+- passed after the profiler changes while `perf-043` was active (`81/81` tests green plus compile/checker/wrapper smoke checks)
+- `python tools/agent_queue_check.py`
+- passed after the final control-plane sync; the queue now resolves to `current_or_next_task='perf-044'`
+- `python tools/codex_verify.py`
+- passed after the final control-plane sync
+- `git diff --check`
+- passed after the final control-plane sync
+
+### Outcome
+
+- Closed `perf-043` as a retained measurement-only profiling refresh with no solver change.
+- Added profiler-only exact `index 5` versus `index 6+` counters inside the exact `sub10 step-3` deep-overwrite `index 5+` lane, with targeted regression coverage in `tests/test_profile_solver.py`.
+- The surviving tail is still concentrated in the deeper exact `index 6+` sublane, not exact `index 5`: dense anchors split `38,346` total exact `index 5+` deep overwrites into `12,205` at exact `index 5` versus `26,141` at `index 6+`, and the real supplemental target trio split `303` into `92` versus `211`.
+- The queue therefore advances to `perf-044`, which should test one bounded solver-core candidate only on the exact `index 6+` tail while keeping exact `index 5`, exact `index 4`, exact `index 3`, exact `index 2`, shallow, and last-slot behavior on the retained baseline path.
+
+### Remaining risks
+
+- The exact `index 6+` tail is now the narrowest still-dominant lane, but `perf-043` is only measurement. The next solver-core experiment still has to clear the dense anchors, focused seven-case slice, and supplemental `satlib_more` guard slice before any broader exact-CLI keep gate.
+
 ## 2026-03-23 `perf-042-index5plus-deep-overwrite-bookkeeping`
 
 - Status: completed
