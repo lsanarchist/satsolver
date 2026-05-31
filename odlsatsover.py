@@ -12,7 +12,7 @@ UNASSIGNED = 0
 PORTFOLIO_DISABLE_ENV = "SATSOLVER_DISABLE_PORTFOLIO"
 PORTFOLIO_MIN_VARS = 250
 PORTFOLIO_MIN_CLAUSES = 1000
-PORTFOLIO_MAX_DENSITY = 4.3
+PORTFOLIO_MAX_DENSITY = 4.2
 ROOT_PURE_LITERAL_MIN_ASSIGNMENTS = 2
 
 
@@ -143,9 +143,9 @@ class Solver:
         self.phase_bias = [0] * (num_vars + 1)
         self.saved_phase = [True] * (num_vars + 1)
         self.var_inc = 1.0
-        self.var_decay = 0.98
+        self.var_decay = 0.95
         self.clause_inc = 1.0
-        self.clause_decay = 0.995
+        self.clause_decay = 0.999
 
         self.trail: list[int] = []
         self.trail_limits: list[int] = []
@@ -158,8 +158,8 @@ class Solver:
         self.lbd_token = 0
 
         self.conflicts = 0
-        self.restart_base = 16384
-        self.next_reduce = 64
+        self.restart_base = 64
+        self.next_reduce = 256
 
         self.ok = True
 

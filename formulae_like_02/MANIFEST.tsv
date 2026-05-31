@@ -1,0 +1,36 @@
+category	file	vars	clauses	expected_status	family	notes
+small	small/test_1.cnf	20	85	SAT	planted_3sat	hidden assignment near 4.25 ratio
+small	small/test_2.cnf	30	128	SAT	planted_3sat	hidden assignment near 4.27 ratio
+small	small/test_3.cnf	40	170	SAT	planted_3sat	hidden assignment near 4.25 ratio
+small	small/test_4.cnf	18	48	UNSAT	xor_parity	contradictory sparse parity pair
+small	small/test_5.cnf	24	96	SAT	xor_parity	sparse parity system with hidden model
+small	small/test_6.cnf	30	81	UNSAT	pigeonhole	classic PHP unsat
+small	small/test_7.cnf	20	75	UNSAT	graph_coloring	complete graph coloring UNSAT
+small	small/test_8.cnf	25	165	SAT	nqueens	5x5 queens
+small	small/test_9.cnf	45	99	SAT	cardinality	independent exactly-one groups
+small	small/test_10.cnf	44	45	UNSAT	horn_chain	forced true chain ending with false
+medium	medium/test_1.cnf	60	255	SAT	planted_3sat	hidden assignment near 4.25 ratio
+medium	medium/test_2.cnf	100	425	SAT	planted_3sat	hidden assignment near 4.25 ratio
+medium	medium/test_3.cnf	160	682	SAT	planted_3sat	hidden assignment near threshold
+medium	medium/test_4.cnf	200	850	SAT	planted_3sat	hidden assignment near threshold
+medium	medium/test_5.cnf	72	297	UNSAT	pigeonhole	classic PHP unsat
+medium	medium/test_6.cnf	90	415	UNSAT	pigeonhole	classic PHP unsat
+medium	medium/test_7.cnf	72	549	UNSAT	graph_coloring	complete graph coloring UNSAT
+medium	medium/test_8.cnf	96	500	SAT	xor_parity	sparse parity system with hidden model
+medium	medium/test_9.cnf	128	660	UNSAT	xor_parity	contradictory sparse parity pair
+medium	medium/test_10.cnf	102	661	SAT	graph_coloring	planted 3-coloring
+large	large/test_1.cnf	230	1035	SAT	planted_3sat	large hidden assignment instance
+large	large/test_2.cnf	270	1080	SAT	planted_3sat	large hidden assignment instance
+large	large/test_3.cnf	310	1010	SAT	planted_3sat	large lower-density hidden assignment instance
+large	large/test_4.cnf	370	1040	SAT	planted_3sat	large lower-density hidden assignment instance
+large	large/test_5.cnf	430	1120	SAT	planted_3sat	large lower-density hidden assignment instance
+large	large/test_6.cnf	490	1200	SAT	planted_3sat	large lower-density hidden assignment instance
+large	large/test_7.cnf	210	1485	UNSAT	pigeonhole	large PHP unsat inside clause limit
+large	large/test_8.cnf	240	1816	UNSAT	pigeonhole	larger PHP unsat inside clause limit
+large	large/test_9.cnf	256	1520	UNSAT	xor_parity	large contradictory parity system
+large	large/test_10.cnf	360	1950	SAT	graph_coloring	large planted 3-coloring
+special	special/easy.cnf	140	140	SAT	unit	very easy all-unit SAT
+special	special/dense.cnf	200	1450	SAT	planted_3sat_dense	dense hidden-assignment 3-SAT
+special	special/hard.cnf	110	1056	UNSAT	graph_coloring	complete graph coloring UNSAT
+special	special/xor.cnf	320	1800	UNSAT	xor_parity	large sparse contradictory parity system
+special	special/coloring.cnf	500	1935	SAT	graph_coloring	500-variable planted 4-coloring
