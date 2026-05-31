@@ -40,6 +40,73 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-05-31 `phase-diversified-portfolio`
+
+- Status: completed
+- Task family: user-directed native SAT portfolio performance experiment
+- Branch/worktree: current checkout
+- Prompt summary: implement `phase_portfolio_agent_instructions.md`, replacing boolean phase-bias portfolio workers with deterministic phase modes and benchmark the result on `formulae`
+- Assumptions:
+  - `PORTFOLIO_MAX_DENSITY` stays unchanged at `4.3`; this patch isolates phase diversification from density tuning.
+  - The existing portfolio gate should remain narrow so small cases and dense UNSAT cases avoid multiprocessing overhead.
+  - PySAT remains reference-only and must not enter the submission path.
+- Escalations: none
+
+### Plan
+
+- [x] Read the phase-portfolio instructions and inspect the current shared/wrapper portfolio implementation.
+- [x] Add deterministic phase modes in the shared core and wire them through the main and fast wrappers.
+- [x] Run compile, checker smoke cases, and focused same-day baseline-vs-candidate comparisons.
+- [x] Keep or revert the candidate based on correctness and `formulae` performance evidence.
+
+### Verification
+
+- `python -m py_compile satsolver.py satsolver_core.py satsolver_io.py satsolver_fast.py`
+- passed
+- `python -m pytest tests/test_solver_regressions.py -q`
+- passed (`20 passed`)
+- `python satsolver.py formulae/large/test_8.cnf /tmp/phase_test8.out && python tools/checker.py formulae/large/test_8.cnf /tmp/phase_test8.out`
+- passed (`VALID: valid SAT`)
+- `SATSOLVER_DISABLE_PORTFOLIO=1 python satsolver.py formulae/large/test_8.cnf /tmp/phase_test8_serial.out && python tools/checker.py formulae/large/test_8.cnf /tmp/phase_test8_serial.out`
+- passed (`VALID: valid SAT`)
+- `python satsolver.py formulae/large/test_6.cnf /tmp/phase_test6.out && python tools/checker.py formulae/large/test_6.cnf /tmp/phase_test6.out`
+- passed (`VALID: valid UNSAT (format checked)`)
+- `python satsolver.py formulae/special/hard.cnf /tmp/phase_hard.out && python tools/checker.py formulae/special/hard.cnf /tmp/phase_hard.out`
+- passed (`VALID: valid UNSAT (format checked)`)
+- `python satsolver.py formulae/large/test_10.cnf /tmp/phase_test10.out && python tools/checker.py formulae/large/test_10.cnf /tmp/phase_test10.out`
+- passed (`VALID: valid UNSAT (format checked)`)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/phase_portfolio_baseline.yPZFfp/satsolver.py --candidate-cli-script satsolver.py --repeat 2 formulae/large/test_8.cnf`
+- passed; target two-order average improved (`1.7061s -> 0.1257s`) after the final phase-mode order
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/phase_portfolio_baseline.yPZFfp/satsolver.py --candidate-cli-script satsolver.py --repeat 2 formulae/large/test_8.cnf formulae/large/test_6.cnf formulae/special/hard.cnf formulae/large/test_10.cnf`
+- passed; guard slice improved (`9.0386s -> 7.3937s`) on the earlier candidate order and all cases stayed valid
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/phase_portfolio_baseline.yPZFfp/satsolver.py --candidate-cli-script satsolver.py --repeat 2 <six portfolio-gated course cases>`
+- passed; final gate-only slice improved (`5.5063s -> 3.9310s`)
+- `python ../benchmark_suite.py satsolver /tmp/phase_formulae_baseline.txt small medium large special --bruteforce-var-limit 16 --repeat 2 --cli-script /tmp/phase_portfolio_baseline.yPZFfp/satsolver.py`
+- baseline: `35/35`, total `12.0224s`
+- `python ../benchmark_suite.py satsolver /tmp/phase_formulae_candidate_final.txt small medium large special --bruteforce-var-limit 16 --repeat 2 --cli-script ../satsolver.py`
+- candidate: `35/35`, total `10.0431s`
+- `python benchmark_suite.py satsolver /tmp/phase_course_baseline.txt . --bruteforce-var-limit 16 --repeat 2 --cli-script /tmp/phase_portfolio_baseline.yPZFfp/satsolver.py`
+- baseline scratch `course_cnf_tests` without known `mycielski_iter4_color5_unsat`: `278/278`, total `30.3867s`
+- `python benchmark_suite.py satsolver /tmp/phase_course_candidate_final.txt . --bruteforce-var-limit 16 --repeat 2 --cli-script /home/doomguy/Desktop/sat/satsolver/satsolver.py`
+- candidate scratch `course_cnf_tests` without known `mycielski_iter4_color5_unsat`: `278/278`, total `27.8704s`
+- `python tools/agent_queue_check.py`
+- passed (`current_or_next_task='perf-065'`)
+- `git diff --check`
+- passed
+- `python tools/codex_verify.py`
+- passed (`92` tests plus compile, queue, checker, and wrapper smoke checks)
+
+### Outcome
+
+- Kept the phase-diversified portfolio change. The retained mode order is `default`, `bias_positive`, `lcg1`, `bias_negative`, with at most three workers, so the old default/bias-positive pair survives on two-core systems while `lcg1` joins on machines with at least three workers.
+- The initial `default`, `lcg1`, `bias_negative` order was rejected during the run because it removed the old `bias_positive` worker and badly regressed some planted SAT gate cases.
+- Updated `benchmark_summary.md` and `experiments.jsonl` with the kept result.
+
+### Remaining risks
+
+- Multiprocessing overhead still makes this suitable only behind the existing narrow large low-density 3-CNF gate.
+- The full `benchmark_suite.py ... formulae/small ...` command must be run from inside `formulae/` with folders `small medium large special`; passing slash-containing folder names from the repo root hits the current harness scratch-output path bug.
+
 ## 2026-04-23 `project-context-snapshot`
 
 - Status: completed

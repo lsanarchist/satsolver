@@ -1,6 +1,6 @@
 # Benchmark Summary
 
-Updated: `2026-03-22T17:06:04+01:00`
+Updated: `2026-05-31T19:36:00+02:00`
 
 Best-known submission configuration:
 - `satsolver.py`
@@ -19,7 +19,8 @@ Best-known submission configuration:
 - Unit-first fallthrough in the ternary `candidate=FALSE` tail inside watched-clause propagation
 - In-place learnt minimization and single-pass backtrack-level/LBD finalization in conflict analysis
 - Binary/ternary reason fast paths inside one-hop `minimize_learnt()`
-- Density-limited two-process standard-library portfolio for large SAT-like pure-3-SAT cases on multi-core POSIX systems, with `SATSOLVER_DISABLE_PORTFOLIO` as an escape hatch
+- Density-limited phase-diversified standard-library portfolio for large SAT-like pure-3-SAT cases on multi-core POSIX systems, with `SATSOLVER_DISABLE_PORTFOLIO` as an escape hatch
+- Portfolio workers now use deterministic phase modes in the order `default`, `bias_positive`, `lcg1`, `bias_negative`, capped at three workers; this preserves the old default/bias-positive pair on two-core systems and adds the LCG phase worker when a third worker is available
 - Parser hardening for misplaced clauses, repeated headers, and out-of-range literals
 - `tools/checker.py` for SAT-format validation and tiny-UNSAT brute-force checks
 - `benchmark_suite.py` now validates written outputs and reports solved-correctly counts
@@ -60,6 +61,14 @@ Best repeat-aware exact-CLI 59-case snapshot:
 - Measured total across both repeats: `51.4054s`
 - Wall clock: `51.6562s`
 - Worst-case representative runtime: `11.4367s` on `large/test_6.cnf`
+
+Latest user-directed phase-portfolio keep:
+- Change: replaced boolean portfolio worker selection with deterministic phase modes while keeping `PORTFOLIO_MAX_DENSITY = 4.3` and the existing narrow portfolio gate.
+- Same-day `formulae` exact-CLI repeat-2 baseline vs candidate: `12.0224s -> 10.0431s`, `35/35` correct, `0` errors.
+- Target case `formulae/large/test_8.cnf`: `1.8271s -> 0.1340s`.
+- Portfolio-gated six-case two-order average: `5.5063s -> 3.9310s`.
+- Broad `course_cnf_tests` scratch set excluding known `mycielski_iter4_color5_unsat` timeout-case: `30.3867s -> 27.8704s`, `278/278` correct, `0` errors.
+- Guard cases stayed valid: `formulae/large/test_6.cnf`, `formulae/special/hard.cnf`, and `formulae/large/test_10.cnf`.
 
 Latest repeat-aware exact-CLI reruns this cycle:
 - Same-day retained promoted-main baseline before removing fast-path root-pure: `39.8399s` representative, `59/59` correct

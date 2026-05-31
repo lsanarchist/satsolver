@@ -101,6 +101,24 @@ class SolverRegressionTests(unittest.TestCase):
 
         self.assertEqual(solver.pick_branch_literal(), -1)
 
+    def test_seed_saved_phases_mode_preserves_root_assignments(self) -> None:
+        solver = satsolver.Solver(4)
+        self.assertTrue(solver.enqueue(1, None))
+        solver.phase_bias[2] = 3
+        solver.phase_bias[3] = -2
+
+        solver.seed_saved_phases_mode(satsolver.PHASE_MODE_BIAS_NEGATIVE)
+
+        self.assertTrue(solver.saved_phase[1])
+        self.assertFalse(solver.saved_phase[2])
+        self.assertTrue(solver.saved_phase[3])
+
+        solver.seed_saved_phases_mode(satsolver.PHASE_MODE_LCG1)
+
+        expected_lcg_var4 = (((4 * 2654435761) >> 17) & 1) == 1
+        self.assertTrue(solver.saved_phase[1])
+        self.assertEqual(solver.saved_phase[4], expected_lcg_var4)
+
     def test_propagate_sets_reason_and_literal_cache_for_inlined_units(self) -> None:
         binary_solver = satsolver.Solver(2)
         self.assertTrue(binary_solver.add_problem_clause([1, 2]))

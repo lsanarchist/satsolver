@@ -5,16 +5,16 @@
 - The repo still uses the queue-driven autonomous control plane rooted in `AGENT.md` and `.agent/*`, plus the machine-checkable queue validator.
 - `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001` through `perf-064` are complete.
 - A user-directed `project_context.md` snapshot now exists to bundle the tracked repo files, their roles, and their verbatim contents for external AI review; the queue itself is unchanged.
+- A user-directed phase-diversified portfolio keep is now present in the working tree: portfolio workers use deterministic phase modes ordered `default`, `bias_positive`, `lcg1`, `bias_negative`, capped at three workers.
 - There is no active in-progress task; the next deterministic task is `perf-065`.
 
 ## What Changed This Run
 
-- Closed `perf-064` as a retained no-op with no solver change.
-- Tested the bounded pop-first watcher-removal rewrite only on exact `sub10 step-3` learnt-large non-last deep-overwrite removals at source index `16+`, then reverted it.
-- The dense anchor pair regressed from `19.9193s` to `20.1643s`.
-- The focused seven-case slice regressed from `24.3913s` to `25.0239s`.
-- The supplemental `satlib_more` guard slice improved from `0.3242s` to `0.3161s`, but not enough to offset the primary-gate regressions.
-- A candidate-only dense-anchor profile kept the same search counts as the retained baseline: `72,886/59,201` on `large/test_6.cnf` and `54,245/44,619` on `special/hard.cnf`.
+- Implemented `phase_portfolio_agent_instructions.md` as a user-directed native-only solver change.
+- Added shared phase-mode constants and `Solver.seed_saved_phases_mode()` in `satsolver_core.py`, leaving `seed_saved_phases_from_bias()` as a compatibility wrapper.
+- Replaced boolean portfolio worker selection in `satsolver_core.py`, `satsolver.py`, and `satsolver_fast.py` with deterministic phase modes.
+- Rejected the first mode order (`default`, `lcg1`, `bias_negative`) during benchmarking because it regressed several planted SAT gate cases; kept the safer order (`default`, `bias_positive`, `lcg1`, `bias_negative`) so the old two-worker pair remains first.
+- Added regression coverage for phase-mode seeding and updated `PLANS.md`, `benchmark_summary.md`, and `experiments.jsonl` with the kept result.
 
 ## Current Focus
 
@@ -26,14 +26,17 @@
 
 ## Verification From This Run
 
-- `python tools/codex_verify.py` — passed on the temporary candidate (`91/91` tests green plus compile, queue, checker, and wrapper smoke checks)
-- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf064_index16plus_baseline.kedCah/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf` — rejected on the dense anchor pair (`19.9193s -> 20.1643s`)
-- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf064_index16plus_baseline.kedCah/satsolver.py --candidate-cli-script satsolver.py large/test_6.cnf special/hard.cnf large/test_10.cnf medium/test_4.cnf medium/test_3.cnf satlib_more/uuf150-01.cnf large/test_8.cnf` — rejected on the focused seven-case gate (`24.3913s -> 25.0239s`)
-- `python tools/hotspot_compare.py --baseline-cli-script /tmp/perf064_index16plus_baseline.kedCah/satsolver.py --candidate-cli-script satsolver.py satlib_more/uuf125-010.cnf satlib_more/uf125-01.cnf satlib_more/uf125-010.cnf satlib_more/jnh10.cnf satlib_more/jnh1.cnf` — supplemental slice improved (`0.3242s -> 0.3161s`) but not enough to justify a keep
-- `python tools/profile_solver.py large/test_6.cnf special/hard.cnf` — candidate kept the same dense-anchor search counts as the retained baseline (`72,886/59,201` and `54,245/44,619`)
-- `python tools/agent_queue_check.py` — passed after the final control-plane sync; queue now resolves to `current_or_next_task='perf-065'`
-- `python tools/codex_verify.py` — passed after the final control-plane sync (`91/91` tests green plus compile, queue, checker, and wrapper smoke checks)
+- `python -m py_compile satsolver.py satsolver_core.py satsolver_io.py satsolver_fast.py` — passed
+- `python -m pytest tests/test_solver_regressions.py -q` — passed (`20 passed`)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/phase_portfolio_baseline.yPZFfp/satsolver.py --candidate-cli-script satsolver.py --repeat 2 formulae/large/test_8.cnf` — target improved (`1.7061s -> 0.1257s`)
+- `python tools/hotspot_compare.py --baseline-cli-script /tmp/phase_portfolio_baseline.yPZFfp/satsolver.py --candidate-cli-script satsolver.py --repeat 2 <six portfolio-gated course cases>` — final gate-only slice improved (`5.5063s -> 3.9310s`)
+- `python ../benchmark_suite.py satsolver /tmp/phase_formulae_candidate_final.txt small medium large special --bruteforce-var-limit 16 --repeat 2 --cli-script ../satsolver.py` from `formulae/` — candidate `35/35`, total `10.0431s`
+- `python ../benchmark_suite.py satsolver /tmp/phase_formulae_baseline.txt small medium large special --bruteforce-var-limit 16 --repeat 2 --cli-script /tmp/phase_portfolio_baseline.yPZFfp/satsolver.py` from `formulae/` — baseline `35/35`, total `12.0224s`
+- `python benchmark_suite.py satsolver /tmp/phase_course_candidate_final.txt . --bruteforce-var-limit 16 --repeat 2 --cli-script /home/doomguy/Desktop/sat/satsolver/satsolver.py` from a scratch 278-case `course_cnf_tests` directory excluding known `mycielski_iter4_color5_unsat` — candidate `278/278`, total `27.8704s`
+- `python benchmark_suite.py satsolver /tmp/phase_course_baseline.txt . --bruteforce-var-limit 16 --repeat 2 --cli-script /tmp/phase_portfolio_baseline.yPZFfp/satsolver.py` from the same scratch directory — baseline `278/278`, total `30.3867s`
+- `python tools/agent_queue_check.py` — passed after the final control-plane sync (`current_or_next_task='perf-065'`)
 - `git diff --check` — passed after the final control-plane sync
+- `python tools/codex_verify.py` — passed after the final control-plane sync (`92` tests plus compile, queue, checker, and wrapper smoke checks)
 
 ## Notes For The Next Run
 
@@ -44,7 +47,7 @@
 - Reuse the queue checker when adjusting `.agent/STATE.yaml` or `.agent/TASK_QUEUE.yaml`.
 - The default verifier covers `satsolver_fast.py`, but `satsolver_pysat.py` remains outside the default gate because it requires an optional external environment.
 - External libraries or solvers may be used as short-lived research references only; do not retain them in the submission path or make them a default verifier dependency.
-- Do not update `benchmark_summary.md` or `experiments.jsonl` for `perf-064`; this run kept no solver change.
+- The phase-diversified portfolio keep is already recorded in `benchmark_summary.md` and `experiments.jsonl`; future portfolio work should preserve the old `default`/`bias_positive` pair unless same-day broad evidence says otherwise.
 - `perf-048` ruled out the whole exact `index 8+` aggregate, `perf-049` showed that the surviving `index 8+` tail is dominated by exact `index 9+`, `perf-050` showed that even the exact `index 9+` aggregate is still too broad for the retained pop-first rewrite, `perf-051` showed that the remaining exact `index 9+` tail is still dominated by exact `index 10+`, `perf-052` showed that even the exact `index 10+` aggregate is still too broad, `perf-053` showed that the surviving `index 10+` tail is itself dominated by exact `index 11+`, `perf-054` showed that even the exact `index 11+` aggregate is still too broad despite a positive dense-anchor and supplemental signal, `perf-055` showed that the remaining exact `index 11+` tail is itself dominated by exact `index 12+`, `perf-056` showed that even the exact `index 12+` aggregate is still too broad despite a positive supplemental signal, `perf-057` showed that the remaining exact `index 12+` tail is itself dominated by exact `index 13+`, `perf-058` showed that even the exact `index 13+` aggregate is still too broad despite a small positive dense-anchor signal, `perf-059` showed that the surviving exact `index 13+` tail is itself still dominated by exact `index 14+`, `perf-060` showed that even the exact `index 14+` aggregate is still too mixed to keep, `perf-061` showed that the surviving exact `index 14+` tail is itself still dominated by exact `index 15+`, and `perf-062` now shows that even the exact `index 15+` aggregate is still too broad because all three early gates regressed.
 - `perf-063` now shows that the surviving exact `index 15+` tail is itself still dominated by exact `index 16+` on the dense anchors, and the only non-zero supplemental target-trio traffic remains `uuf125-010` at `3` exact `index 15` hits versus `10` `index 16+` hits.
 - `perf-064` now shows that even the exact `index 16+` aggregate is still too broad: it kept the same dense-anchor search counts and improved the supplemental slice slightly, but it still regressed both the dense anchors and the focused seven-case gate.

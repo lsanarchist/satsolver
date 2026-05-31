@@ -25,6 +25,12 @@ else:
     PORTFOLIO_MIN_VARS = base.PORTFOLIO_MIN_VARS
     PORTFOLIO_MIN_CLAUSES = base.PORTFOLIO_MIN_CLAUSES
     PORTFOLIO_MAX_DENSITY = base.PORTFOLIO_MAX_DENSITY
+    PHASE_PORTFOLIO_MAX_WORKERS = base.PHASE_PORTFOLIO_MAX_WORKERS
+    PHASE_MODE_DEFAULT = base.PHASE_MODE_DEFAULT
+    PHASE_MODE_BIAS_POSITIVE = base.PHASE_MODE_BIAS_POSITIVE
+    PHASE_MODE_BIAS_NEGATIVE = base.PHASE_MODE_BIAS_NEGATIVE
+    PHASE_MODE_LCG1 = base.PHASE_MODE_LCG1
+    PHASE_PORTFOLIO_MODES = base.PHASE_PORTFOLIO_MODES
     ROOT_PURE_LITERAL_MIN_ASSIGNMENTS = base.ROOT_PURE_LITERAL_MIN_ASSIGNMENTS
 
     luby = base.luby
@@ -49,8 +55,12 @@ if not CLI_MODE:
         num_vars: int,
         clauses: list[list[int]],
         *,
+        phase_mode: str = base.PHASE_MODE_DEFAULT,
         seed_phase_bias: bool = False,
     ) -> list[int] | None:
+        if seed_phase_bias:
+            phase_mode = base.PHASE_MODE_BIAS_POSITIVE
+
         solver = Solver(num_vars)
         root_pure_literals = base.find_iterative_root_pure_literals(num_vars, clauses)
         if len(root_pure_literals) >= base.ROOT_PURE_LITERAL_MIN_ASSIGNMENTS:
@@ -60,8 +70,7 @@ if not CLI_MODE:
         for clause in clauses:
             if not solver.add_problem_clause(clause):
                 return None
-        if seed_phase_bias:
-            solver.seed_saved_phases_from_bias()
+        solver.seed_saved_phases_mode(phase_mode)
         return solver.solve()
 
 
@@ -69,14 +78,17 @@ def solve_cnf_fast_serial(
     num_vars: int,
     clauses: list[list[int]],
     *,
+    phase_mode: str = base.PHASE_MODE_DEFAULT,
     seed_phase_bias: bool = False,
 ) -> list[int] | None:
+    if seed_phase_bias:
+        phase_mode = base.PHASE_MODE_BIAS_POSITIVE
+
     solver = Solver(num_vars)
     for clause in clauses:
         if not solver.add_problem_clause(clause):
             return None
-    if seed_phase_bias:
-        solver.seed_saved_phases_from_bias()
+    solver.seed_saved_phases_mode(phase_mode)
     return solver.solve()
 
 
@@ -88,19 +100,27 @@ if not CLI_MODE:
 
 def solve_cnf_portfolio(num_vars: int, clauses: list[list[int]]) -> list[int] | None:
     import multiprocessing as mp
+    import os
 
-    def solve_portfolio_worker(seed_phase_bias: bool, result_queue) -> None:
+    def solve_portfolio_worker(phase_mode: str, result_queue) -> None:
         try:
-            model = solve_cnf_fast_serial(num_vars, clauses, seed_phase_bias=seed_phase_bias)
-            result_queue.put((True, model))
+            model = solve_cnf_fast_serial(num_vars, clauses, phase_mode=phase_mode)
+            result_queue.put((True, phase_mode, model))
         except BaseException as exc:
-            result_queue.put((False, f"{type(exc).__name__}: {exc}"))
+            result_queue.put((False, phase_mode, f"{type(exc).__name__}: {exc}"))
 
     context = mp.get_context("fork")
     result_queue = context.Queue()
+    cpu_count = os.cpu_count() or 1
+    max_workers = min(
+        cpu_count,
+        base.PHASE_PORTFOLIO_MAX_WORKERS,
+        len(base.PHASE_PORTFOLIO_MODES),
+    )
+    modes = base.PHASE_PORTFOLIO_MODES[:max_workers]
     processes = [
-        context.Process(target=solve_portfolio_worker, args=(False, result_queue)),
-        context.Process(target=solve_portfolio_worker, args=(True, result_queue)),
+        context.Process(target=solve_portfolio_worker, args=(mode, result_queue))
+        for mode in modes
     ]
 
     for process in processes:
@@ -111,11 +131,11 @@ def solve_cnf_portfolio(num_vars: int, clauses: list[list[int]]) -> list[int] | 
     try:
         remaining = len(processes)
         while remaining > 0:
-            ok, payload = result_queue.get()
+            ok, phase_mode, payload = result_queue.get()
             remaining -= 1
             if ok:
                 return payload
-            errors.append(payload)
+            errors.append(f"{phase_mode}: {payload}")
     finally:
         for process in processes:
             if process.is_alive():

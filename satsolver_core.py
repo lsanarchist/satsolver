@@ -13,6 +13,17 @@ PORTFOLIO_DISABLE_ENV = "SATSOLVER_DISABLE_PORTFOLIO"
 PORTFOLIO_MIN_VARS = 250
 PORTFOLIO_MIN_CLAUSES = 1000
 PORTFOLIO_MAX_DENSITY = 4.3
+PHASE_PORTFOLIO_MAX_WORKERS = 3
+PHASE_MODE_DEFAULT = "default"
+PHASE_MODE_BIAS_POSITIVE = "bias_positive"
+PHASE_MODE_BIAS_NEGATIVE = "bias_negative"
+PHASE_MODE_LCG1 = "lcg1"
+PHASE_PORTFOLIO_MODES = (
+    PHASE_MODE_DEFAULT,
+    PHASE_MODE_BIAS_POSITIVE,
+    PHASE_MODE_LCG1,
+    PHASE_MODE_BIAS_NEGATIVE,
+)
 ROOT_PURE_LITERAL_MIN_ASSIGNMENTS = 2
 
 
@@ -670,14 +681,37 @@ class Solver:
             model[variable] = value
         return model
 
-    def seed_saved_phases_from_bias(self) -> None:
+    def seed_saved_phases_mode(self, mode: str) -> None:
+        if mode == PHASE_MODE_DEFAULT:
+            return
+
         values = self.values
         saved_phase = self.saved_phase
+
+        if mode == PHASE_MODE_LCG1:
+            for variable in range(1, self.num_vars + 1):
+                if values[variable] == UNASSIGNED:
+                    saved_phase[variable] = (((variable * 2654435761) >> 17) & 1) == 1
+            return
+
         phase_bias = self.phase_bias
 
-        for variable in range(1, self.num_vars + 1):
-            if values[variable] == UNASSIGNED:
-                saved_phase[variable] = phase_bias[variable] >= 0
+        if mode == PHASE_MODE_BIAS_POSITIVE:
+            for variable in range(1, self.num_vars + 1):
+                if values[variable] == UNASSIGNED:
+                    saved_phase[variable] = phase_bias[variable] >= 0
+            return
+
+        if mode == PHASE_MODE_BIAS_NEGATIVE:
+            for variable in range(1, self.num_vars + 1):
+                if values[variable] == UNASSIGNED:
+                    saved_phase[variable] = phase_bias[variable] < 0
+            return
+
+        raise ValueError(f"unknown phase mode: {mode}")
+
+    def seed_saved_phases_from_bias(self) -> None:
+        self.seed_saved_phases_mode(PHASE_MODE_BIAS_POSITIVE)
 
     def solve(self) -> list[int] | None:
         if not self.ok:
@@ -917,8 +951,12 @@ def solve_cnf_serial(
     num_vars: int,
     clauses: list[list[int]],
     *,
+    phase_mode: str = PHASE_MODE_DEFAULT,
     seed_phase_bias: bool = False,
 ) -> list[int] | None:
+    if seed_phase_bias:
+        phase_mode = PHASE_MODE_BIAS_POSITIVE
+
     solver = Solver(num_vars)
     root_pure_literals = find_iterative_root_pure_literals(num_vars, clauses)
     if len(root_pure_literals) >= ROOT_PURE_LITERAL_MIN_ASSIGNMENTS:
@@ -928,8 +966,7 @@ def solve_cnf_serial(
     for clause in clauses:
         if not solver.add_problem_clause(clause):
             return None
-    if seed_phase_bias:
-        solver.seed_saved_phases_from_bias()
+    solver.seed_saved_phases_mode(phase_mode)
     return solver.solve()
 
 
@@ -951,18 +988,21 @@ def should_use_parallel_portfolio(num_vars: int, clauses: list[list[int]]) -> bo
 def solve_cnf_portfolio(num_vars: int, clauses: list[list[int]]) -> list[int] | None:
     import multiprocessing as mp
 
-    def solve_portfolio_worker(seed_phase_bias: bool, result_queue) -> None:
+    def solve_portfolio_worker(phase_mode: str, result_queue) -> None:
         try:
-            model = solve_cnf_serial(num_vars, clauses, seed_phase_bias=seed_phase_bias)
-            result_queue.put((True, model))
+            model = solve_cnf_serial(num_vars, clauses, phase_mode=phase_mode)
+            result_queue.put((True, phase_mode, model))
         except BaseException as exc:
-            result_queue.put((False, f"{type(exc).__name__}: {exc}"))
+            result_queue.put((False, phase_mode, f"{type(exc).__name__}: {exc}"))
 
     context = mp.get_context("fork")
     result_queue = context.Queue()
+    cpu_count = os.cpu_count() or 1
+    max_workers = min(cpu_count, PHASE_PORTFOLIO_MAX_WORKERS, len(PHASE_PORTFOLIO_MODES))
+    modes = PHASE_PORTFOLIO_MODES[:max_workers]
     processes = [
-        context.Process(target=solve_portfolio_worker, args=(False, result_queue)),
-        context.Process(target=solve_portfolio_worker, args=(True, result_queue)),
+        context.Process(target=solve_portfolio_worker, args=(mode, result_queue))
+        for mode in modes
     ]
 
     for process in processes:
@@ -973,11 +1013,11 @@ def solve_cnf_portfolio(num_vars: int, clauses: list[list[int]]) -> list[int] | 
     try:
         remaining = len(processes)
         while remaining > 0:
-            ok, payload = result_queue.get()
+            ok, phase_mode, payload = result_queue.get()
             remaining -= 1
             if ok:
                 return payload
-            errors.append(payload)
+            errors.append(f"{phase_mode}: {payload}")
     finally:
         for process in processes:
             if process.is_alive():
