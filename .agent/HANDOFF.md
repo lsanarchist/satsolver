@@ -4,6 +4,7 @@
 
 - The repo still uses the queue-driven autonomous control plane rooted in `AGENT.md` and `.agent/*`, plus the machine-checkable queue validator.
 - `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001` through `perf-064` are complete.
+- A user-directed `project_context.md` snapshot now exists to bundle the tracked repo files, their roles, and their verbatim contents for external AI review; the queue itself is unchanged.
 - There is no active in-progress task; the next deterministic task is `perf-065`.
 
 ## What Changed This Run
@@ -39,6 +40,7 @@
 - Start with the read order in `.agent/RUNBOOK.md`.
 - Reconcile `STATE.yaml` against the repo tree before selecting a task.
 - Keep `PLANS.md` updated for any multi-step or code-bearing task.
+- Refresh `project_context.md` only when the tracked repo snapshot or the guidance another AI needs has changed materially; it intentionally snapshots the pre-self tracked tree and excludes local untracked files.
 - Reuse the queue checker when adjusting `.agent/STATE.yaml` or `.agent/TASK_QUEUE.yaml`.
 - The default verifier covers `satsolver_fast.py`, but `satsolver_pysat.py` remains outside the default gate because it requires an optional external environment.
 - External libraries or solvers may be used as short-lived research references only; do not retain them in the submission path or make them a default verifier dependency.

@@ -1,0 +1,14 @@
+c generated_for satsolver training
+c category horn_implication
+c expected UNSAT
+c notes unit propagation chain; UNSAT variant ends with negated tail literal
+p cnf 8 9
+1 0
+-1 2 0
+-2 3 0
+-3 4 0
+-4 5 0
+-5 6 0
+-6 7 0
+-7 8 0
+-8 0

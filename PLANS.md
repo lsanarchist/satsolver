@@ -40,6 +40,39 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-04-23 `project-context-snapshot`
+
+- Status: completed
+- Task family: documentation and external-AI handoff context
+- Branch/worktree: current checkout
+- Prompt summary: create one `project_context.md` file that another AI can use as a second-opinion snapshot of the repo, including the significant tracked files, their roles, and their full contents in one place
+- Assumptions:
+  - The safest interpretation of "don't miss anything significant" is to include every tracked repo file in the snapshot, then explain the untracked local-only files that were intentionally excluded.
+  - The generated context file should snapshot the repo as it existed before adding `project_context.md` itself, because a file cannot meaningfully inline its own full content recursively.
+  - The benchmark `.cnf` inputs must be included verbatim because correctness and performance decisions in this repo depend on the exact clauses, not only on the solver code.
+- Escalations: none
+
+### Plan
+
+- [x] Inventory the tracked repo files and capture the repo's own instructions so the snapshot reflects the correct workflow and constraints.
+- [x] Generate `project_context.md` with a reader-oriented overview, a file manifest, and verbatim contents for every tracked file in the current Git snapshot.
+- [x] Verify the repo after the documentation update and then mark the plan complete with the final outcome.
+
+### Verification
+
+- `python tools/codex_verify.py`
+- passed (`91/91` tests green plus compile, queue, checker, and wrapper smoke checks)
+- `git diff --check`
+- passed
+
+### Outcome
+
+- Added `project_context.md`, a single-file snapshot for external AI review that explains the repo structure, flags the important invariants, inventories every tracked file, and then embeds the verbatim contents of all tracked files from the current Git snapshot in one place.
+
+### Remaining risks
+
+- `project_context.md` will become stale as the repo changes, and by design it excludes both its own recursive content and the current untracked local-only files (`.codex`, `cnf_training_complex/`, `cnf_training_extra/`, `satsolver.zip`, and `satsolver_cli_all_2026-04-14_r10_simple.txt`).
+
 ## 2026-03-23 `perf-064-index16plus-deep-overwrite-bookkeeping`
 
 - Status: completed

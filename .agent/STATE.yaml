@@ -12,9 +12,9 @@ working_assumptions:
   - External libraries may be used only as short-lived research references; retained solver code and default verification remain standard-library only.
 blockers: []
 recent_files:
+  - project_context.md
   - PLANS.md
   - .agent/STATE.yaml
-  - .agent/TASK_QUEUE.yaml
   - .agent/HANDOFF.md
   - .agent/WORKLOG.md
 next_task_hint: perf-065

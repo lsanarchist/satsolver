@@ -1,0 +1,159 @@
+file,category,expected_status,vars,clauses,notes
+extra_cnf/cardinality_exactly_one_sat_g10_s5_004.cnf,cardinality_exactly_one,SAT,50,110,pairwise exactly-one constraints per independent group
+extra_cnf/cardinality_exactly_one_sat_g12_s6_005.cnf,cardinality_exactly_one,SAT,72,192,pairwise exactly-one constraints per independent group
+extra_cnf/cardinality_exactly_one_sat_g16_s4_006.cnf,cardinality_exactly_one,SAT,64,112,pairwise exactly-one constraints per independent group
+extra_cnf/cardinality_exactly_one_sat_g4_s4_001.cnf,cardinality_exactly_one,SAT,16,28,pairwise exactly-one constraints per independent group
+extra_cnf/cardinality_exactly_one_sat_g5_s5_002.cnf,cardinality_exactly_one,SAT,25,55,pairwise exactly-one constraints per independent group
+extra_cnf/cardinality_exactly_one_sat_g8_s4_003.cnf,cardinality_exactly_one,SAT,32,56,pairwise exactly-one constraints per independent group
+extra_cnf/cardinality_exactly_one_unsat_g10_s6_005.cnf,cardinality_exactly_one,UNSAT,60,162,exactly-one constraints plus two forced true variables in the same group
+extra_cnf/cardinality_exactly_one_unsat_g12_s4_006.cnf,cardinality_exactly_one,UNSAT,48,86,exactly-one constraints plus two forced true variables in the same group
+extra_cnf/cardinality_exactly_one_unsat_g3_s4_001.cnf,cardinality_exactly_one,UNSAT,12,23,exactly-one constraints plus two forced true variables in the same group
+extra_cnf/cardinality_exactly_one_unsat_g4_s5_002.cnf,cardinality_exactly_one,UNSAT,20,46,exactly-one constraints plus two forced true variables in the same group
+extra_cnf/cardinality_exactly_one_unsat_g6_s4_003.cnf,cardinality_exactly_one,UNSAT,24,44,exactly-one constraints plus two forced true variables in the same group
+extra_cnf/cardinality_exactly_one_unsat_g8_s5_004.cnf,cardinality_exactly_one,UNSAT,40,90,exactly-one constraints plus two forced true variables in the same group
+extra_cnf/equivalence_chain_len10_sat.cnf,equivalence_chain,SAT,10,20,binary implication/equivalence chain; tests propagation and conflict analysis
+extra_cnf/equivalence_chain_len10_unsat.cnf,equivalence_chain,UNSAT,10,20,binary implication/equivalence chain; tests propagation and conflict analysis
+extra_cnf/equivalence_chain_len120_sat.cnf,equivalence_chain,SAT,120,240,binary implication/equivalence chain; tests propagation and conflict analysis
+extra_cnf/equivalence_chain_len120_unsat.cnf,equivalence_chain,UNSAT,120,240,binary implication/equivalence chain; tests propagation and conflict analysis
+extra_cnf/equivalence_chain_len20_sat.cnf,equivalence_chain,SAT,20,40,binary implication/equivalence chain; tests propagation and conflict analysis
+extra_cnf/equivalence_chain_len20_unsat.cnf,equivalence_chain,UNSAT,20,40,binary implication/equivalence chain; tests propagation and conflict analysis
+extra_cnf/equivalence_chain_len40_sat.cnf,equivalence_chain,SAT,40,80,binary implication/equivalence chain; tests propagation and conflict analysis
+extra_cnf/equivalence_chain_len40_unsat.cnf,equivalence_chain,UNSAT,40,80,binary implication/equivalence chain; tests propagation and conflict analysis
+extra_cnf/equivalence_chain_len80_sat.cnf,equivalence_chain,SAT,80,160,binary implication/equivalence chain; tests propagation and conflict analysis
+extra_cnf/equivalence_chain_len80_unsat.cnf,equivalence_chain,UNSAT,80,160,binary implication/equivalence chain; tests propagation and conflict analysis
+extra_cnf/exact_random3sat_sat_n10_m49_008.cnf,exact_small_random_3sat,SAT,10,49,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_sat_n11_m40_017.cnf,exact_small_random_3sat,SAT,11,40,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_sat_n11_m46_001.cnf,exact_small_random_3sat,SAT,11,46,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_sat_n12_m43_012.cnf,exact_small_random_3sat,SAT,12,43,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_sat_n12_m47_006.cnf,exact_small_random_3sat,SAT,12,47,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_sat_n12_m47_013.cnf,exact_small_random_3sat,SAT,12,47,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_sat_n13_m47_011.cnf,exact_small_random_3sat,SAT,13,47,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_sat_n13_m64_004.cnf,exact_small_random_3sat,SAT,13,64,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_sat_n14_m50_015.cnf,exact_small_random_3sat,SAT,14,50,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_sat_n15_m68_014.cnf,exact_small_random_3sat,SAT,15,68,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_sat_n16_m62_016.cnf,exact_small_random_3sat,SAT,16,62,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_sat_n16_m72_003.cnf,exact_small_random_3sat,SAT,16,72,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_sat_n8_m31_007.cnf,exact_small_random_3sat,SAT,8,31,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_sat_n8_m31_009.cnf,exact_small_random_3sat,SAT,8,31,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_sat_n8_m36_002.cnf,exact_small_random_3sat,SAT,8,36,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_sat_n8_m36_005.cnf,exact_small_random_3sat,SAT,8,36,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_sat_n9_m32_018.cnf,exact_small_random_3sat,SAT,9,32,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_sat_n9_m38_010.cnf,exact_small_random_3sat,SAT,9,38,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_unsat_n10_m49_015.cnf,exact_small_random_3sat,UNSAT,10,49,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_unsat_n11_m54_012.cnf,exact_small_random_3sat,UNSAT,11,54,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_unsat_n12_m64_007.cnf,exact_small_random_3sat,UNSAT,12,64,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_unsat_n12_m64_013.cnf,exact_small_random_3sat,UNSAT,12,64,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_unsat_n13_m69_006.cnf,exact_small_random_3sat,UNSAT,13,69,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_unsat_n13_m69_010.cnf,exact_small_random_3sat,UNSAT,13,69,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_unsat_n14_m74_017.cnf,exact_small_random_3sat,UNSAT,14,74,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_unsat_n15_m68_011.cnf,exact_small_random_3sat,UNSAT,15,68,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_unsat_n15_m68_018.cnf,exact_small_random_3sat,UNSAT,15,68,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_unsat_n15_m80_014.cnf,exact_small_random_3sat,UNSAT,15,80,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_unsat_n16_m78_005.cnf,exact_small_random_3sat,UNSAT,16,78,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_unsat_n16_m78_008.cnf,exact_small_random_3sat,UNSAT,16,78,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_unsat_n16_m85_002.cnf,exact_small_random_3sat,UNSAT,16,85,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_unsat_n16_m85_003.cnf,exact_small_random_3sat,UNSAT,16,85,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_unsat_n8_m31_016.cnf,exact_small_random_3sat,UNSAT,8,31,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_unsat_n8_m34_009.cnf,exact_small_random_3sat,UNSAT,8,34,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_unsat_n9_m38_004.cnf,exact_small_random_3sat,UNSAT,9,38,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/exact_random3sat_unsat_n9_m44_001.cnf,exact_small_random_3sat,UNSAT,9,44,status brute-force checked during generation; safe for checker --bruteforce-var-limit 16
+extra_cnf/graphcolor_k3_complete_K4_unsat.cnf,graph_coloring,UNSAT,12,34,3-coloring of complete graph K4; K4 and larger are not 3-colorable
+extra_cnf/graphcolor_k3_complete_K5_unsat.cnf,graph_coloring,UNSAT,15,50,3-coloring of complete graph K5; K4 and larger are not 3-colorable
+extra_cnf/graphcolor_k3_complete_K6_unsat.cnf,graph_coloring,UNSAT,18,69,3-coloring of complete graph K6; K4 and larger are not 3-colorable
+extra_cnf/graphcolor_k3_planted_v12_e26_001.cnf,graph_coloring,SAT,36,126,random graph generated to respect a hidden 3-coloring
+extra_cnf/graphcolor_k3_planted_v16_e35_002.cnf,graph_coloring,SAT,48,169,random graph generated to respect a hidden 3-coloring
+extra_cnf/graphcolor_k3_planted_v20_e44_003.cnf,graph_coloring,SAT,60,212,random graph generated to respect a hidden 3-coloring
+extra_cnf/graphcolor_k3_planted_v24_e53_004.cnf,graph_coloring,SAT,72,255,random graph generated to respect a hidden 3-coloring
+extra_cnf/graphcolor_k3_planted_v30_e66_005.cnf,graph_coloring,SAT,90,318,random graph generated to respect a hidden 3-coloring
+extra_cnf/graphcolor_k3_planted_v36_e79_006.cnf,graph_coloring,SAT,108,381,random graph generated to respect a hidden 3-coloring
+extra_cnf/graphcolor_k3_planted_v42_e92_007.cnf,graph_coloring,SAT,126,444,random graph generated to respect a hidden 3-coloring
+extra_cnf/graphcolor_k3_planted_v50_e110_008.cnf,graph_coloring,SAT,150,530,random graph generated to respect a hidden 3-coloring
+extra_cnf/graphcolor_k3_planted_v60_e132_009.cnf,graph_coloring,SAT,180,636,random graph generated to respect a hidden 3-coloring
+extra_cnf/graphcolor_k3_planted_v72_e158_010.cnf,graph_coloring,SAT,216,762,random graph generated to respect a hidden 3-coloring
+extra_cnf/horn_chain_len12_sat.cnf,horn_implication,SAT,12,12,unit propagation chain; UNSAT variant ends with negated tail literal
+extra_cnf/horn_chain_len12_unsat.cnf,horn_implication,UNSAT,12,13,unit propagation chain; UNSAT variant ends with negated tail literal
+extra_cnf/horn_chain_len16_sat.cnf,horn_implication,SAT,16,16,unit propagation chain; UNSAT variant ends with negated tail literal
+extra_cnf/horn_chain_len16_unsat.cnf,horn_implication,UNSAT,16,17,unit propagation chain; UNSAT variant ends with negated tail literal
+extra_cnf/horn_chain_len24_sat.cnf,horn_implication,SAT,24,24,unit propagation chain; UNSAT variant ends with negated tail literal
+extra_cnf/horn_chain_len24_unsat.cnf,horn_implication,UNSAT,24,25,unit propagation chain; UNSAT variant ends with negated tail literal
+extra_cnf/horn_chain_len32_sat.cnf,horn_implication,SAT,32,32,unit propagation chain; UNSAT variant ends with negated tail literal
+extra_cnf/horn_chain_len32_unsat.cnf,horn_implication,UNSAT,32,33,unit propagation chain; UNSAT variant ends with negated tail literal
+extra_cnf/horn_chain_len48_sat.cnf,horn_implication,SAT,48,48,unit propagation chain; UNSAT variant ends with negated tail literal
+extra_cnf/horn_chain_len48_unsat.cnf,horn_implication,UNSAT,48,49,unit propagation chain; UNSAT variant ends with negated tail literal
+extra_cnf/horn_chain_len64_sat.cnf,horn_implication,SAT,64,64,unit propagation chain; UNSAT variant ends with negated tail literal
+extra_cnf/horn_chain_len64_unsat.cnf,horn_implication,UNSAT,64,65,unit propagation chain; UNSAT variant ends with negated tail literal
+extra_cnf/horn_chain_len8_sat.cnf,horn_implication,SAT,8,8,unit propagation chain; UNSAT variant ends with negated tail literal
+extra_cnf/horn_chain_len8_unsat.cnf,horn_implication,UNSAT,8,9,unit propagation chain; UNSAT variant ends with negated tail literal
+extra_cnf/nqueens_2x2_unsat.cnf,nqueens,UNSAT,4,8,one queen per row with column and diagonal conflicts
+extra_cnf/nqueens_3x3_unsat.cnf,nqueens,UNSAT,9,31,one queen per row with column and diagonal conflicts
+extra_cnf/nqueens_4x4_sat.cnf,nqueens,SAT,16,80,one queen per row with column and diagonal conflicts
+extra_cnf/nqueens_5x5_sat.cnf,nqueens,SAT,25,165,one queen per row with column and diagonal conflicts
+extra_cnf/nqueens_6x6_sat.cnf,nqueens,SAT,36,296,one queen per row with column and diagonal conflicts
+extra_cnf/nqueens_7x7_sat.cnf,nqueens,SAT,49,483,one queen per row with column and diagonal conflicts
+extra_cnf/nqueens_8x8_sat.cnf,nqueens,SAT,64,736,one queen per row with column and diagonal conflicts
+extra_cnf/nqueens_9x9_sat.cnf,nqueens,SAT,81,1065,one queen per row with column and diagonal conflicts
+extra_cnf/pigeonhole_php_10_into_9.cnf,pigeonhole_unsat,UNSAT,90,415,classic pigeonhole principle encoding: more pigeons than holes
+extra_cnf/pigeonhole_php_4_into_3.cnf,pigeonhole_unsat,UNSAT,12,22,classic pigeonhole principle encoding: more pigeons than holes
+extra_cnf/pigeonhole_php_5_into_4.cnf,pigeonhole_unsat,UNSAT,20,45,classic pigeonhole principle encoding: more pigeons than holes
+extra_cnf/pigeonhole_php_6_into_5.cnf,pigeonhole_unsat,UNSAT,30,81,classic pigeonhole principle encoding: more pigeons than holes
+extra_cnf/pigeonhole_php_7_into_6.cnf,pigeonhole_unsat,UNSAT,42,133,classic pigeonhole principle encoding: more pigeons than holes
+extra_cnf/pigeonhole_php_8_into_7.cnf,pigeonhole_unsat,UNSAT,56,204,classic pigeonhole principle encoding: more pigeons than holes
+extra_cnf/pigeonhole_php_9_into_8.cnf,pigeonhole_unsat,UNSAT,72,297,classic pigeonhole principle encoding: more pigeons than holes
+extra_cnf/planted3sat_n20_m85_001.cnf,planted_random_3sat,SAT,20,85,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=1
+extra_cnf/planted3sat_n20_m85_002.cnf,planted_random_3sat,SAT,20,85,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=2
+extra_cnf/planted3sat_n20_m85_003.cnf,planted_random_3sat,SAT,20,85,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=3
+extra_cnf/planted3sat_n20_m85_004.cnf,planted_random_3sat,SAT,20,85,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=4
+extra_cnf/planted3sat_n20_m85_005.cnf,planted_random_3sat,SAT,20,85,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=5
+extra_cnf/planted3sat_n20_m85_006.cnf,planted_random_3sat,SAT,20,85,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=6
+extra_cnf/planted3sat_n20_m85_007.cnf,planted_random_3sat,SAT,20,85,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=7
+extra_cnf/planted3sat_n20_m85_008.cnf,planted_random_3sat,SAT,20,85,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=8
+extra_cnf/planted3sat_n20_m85_009.cnf,planted_random_3sat,SAT,20,85,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=9
+extra_cnf/planted3sat_n20_m85_010.cnf,planted_random_3sat,SAT,20,85,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=10
+extra_cnf/planted3sat_n30_m128_001.cnf,planted_random_3sat,SAT,30,128,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=1
+extra_cnf/planted3sat_n30_m128_002.cnf,planted_random_3sat,SAT,30,128,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=2
+extra_cnf/planted3sat_n30_m128_003.cnf,planted_random_3sat,SAT,30,128,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=3
+extra_cnf/planted3sat_n30_m128_004.cnf,planted_random_3sat,SAT,30,128,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=4
+extra_cnf/planted3sat_n30_m128_005.cnf,planted_random_3sat,SAT,30,128,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=5
+extra_cnf/planted3sat_n30_m128_006.cnf,planted_random_3sat,SAT,30,128,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=6
+extra_cnf/planted3sat_n30_m128_007.cnf,planted_random_3sat,SAT,30,128,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=7
+extra_cnf/planted3sat_n30_m128_008.cnf,planted_random_3sat,SAT,30,128,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=8
+extra_cnf/planted3sat_n30_m128_009.cnf,planted_random_3sat,SAT,30,128,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=9
+extra_cnf/planted3sat_n30_m128_010.cnf,planted_random_3sat,SAT,30,128,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=10
+extra_cnf/planted3sat_n40_m170_001.cnf,planted_random_3sat,SAT,40,170,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=1
+extra_cnf/planted3sat_n40_m170_002.cnf,planted_random_3sat,SAT,40,170,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=2
+extra_cnf/planted3sat_n40_m170_003.cnf,planted_random_3sat,SAT,40,170,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=3
+extra_cnf/planted3sat_n40_m170_004.cnf,planted_random_3sat,SAT,40,170,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=4
+extra_cnf/planted3sat_n40_m170_005.cnf,planted_random_3sat,SAT,40,170,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=5
+extra_cnf/planted3sat_n40_m170_006.cnf,planted_random_3sat,SAT,40,170,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=6
+extra_cnf/planted3sat_n40_m170_007.cnf,planted_random_3sat,SAT,40,170,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=7
+extra_cnf/planted3sat_n40_m170_008.cnf,planted_random_3sat,SAT,40,170,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=8
+extra_cnf/planted3sat_n40_m170_009.cnf,planted_random_3sat,SAT,40,170,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=9
+extra_cnf/planted3sat_n40_m170_010.cnf,planted_random_3sat,SAT,40,170,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=10
+extra_cnf/planted3sat_n60_m255_001.cnf,planted_random_3sat,SAT,60,255,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=1
+extra_cnf/planted3sat_n60_m255_002.cnf,planted_random_3sat,SAT,60,255,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=2
+extra_cnf/planted3sat_n60_m255_003.cnf,planted_random_3sat,SAT,60,255,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=3
+extra_cnf/planted3sat_n60_m255_004.cnf,planted_random_3sat,SAT,60,255,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=4
+extra_cnf/planted3sat_n60_m255_005.cnf,planted_random_3sat,SAT,60,255,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=5
+extra_cnf/planted3sat_n60_m255_006.cnf,planted_random_3sat,SAT,60,255,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=6
+extra_cnf/planted3sat_n60_m255_007.cnf,planted_random_3sat,SAT,60,255,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=7
+extra_cnf/planted3sat_n60_m255_008.cnf,planted_random_3sat,SAT,60,255,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=8
+extra_cnf/planted3sat_n80_m340_001.cnf,planted_random_3sat,SAT,80,340,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=1
+extra_cnf/planted3sat_n80_m340_002.cnf,planted_random_3sat,SAT,80,340,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=2
+extra_cnf/planted3sat_n80_m340_003.cnf,planted_random_3sat,SAT,80,340,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=3
+extra_cnf/planted3sat_n80_m340_004.cnf,planted_random_3sat,SAT,80,340,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=4
+extra_cnf/planted3sat_n80_m340_005.cnf,planted_random_3sat,SAT,80,340,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=5
+extra_cnf/planted3sat_n80_m340_006.cnf,planted_random_3sat,SAT,80,340,near-threshold 3-SAT generated from a hidden satisfying assignment; seed=20260420 index=6
+extra_cnf/xor_parity_sat_n18_eq18_w3_001.cnf,xor_parity_cnf,SAT,18,72,XOR equations encoded to CNF; width=3; consistent with a hidden assignment
+extra_cnf/xor_parity_sat_n24_eq24_w3_002.cnf,xor_parity_cnf,SAT,24,96,XOR equations encoded to CNF; width=3; consistent with a hidden assignment
+extra_cnf/xor_parity_sat_n30_eq30_w3_003.cnf,xor_parity_cnf,SAT,30,120,XOR equations encoded to CNF; width=3; consistent with a hidden assignment
+extra_cnf/xor_parity_sat_n32_eq20_w4_007.cnf,xor_parity_cnf,SAT,32,160,XOR equations encoded to CNF; width=4; consistent with a hidden assignment
+extra_cnf/xor_parity_sat_n40_eq35_w3_004.cnf,xor_parity_cnf,SAT,40,140,XOR equations encoded to CNF; width=3; consistent with a hidden assignment
+extra_cnf/xor_parity_sat_n48_eq28_w4_008.cnf,xor_parity_cnf,SAT,48,224,XOR equations encoded to CNF; width=4; consistent with a hidden assignment
+extra_cnf/xor_parity_sat_n60_eq45_w3_005.cnf,xor_parity_cnf,SAT,60,180,XOR equations encoded to CNF; width=3; consistent with a hidden assignment
+extra_cnf/xor_parity_sat_n80_eq55_w3_006.cnf,xor_parity_cnf,SAT,80,220,XOR equations encoded to CNF; width=3; consistent with a hidden assignment
+extra_cnf/xor_parity_unsat_n18_eq12_w3_001.cnf,xor_parity_cnf,UNSAT,18,48,"contains contradictory XOR constraints on variables [1, 2, 3]"
+extra_cnf/xor_parity_unsat_n24_eq16_w3_002.cnf,xor_parity_cnf,UNSAT,24,64,"contains contradictory XOR constraints on variables [1, 2, 3]"
+extra_cnf/xor_parity_unsat_n30_eq20_w3_003.cnf,xor_parity_cnf,UNSAT,30,80,"contains contradictory XOR constraints on variables [1, 2, 3]"
+extra_cnf/xor_parity_unsat_n32_eq18_w4_006.cnf,xor_parity_cnf,UNSAT,32,144,"contains contradictory XOR constraints on variables [1, 2, 3, 4]"
+extra_cnf/xor_parity_unsat_n40_eq24_w3_004.cnf,xor_parity_cnf,UNSAT,40,96,"contains contradictory XOR constraints on variables [1, 2, 3]"
+extra_cnf/xor_parity_unsat_n60_eq32_w3_005.cnf,xor_parity_cnf,UNSAT,60,128,"contains contradictory XOR constraints on variables [1, 2, 3]"
