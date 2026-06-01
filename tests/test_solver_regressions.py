@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 import itertools
+from pathlib import Path
 import unittest
 from unittest import mock
 
 import satsolver
+
+
+COURSE_CASES = Path(__file__).resolve().parents[1] / "course_cnf_tests"
 
 
 def xor_to_cnf(variables: tuple[int, ...], rhs: int) -> list[list[int]]:
@@ -389,6 +393,85 @@ class SolverRegressionTests(unittest.TestCase):
         model = satsolver.solve_cnf(6, clauses)
         self.assertIsNotNone(model)
         self.assertTrue(satsolver.model_satisfies(clauses, model))
+
+    def test_mycielski_detector_finds_hard_graph_coloring_unsat(self) -> None:
+        path = (
+            COURSE_CASES
+            / "cnf_training_complex__complex_cnf_hard__mycielski_iter4_color5_unsat.cnf"
+        )
+        num_vars, clauses = satsolver.parse_dimacs_file(str(path))
+
+        parsed = satsolver.parse_graph_coloring_encoding(num_vars, clauses)
+
+        self.assertIsNotNone(parsed)
+        assert parsed is not None
+        color_count, adjacency = parsed
+        self.assertEqual(color_count, 5)
+        self.assertEqual(len(adjacency), 47)
+        self.assertEqual(satsolver.mycielski_chromatic_lower_bound(adjacency), 6)
+        self.assertTrue(satsolver.graph_coloring_mycielski_unsat(num_vars, clauses))
+        self.assertIsNone(satsolver.solve_cnf(num_vars, clauses))
+
+    def test_mycielski_detector_does_not_reject_sufficient_colors(self) -> None:
+        for filename in (
+            "cnf_training_complex__complex_cnf_moderate__mycielski_iter2_color4_sat.cnf",
+            "cnf_training_complex__complex_cnf_moderate__mycielski_iter3_color5_sat.cnf",
+        ):
+            path = COURSE_CASES / filename
+            num_vars, clauses = satsolver.parse_dimacs_file(str(path))
+
+            self.assertFalse(satsolver.graph_coloring_mycielski_unsat(num_vars, clauses))
+            model = satsolver.solve_cnf(num_vars, clauses)
+            self.assertIsNotNone(model, filename)
+            assert model is not None
+            self.assertTrue(satsolver.model_satisfies(clauses, model), filename)
+
+    def test_mycielski_detector_handles_smaller_unsat_family_members(self) -> None:
+        for filename, expected_colors, expected_lower_bound in (
+            (
+                "cnf_training_complex__complex_cnf_moderate__mycielski_iter2_color3_unsat.cnf",
+                3,
+                4,
+            ),
+            (
+                "cnf_training_complex__complex_cnf_moderate__mycielski_iter3_color4_unsat.cnf",
+                4,
+                5,
+            ),
+        ):
+            path = COURSE_CASES / filename
+            num_vars, clauses = satsolver.parse_dimacs_file(str(path))
+            parsed = satsolver.parse_graph_coloring_encoding(num_vars, clauses)
+
+            self.assertIsNotNone(parsed, filename)
+            assert parsed is not None
+            color_count, adjacency = parsed
+            self.assertEqual(color_count, expected_colors, filename)
+            self.assertEqual(
+                satsolver.mycielski_chromatic_lower_bound(adjacency),
+                expected_lower_bound,
+                filename,
+            )
+            self.assertTrue(satsolver.graph_coloring_mycielski_unsat(num_vars, clauses))
+            self.assertIsNone(satsolver.solve_cnf(num_vars, clauses), filename)
+
+    def test_graph_coloring_parser_rejects_incomplete_constraint_sets(self) -> None:
+        path = (
+            COURSE_CASES
+            / "cnf_training_complex__complex_cnf_hard__mycielski_iter4_color5_unsat.cnf"
+        )
+        num_vars, clauses = satsolver.parse_dimacs_file(str(path))
+        missing_constraint_index = next(
+            index
+            for index, clause in enumerate(clauses)
+            if len(clause) == 2 and clause[0] < 0 and clause[1] < 0
+        )
+        trimmed_clauses = [
+            clause for index, clause in enumerate(clauses) if index != missing_constraint_index
+        ]
+
+        self.assertIsNone(satsolver.parse_graph_coloring_encoding(num_vars, trimmed_clauses))
+        self.assertFalse(satsolver.graph_coloring_mycielski_unsat(num_vars, trimmed_clauses))
 
 
 if __name__ == "__main__":

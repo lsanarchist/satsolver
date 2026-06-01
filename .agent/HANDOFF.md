@@ -6,15 +6,16 @@
 - `cp-001`, `cp-002`, `cp-003`, `sat-001`, `tool-001`, `perf-001` through `perf-064` are complete.
 - A user-directed `project_context.md` snapshot now exists to bundle the tracked repo files, their roles, and their verbatim contents for external AI review; the queue itself is unchanged.
 - A user-directed phase-diversified portfolio keep is now present in the working tree: portfolio workers use deterministic phase modes ordered `default`, `bias_positive`, `lcg1`, `bias_negative`, capped at three workers.
+- A user-directed Mycielski graph-coloring detector keep is now present in the working tree: exact standard graph-coloring encodings for Mycielski towers from `K2` can return UNSAT before CDCL when the chromatic lower bound exceeds the available colors.
 - There is no active in-progress task; the next deterministic task is `perf-065`.
 
 ## What Changed This Run
 
-- Implemented `phase_portfolio_agent_instructions.md` as a user-directed native-only solver change.
-- Added shared phase-mode constants and `Solver.seed_saved_phases_mode()` in `satsolver_core.py`, leaving `seed_saved_phases_from_bias()` as a compatibility wrapper.
-- Replaced boolean portfolio worker selection in `satsolver_core.py`, `satsolver.py`, and `satsolver_fast.py` with deterministic phase modes.
-- Rejected the first mode order (`default`, `lcg1`, `bias_negative`) during benchmarking because it regressed several planted SAT gate cases; kept the safer order (`default`, `bias_positive`, `lcg1`, `bias_negative`) so the old two-worker pair remains first.
-- Added regression coverage for phase-mode seeding and updated `PLANS.md`, `benchmark_summary.md`, and `experiments.jsonl` with the kept result.
+- Implemented `mycielski_graph_coloring_unsat_agent_instructions.md` as a user-directed native-only structural UNSAT detector.
+- Added `parse_graph_coloring_encoding()`, `mycielski_chromatic_lower_bound()`, and `graph_coloring_mycielski_unsat()` in `satsolver_core.py`.
+- Wired the detector after the existing pigeonhole and XOR fast exits in `satsolver_core.py`, `satsolver.py`, and `satsolver_fast.py`.
+- Added regression coverage for the hard Mycielski UNSAT target, smaller UNSAT family members, sufficient-color SAT guards, and incomplete graph-coloring constraint rejection.
+- Updated `PLANS.md`, `benchmark_summary.md`, and `experiments.jsonl` with the kept result.
 
 ## Current Focus
 
@@ -27,16 +28,17 @@
 ## Verification From This Run
 
 - `python -m py_compile satsolver.py satsolver_core.py satsolver_io.py satsolver_fast.py` — passed
-- `python -m pytest tests/test_solver_regressions.py -q` — passed (`20 passed`)
-- `python tools/hotspot_compare.py --baseline-cli-script /tmp/phase_portfolio_baseline.yPZFfp/satsolver.py --candidate-cli-script satsolver.py --repeat 2 formulae/large/test_8.cnf` — target improved (`1.7061s -> 0.1257s`)
-- `python tools/hotspot_compare.py --baseline-cli-script /tmp/phase_portfolio_baseline.yPZFfp/satsolver.py --candidate-cli-script satsolver.py --repeat 2 <six portfolio-gated course cases>` — final gate-only slice improved (`5.5063s -> 3.9310s`)
-- `python ../benchmark_suite.py satsolver /tmp/phase_formulae_candidate_final.txt small medium large special --bruteforce-var-limit 16 --repeat 2 --cli-script ../satsolver.py` from `formulae/` — candidate `35/35`, total `10.0431s`
-- `python ../benchmark_suite.py satsolver /tmp/phase_formulae_baseline.txt small medium large special --bruteforce-var-limit 16 --repeat 2 --cli-script /tmp/phase_portfolio_baseline.yPZFfp/satsolver.py` from `formulae/` — baseline `35/35`, total `12.0224s`
-- `python benchmark_suite.py satsolver /tmp/phase_course_candidate_final.txt . --bruteforce-var-limit 16 --repeat 2 --cli-script /home/doomguy/Desktop/sat/satsolver/satsolver.py` from a scratch 278-case `course_cnf_tests` directory excluding known `mycielski_iter4_color5_unsat` — candidate `278/278`, total `27.8704s`
-- `python benchmark_suite.py satsolver /tmp/phase_course_baseline.txt . --bruteforce-var-limit 16 --repeat 2 --cli-script /tmp/phase_portfolio_baseline.yPZFfp/satsolver.py` from the same scratch directory — baseline `278/278`, total `30.3867s`
-- `python tools/agent_queue_check.py` — passed after the final control-plane sync (`current_or_next_task='perf-065'`)
-- `git diff --check` — passed after the final control-plane sync
-- `python tools/codex_verify.py` — passed after the final control-plane sync (`92` tests plus compile, queue, checker, and wrapper smoke checks)
+- `python -m pytest tests/test_solver_regressions.py -q` — passed (`24 passed`)
+- Target hard Mycielski direct smoke — `UNSAT` in `0.0336s`, checker-valid
+- Mycielski family smoke — iter2/color3 UNSAT, iter2/color4 SAT, iter3/color4 UNSAT, iter3/color5 SAT, and iter4/color5 UNSAT all checker-valid
+- Focused formulae smoke — `large/test_8.cnf` SAT, `large/test_6.cnf` UNSAT, and `special/hard.cnf` UNSAT all checker-valid
+- `python tools/codex_verify.py` — passed (`96` tests plus compile, queue, checker, and wrapper smoke checks)
+- `python ../benchmark_suite.py satsolver /tmp/mycielski_formulae_repeat2.txt small medium large special --bruteforce-var-limit 16 --repeat 2 --cli-script ../satsolver.py` from `formulae/` — `35/35`, total `10.5654s`
+- `python /home/doomguy/Desktop/sat/satsolver/benchmark_suite.py satsolver /tmp/mycielski_course_all_repeat2.txt . --bruteforce-var-limit 16 --repeat 2 --cli-script /home/doomguy/Desktop/sat/satsolver/satsolver.py` from a scratch symlink dir with all `course_cnf_tests/*.cnf` — `279/279`, total `27.5045s`; hard Mycielski average `0.0441s`
+- `python tools/codex_verify.py --benchmark-mode cli --repeat 2` — passed; exact-CLI suite `59/59`, total `11.5872s`
+- `python tools/agent_queue_check.py` — passed after final control-plane sync (`current_or_next_task='perf-065'`)
+- `git diff --check` — passed after final control-plane sync
+- Final `python tools/codex_verify.py` — passed after final control-plane sync (`96` tests plus compile, queue, checker, and wrapper smoke checks)
 
 ## Notes For The Next Run
 

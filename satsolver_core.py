@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import Counter
 from collections.abc import Iterable
 import os
 import sys
@@ -942,6 +943,184 @@ def xor_system_unsat(num_vars: int, clauses: Iterable[Iterable[int]]) -> bool:
     return False
 
 
+def parse_graph_coloring_encoding(
+    num_vars: int,
+    clauses: list[list[int]],
+) -> tuple[int, list[set[int]]] | None:
+    positive_groups: list[tuple[int, ...]] = []
+    for clause in clauses:
+        if clause and all(literal > 0 for literal in clause):
+            positive_groups.append(tuple(sorted(clause)))
+
+    if not positive_groups:
+        return None
+
+    color_count = len(positive_groups[0])
+    if color_count < 2:
+        return None
+    if any(len(group) != color_count for group in positive_groups):
+        return None
+
+    vertex_count = len(positive_groups)
+    if vertex_count * color_count != num_vars:
+        return None
+
+    variable_to_vertex_color: list[tuple[int, int] | None] = [None] * (num_vars + 1)
+    seen_variables = [False] * (num_vars + 1)
+
+    for vertex, group in enumerate(positive_groups):
+        if len(set(group)) != color_count:
+            return None
+        for color, variable in enumerate(group):
+            if variable < 1 or variable > num_vars or seen_variables[variable]:
+                return None
+            seen_variables[variable] = True
+            variable_to_vertex_color[variable] = (vertex, color)
+
+    if not all(seen_variables[1:]):
+        return None
+
+    at_most_one_pairs: set[tuple[int, int, int]] = set()
+    edge_to_colors: dict[tuple[int, int], set[int]] = {}
+
+    for clause in clauses:
+        if clause and all(literal > 0 for literal in clause):
+            continue
+        if len(clause) != 2 or clause[0] >= 0 or clause[1] >= 0:
+            return None
+
+        first_variable = -clause[0]
+        second_variable = -clause[1]
+        if (
+            first_variable == second_variable
+            or first_variable < 1
+            or second_variable < 1
+            or first_variable > num_vars
+            or second_variable > num_vars
+        ):
+            return None
+
+        first_info = variable_to_vertex_color[first_variable]
+        second_info = variable_to_vertex_color[second_variable]
+        if first_info is None or second_info is None:
+            return None
+
+        first_vertex, first_color = first_info
+        second_vertex, second_color = second_info
+
+        if first_vertex == second_vertex:
+            if first_color == second_color:
+                return None
+            pair = (
+                first_vertex,
+                min(first_color, second_color),
+                max(first_color, second_color),
+            )
+            if pair in at_most_one_pairs:
+                return None
+            at_most_one_pairs.add(pair)
+            continue
+
+        if first_color != second_color:
+            return None
+
+        edge = (
+            min(first_vertex, second_vertex),
+            max(first_vertex, second_vertex),
+        )
+        colors = edge_to_colors.setdefault(edge, set())
+        if first_color in colors:
+            return None
+        colors.add(first_color)
+
+    for vertex in range(vertex_count):
+        for first_color in range(color_count):
+            for second_color in range(first_color + 1, color_count):
+                if (vertex, first_color, second_color) not in at_most_one_pairs:
+                    return None
+
+    all_colors = set(range(color_count))
+    adjacency = [set() for _ in range(vertex_count)]
+    for (first_vertex, second_vertex), colors in edge_to_colors.items():
+        if colors != all_colors:
+            return None
+        adjacency[first_vertex].add(second_vertex)
+        adjacency[second_vertex].add(first_vertex)
+
+    return color_count, adjacency
+
+
+def _is_independent_set(vertices: set[int], adjacency: list[set[int]]) -> bool:
+    for vertex in vertices:
+        if adjacency[vertex] & vertices:
+            return False
+    return True
+
+
+def mycielski_chromatic_lower_bound(adjacency: list[set[int]]) -> int | None:
+    if len(adjacency) == 2:
+        return 2 if adjacency[0] == {1} and adjacency[1] == {0} else None
+
+    graph_size = len(adjacency)
+    if graph_size < 5 or graph_size % 2 == 0:
+        return None
+
+    child_size = (graph_size - 1) // 2
+    all_vertices = set(range(graph_size))
+
+    for apex in range(graph_size):
+        y_vertices = set(adjacency[apex])
+        if len(y_vertices) != child_size:
+            continue
+        if not _is_independent_set(y_vertices, adjacency):
+            continue
+
+        x_vertices = all_vertices - y_vertices - {apex}
+        if len(x_vertices) != child_size:
+            continue
+        if adjacency[apex] & x_vertices:
+            continue
+
+        x_list = sorted(x_vertices)
+        x_index = {vertex: index for index, vertex in enumerate(x_list)}
+
+        def normalized_x_subset(vertices: set[int]) -> tuple[int, ...]:
+            return tuple(sorted(x_index[vertex] for vertex in vertices))
+
+        x_neighborhoods: Counter[tuple[int, ...]] = Counter()
+        for vertex in x_list:
+            x_neighborhoods[normalized_x_subset(adjacency[vertex] & x_vertices)] += 1
+
+        y_neighborhoods: Counter[tuple[int, ...]] = Counter()
+        for vertex in y_vertices:
+            y_neighborhoods[normalized_x_subset(adjacency[vertex] & x_vertices)] += 1
+
+        if x_neighborhoods != y_neighborhoods:
+            continue
+
+        child_adjacency = [set() for _ in range(child_size)]
+        for old_vertex in x_list:
+            new_vertex = x_index[old_vertex]
+            for old_neighbor in adjacency[old_vertex] & x_vertices:
+                child_adjacency[new_vertex].add(x_index[old_neighbor])
+
+        child_lower_bound = mycielski_chromatic_lower_bound(child_adjacency)
+        if child_lower_bound is not None:
+            return child_lower_bound + 1
+
+    return None
+
+
+def graph_coloring_mycielski_unsat(num_vars: int, clauses: list[list[int]]) -> bool:
+    parsed = parse_graph_coloring_encoding(num_vars, clauses)
+    if parsed is None:
+        return False
+
+    color_count, adjacency = parsed
+    lower_bound = mycielski_chromatic_lower_bound(adjacency)
+    return lower_bound is not None and lower_bound > color_count
+
+
 def format_model(model: list[int]) -> str:
     literals = [str(variable if model[variable] == TRUE else -variable) for variable in range(1, len(model))]
     return " ".join(literals) + " 0"
@@ -1034,6 +1213,8 @@ def solve_cnf(num_vars: int, clauses: list[list[int]]) -> list[int] | None:
     if has_pigeonhole_core(clauses):
         return None
     if xor_system_unsat(num_vars, clauses):
+        return None
+    if graph_coloring_mycielski_unsat(num_vars, clauses):
         return None
     if should_use_parallel_portfolio(num_vars, clauses):
         return solve_cnf_portfolio(num_vars, clauses)

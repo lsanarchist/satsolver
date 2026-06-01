@@ -40,6 +40,71 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-05-31 `mycielski-graph-coloring-detector`
+
+- Status: completed
+- Task family: user-directed native-only structural UNSAT detector
+- Branch/worktree: current checkout
+- Prompt summary: implement `mycielski_graph_coloring_unsat_agent_instructions.md` so standard graph-coloring CNFs for Mycielski graphs that have too few colors return UNSAT before CDCL search
+- Assumptions:
+  - Detection must be based only on CNF structure, never on filenames.
+  - The detector should be conservative: malformed or unfamiliar encodings return unknown and fall through to the existing solver.
+  - Submission-path code must remain standard-library only.
+- Escalations: none
+
+### Plan
+
+- [x] Read the user instruction file and current solver wrapper/core paths.
+- [x] Add an exact graph-coloring CNF parser and recursive Mycielski tower lower-bound recognizer.
+- [x] Wire the detector after existing pigeonhole and XOR fast exits in the main solving paths.
+- [x] Add regression tests for the hard UNSAT case, sufficient-color SAT guards, and malformed encodings.
+- [x] Run compile, regression, smoke, and benchmark verification.
+
+### Verification
+
+- `python -m py_compile satsolver.py satsolver_core.py satsolver_io.py satsolver_fast.py`
+- passed
+- `python -m pytest tests/test_solver_regressions.py -q`
+- passed (`24 passed`)
+- `python satsolver.py course_cnf_tests/cnf_training_complex__complex_cnf_hard__mycielski_iter4_color5_unsat.cnf /tmp/mycielski_iter4_color5.out`
+- passed; direct timed smoke returned `UNSAT` in `0.0336s`
+- `python tools/checker.py course_cnf_tests/cnf_training_complex__complex_cnf_hard__mycielski_iter4_color5_unsat.cnf /tmp/mycielski_iter4_color5.out --bruteforce-var-limit 16`
+- passed (`VALID: valid UNSAT (format checked)`)
+- Targeted formulae smoke:
+  - `formulae/large/test_8.cnf`: `SAT`, `0.1462s`, checker-valid
+  - `formulae/large/test_6.cnf`: `UNSAT`, `3.9370s`, checker-valid
+  - `formulae/special/hard.cnf`: `UNSAT`, `2.7772s`, checker-valid
+- Mycielski family smoke:
+  - `mycielski_iter4_color5_unsat`: `UNSAT`, `0.0445s`, checker-valid
+  - `mycielski_iter2_color3_unsat`: `UNSAT`, `0.0259s`, checker-valid
+  - `mycielski_iter2_color4_sat`: `SAT`, `0.0334s`, checker-valid
+  - `mycielski_iter3_color4_unsat`: `UNSAT`, `0.0345s`, checker-valid
+  - `mycielski_iter3_color5_sat`: `SAT`, `0.0346s`, checker-valid
+- `python tools/codex_verify.py`
+- passed (`96` tests plus compile, queue, checker, and wrapper smoke checks)
+- `python ../benchmark_suite.py satsolver /tmp/mycielski_formulae_repeat2.txt small medium large special --bruteforce-var-limit 16 --repeat 2 --cli-script ../satsolver.py` from `formulae/`
+- passed: `35/35`, total `10.5654s`, wall `21.3374s`
+- `python /home/doomguy/Desktop/sat/satsolver/benchmark_suite.py satsolver /tmp/mycielski_course_all_repeat2.txt . --bruteforce-var-limit 16 --repeat 2 --cli-script /home/doomguy/Desktop/sat/satsolver/satsolver.py` from scratch symlink dir with all `course_cnf_tests/*.cnf`
+- passed: `279/279`, total `27.5045s`, wall `59.6309s`; hard Mycielski repeat-2 average `0.0441s`
+- `python tools/codex_verify.py --benchmark-mode cli --repeat 2`
+- passed: exact-CLI suite `59/59`, total `11.5872s`, wall `23.4331s`
+- `python tools/agent_queue_check.py`
+- passed (`current_or_next_task='perf-065'`)
+- `git diff --check`
+- passed
+- Final `python tools/codex_verify.py` after control-plane sync
+- passed (`96` tests plus compile, queue, checker, and wrapper smoke checks)
+
+### Outcome
+
+- Kept the structural Mycielski graph-coloring UNSAT detector. It parses only exact complete standard graph-coloring encodings, reconstructs the graph, recognizes Mycielski towers from `K2`, and returns UNSAT only when the lower bound exceeds the available colors.
+- The formerly excluded hard case now solves in about `0.04s` and can be included in the full course scratch benchmark.
+- Updated `benchmark_summary.md` and `experiments.jsonl` with the kept result.
+
+### Remaining risks
+
+- The detector intentionally covers only one exact encoding family. Equivalent graph-coloring encodings with extra redundant clauses, different variable grouping, or non-standard constraints will fall through to CDCL.
+
 ## 2026-05-31 `phase-diversified-portfolio`
 
 - Status: completed

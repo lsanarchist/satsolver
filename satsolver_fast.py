@@ -30,6 +30,7 @@ Solver = base.Solver
 model_satisfies = base.model_satisfies
 has_pigeonhole_core = base.has_pigeonhole_core
 xor_system_unsat = base.xor_system_unsat
+graph_coloring_mycielski_unsat = base.graph_coloring_mycielski_unsat
 format_model = base.format_model
 
 parse_dimacs_bytes = io.parse_dimacs_bytes
@@ -117,6 +118,8 @@ def solve_cnf(num_vars: int, clauses: list[list[int]]) -> list[int] | None:
     if has_pigeonhole_core(clauses):
         return None
     if xor_system_unsat(num_vars, clauses):
+        return None
+    if graph_coloring_mycielski_unsat(num_vars, clauses):
         return None
     if should_use_parallel_portfolio(num_vars, clauses):
         return solve_cnf_portfolio(num_vars, clauses)

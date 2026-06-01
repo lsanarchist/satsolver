@@ -1,6 +1,6 @@
 # Benchmark Summary
 
-Updated: `2026-05-31T19:36:00+02:00`
+Updated: `2026-05-31T22:26:11+02:00`
 
 Best-known submission configuration:
 - `satsolver.py`
@@ -10,7 +10,7 @@ Best-known submission configuration:
 - No root pure-literal presolve on the main `solve_cnf_fast_serial()` submission path
 - Root-pure-enabled `solve_cnf_serial()` compatibility path still exposed for tests and tooling
 - CDCL core in `satsolver_core.py` with watched literals, VSIDS-style activity, Luby restarts, clause database reduction
-- Structural UNSAT presolvers for pigeonhole cores and XOR contradictions
+- Structural UNSAT presolvers for pigeonhole cores, XOR contradictions, and exact Mycielski graph-coloring encodings with too few colors
 - Precomputed per-literal lookup tables in the propagation hot path
 - Per-literal truth-value cache updated on enqueue/backtrack and read directly in propagation
 - Inlined assignment updates for already-known-unassigned binary and watched-clause units inside `propagate()`
@@ -57,10 +57,10 @@ Best repeat-aware exact-CLI 59-case snapshot:
 - SAT solved: `28`
 - UNSAT solved: `31`
 - Errors: `0`
-- Representative total runtime: `25.7027s`
-- Measured total across both repeats: `51.4054s`
-- Wall clock: `51.6562s`
-- Worst-case representative runtime: `11.4367s` on `large/test_6.cnf`
+- Representative total runtime: `11.5872s`
+- Measured total across both repeats: `23.1745s`
+- Wall clock: `23.4331s`
+- Worst-case representative runtime: `3.5153s` on `large/test_6.cnf`
 
 Latest user-directed phase-portfolio keep:
 - Change: replaced boolean portfolio worker selection with deterministic phase modes while keeping `PORTFOLIO_MAX_DENSITY = 4.3` and the existing narrow portfolio gate.
@@ -69,6 +69,15 @@ Latest user-directed phase-portfolio keep:
 - Portfolio-gated six-case two-order average: `5.5063s -> 3.9310s`.
 - Broad `course_cnf_tests` scratch set excluding known `mycielski_iter4_color5_unsat` timeout-case: `30.3867s -> 27.8704s`, `278/278` correct, `0` errors.
 - Guard cases stayed valid: `formulae/large/test_6.cnf`, `formulae/special/hard.cnf`, and `formulae/large/test_10.cnf`.
+
+Latest user-directed Mycielski graph-coloring detector keep:
+- Change: added a conservative standard graph-coloring parser plus recursive Mycielski tower recognizer before the CDCL/portfolio path.
+- The detector never uses filenames; it returns UNSAT only when the CNF exactly matches a complete graph-coloring encoding, the reconstructed graph is a Mycielski tower from `K2`, and the chromatic lower bound exceeds the available color count.
+- Target hard case `course_cnf_tests/cnf_training_complex__complex_cnf_hard__mycielski_iter4_color5_unsat.cnf`: `UNSAT`, repeat-2 average `0.0441s`, checker-valid.
+- Mycielski family guard: iter2/color3 UNSAT, iter2/color4 SAT, iter3/color4 UNSAT, iter3/color5 SAT, and iter4/color5 UNSAT all stayed checker-valid.
+- `formulae` exact-CLI repeat-2: `35/35` correct, `0` errors, representative total `10.5654s`.
+- Full course scratch exact-CLI repeat-2 including the formerly excluded hard Mycielski case: `279/279` correct, `0` errors, representative total `27.5045s`.
+- Standard exact-CLI verifier suite repeat-2: `59/59` correct, `0` errors, representative total `11.5872s`.
 
 Latest repeat-aware exact-CLI reruns this cycle:
 - Same-day retained promoted-main baseline before removing fast-path root-pure: `39.8399s` representative, `59/59` correct

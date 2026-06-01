@@ -12,6 +12,7 @@ if CLI_MODE:
     model_satisfies = base.model_satisfies
     has_pigeonhole_core = base.has_pigeonhole_core
     xor_system_unsat = base.xor_system_unsat
+    graph_coloring_mycielski_unsat = base.graph_coloring_mycielski_unsat
     format_model = base.format_model
     should_use_parallel_portfolio = base.should_use_parallel_portfolio
 else:
@@ -42,6 +43,9 @@ else:
     model_satisfies = base.model_satisfies
     has_pigeonhole_core = base.has_pigeonhole_core
     xor_system_unsat = base.xor_system_unsat
+    parse_graph_coloring_encoding = base.parse_graph_coloring_encoding
+    mycielski_chromatic_lower_bound = base.mycielski_chromatic_lower_bound
+    graph_coloring_mycielski_unsat = base.graph_coloring_mycielski_unsat
     format_model = base.format_model
 
 
@@ -152,6 +156,8 @@ def solve_cnf(num_vars: int, clauses: list[list[int]]) -> list[int] | None:
     if has_pigeonhole_core(clauses):
         return None
     if xor_system_unsat(num_vars, clauses):
+        return None
+    if graph_coloring_mycielski_unsat(num_vars, clauses):
         return None
     if should_use_parallel_portfolio(num_vars, clauses):
         return solve_cnf_portfolio(num_vars, clauses)
