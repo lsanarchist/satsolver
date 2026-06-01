@@ -1,0 +1,124 @@
+profile_mode=in_process
+portfolio_disabled=true
+cases=278
+wall=79.6091s
+total_case_time=79.6012s
+slowest_cases:
+28.1675s SAT   vars=260 clauses=1108 cnf_training_complex__complex_cnf_hard__planted3sat_balanced_n260_m1108_seed1.cnf validation=valid SAT
+6.9655s UNSAT vars=271 clauses=1393 large__test_6.cnf validation=valid UNSAT (format checked)
+6.8128s SAT   vars=400 clauses=1704 cnf_training_complex__complex_cnf_hard__planted3sat_balanced_n400_m1704_seed1.cnf validation=valid SAT
+5.0857s UNSAT vars=200 clauses= 850 special__hard.cnf validation=valid UNSAT (format checked)
+3.1557s SAT   vars=298 clauses=1210 large__test_8.cnf validation=valid SAT
+2.4031s UNSAT vars= 55 clauses= 495 cnf_training_complex__complex_cnf_hard__ramsey_R3_4_n11_unsat.cnf validation=valid UNSAT (format checked)
+2.2657s UNSAT vars= 36 clauses= 210 cnf_training_complex__complex_cnf_moderate__ramsey_R3_4_n9_unsat.cnf validation=valid UNSAT (format checked)
+2.2607s UNSAT vars= 45 clauses= 330 cnf_training_complex__complex_cnf_moderate__ramsey_R3_4_n10_unsat.cnf validation=valid UNSAT (format checked)
+1.8885s SAT   vars=260 clauses=1108 cnf_training_complex__complex_cnf_hard__planted3sat_balanced_n260_m1108_seed2.cnf validation=valid SAT
+1.7331s SAT   vars=200 clauses= 852 cnf_training_complex__complex_cnf_moderate__planted3sat_balanced_n200_m852_seed2.cnf validation=valid SAT
+1.7265s UNSAT vars=191 clauses= 886 medium__test_4.cnf validation=valid UNSAT (format checked)
+1.6424s UNSAT vars=229 clauses=1280 large__test_10.cnf validation=valid UNSAT (format checked)
+1.3843s SAT   vars=320 clauses=1363 cnf_training_complex__complex_cnf_hard__planted3sat_balanced_n320_m1363_seed1.cnf validation=valid SAT
+1.0359s SAT   vars=320 clauses=1363 cnf_training_complex__complex_cnf_hard__planted3sat_balanced_n320_m1363_seed2.cnf validation=valid SAT
+0.9579s UNSAT vars=172 clauses= 774 medium__test_3.cnf validation=valid UNSAT (format checked)
+0.8597s SAT   vars=200 clauses= 852 cnf_training_complex__complex_cnf_moderate__planted3sat_balanced_n200_m852_seed1.cnf validation=valid SAT
+0.7382s UNSAT vars= 16 clauses=  85 cnf_training_extra__extra_cnf__exact_random3sat_unsat_n16_m85_003.cnf validation=valid UNSAT (brute-force checked)
+0.7141s UNSAT vars= 16 clauses=  85 cnf_training_extra__extra_cnf__exact_random3sat_unsat_n16_m85_002.cnf validation=valid UNSAT (brute-force checked)
+0.7056s UNSAT vars=150 clauses= 645 satlib_more__uuf150-01.cnf validation=valid UNSAT (format checked)
+0.6853s UNSAT vars= 16 clauses=  78 cnf_training_extra__extra_cnf__exact_random3sat_unsat_n16_m78_005.cnf validation=valid UNSAT (brute-force checked)
+
+         134130958 function calls (134130948 primitive calls) in 79.597 seconds
+
+   Ordered by: cumulative time
+   List reduced from 104 to 40 due to restriction <40>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+      278    0.069    0.000   72.886    0.262 satsolver.py:155(solve_cnf)
+      240    0.029    0.000   72.123    0.301 satsolver.py:81(solve_cnf_fast_serial)
+      222    1.584    0.007   71.177    0.321 satsolver_core.py:717(solve)
+   488566   36.002    0.000   45.039    0.000 satsolver_core.py:337(propagate)
+   219764    7.833    0.000   16.158    0.000 satsolver_core.py:555(analyze)
+      278    0.001    0.000    6.120    0.022 checker.py:81(validate_output_text)
+      121    0.268    0.002    6.043    0.050 checker.py:70(brute_force_status)
+   638026    1.689    0.000    5.902    0.000 satsolver_core.py:823(model_satisfies)
+ 33127914    5.531    0.000    5.531    0.000 {method 'append' of 'list' objects}
+   219764    3.823    0.000    5.279    0.000 satsolver_core.py:470(_minimize_learnt_and_prepare)
+ 42114155    4.297    0.000    4.297    0.000 {built-in method builtins.abs}
+  4743451    1.532    0.000    4.218    0.000 {built-in method builtins.any}
+   267561    3.308    0.000    3.308    0.000 satsolver_core.py:622(pick_branch_literal)
+ 16840571    2.790    0.000    2.790    0.000 {method 'pop' of 'list' objects}
+  8825641    1.934    0.000    2.683    0.000 satsolver_core.py:825(<genexpr>)
+ 21196879    2.596    0.000    2.596    0.000 {built-in method builtins.len}
+   219768    2.246    0.000    2.367    0.000 satsolver_core.py:217(backtrack)
+   219764    0.681    0.000    1.251    0.000 satsolver_core.py:328(add_learnt_clause)
+    76669    0.204    0.000    0.906    0.000 satsolver_core.py:295(add_problem_clause)
+   219764    0.324    0.000    0.802    0.000 satsolver_core.py:644(reduce_database)
+      278    0.001    0.000    0.515    0.002 satsolver_io.py:61(parse_dimacs_file)
+      278    0.309    0.001    0.497    0.002 satsolver_io.py:6(parse_dimacs_bytes)
+   488122    0.409    0.000    0.493    0.000 satsolver_core.py:201(enqueue)
+   294595    0.294    0.000    0.427    0.000 satsolver_core.py:243(attach_clause)
+      262    0.255    0.001    0.367    0.001 satsolver_core.py:880(xor_system_unsat)
+     1278    0.135    0.000    0.323    0.000 {method 'sort' of 'list' objects}
+    76669    0.029    0.000    0.241    0.000 satsolver_core.py:282(normalize_clause)
+    76669    0.141    0.000    0.212    0.000 satsolver_core.py:50(normalize_clause_literals)
+      278    0.115    0.000    0.208    0.001 satsolver_core.py:830(has_pigeonhole_core)
+   416744    0.149    0.000    0.189    0.000 satsolver_core.py:662(<lambda>)
+    76669    0.121    0.000    0.187    0.000 satsolver_core.py:285(simplify_root_clause)
+   598597    0.166    0.000    0.166    0.000 satsolver_core.py:263(bump_clause_activity)
+   295880    0.106    0.000    0.141    0.000 satsolver_core.py:119(__init__)
+      242    0.001    0.000    0.117    0.000 satsolver_core.py:1114(graph_coloring_mycielski_unsat)
+      242    0.054    0.000    0.115    0.000 satsolver_core.py:946(parse_graph_coloring_encoding)
+    76669    0.078    0.000    0.104    0.000 satsolver_core.py:276(observe_clause)
+   164795    0.056    0.000    0.090    0.000 {built-in method builtins.all}
+   219764    0.057    0.000    0.057    0.000 satsolver_core.py:260(decay_var_activity)
+   346773    0.056    0.000    0.056    0.000 {method 'add' of 'set' objects}
+   290797    0.047    0.000    0.047    0.000 {method 'startswith' of 'bytes' objects}
+
+
+         134130958 function calls (134130948 primitive calls) in 79.597 seconds
+
+   Ordered by: internal time
+   List reduced from 104 to 40 due to restriction <40>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+   488566   36.002    0.000   45.039    0.000 satsolver_core.py:337(propagate)
+   219764    7.833    0.000   16.158    0.000 satsolver_core.py:555(analyze)
+ 33127914    5.531    0.000    5.531    0.000 {method 'append' of 'list' objects}
+ 42114155    4.297    0.000    4.297    0.000 {built-in method builtins.abs}
+   219764    3.823    0.000    5.279    0.000 satsolver_core.py:470(_minimize_learnt_and_prepare)
+   267561    3.308    0.000    3.308    0.000 satsolver_core.py:622(pick_branch_literal)
+ 16840571    2.790    0.000    2.790    0.000 {method 'pop' of 'list' objects}
+ 21196879    2.596    0.000    2.596    0.000 {built-in method builtins.len}
+   219768    2.246    0.000    2.367    0.000 satsolver_core.py:217(backtrack)
+  8825641    1.934    0.000    2.683    0.000 satsolver_core.py:825(<genexpr>)
+   638026    1.689    0.000    5.902    0.000 satsolver_core.py:823(model_satisfies)
+      222    1.584    0.007   71.177    0.321 satsolver_core.py:717(solve)
+  4743451    1.532    0.000    4.218    0.000 {built-in method builtins.any}
+   219764    0.681    0.000    1.251    0.000 satsolver_core.py:328(add_learnt_clause)
+   488122    0.409    0.000    0.493    0.000 satsolver_core.py:201(enqueue)
+   219764    0.324    0.000    0.802    0.000 satsolver_core.py:644(reduce_database)
+      278    0.309    0.001    0.497    0.002 satsolver_io.py:6(parse_dimacs_bytes)
+   294595    0.294    0.000    0.427    0.000 satsolver_core.py:243(attach_clause)
+      121    0.268    0.002    6.043    0.050 checker.py:70(brute_force_status)
+      262    0.255    0.001    0.367    0.001 satsolver_core.py:880(xor_system_unsat)
+    76669    0.204    0.000    0.906    0.000 satsolver_core.py:295(add_problem_clause)
+   598597    0.166    0.000    0.166    0.000 satsolver_core.py:263(bump_clause_activity)
+   416744    0.149    0.000    0.189    0.000 satsolver_core.py:662(<lambda>)
+    76669    0.141    0.000    0.212    0.000 satsolver_core.py:50(normalize_clause_literals)
+     1278    0.135    0.000    0.323    0.000 {method 'sort' of 'list' objects}
+    76669    0.121    0.000    0.187    0.000 satsolver_core.py:285(simplify_root_clause)
+      278    0.115    0.000    0.208    0.001 satsolver_core.py:830(has_pigeonhole_core)
+   295880    0.106    0.000    0.141    0.000 satsolver_core.py:119(__init__)
+    76669    0.078    0.000    0.104    0.000 satsolver_core.py:276(observe_clause)
+      278    0.069    0.000   72.886    0.262 satsolver.py:155(solve_cnf)
+   219764    0.057    0.000    0.057    0.000 satsolver_core.py:260(decay_var_activity)
+   346773    0.056    0.000    0.056    0.000 {method 'add' of 'set' objects}
+   164795    0.056    0.000    0.090    0.000 {built-in method builtins.all}
+      242    0.054    0.000    0.115    0.000 satsolver_core.py:946(parse_graph_coloring_encoding)
+   290797    0.047    0.000    0.047    0.000 {method 'startswith' of 'bytes' objects}
+   219764    0.037    0.000    0.037    0.000 satsolver_core.py:273(decay_clause_activity)
+   119561    0.031    0.000    0.031    0.000 {built-in method builtins.sorted}
+   226509    0.031    0.000    0.031    0.000 satsolver_core.py:198(literal_value)
+    76669    0.029    0.000    0.241    0.000 satsolver_core.py:282(normalize_clause)
+      240    0.029    0.000   72.123    0.301 satsolver.py:81(solve_cnf_fast_serial)
+
+
+

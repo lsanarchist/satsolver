@@ -480,11 +480,12 @@ class Solver:
         reasons = self.reason
         seen = self.seen
         clauses = self.clauses
+        literal_var = self.literal_var
         self.lbd_token += 1
         lbd_token = self.lbd_token
         lbd_marks = self.lbd_marks
         write_index = 1
-        first_level = levels[abs(learnt[0])]
+        first_level = levels[literal_var[learnt[0]]]
         lbd_marks[first_level] = lbd_token
         lbd = 1
         best_index = 1
@@ -492,7 +493,8 @@ class Solver:
 
         for read_index in range(1, len(learnt)):
             literal = learnt[read_index]
-            reason_clause_id = reasons[abs(literal)]
+            variable = literal_var[literal]
+            reason_clause_id = reasons[variable]
             keep_literal = False
             if reason_clause_id is None:
                 keep_literal = True
@@ -503,19 +505,19 @@ class Solver:
 
                 if reason_size == 2:
                     first, second = reason_lits
-                    other_variable = abs(second if first == neg_literal else first)
+                    other_variable = literal_var[second if first == neg_literal else first]
                     keep_literal = levels[other_variable] != 0 and seen[other_variable] != token
                 elif reason_size == 3:
                     first, second, third = reason_lits
                     if first == neg_literal:
-                        first_variable = abs(second)
-                        second_variable = abs(third)
+                        first_variable = literal_var[second]
+                        second_variable = literal_var[third]
                     elif second == neg_literal:
-                        first_variable = abs(first)
-                        second_variable = abs(third)
+                        first_variable = literal_var[first]
+                        second_variable = literal_var[third]
                     else:
-                        first_variable = abs(first)
-                        second_variable = abs(second)
+                        first_variable = literal_var[first]
+                        second_variable = literal_var[second]
 
                     keep_literal = (
                         (levels[first_variable] != 0 and seen[first_variable] != token)
@@ -526,14 +528,14 @@ class Solver:
                     for reason_literal in reason_lits:
                         if reason_literal == neg_literal:
                             continue
-                        variable = abs(reason_literal)
-                        if levels[variable] != 0 and seen[variable] != token:
+                        reason_variable = literal_var[reason_literal]
+                        if levels[reason_variable] != 0 and seen[reason_variable] != token:
                             keep_literal = True
                             break
 
             if keep_literal:
                 learnt[write_index] = literal
-                decision_level = levels[abs(literal)]
+                decision_level = levels[variable]
                 if lbd_marks[decision_level] != lbd_token:
                     lbd_marks[decision_level] = lbd_token
                     lbd += 1
@@ -564,6 +566,7 @@ class Solver:
         trail = self.trail
         current_level = self.decision_level
         activity = self.activity
+        literal_var = self.literal_var
         var_inc = self.var_inc
         num_vars = self.num_vars
 
@@ -580,7 +583,7 @@ class Solver:
             for literal in clause.lits:
                 if literal == pivot:
                     continue
-                variable = abs(literal)
+                variable = literal_var[literal]
                 if seen[variable] == token or levels[variable] == 0:
                     continue
 
@@ -599,7 +602,7 @@ class Solver:
             while True:
                 pivot = trail[trail_index]
                 trail_index -= 1
-                pivot_variable = abs(pivot)
+                pivot_variable = literal_var[pivot]
                 if seen[pivot_variable] == token:
                     break
 

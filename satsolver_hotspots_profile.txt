@@ -1,0 +1,242 @@
+profile_mode=solve_only
+portfolio_disabled=true
+
+## large__test_6.cnf
+status=UNSAT vars=271 clauses=1393 elapsed=8.0523s
+         9764796 function calls in 8.052 seconds
+
+   Ordered by: cumulative time
+   List reduced from 59 to 20 due to restriction <20>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.006    0.006    8.052    8.052 satsolver.py:155(solve_cnf)
+        1    0.001    0.001    8.032    8.032 satsolver.py:81(solve_cnf_fast_serial)
+        1    0.158    0.158    8.012    8.012 satsolver_core.py:717(solve)
+    40250    4.266    0.000    5.374    0.000 satsolver_core.py:337(propagate)
+    18146    0.774    0.000    1.539    0.000 satsolver_core.py:555(analyze)
+  3212322    0.659    0.000    0.659    0.000 {method 'append' of 'list' objects}
+    18146    0.337    0.000    0.464    0.000 satsolver_core.py:470(_minimize_learnt_and_prepare)
+    22102    0.398    0.000    0.398    0.000 satsolver_core.py:622(pick_branch_literal)
+  1862190    0.365    0.000    0.365    0.000 {method 'pop' of 'list' objects}
+  2670017    0.335    0.000    0.335    0.000 {built-in method builtins.abs}
+    18147    0.242    0.000    0.254    0.000 satsolver_core.py:217(backtrack)
+  1643451    0.241    0.000    0.241    0.000 {built-in method builtins.len}
+    18146    0.078    0.000    0.135    0.000 satsolver_core.py:328(add_learnt_clause)
+    18146    0.037    0.000    0.086    0.000 satsolver_core.py:644(reduce_database)
+    40248    0.040    0.000    0.048    0.000 satsolver_core.py:201(enqueue)
+    19527    0.024    0.000    0.035    0.000 satsolver_core.py:243(attach_clause)
+      101    0.013    0.000    0.033    0.000 {method 'sort' of 'list' objects}
+    35127    0.016    0.000    0.020    0.000 satsolver_core.py:662(<lambda>)
+     1393    0.004    0.000    0.020    0.000 satsolver_core.py:295(add_problem_clause)
+    44053    0.015    0.000    0.015    0.000 satsolver_core.py:263(bump_clause_activity)
+
+
+         9764796 function calls in 8.052 seconds
+
+   Ordered by: internal time
+   List reduced from 59 to 20 due to restriction <20>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    40250    4.266    0.000    5.374    0.000 satsolver_core.py:337(propagate)
+    18146    0.774    0.000    1.539    0.000 satsolver_core.py:555(analyze)
+  3212322    0.659    0.000    0.659    0.000 {method 'append' of 'list' objects}
+    22102    0.398    0.000    0.398    0.000 satsolver_core.py:622(pick_branch_literal)
+  1862190    0.365    0.000    0.365    0.000 {method 'pop' of 'list' objects}
+    18146    0.337    0.000    0.464    0.000 satsolver_core.py:470(_minimize_learnt_and_prepare)
+  2670017    0.335    0.000    0.335    0.000 {built-in method builtins.abs}
+    18147    0.242    0.000    0.254    0.000 satsolver_core.py:217(backtrack)
+  1643451    0.241    0.000    0.241    0.000 {built-in method builtins.len}
+        1    0.158    0.158    8.012    8.012 satsolver_core.py:717(solve)
+    18146    0.078    0.000    0.135    0.000 satsolver_core.py:328(add_learnt_clause)
+    40248    0.040    0.000    0.048    0.000 satsolver_core.py:201(enqueue)
+    18146    0.037    0.000    0.086    0.000 satsolver_core.py:644(reduce_database)
+    19527    0.024    0.000    0.035    0.000 satsolver_core.py:243(attach_clause)
+    35127    0.016    0.000    0.020    0.000 satsolver_core.py:662(<lambda>)
+    44053    0.015    0.000    0.015    0.000 satsolver_core.py:263(bump_clause_activity)
+      101    0.013    0.000    0.033    0.000 {method 'sort' of 'list' objects}
+    19539    0.009    0.000    0.011    0.000 satsolver_core.py:119(__init__)
+    18146    0.007    0.000    0.007    0.000 satsolver_core.py:260(decay_var_activity)
+        1    0.006    0.006    0.009    0.009 satsolver_core.py:880(xor_system_unsat)
+
+
+
+
+## special__hard.cnf
+status=UNSAT vars=200 clauses=850 elapsed=5.1736s
+         7488296 function calls in 5.174 seconds
+
+   Ordered by: cumulative time
+   List reduced from 59 to 20 due to restriction <20>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.004    0.004    5.174    5.174 satsolver.py:155(solve_cnf)
+        1    0.000    0.000    5.163    5.163 satsolver.py:81(solve_cnf_fast_serial)
+        1    0.118    0.118    5.152    5.152 satsolver_core.py:717(solve)
+    34552    2.621    0.000    3.305    0.000 satsolver_core.py:337(propagate)
+    15799    0.565    0.000    1.137    0.000 satsolver_core.py:555(analyze)
+  2293763    0.406    0.000    0.406    0.000 {method 'append' of 'list' objects}
+    15799    0.251    0.000    0.348    0.000 satsolver_core.py:470(_minimize_learnt_and_prepare)
+  2232494    0.250    0.000    0.250    0.000 {built-in method builtins.abs}
+    18751    0.215    0.000    0.215    0.000 satsolver_core.py:622(pick_branch_literal)
+  1208905    0.210    0.000    0.210    0.000 {method 'pop' of 'list' objects}
+  1426830    0.186    0.000    0.186    0.000 {built-in method builtins.len}
+    15799    0.166    0.000    0.176    0.000 satsolver_core.py:217(backtrack)
+    15799    0.048    0.000    0.091    0.000 satsolver_core.py:328(add_learnt_clause)
+    15799    0.026    0.000    0.061    0.000 satsolver_core.py:644(reduce_database)
+    34550    0.030    0.000    0.036    0.000 satsolver_core.py:201(enqueue)
+    16637    0.018    0.000    0.026    0.000 satsolver_core.py:243(attach_clause)
+       88    0.010    0.000    0.024    0.000 {method 'sort' of 'list' objects}
+    30532    0.011    0.000    0.014    0.000 satsolver_core.py:662(<lambda>)
+    46268    0.013    0.000    0.013    0.000 satsolver_core.py:263(bump_clause_activity)
+      850    0.002    0.000    0.011    0.000 satsolver_core.py:295(add_problem_clause)
+
+
+         7488296 function calls in 5.174 seconds
+
+   Ordered by: internal time
+   List reduced from 59 to 20 due to restriction <20>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    34552    2.621    0.000    3.305    0.000 satsolver_core.py:337(propagate)
+    15799    0.565    0.000    1.137    0.000 satsolver_core.py:555(analyze)
+  2293763    0.406    0.000    0.406    0.000 {method 'append' of 'list' objects}
+    15799    0.251    0.000    0.348    0.000 satsolver_core.py:470(_minimize_learnt_and_prepare)
+  2232494    0.250    0.000    0.250    0.000 {built-in method builtins.abs}
+    18751    0.215    0.000    0.215    0.000 satsolver_core.py:622(pick_branch_literal)
+  1208905    0.210    0.000    0.210    0.000 {method 'pop' of 'list' objects}
+  1426830    0.186    0.000    0.186    0.000 {built-in method builtins.len}
+    15799    0.166    0.000    0.176    0.000 satsolver_core.py:217(backtrack)
+        1    0.118    0.118    5.152    5.152 satsolver_core.py:717(solve)
+    15799    0.048    0.000    0.091    0.000 satsolver_core.py:328(add_learnt_clause)
+    34550    0.030    0.000    0.036    0.000 satsolver_core.py:201(enqueue)
+    15799    0.026    0.000    0.061    0.000 satsolver_core.py:644(reduce_database)
+    16637    0.018    0.000    0.026    0.000 satsolver_core.py:243(attach_clause)
+    46268    0.013    0.000    0.013    0.000 satsolver_core.py:263(bump_clause_activity)
+    30532    0.011    0.000    0.014    0.000 satsolver_core.py:662(<lambda>)
+       88    0.010    0.000    0.024    0.000 {method 'sort' of 'list' objects}
+    16649    0.006    0.000    0.009    0.000 satsolver_core.py:119(__init__)
+    15799    0.005    0.000    0.005    0.000 satsolver_core.py:260(decay_var_activity)
+        1    0.004    0.004    5.174    5.174 satsolver.py:155(solve_cnf)
+
+
+
+
+## medium__test_4.cnf
+status=UNSAT vars=191 clauses=886 elapsed=1.4840s
+         2470752 function calls in 1.484 seconds
+
+   Ordered by: cumulative time
+   List reduced from 59 to 20 due to restriction <20>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.001    0.001    1.484    1.484 satsolver.py:155(solve_cnf)
+        1    0.000    0.000    1.475    1.475 satsolver.py:81(solve_cnf_fast_serial)
+        1    0.035    0.035    1.464    1.464 satsolver_core.py:717(solve)
+    11935    0.744    0.000    0.935    0.000 satsolver_core.py:337(propagate)
+     5461    0.163    0.000    0.318    0.000 satsolver_core.py:555(analyze)
+   772898    0.114    0.000    0.114    0.000 {method 'append' of 'list' objects}
+     5461    0.070    0.000    0.094    0.000 satsolver_core.py:470(_minimize_learnt_and_prepare)
+   714083    0.066    0.000    0.066    0.000 {built-in method builtins.abs}
+     6472    0.066    0.000    0.066    0.000 satsolver_core.py:622(pick_branch_literal)
+   413819    0.061    0.000    0.061    0.000 {method 'pop' of 'list' objects}
+     5461    0.050    0.000    0.052    0.000 satsolver_core.py:217(backtrack)
+   445804    0.049    0.000    0.049    0.000 {built-in method builtins.len}
+     5461    0.013    0.000    0.026    0.000 satsolver_core.py:328(add_learnt_clause)
+     5461    0.007    0.000    0.017    0.000 satsolver_core.py:644(reduce_database)
+      886    0.002    0.000    0.011    0.000 satsolver_core.py:295(add_problem_clause)
+    11933    0.009    0.000    0.011    0.000 satsolver_core.py:201(enqueue)
+     6338    0.006    0.000    0.009    0.000 satsolver_core.py:243(attach_clause)
+       34    0.003    0.000    0.007    0.000 {method 'sort' of 'list' objects}
+        1    0.003    0.003    0.004    0.004 satsolver_core.py:880(xor_system_unsat)
+    10052    0.003    0.000    0.004    0.000 satsolver_core.py:662(<lambda>)
+
+
+         2470752 function calls in 1.484 seconds
+
+   Ordered by: internal time
+   List reduced from 59 to 20 due to restriction <20>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    11935    0.744    0.000    0.935    0.000 satsolver_core.py:337(propagate)
+     5461    0.163    0.000    0.318    0.000 satsolver_core.py:555(analyze)
+   772898    0.114    0.000    0.114    0.000 {method 'append' of 'list' objects}
+     5461    0.070    0.000    0.094    0.000 satsolver_core.py:470(_minimize_learnt_and_prepare)
+   714083    0.066    0.000    0.066    0.000 {built-in method builtins.abs}
+     6472    0.066    0.000    0.066    0.000 satsolver_core.py:622(pick_branch_literal)
+   413819    0.061    0.000    0.061    0.000 {method 'pop' of 'list' objects}
+     5461    0.050    0.000    0.052    0.000 satsolver_core.py:217(backtrack)
+   445804    0.049    0.000    0.049    0.000 {built-in method builtins.len}
+        1    0.035    0.035    1.464    1.464 satsolver_core.py:717(solve)
+     5461    0.013    0.000    0.026    0.000 satsolver_core.py:328(add_learnt_clause)
+    11933    0.009    0.000    0.011    0.000 satsolver_core.py:201(enqueue)
+     5461    0.007    0.000    0.017    0.000 satsolver_core.py:644(reduce_database)
+     6338    0.006    0.000    0.009    0.000 satsolver_core.py:243(attach_clause)
+    14347    0.003    0.000    0.003    0.000 satsolver_core.py:263(bump_clause_activity)
+       34    0.003    0.000    0.007    0.000 {method 'sort' of 'list' objects}
+    10052    0.003    0.000    0.004    0.000 satsolver_core.py:662(<lambda>)
+        1    0.003    0.003    0.004    0.004 satsolver_core.py:880(xor_system_unsat)
+      886    0.002    0.000    0.011    0.000 satsolver_core.py:295(add_problem_clause)
+     6347    0.002    0.000    0.003    0.000 satsolver_core.py:119(__init__)
+
+
+
+
+## large__test_10.cnf
+status=UNSAT vars=229 clauses=1280 elapsed=1.6391s
+         2449392 function calls in 1.639 seconds
+
+   Ordered by: cumulative time
+   List reduced from 59 to 20 due to restriction <20>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.001    0.001    1.639    1.639 satsolver.py:155(solve_cnf)
+        1    0.001    0.001    1.628    1.628 satsolver.py:81(solve_cnf_fast_serial)
+        1    0.037    0.037    1.610    1.610 satsolver_core.py:717(solve)
+    11277    0.823    0.000    1.059    0.000 satsolver_core.py:337(propagate)
+     5098    0.163    0.000    0.316    0.000 satsolver_core.py:555(analyze)
+   813835    0.141    0.000    0.141    0.000 {method 'append' of 'list' objects}
+     5098    0.065    0.000    0.089    0.000 satsolver_core.py:470(_minimize_learnt_and_prepare)
+   473620    0.080    0.000    0.080    0.000 {method 'pop' of 'list' objects}
+     6177    0.080    0.000    0.080    0.000 satsolver_core.py:622(pick_branch_literal)
+   640212    0.070    0.000    0.070    0.000 {built-in method builtins.abs}
+     5098    0.052    0.000    0.055    0.000 satsolver_core.py:217(backtrack)
+   396928    0.051    0.000    0.051    0.000 {built-in method builtins.len}
+     5098    0.015    0.000    0.029    0.000 satsolver_core.py:328(add_learnt_clause)
+     5098    0.007    0.000    0.018    0.000 satsolver_core.py:644(reduce_database)
+     1280    0.004    0.000    0.018    0.000 satsolver_core.py:295(add_problem_clause)
+    11275    0.010    0.000    0.012    0.000 satsolver_core.py:201(enqueue)
+     6366    0.007    0.000    0.010    0.000 satsolver_core.py:243(attach_clause)
+       32    0.003    0.000    0.007    0.000 {method 'sort' of 'list' objects}
+        1    0.004    0.004    0.006    0.006 satsolver_core.py:880(xor_system_unsat)
+     1280    0.001    0.000    0.005    0.000 satsolver_core.py:282(normalize_clause)
+
+
+         2449392 function calls in 1.639 seconds
+
+   Ordered by: internal time
+   List reduced from 59 to 20 due to restriction <20>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    11277    0.823    0.000    1.059    0.000 satsolver_core.py:337(propagate)
+     5098    0.163    0.000    0.316    0.000 satsolver_core.py:555(analyze)
+   813835    0.141    0.000    0.141    0.000 {method 'append' of 'list' objects}
+   473620    0.080    0.000    0.080    0.000 {method 'pop' of 'list' objects}
+     6177    0.080    0.000    0.080    0.000 satsolver_core.py:622(pick_branch_literal)
+   640212    0.070    0.000    0.070    0.000 {built-in method builtins.abs}
+     5098    0.065    0.000    0.089    0.000 satsolver_core.py:470(_minimize_learnt_and_prepare)
+     5098    0.052    0.000    0.055    0.000 satsolver_core.py:217(backtrack)
+   396928    0.051    0.000    0.051    0.000 {built-in method builtins.len}
+        1    0.037    0.037    1.610    1.610 satsolver_core.py:717(solve)
+     5098    0.015    0.000    0.029    0.000 satsolver_core.py:328(add_learnt_clause)
+    11275    0.010    0.000    0.012    0.000 satsolver_core.py:201(enqueue)
+     5098    0.007    0.000    0.018    0.000 satsolver_core.py:644(reduce_database)
+     6366    0.007    0.000    0.010    0.000 satsolver_core.py:243(attach_clause)
+        1    0.004    0.004    0.006    0.006 satsolver_core.py:880(xor_system_unsat)
+     1280    0.004    0.000    0.018    0.000 satsolver_core.py:295(add_problem_clause)
+    11979    0.003    0.000    0.003    0.000 satsolver_core.py:263(bump_clause_activity)
+     9429    0.003    0.000    0.004    0.000 satsolver_core.py:662(<lambda>)
+       32    0.003    0.000    0.007    0.000 {method 'sort' of 'list' objects}
+     1280    0.003    0.000    0.004    0.000 satsolver_core.py:50(normalize_clause_literals)
+
+
+
