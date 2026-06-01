@@ -1,0 +1,3 @@
+c tautology_only_sat.cnf
+p cnf 1 1
+1 -1 0

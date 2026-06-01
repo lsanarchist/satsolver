@@ -40,6 +40,60 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-06-01 `sat-solver-coverage-suite`
+
+- Status: completed
+- Task family: user-directed correctness, robustness, and submission-readiness coverage
+- Branch/worktree: current checkout
+- Prompt summary: implement `sat_solver_coverage_agent_instructions.md` by adding generated regression CNFs, smoke scripts, packaging and portfolio cleanup checks, must-pass docs, and a factual coverage report without changing solver heuristics
+- Assumptions:
+  - No SAT-solving algorithm, heuristic, detector strictness, or portfolio threshold should change in this task.
+  - Existing benchmark artifacts are baselines and must not be overwritten for comparison.
+  - The current modular submission path requires `satsolver.py`, `satsolver_core.py`, and `satsolver_io.py`; single-file-only grading should be documented as unsupported unless a separate bundling task is requested.
+- Escalations: none
+
+### Plan
+
+- [x] Read the coverage instruction file and current tests/tooling layout.
+- [x] Add generated CNF case generator and manifests for Mycielski, graph-coloring, near-limit, portfolio-boundary, parser, and mutation coverage.
+- [x] Add smoke, validation, packaging, and portfolio cleanup scripts under `tests/scripts/`.
+- [x] Add focused unit coverage for generated detector/parser/portfolio guard behavior.
+- [x] Run generator, smoke suites, packaging check, portfolio cleanup stress, and repo verification.
+- [x] Write `coverage_report.md` with factual pass/fail and remaining risks.
+
+### Verification
+
+- `python -m py_compile satsolver.py satsolver_core.py satsolver_io.py tests/scripts/generate_regression_cases.py tests/scripts/run_regression_smoke.py tests/scripts/validate_output.py tests/scripts/check_single_file_submission.py tests/scripts/stress_portfolio_cleanup.py tests/test_generated_coverage.py`
+- passed
+- `python tests/scripts/generate_regression_cases.py`
+- passed; generated `140` CNFs under `tests/generated/`
+- `python -m pytest tests/test_generated_coverage.py -q`
+- passed (`4 passed`)
+- `python tests/scripts/run_regression_smoke.py --solver ./satsolver.py --suite tests/generated --timeout 60`
+- passed (`140/140`, max `0.1205s`)
+- `python tests/scripts/run_regression_smoke.py --solver ./satsolver.py --suite tests/must_pass --timeout 60`
+- passed (`17/17`, max `3.6623s`)
+- `python tests/scripts/check_single_file_submission.py --solver ./satsolver.py`
+- passed; single-file copy unsupported, modular `satsolver.py`, `satsolver_core.py`, and `satsolver_io.py` verified
+- `python tests/scripts/stress_portfolio_cleanup.py --solver ./satsolver.py --repeat 5 --timeout 60`
+- passed (`15/15`, avg `1.8407s`, max `4.1003s`)
+- `python ../benchmark_suite.py satsolver /tmp/coverage_formulae_35.txt small medium large special --bruteforce-var-limit 16 --cli-script ../satsolver.py` from `formulae/`
+- passed (`35/35`, total `10.5580s`, wall `10.6678s`)
+- `python ../benchmark_suite.py satsolver /tmp/coverage_course_279.txt . --bruteforce-var-limit 16 --cli-script ../satsolver.py` from `course_cnf_tests/`
+- passed (`279/279`, total `28.5081s`, wall `30.7521s`)
+- `python tools/codex_verify.py`
+- passed (`100` unit tests plus compile, queue, checker, and wrapper smoke checks)
+
+### Outcome
+
+- Added a generated regression corpus, smoke harnesses, output validation helper, modular packaging check, portfolio cleanup stress script, compact must-pass suite, and `coverage_report.md`.
+- No solver algorithm, heuristic, detector strictness, or portfolio threshold was changed.
+
+### Remaining risks
+
+- The solver remains modular rather than single-file; package `satsolver.py`, `satsolver_core.py`, and `satsolver_io.py` together for submission.
+- Generated coverage is broad but hidden final cases can still differ in encoding style and difficulty.
+
 ## 2026-05-31 `mycielski-graph-coloring-detector`
 
 - Status: completed

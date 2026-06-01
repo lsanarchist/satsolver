@@ -1,0 +1,9 @@
+path	expected	detector	max_seconds	mode	notes
+K4_color3_unsat.cnf	UNSAT	false	60	solve	ordinary graph-coloring guard
+K4_color4_sat.cnf	SAT	false	60	solve	ordinary graph-coloring guard
+K5_color4_unsat.cnf	UNSAT	false	60	solve	ordinary graph-coloring guard
+C5_color2_unsat.cnf	UNSAT	true	60	solve	C5 is also the first Mycielski graph M(K2)
+C5_color3_sat.cnf	SAT	false	60	solve	ordinary graph-coloring guard
+bipartite_20_color2_sat.cnf	SAT	false	60	solve	ordinary graph-coloring guard
+random_graph_v20_k3_sat.cnf	SAT	false	60	solve	ordinary graph-coloring guard
+random_graph_v20_k2_unsat.cnf	UNSAT	false	60	solve	ordinary graph-coloring guard

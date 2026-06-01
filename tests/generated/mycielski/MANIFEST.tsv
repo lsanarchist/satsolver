@@ -1,0 +1,7 @@
+path	expected	detector	max_seconds	mode	notes
+mycielski_iter2_color3_unsat.cnf	UNSAT	true	60	solve	Mycielski iter2 color3
+mycielski_iter2_color4_sat.cnf	SAT	false	60	solve	Mycielski iter2 color4
+mycielski_iter3_color4_unsat.cnf	UNSAT	true	60	solve	Mycielski iter3 color4
+mycielski_iter3_color5_sat.cnf	SAT	false	60	solve	Mycielski iter3 color5
+mycielski_iter4_color5_unsat.cnf	UNSAT	true	60	solve	Mycielski iter4 color5
+mycielski_iter4_color6_sat.cnf	SAT	false	60	solve	Mycielski iter4 color6

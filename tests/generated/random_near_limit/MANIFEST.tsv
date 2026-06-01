@@ -1,0 +1,7 @@
+path	expected	detector	max_seconds	mode	notes
+random3sat_n500_m2000_seed1.cnf	SAT	any	60	solve	planted all-true SAT
+random3sat_n500_m2000_seed2.cnf	SAT	any	60	solve	planted all-true SAT
+planted3sat_n450_m1900_seed1.cnf	SAT	any	60	solve	planted all-true SAT
+planted3sat_n450_m1900_seed2.cnf	SAT	any	60	solve	planted all-true SAT
+xor_sparse_unsat_n240_eq330_w3_4_seed1.cnf	UNSAT	any	60	solve	inconsistent XOR system
+pigeonhole_php_15_into_14_near_limit.cnf	UNSAT	any	60	solve	near-limit pigeonhole

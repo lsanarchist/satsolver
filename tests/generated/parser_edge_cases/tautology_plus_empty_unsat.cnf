@@ -1,0 +1,4 @@
+c tautology_plus_empty_unsat.cnf
+p cnf 1 2
+1 -1 0
+ 0
