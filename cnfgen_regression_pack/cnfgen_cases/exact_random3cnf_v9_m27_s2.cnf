@@ -1,0 +1,39 @@
+c description: Random 3-CNF over 9 variables and 27 clauses
+c generator: CNFgen (0.9.5)
+c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
+c url: https://massimolauria.net/cnfgen
+c random seed: 31073
+c command line: cnfgen -S 31073 -o cnfgen_regression_pack/cnfgen_cases/exact_random3cnf_v9_m27_s2.cnf randkcnf 3 9 27
+c
+c known_status: SAT
+c pack_family: exact_small_randkcnf
+c pack_level: easy
+c pack_notes: status brute-forced during generation
+p cnf 9 27
+-1 8 -9 0
+3 4 8 0
+-4 -5 7 0
+-1 -5 9 0
+1 5 -9 0
+2 -5 9 0
+-3 -4 -8 0
+-1 2 4 0
+-2 4 9 0
+3 -4 6 0
+2 -3 -4 0
+2 3 -5 0
+-1 -5 -9 0
+-1 2 -7 0
+-3 5 -6 0
+-2 -4 9 0
+3 7 9 0
+-3 -5 -6 0
+2 3 -7 0
+1 6 7 0
+1 -6 -8 0
+1 -2 9 0
+-5 6 -9 0
+-4 -7 8 0
+4 -7 -8 0
+1 -6 7 0
+-1 2 -4 0

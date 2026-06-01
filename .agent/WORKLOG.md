@@ -510,3 +510,24 @@
 - Files changed: `tests/scripts/generate_regression_cases.py`, `tests/scripts/run_regression_smoke.py`, `tests/scripts/validate_output.py`, `tests/scripts/check_single_file_submission.py`, `tests/scripts/stress_portfolio_cleanup.py`, `tests/test_generated_coverage.py`, `tests/generated/`, `tests/must_pass/`, `coverage_report.md`, `PLANS.md`, `.agent/STATE.yaml`, `.agent/HANDOFF.md`, `.agent/WORKLOG.md`
 - Verification: `python -m py_compile satsolver.py satsolver_core.py satsolver_io.py tests/scripts/generate_regression_cases.py tests/scripts/run_regression_smoke.py tests/scripts/validate_output.py tests/scripts/check_single_file_submission.py tests/scripts/stress_portfolio_cleanup.py tests/test_generated_coverage.py` — passed; `python tests/scripts/generate_regression_cases.py` — generated 140 CNFs; `python -m pytest tests/test_generated_coverage.py -q` — passed (`4 passed`); generated smoke — `140/140`, max `0.1205s`; must-pass smoke — `17/17`, max `3.6623s`; modular packaging check — passed with required files `satsolver.py`, `satsolver_core.py`, and `satsolver_io.py`; portfolio cleanup stress — `15/15`, avg `1.8407s`, max `4.1003s`; formulae exact-CLI sanity — `35/35`, total `10.5580s`; course exact-CLI sanity — `279/279`, total `28.5081s`; `python tools/codex_verify.py` — passed (`100` tests plus compile, queue, checker, and wrapper smoke checks)
 - Follow-up: Use `tests/must_pass/` before submission packaging; keep generated coverage in sync by rerunning `python tests/scripts/generate_regression_cases.py` after changes to the generator.
+
+## 2026-06-01 11:48 CEST — user-cnfgen-regression-pack
+- Status: done
+- Summary: Added a bounded CNFgen regression pack in `cnfgen_regression_pack/` with 228 retained known-status CNFs across 30 families, all within `vars <= 500`, `clauses <= 2000`, and a `60s` per-case smoke timeout.
+- Files changed: `cnfgen_regression_pack/`, `generated_cnf_report.md`, `PLANS.md`, `.agent/STATE.yaml`, `.agent/HANDOFF.md`, `.agent/WORKLOG.md`
+- Verification: `python cnfgen_regression_pack/generate_cnfgen_pack.py --cnfgen /tmp/satsolver-cnfgen-venv/bin/cnfgen` — passed (`228` cases, `152 SAT`, `76 UNSAT`); manifest constraint check — passed (`30` families, `max_vars=500`, `max_clauses=2000`, all statuses known SAT/UNSAT, all timeouts `60`); `PYTHONUNBUFFERED=1 python tests/scripts/run_regression_smoke.py --solver ./satsolver.py --suite cnfgen_regression_pack --timeout 60` — passed (`228/228`, max `35.4312s`); `python -m py_compile cnfgen_regression_pack/generate_cnfgen_pack.py` — passed; `python tools/codex_verify.py` — passed (`100` tests plus compile, queue, checker, and wrapper smoke checks); `git diff --check` — passed
+- Follow-up: Continue with queued `perf-065`; rebuild the CNFgen pack only via the generator with an explicit CNFgen executable, keeping CNFgen generation-only and outside the submission path.
+
+## 2026-06-01 11:59 CEST — user-cnfgen-regression-pack-avg5
+- Status: done
+- Summary: Ran exact-CLI avg-5 benchmark on the new CNFgen regression pack, documented the result in `generated_cnf_report.md` and `cnfgen_regression_pack/AVG5_BENCHMARK.md`.
+- Files changed: `cnfgen_regression_pack/AVG5_BENCHMARK.md`, `generated_cnf_report.md`, `PLANS.md`, `.agent/STATE.yaml`, `.agent/HANDOFF.md`, `.agent/WORKLOG.md`
+- Verification: initial root-relative benchmark attempt exposed the known slash-folder scratch-output bug and was stopped; rerun from `cnfgen_regression_pack/` with `python ../benchmark_suite.py satsolver /tmp/cnfgen_regression_pack_avg5.txt cnfgen_cases --bruteforce-var-limit 16 --repeat 5 --cli-script ../satsolver.py` — passed (`228/228`, `0` errors, representative total `80.1684s`, measured total `402.7179s`, wall `410.3343s`); `python tools/codex_verify.py` — passed; `git diff --check` — passed
+- Follow-up: Use the avg-5 result as the current baseline for CNFgen-pack regressions; run from inside `cnfgen_regression_pack/` to avoid slash-folder scratch paths.
+
+## 2026-06-01 12:42 CEST — user-cnfgen-list
+- Status: done
+- Summary: Added `cnfgen_regression_pack/CNF_LIST.md`, a complete generated table listing all 228 retained CNF files with status, family, level, variable count, clause count, and timeout.
+- Files changed: `cnfgen_regression_pack/CNF_LIST.md`, `cnfgen_regression_pack/README.md`, `generated_cnf_report.md`, `PLANS.md`, `.agent/STATE.yaml`, `.agent/HANDOFF.md`, `.agent/WORKLOG.md`
+- Verification: CNF list count check — passed (`228` listed rows); `git diff --check` — passed
+- Follow-up: Regenerate `CNF_LIST.md` from `manifest.csv` whenever the retained CNFgen pack changes.

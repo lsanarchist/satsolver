@@ -2,6 +2,26 @@
 
 Date: 2026-06-01
 
+## CNFgen Regression Pack
+
+A separate CNFgen-based pack now lives under `cnfgen_regression_pack/`.
+
+- Cases: `228`
+- Known statuses: `152 SAT`, `76 UNSAT`
+- Families: `30`
+- Limits: `vars <= 500`, `clauses <= 2000`, timeout `60s`
+- Full smoke: `228/228` passed
+- Max observed solver time: `35.4312s`
+- Avg-5 exact-CLI benchmark: `228/228`, `0` errors, representative total `80.1684s`, measured total `402.7179s`, wall clock `410.3343s`
+
+Command:
+
+```bash
+PYTHONUNBUFFERED=1 python tests/scripts/run_regression_smoke.py --solver ./satsolver.py --suite cnfgen_regression_pack --timeout 60
+```
+
+See `cnfgen_regression_pack/CNF_LIST.md`, `cnfgen_regression_pack/SMOKE_REPORT.md`, `cnfgen_regression_pack/AVG5_BENCHMARK.md`, and `cnfgen_regression_pack/manifest.csv` for per-case details.
+
 Command:
 
 ```bash

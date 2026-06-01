@@ -1,0 +1,72 @@
+c description: Random 2-CNF over 50 variables and 60 clauses
+c generator: CNFgen (0.9.5)
+c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
+c url: https://massimolauria.net/cnfgen
+c random seed: 31015
+c command line: cnfgen -S 31015 -o cnfgen_regression_pack/cnfgen_cases/planted_rand2cnf_v50_m60_s1_sat.cnf randkcnf -p 2 50 60
+c
+c known_status: SAT
+c pack_family: planted_randkcnf
+c pack_level: easy
+c pack_notes: CNFgen planted random k-CNF
+p cnf 50 60
+20 -33 0
+-37 45 0
+-5 39 0
+-13 -49 0
+-27 -38 0
+-24 -32 0
+38 -39 0
+-3 12 0
+-17 -27 0
+-3 -7 0
+-31 49 0
+6 -22 0
+-10 17 0
+-4 29 0
+-3 -49 0
+18 44 0
+18 -35 0
+8 36 0
+21 -32 0
+9 -24 0
+-24 37 0
+26 -45 0
+11 28 0
+34 49 0
+-22 -46 0
+23 37 0
+4 -11 0
+-28 -35 0
+10 -11 0
+5 -27 0
+43 50 0
+-10 18 0
+-28 38 0
+25 -30 0
+2 47 0
+-13 -33 0
+-9 -36 0
+-26 30 0
+1 14 0
+30 -31 0
+45 -49 0
+-15 48 0
+-13 32 0
+-28 30 0
+46 -48 0
+9 -21 0
+16 40 0
+-23 24 0
+4 19 0
+-11 32 0
+1 -11 0
+-2 -25 0
+14 22 0
+-23 -41 0
+-4 -37 0
+10 16 0
+-30 43 0
+-16 26 0
+5 -45 0
+17 20 0

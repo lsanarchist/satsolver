@@ -1,0 +1,87 @@
+c description: Random 3-CNF over 15 variables and 75 clauses
+c generator: CNFgen (0.9.5)
+c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
+c url: https://massimolauria.net/cnfgen
+c random seed: 31113
+c command line: cnfgen -S 31113 -o cnfgen_regression_pack/cnfgen_cases/exact_random3cnf_v15_m75_s2.cnf randkcnf 3 15 75
+c
+c known_status: UNSAT
+c pack_family: exact_small_randkcnf
+c pack_level: easy
+c pack_notes: status brute-forced during generation
+p cnf 15 75
+-5 -8 12 0
+-6 -10 -13 0
+-5 -8 -13 0
+-8 10 -15 0
+1 -2 9 0
+8 -13 14 0
+-11 12 -14 0
+-2 -3 -8 0
+1 5 7 0
+-2 9 10 0
+-2 5 7 0
+9 -11 13 0
+-9 -11 13 0
+-6 12 14 0
+-2 -3 10 0
+3 11 -14 0
+-2 -4 -7 0
+-9 12 15 0
+2 -4 11 0
+-2 4 14 0
+4 -6 -15 0
+2 3 12 0
+-5 7 -13 0
+3 8 14 0
+10 -12 -14 0
+2 3 -6 0
+-6 7 12 0
+6 -10 14 0
+3 8 -10 0
+-8 9 -13 0
+-2 5 -12 0
+2 3 -14 0
+3 -5 -15 0
+-5 11 -14 0
+1 -2 5 0
+6 7 10 0
+-2 -3 13 0
+3 -7 -15 0
+1 -3 11 0
+8 -11 15 0
+-4 8 15 0
+4 6 13 0
+-3 11 -15 0
+-8 10 -11 0
+2 -4 -8 0
+-2 4 12 0
+-3 -9 -10 0
+2 12 -13 0
+-1 6 9 0
+-5 -11 13 0
+-3 -9 10 0
+2 -6 -15 0
+1 4 -8 0
+4 -14 -15 0
+2 3 7 0
+-11 -12 -13 0
+1 2 -4 0
+-2 10 14 0
+-9 -11 -14 0
+-1 4 -12 0
+-9 11 -13 0
+-7 11 14 0
+-3 -8 -14 0
+-4 12 -14 0
+1 -3 -15 0
+4 -5 15 0
+3 -5 -6 0
+5 -6 -15 0
+-3 -4 11 0
+-8 9 -15 0
+-1 -5 13 0
+-3 -5 6 0
+-8 -13 14 0
+-10 -11 -14 0
+-3 5 15 0

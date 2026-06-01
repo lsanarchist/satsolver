@@ -40,6 +40,55 @@ Use this file for queued or multi-step Codex work so the execution state survive
 
 - Risk or `none`
 
+## 2026-06-01 `cnfgen-regression-pack`
+
+- Status: completed
+- Task family: user-directed CNFgen regression corpus
+- Branch/worktree: current checkout
+- Prompt summary: generate many CNFgen-based tests of varied size and structure in a separate folder to catch solver correctness and robustness issues
+- Assumptions:
+  - The generated corpus is a test artifact only; no solver algorithm, heuristic, detector strictness, or portfolio threshold should change.
+  - CNFgen may be used from a temporary external environment for generation, but it must not become a submission-path dependency.
+  - Keep the CNF files in one flat benchmark folder so `benchmark_suite.py` can consume them directly.
+  - User constraints: every generated case must have `vars <= 500`, `clauses <= 2000`, known `SAT` or `UNSAT` status only, and `60s` smoke timeout.
+- Escalations: none
+
+### Plan
+
+- [x] Read repo instructions, current generated suites, and CNFgen availability.
+- [x] Add a deterministic CNFgen pack generator, README, manifest, and known-status smoke runner notes.
+- [x] Generate a varied CNF corpus in a separate folder.
+- [x] Run smoke validation and default repo verification.
+- [x] Update control-plane handoff and worklog.
+
+### Verification
+
+- `python cnfgen_regression_pack/generate_cnfgen_pack.py --cnfgen /tmp/satsolver-cnfgen-venv/bin/cnfgen`
+- passed; generated `228` CNFgen cases under `cnfgen_regression_pack/cnfgen_cases/` (`152 SAT`, `76 UNSAT`)
+- Manifest constraint check
+- passed: `228` rows, `30` families, `max_vars=500`, `max_clauses=2000`, all statuses `SAT` or `UNSAT`, all timeouts `60`
+- `PYTHONUNBUFFERED=1 python tests/scripts/run_regression_smoke.py --solver ./satsolver.py --suite cnfgen_regression_pack --timeout 60`
+- passed (`228/228`, max `35.4312s`)
+- `python ../benchmark_suite.py satsolver /tmp/cnfgen_regression_pack_avg5.txt cnfgen_cases --bruteforce-var-limit 16 --repeat 5 --cli-script ../satsolver.py` from `cnfgen_regression_pack/`
+- passed (`228/228`, `0` errors, representative total `80.1684s`, measured total `402.7179s`, wall `410.3343s`)
+- `python -m py_compile cnfgen_regression_pack/generate_cnfgen_pack.py`
+- passed
+- `python tools/codex_verify.py`
+- passed (`100` tests plus compile, queue, checker, and wrapper smoke checks)
+- `git diff --check`
+- passed
+
+### Outcome
+
+- Added `cnfgen_regression_pack/` with a deterministic CNFgen generator, `228` retained bounded CNF cases, `MANIFEST.tsv`, `manifest.csv`, README, full CNF list, smoke report, and avg-5 benchmark report.
+- Updated `generated_cnf_report.md` with the CNFgen pack summary.
+- No solver algorithm, heuristic, detector strictness, or portfolio threshold was changed.
+
+### Remaining risks
+
+- CNFgen is intentionally not a submission-path dependency; rebuilding the pack requires installing or pointing to CNFgen.
+- The pack is broad and green under the current solver, but hidden final tests can still differ in encoding style or hardness.
+
 ## 2026-06-01 `sat-solver-coverage-suite`
 
 - Status: completed

@@ -8,14 +8,16 @@
 - A user-directed phase-diversified portfolio keep is now present in the working tree: portfolio workers use deterministic phase modes ordered `default`, `bias_positive`, `lcg1`, `bias_negative`, capped at three workers.
 - A user-directed Mycielski graph-coloring detector keep is now present in the working tree: exact standard graph-coloring encodings for Mycielski towers from `K2` can return UNSAT before CDCL when the chromatic lower bound exceeds the available colors.
 - A user-directed coverage-suite keep is now present in the working tree: generated regression CNFs, smoke scripts, packaging checks, portfolio cleanup stress, a compact must-pass suite, and `coverage_report.md`.
+- A user-directed CNFgen regression pack is now present in `cnfgen_regression_pack/`: 228 retained CNFs across 30 families, all within `vars <= 500` and `clauses <= 2000`, all known SAT/UNSAT, full smoke passing under the 60s per-case timeout, exact-CLI avg-5 benchmark passing `228/228`, and `CNF_LIST.md` listing every retained CNF.
 - There is no active in-progress task; the next deterministic task is `perf-065`.
 
 ## What Changed This Run
 
-- Implemented `sat_solver_coverage_agent_instructions.md` as a coverage-only suite.
-- Added `tests/scripts/generate_regression_cases.py`, which deterministically generates 140 CNFs under `tests/generated/` across Mycielski, mutated Mycielski, graph-coloring, near-limit random, portfolio-density, and parser edge-case suites.
-- Added `tests/scripts/run_regression_smoke.py`, `validate_output.py`, `check_single_file_submission.py`, and `stress_portfolio_cleanup.py`.
-- Added `tests/test_generated_coverage.py`, `tests/must_pass/README.md`, `tests/must_pass/MANIFEST.tsv`, and `coverage_report.md`.
+- Added `cnfgen_regression_pack/generate_cnfgen_pack.py`, a deterministic CNFgen generator with hard guards for `vars <= 500`, `clauses <= 2000`, known final status, and `60s` manifest timeout.
+- Generated `228` retained CNFgen cases under `cnfgen_regression_pack/cnfgen_cases/`.
+- Added `cnfgen_regression_pack/MANIFEST.tsv`, `manifest.csv`, `README.md`, `SMOKE_REPORT.md`, and `AVG5_BENCHMARK.md`.
+- Added `cnfgen_regression_pack/CNF_LIST.md`, a complete table of all `228` retained CNF files with status, family, level, vars, clauses, and timeout.
+- Updated `generated_cnf_report.md` with the CNFgen pack summary.
 - Left solver algorithms, heuristics, detector strictness, and portfolio thresholds unchanged.
 
 ## Current Focus
@@ -28,22 +30,21 @@
 
 ## Verification From This Run
 
-- `python -m py_compile satsolver.py satsolver_core.py satsolver_io.py tests/scripts/generate_regression_cases.py tests/scripts/run_regression_smoke.py tests/scripts/validate_output.py tests/scripts/check_single_file_submission.py tests/scripts/stress_portfolio_cleanup.py tests/test_generated_coverage.py` — passed
-- `python tests/scripts/generate_regression_cases.py` — passed; generated 140 CNFs
-- `python -m pytest tests/test_generated_coverage.py -q` — passed (`4 passed`)
-- `python tests/scripts/run_regression_smoke.py --solver ./satsolver.py --suite tests/generated --timeout 60` — passed (`140/140`, max `0.1205s`)
-- `python tests/scripts/run_regression_smoke.py --solver ./satsolver.py --suite tests/must_pass --timeout 60` — passed (`17/17`, max `3.6623s`)
-- `python tests/scripts/check_single_file_submission.py --solver ./satsolver.py` — passed; single-file copy unsupported, modular three-file submission verified
-- `python tests/scripts/stress_portfolio_cleanup.py --solver ./satsolver.py --repeat 5 --timeout 60` — passed (`15/15`, avg `1.8407s`, max `4.1003s`)
-- `python ../benchmark_suite.py satsolver /tmp/coverage_formulae_35.txt small medium large special --bruteforce-var-limit 16 --cli-script ../satsolver.py` from `formulae/` — `35/35`, total `10.5580s`
-- `python ../benchmark_suite.py satsolver /tmp/coverage_course_279.txt . --bruteforce-var-limit 16 --cli-script ../satsolver.py` from `course_cnf_tests/` — `279/279`, total `28.5081s`
+- `python cnfgen_regression_pack/generate_cnfgen_pack.py --cnfgen /tmp/satsolver-cnfgen-venv/bin/cnfgen` — passed; generated `228` retained CNFgen cases (`152 SAT`, `76 UNSAT`)
+- Manifest constraint check — passed: `228` rows, `30` families, `max_vars=500`, `max_clauses=2000`, all statuses `SAT` or `UNSAT`, all timeouts `60`
+- `PYTHONUNBUFFERED=1 python tests/scripts/run_regression_smoke.py --solver ./satsolver.py --suite cnfgen_regression_pack --timeout 60` — passed (`228/228`, max `35.4312s`)
+- `python ../benchmark_suite.py satsolver /tmp/cnfgen_regression_pack_avg5.txt cnfgen_cases --bruteforce-var-limit 16 --repeat 5 --cli-script ../satsolver.py` from `cnfgen_regression_pack/` — passed (`228/228`, `0` errors, representative total `80.1684s`, measured total `402.7179s`, wall `410.3343s`)
+- `python -m py_compile cnfgen_regression_pack/generate_cnfgen_pack.py` — passed
 - `python tools/codex_verify.py` — passed (`100` tests plus compile, queue, checker, and wrapper smoke checks)
+- `git diff --check` — passed
 
 ## Notes For The Next Run
 
 - Start with the read order in `.agent/RUNBOOK.md`.
 - Reconcile `STATE.yaml` against the repo tree before selecting a task.
 - Keep `PLANS.md` updated for any multi-step or code-bearing task.
+- Rebuild the CNFgen pack only with an explicit CNFgen executable; CNFgen remains generation-only and must not become a submission-path dependency.
+- Keep `cnfgen_regression_pack/manifest.csv` and `MANIFEST.tsv` aligned by rerunning `python cnfgen_regression_pack/generate_cnfgen_pack.py --cnfgen <path>` after generator changes.
 - Refresh `project_context.md` only when the tracked repo snapshot or the guidance another AI needs has changed materially; it intentionally snapshots the pre-self tracked tree and excludes local untracked files.
 - Reuse the queue checker when adjusting `.agent/STATE.yaml` or `.agent/TASK_QUEUE.yaml`.
 - The default verifier covers `satsolver_fast.py`, but `satsolver_pysat.py` remains outside the default gate because it requires an optional external environment.

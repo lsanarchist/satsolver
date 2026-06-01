@@ -1,0 +1,44 @@
+c description: is van der Waerden number vdw(3, 3) > 9 ?
+c generator: CNFgen (0.9.5)
+c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
+c url: https://massimolauria.net/cnfgen
+c random seed: 31185
+c command line: cnfgen -S 31185 -o cnfgen_regression_pack/cnfgen_cases/vdw_2color_k3_n9_unsat.cnf vdw 9 3 3
+c
+c known_status: UNSAT
+c pack_family: van_der_waerden
+c pack_level: easy
+c pack_notes: Van der Waerden principle
+p cnf 9 32
+1 2 3 0
+2 3 4 0
+3 4 5 0
+4 5 6 0
+5 6 7 0
+6 7 8 0
+7 8 9 0
+1 3 5 0
+2 4 6 0
+3 5 7 0
+4 6 8 0
+5 7 9 0
+1 4 7 0
+2 5 8 0
+3 6 9 0
+1 5 9 0
+-1 -2 -3 0
+-2 -3 -4 0
+-3 -4 -5 0
+-4 -5 -6 0
+-5 -6 -7 0
+-6 -7 -8 0
+-7 -8 -9 0
+-1 -3 -5 0
+-2 -4 -6 0
+-3 -5 -7 0
+-4 -6 -8 0
+-5 -7 -9 0
+-1 -4 -7 0
+-2 -5 -8 0
+-3 -6 -9 0
+-1 -5 -9 0

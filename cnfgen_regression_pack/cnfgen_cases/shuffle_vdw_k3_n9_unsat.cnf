@@ -1,0 +1,45 @@
+c description: is van der Waerden number vdw(3, 3) > 9 ? (reshuffled)
+c generator: CNFgen (0.9.5)
+c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
+c url: https://massimolauria.net/cnfgen
+c transformation 1: Formula reshuffling
+c random seed: 31221
+c command line: cnfgen -S 31221 -o cnfgen_regression_pack/cnfgen_cases/shuffle_vdw_k3_n9_unsat.cnf vdw 9 3 3 -T shuffle
+c
+c known_status: UNSAT
+c pack_family: van_der_waerden_transform
+c pack_level: moderate
+c pack_notes: satisfiability-preserving CNFgen transformation
+p cnf 9 32
+-1 3 2 0
+1 -3 -2 0
+7 -1 2 0
+-5 -8 -3 0
+-9 -8 -2 0
+6 -5 -8 0
+-4 7 2 0
+-9 -7 1 0
+4 -7 -2 0
+-6 5 8 0
+-6 9 5 0
+8 -1 3 0
+-7 1 -2 0
+-8 1 -3 0
+-4 -6 9 0
+4 -5 1 0
+-4 9 7 0
+6 -9 -5 0
+-6 7 3 0
+5 7 8 0
+-4 5 -1 0
+-7 -8 1 0
+5 8 3 0
+9 8 2 0
+4 6 -9 0
+4 -9 -7 0
+9 7 -1 0
+-9 -5 -7 0
+-5 -7 -8 0
+9 5 7 0
+6 -7 -3 0
+7 8 -1 0

@@ -1,0 +1,229 @@
+folder,filename,family,known_status,level,vars,clauses,max_seconds,source_command,notes
+cnfgen_cases,bphp_p5_h5_sat.cnf,binary_pigeonhole,SAT,moderate,15,65,60,cnfgen -S 31150 bphp 5 5,binary pigeonhole principle
+cnfgen_cases,bphp_p6_h5_unsat.cnf,binary_pigeonhole,UNSAT,moderate,18,93,60,cnfgen -S 31151 bphp 6 5,binary pigeonhole principle
+cnfgen_cases,bphp_p7_h6_unsat.cnf,binary_pigeonhole,UNSAT,moderate,21,140,60,cnfgen -S 31152 bphp 7 6,binary pigeonhole principle
+cnfgen_cases,bphp_p8_h7_unsat.cnf,binary_pigeonhole,UNSAT,moderate,24,204,60,cnfgen -S 31154 bphp 8 7,binary pigeonhole principle
+cnfgen_cases,bphp_p8_h8_sat.cnf,binary_pigeonhole,SAT,moderate,24,224,60,cnfgen -S 31153 bphp 8 8,binary pigeonhole principle
+cnfgen_cases,bphp_p9_h8_unsat.cnf,binary_pigeonhole,UNSAT,moderate,27,288,60,cnfgen -S 31155 bphp 9 8,binary pigeonhole principle
+cnfgen_cases,cliquecoloring_n10_k4_c3_unsat.cnf,clique_coloring,UNSAT,moderate,115,959,60,cnfgen -S 31206 cliquecoloring 10 4 3,clique-coloring principle
+cnfgen_cases,cliquecoloring_n10_k4_c4_sat.cnf,clique_coloring,SAT,moderate,125,1034,60,cnfgen -S 31207 cliquecoloring 10 4 4,clique-coloring principle
+cnfgen_cases,cliquecoloring_n6_k5_c4_unsat.cnf,clique_coloring,UNSAT,moderate,69,542,60,cnfgen -S 31209 cliquecoloring 6 5 4,clique-coloring principle
+cnfgen_cases,cliquecoloring_n8_k3_c4_sat.cnf,clique_coloring,SAT,moderate,84,447,60,cnfgen -S 31208 cliquecoloring 8 3 4,clique-coloring principle
+cnfgen_cases,count_m10_p2_sat.cnf,counting,SAT,easy,45,370,60,cnfgen -S 31011 count 10 2,counting partition principle
+cnfgen_cases,count_m11_p2_unsat.cnf,counting,UNSAT,easy,55,506,60,cnfgen -S 31012 count 11 2,counting partition principle
+cnfgen_cases,count_m6_p3_sat.cnf,counting,SAT,easy,20,276,60,cnfgen -S 31013 count 6 3,counting partition principle
+cnfgen_cases,count_m7_p3_unsat.cnf,counting,UNSAT,easy,35,742,60,cnfgen -S 31014 count 7 3,counting partition principle
+cnfgen_cases,count_m8_p2_sat.cnf,counting,SAT,easy,28,176,60,cnfgen -S 31009 count 8 2,counting partition principle
+cnfgen_cases,count_m9_p2_unsat.cnf,counting,UNSAT,easy,36,261,60,cnfgen -S 31010 count 9 2,counting partition principle
+cnfgen_cases,eq2_rand3cnf_v12_m42_planted_sat.cnf,planted_randkcnf_transform,SAT,moderate,24,336,60,cnfgen -S 31227 randkcnf -p 3 12 42 -T eq 2,satisfiability-preserving CNFgen transformation
+cnfgen_cases,exact_random3cnf_v10_m30_s1.cnf,exact_small_randkcnf,SAT,easy,10,30,60,cnfgen -S 31078 randkcnf 3 10 30,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v10_m30_s2.cnf,exact_small_randkcnf,SAT,easy,10,30,60,cnfgen -S 31079 randkcnf 3 10 30,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v10_m40_s1.cnf,exact_small_randkcnf,SAT,easy,10,40,60,cnfgen -S 31080 randkcnf 3 10 40,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v10_m40_s2.cnf,exact_small_randkcnf,SAT,easy,10,40,60,cnfgen -S 31081 randkcnf 3 10 40,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v10_m50_s1.cnf,exact_small_randkcnf,UNSAT,easy,10,50,60,cnfgen -S 31082 randkcnf 3 10 50,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v10_m50_s2.cnf,exact_small_randkcnf,UNSAT,easy,10,50,60,cnfgen -S 31083 randkcnf 3 10 50,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v11_m33_s1.cnf,exact_small_randkcnf,SAT,easy,11,33,60,cnfgen -S 31084 randkcnf 3 11 33,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v11_m33_s2.cnf,exact_small_randkcnf,SAT,easy,11,33,60,cnfgen -S 31085 randkcnf 3 11 33,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v11_m44_s1.cnf,exact_small_randkcnf,SAT,easy,11,44,60,cnfgen -S 31086 randkcnf 3 11 44,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v11_m44_s2.cnf,exact_small_randkcnf,SAT,easy,11,44,60,cnfgen -S 31087 randkcnf 3 11 44,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v11_m55_s1.cnf,exact_small_randkcnf,SAT,easy,11,55,60,cnfgen -S 31088 randkcnf 3 11 55,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v11_m55_s2.cnf,exact_small_randkcnf,UNSAT,easy,11,55,60,cnfgen -S 31089 randkcnf 3 11 55,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v12_m36_s1.cnf,exact_small_randkcnf,SAT,easy,12,36,60,cnfgen -S 31090 randkcnf 3 12 36,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v12_m36_s2.cnf,exact_small_randkcnf,SAT,easy,12,36,60,cnfgen -S 31091 randkcnf 3 12 36,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v12_m48_s1.cnf,exact_small_randkcnf,UNSAT,easy,12,48,60,cnfgen -S 31092 randkcnf 3 12 48,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v12_m48_s2.cnf,exact_small_randkcnf,UNSAT,easy,12,48,60,cnfgen -S 31093 randkcnf 3 12 48,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v12_m60_s1.cnf,exact_small_randkcnf,UNSAT,easy,12,60,60,cnfgen -S 31094 randkcnf 3 12 60,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v12_m60_s2.cnf,exact_small_randkcnf,UNSAT,easy,12,60,60,cnfgen -S 31095 randkcnf 3 12 60,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v13_m39_s1.cnf,exact_small_randkcnf,SAT,easy,13,39,60,cnfgen -S 31096 randkcnf 3 13 39,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v13_m39_s2.cnf,exact_small_randkcnf,SAT,easy,13,39,60,cnfgen -S 31097 randkcnf 3 13 39,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v13_m52_s1.cnf,exact_small_randkcnf,SAT,easy,13,52,60,cnfgen -S 31098 randkcnf 3 13 52,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v13_m52_s2.cnf,exact_small_randkcnf,SAT,easy,13,52,60,cnfgen -S 31099 randkcnf 3 13 52,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v13_m65_s1.cnf,exact_small_randkcnf,SAT,easy,13,65,60,cnfgen -S 31100 randkcnf 3 13 65,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v13_m65_s2.cnf,exact_small_randkcnf,UNSAT,easy,13,65,60,cnfgen -S 31101 randkcnf 3 13 65,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v14_m42_s1.cnf,exact_small_randkcnf,SAT,easy,14,42,60,cnfgen -S 31102 randkcnf 3 14 42,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v14_m42_s2.cnf,exact_small_randkcnf,SAT,easy,14,42,60,cnfgen -S 31103 randkcnf 3 14 42,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v14_m56_s1.cnf,exact_small_randkcnf,SAT,easy,14,56,60,cnfgen -S 31104 randkcnf 3 14 56,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v14_m56_s2.cnf,exact_small_randkcnf,UNSAT,easy,14,56,60,cnfgen -S 31105 randkcnf 3 14 56,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v14_m70_s1.cnf,exact_small_randkcnf,UNSAT,easy,14,70,60,cnfgen -S 31106 randkcnf 3 14 70,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v14_m70_s2.cnf,exact_small_randkcnf,SAT,easy,14,70,60,cnfgen -S 31107 randkcnf 3 14 70,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v15_m45_s1.cnf,exact_small_randkcnf,SAT,easy,15,45,60,cnfgen -S 31108 randkcnf 3 15 45,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v15_m45_s2.cnf,exact_small_randkcnf,SAT,easy,15,45,60,cnfgen -S 31109 randkcnf 3 15 45,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v15_m60_s1.cnf,exact_small_randkcnf,SAT,easy,15,60,60,cnfgen -S 31110 randkcnf 3 15 60,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v15_m60_s2.cnf,exact_small_randkcnf,UNSAT,easy,15,60,60,cnfgen -S 31111 randkcnf 3 15 60,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v15_m75_s1.cnf,exact_small_randkcnf,SAT,easy,15,75,60,cnfgen -S 31112 randkcnf 3 15 75,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v15_m75_s2.cnf,exact_small_randkcnf,UNSAT,easy,15,75,60,cnfgen -S 31113 randkcnf 3 15 75,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v16_m48_s1.cnf,exact_small_randkcnf,SAT,easy,16,48,60,cnfgen -S 31114 randkcnf 3 16 48,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v16_m48_s2.cnf,exact_small_randkcnf,SAT,easy,16,48,60,cnfgen -S 31115 randkcnf 3 16 48,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v16_m64_s1.cnf,exact_small_randkcnf,SAT,easy,16,64,60,cnfgen -S 31116 randkcnf 3 16 64,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v16_m64_s2.cnf,exact_small_randkcnf,UNSAT,easy,16,64,60,cnfgen -S 31117 randkcnf 3 16 64,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v16_m80_s1.cnf,exact_small_randkcnf,UNSAT,easy,16,80,60,cnfgen -S 31118 randkcnf 3 16 80,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v16_m80_s2.cnf,exact_small_randkcnf,SAT,easy,16,80,60,cnfgen -S 31119 randkcnf 3 16 80,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v8_m24_s1.cnf,exact_small_randkcnf,SAT,easy,8,24,60,cnfgen -S 31066 randkcnf 3 8 24,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v8_m24_s2.cnf,exact_small_randkcnf,SAT,easy,8,24,60,cnfgen -S 31067 randkcnf 3 8 24,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v8_m32_s1.cnf,exact_small_randkcnf,SAT,easy,8,32,60,cnfgen -S 31068 randkcnf 3 8 32,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v8_m32_s2.cnf,exact_small_randkcnf,SAT,easy,8,32,60,cnfgen -S 31069 randkcnf 3 8 32,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v8_m40_s1.cnf,exact_small_randkcnf,SAT,easy,8,40,60,cnfgen -S 31070 randkcnf 3 8 40,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v8_m40_s2.cnf,exact_small_randkcnf,UNSAT,easy,8,40,60,cnfgen -S 31071 randkcnf 3 8 40,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v9_m27_s1.cnf,exact_small_randkcnf,SAT,easy,9,27,60,cnfgen -S 31072 randkcnf 3 9 27,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v9_m27_s2.cnf,exact_small_randkcnf,SAT,easy,9,27,60,cnfgen -S 31073 randkcnf 3 9 27,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v9_m36_s1.cnf,exact_small_randkcnf,SAT,easy,9,36,60,cnfgen -S 31074 randkcnf 3 9 36,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v9_m36_s2.cnf,exact_small_randkcnf,SAT,easy,9,36,60,cnfgen -S 31075 randkcnf 3 9 36,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v9_m45_s1.cnf,exact_small_randkcnf,UNSAT,easy,9,45,60,cnfgen -S 31076 randkcnf 3 9 45,status brute-forced during generation
+cnfgen_cases,exact_random3cnf_v9_m45_s2.cnf,exact_small_randkcnf,SAT,easy,9,45,60,cnfgen -S 31077 randkcnf 3 9 45,status brute-forced during generation
+cnfgen_cases,flip_cliquecoloring_n5_k5_c4_unsat.cnf,clique_coloring_transform,UNSAT,moderate,55,380,60,cnfgen -S 31229 cliquecoloring 5 5 4 -T flip,satisfiability-preserving CNFgen transformation
+cnfgen_cases,flip_php_p6_h6_sat.cnf,pigeonhole_transform,SAT,moderate,36,96,60,cnfgen -S 31219 php 6 6 -T flip,satisfiability-preserving CNFgen transformation
+cnfgen_cases,kclique_k4_complete4_sat.cnf,clique,SAT,easy,16,88,60,cnfgen -S 31195 kclique 4 complete 4,known clique instance
+cnfgen_cases,kclique_k4_empty8_unsat.cnf,clique,UNSAT,easy,32,500,60,cnfgen -S 31196 kclique 4 empty 8,known clique instance
+cnfgen_cases,kclique_k5_complete8_sat.cnf,clique,SAT,easy,40,505,60,cnfgen -S 31197 kclique 5 complete 8,known clique instance
+cnfgen_cases,kclique_k6_complete5_unsat.cnf,clique,UNSAT,easy,30,291,60,cnfgen -S 31198 kclique 6 complete 5,known clique instance
+cnfgen_cases,kcolor_k2_empty24_sat.cnf,graph_coloring,SAT,easy,48,48,60,cnfgen -S 31193 kcolor 2 empty 24,known graph-coloring instance
+cnfgen_cases,kcolor_k2_grid3x3_sat.cnf,graph_coloring,SAT,easy,18,42,60,cnfgen -S 31194 kcolor 2 grid 3 3,known graph-coloring instance
+cnfgen_cases,kcolor_k3_complete3_sat.cnf,graph_coloring,SAT,easy,9,21,60,cnfgen -S 31189 kcolor 3 complete 3,known graph-coloring instance
+cnfgen_cases,kcolor_k3_complete4_unsat.cnf,graph_coloring,UNSAT,easy,12,34,60,cnfgen -S 31190 kcolor 3 complete 4,known graph-coloring instance
+cnfgen_cases,kcolor_k4_complete4_sat.cnf,graph_coloring,SAT,easy,16,52,60,cnfgen -S 31191 kcolor 4 complete 4,known graph-coloring instance
+cnfgen_cases,kcolor_k4_complete5_unsat.cnf,graph_coloring,UNSAT,easy,20,75,60,cnfgen -S 31192 kcolor 4 complete 5,known graph-coloring instance
+cnfgen_cases,matching_complete8_sat.cnf,matching,SAT,easy,28,176,60,cnfgen -S 31199 matching complete 8,perfect matching principle
+cnfgen_cases,matching_complete9_unsat.cnf,matching,UNSAT,easy,36,261,60,cnfgen -S 31200 matching complete 9,perfect matching principle
+cnfgen_cases,matching_empty6_unsat.cnf,matching,UNSAT,easy,0,6,60,cnfgen -S 31201 matching empty 6,perfect matching principle
+cnfgen_cases,matching_grid4x4_sat.cnf,matching,SAT,easy,24,68,60,cnfgen -S 31202 matching grid 4 4,perfect matching principle
+cnfgen_cases,or2_rand3cnf_v12_m42_planted_sat.cnf,planted_randkcnf_transform,SAT,moderate,24,170,60,cnfgen -S 31226 randkcnf -p 3 12 42 -T or 2,satisfiability-preserving CNFgen transformation
+cnfgen_cases,ordering_no_minimum_n10_unsat.cnf,ordering,UNSAT,moderate,90,775,60,cnfgen -S 31175 op 10,ordering principle
+cnfgen_cases,ordering_no_minimum_n12_unsat.cnf,ordering,UNSAT,moderate,132,1398,60,cnfgen -S 31176 op 12,ordering principle
+cnfgen_cases,ordering_no_minimum_n13_unsat.cnf,ordering,UNSAT,moderate,156,1807,60,cnfgen -S 31177 op 13,ordering principle
+cnfgen_cases,ordering_no_minimum_n6_unsat.cnf,ordering,UNSAT,easy,30,141,60,cnfgen -S 31173 op 6,ordering principle
+cnfgen_cases,ordering_no_minimum_n8_unsat.cnf,ordering,UNSAT,easy,56,372,60,cnfgen -S 31174 op 8,ordering principle
+cnfgen_cases,parity_n12_sat.cnf,parity,SAT,easy,66,672,60,cnfgen -S 31006 parity 12,parity principle
+cnfgen_cases,parity_n13_unsat.cnf,parity,UNSAT,easy,78,871,60,cnfgen -S 31007 parity 13,parity principle
+cnfgen_cases,parity_n16_sat.cnf,parity,SAT,easy,120,1696,60,cnfgen -S 31008 parity 16,parity principle
+cnfgen_cases,parity_n8_sat.cnf,parity,SAT,easy,28,176,60,cnfgen -S 31004 parity 8,parity principle
+cnfgen_cases,parity_n9_unsat.cnf,parity,UNSAT,easy,36,261,60,cnfgen -S 31005 parity 9,parity principle
+cnfgen_cases,peb_path12_unsat.cnf,pebbling,UNSAT,easy,13,14,60,cnfgen -S 31212 peb path 12,pebbling formula
+cnfgen_cases,peb_pyramid4_unsat.cnf,pebbling,UNSAT,easy,15,16,60,cnfgen -S 31213 peb pyramid 4,pebbling formula
+cnfgen_cases,peb_tree4_unsat.cnf,pebbling,UNSAT,easy,31,32,60,cnfgen -S 31214 peb tree 4,pebbling formula
+cnfgen_cases,php_p12_h11_unsat.cnf,pigeonhole,UNSAT,moderate,132,738,60,cnfgen -S 31146 php 12 11,plain pigeonhole principle
+cnfgen_cases,php_p15_h14_unsat.cnf,pigeonhole,UNSAT,moderate,210,1485,60,cnfgen -S 31147 php 15 14,plain pigeonhole principle
+cnfgen_cases,php_p16_h15_unsat.cnf,pigeonhole,UNSAT,moderate,240,1816,60,cnfgen -S 31149 php 16 15,plain pigeonhole principle
+cnfgen_cases,php_p16_h16_sat.cnf,pigeonhole,SAT,moderate,256,1936,60,cnfgen -S 31148 php 16 16,plain pigeonhole principle
+cnfgen_cases,php_p5_h5_sat.cnf,pigeonhole,SAT,easy,25,55,60,cnfgen -S 31142 php 5 5,plain pigeonhole principle
+cnfgen_cases,php_p6_h5_unsat.cnf,pigeonhole,UNSAT,easy,30,81,60,cnfgen -S 31143 php 6 5,plain pigeonhole principle
+cnfgen_cases,php_p8_h8_sat.cnf,pigeonhole,SAT,easy,64,232,60,cnfgen -S 31144 php 8 8,plain pigeonhole principle
+cnfgen_cases,php_p9_h8_unsat.cnf,pigeonhole,UNSAT,easy,72,297,60,cnfgen -S 31145 php 9 8,plain pigeonhole principle
+cnfgen_cases,planted_rand2cnf_v120_m260_s1_sat.cnf,planted_randkcnf,SAT,moderate,120,260,60,cnfgen -S 31018 randkcnf -p 2 120 260,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand2cnf_v120_m260_s2_sat.cnf,planted_randkcnf,SAT,moderate,120,260,60,cnfgen -S 31024 randkcnf -p 2 120 260,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand2cnf_v120_m260_s3_sat.cnf,planted_randkcnf,SAT,moderate,120,260,60,cnfgen -S 31030 randkcnf -p 2 120 260,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand2cnf_v180_m360_s1_sat.cnf,planted_randkcnf,SAT,moderate,180,360,60,cnfgen -S 31019 randkcnf -p 2 180 360,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand2cnf_v180_m360_s2_sat.cnf,planted_randkcnf,SAT,moderate,180,360,60,cnfgen -S 31025 randkcnf -p 2 180 360,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand2cnf_v180_m360_s3_sat.cnf,planted_randkcnf,SAT,moderate,180,360,60,cnfgen -S 31031 randkcnf -p 2 180 360,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand2cnf_v240_m520_s1_sat.cnf,planted_randkcnf,SAT,stress,240,520,60,cnfgen -S 31020 randkcnf -p 2 240 520,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand2cnf_v240_m520_s2_sat.cnf,planted_randkcnf,SAT,stress,240,520,60,cnfgen -S 31026 randkcnf -p 2 240 520,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand2cnf_v240_m520_s3_sat.cnf,planted_randkcnf,SAT,stress,240,520,60,cnfgen -S 31032 randkcnf -p 2 240 520,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand2cnf_v50_m120_s1_sat.cnf,planted_randkcnf,SAT,easy,50,120,60,cnfgen -S 31016 randkcnf -p 2 50 120,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand2cnf_v50_m120_s2_sat.cnf,planted_randkcnf,SAT,easy,50,120,60,cnfgen -S 31022 randkcnf -p 2 50 120,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand2cnf_v50_m120_s3_sat.cnf,planted_randkcnf,SAT,easy,50,120,60,cnfgen -S 31028 randkcnf -p 2 50 120,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand2cnf_v50_m60_s1_sat.cnf,planted_randkcnf,SAT,easy,50,60,60,cnfgen -S 31015 randkcnf -p 2 50 60,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand2cnf_v50_m60_s2_sat.cnf,planted_randkcnf,SAT,easy,50,60,60,cnfgen -S 31021 randkcnf -p 2 50 60,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand2cnf_v50_m60_s3_sat.cnf,planted_randkcnf,SAT,easy,50,60,60,cnfgen -S 31027 randkcnf -p 2 50 60,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand2cnf_v80_m160_s1_sat.cnf,planted_randkcnf,SAT,moderate,80,160,60,cnfgen -S 31017 randkcnf -p 2 80 160,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand2cnf_v80_m160_s2_sat.cnf,planted_randkcnf,SAT,moderate,80,160,60,cnfgen -S 31023 randkcnf -p 2 80 160,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand2cnf_v80_m160_s3_sat.cnf,planted_randkcnf,SAT,moderate,80,160,60,cnfgen -S 31029 randkcnf -p 2 80 160,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v120_m510_s1_sat.cnf,planted_randkcnf,SAT,moderate,120,510,60,cnfgen -S 31036 randkcnf -p 3 120 510,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v120_m510_s2_sat.cnf,planted_randkcnf,SAT,moderate,120,510,60,cnfgen -S 31043 randkcnf -p 3 120 510,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v120_m510_s3_sat.cnf,planted_randkcnf,SAT,moderate,120,510,60,cnfgen -S 31050 randkcnf -p 3 120 510,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v200_m860_s1_sat.cnf,planted_randkcnf,SAT,stress,200,860,60,cnfgen -S 31037 randkcnf -p 3 200 860,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v200_m860_s2_sat.cnf,planted_randkcnf,SAT,stress,200,860,60,cnfgen -S 31044 randkcnf -p 3 200 860,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v200_m860_s3_sat.cnf,planted_randkcnf,SAT,stress,200,860,60,cnfgen -S 31051 randkcnf -p 3 200 860,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v30_m90_s1_sat.cnf,planted_randkcnf,SAT,easy,30,90,60,cnfgen -S 31033 randkcnf -p 3 30 90,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v30_m90_s2_sat.cnf,planted_randkcnf,SAT,easy,30,90,60,cnfgen -S 31040 randkcnf -p 3 30 90,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v30_m90_s3_sat.cnf,planted_randkcnf,SAT,easy,30,90,60,cnfgen -S 31047 randkcnf -p 3 30 90,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v320_m1360_s1_sat.cnf,planted_randkcnf,SAT,stress,320,1360,60,cnfgen -S 31038 randkcnf -p 3 320 1360,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v320_m1360_s2_sat.cnf,planted_randkcnf,SAT,stress,320,1360,60,cnfgen -S 31045 randkcnf -p 3 320 1360,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v320_m1360_s3_sat.cnf,planted_randkcnf,SAT,stress,320,1360,60,cnfgen -S 31052 randkcnf -p 3 320 1360,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v500_m2000_s1_sat.cnf,planted_randkcnf,SAT,stress,500,2000,60,cnfgen -S 31039 randkcnf -p 3 500 2000,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v500_m2000_s2_sat.cnf,planted_randkcnf,SAT,stress,500,2000,60,cnfgen -S 31046 randkcnf -p 3 500 2000,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v500_m2000_s3_sat.cnf,planted_randkcnf,SAT,stress,500,2000,60,cnfgen -S 31053 randkcnf -p 3 500 2000,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v60_m240_s1_sat.cnf,planted_randkcnf,SAT,easy,60,240,60,cnfgen -S 31034 randkcnf -p 3 60 240,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v60_m240_s2_sat.cnf,planted_randkcnf,SAT,easy,60,240,60,cnfgen -S 31041 randkcnf -p 3 60 240,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v60_m240_s3_sat.cnf,planted_randkcnf,SAT,easy,60,240,60,cnfgen -S 31048 randkcnf -p 3 60 240,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v90_m380_s1_sat.cnf,planted_randkcnf,SAT,moderate,90,380,60,cnfgen -S 31035 randkcnf -p 3 90 380,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v90_m380_s2_sat.cnf,planted_randkcnf,SAT,moderate,90,380,60,cnfgen -S 31042 randkcnf -p 3 90 380,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3cnf_v90_m380_s3_sat.cnf,planted_randkcnf,SAT,moderate,90,380,60,cnfgen -S 31049 randkcnf -p 3 90 380,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand3xor_v128_e180_s1_sat.cnf,planted_randkxor,SAT,stress,128,720,60,cnfgen -S 31125 randkxor -p 3 128 180,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand3xor_v128_e180_s2_sat.cnf,planted_randkxor,SAT,stress,128,720,60,cnfgen -S 31131 randkxor -p 3 128 180,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand3xor_v24_e24_s1_sat.cnf,planted_randkxor,SAT,easy,24,96,60,cnfgen -S 31120 randkxor -p 3 24 24,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand3xor_v24_e24_s2_sat.cnf,planted_randkxor,SAT,easy,24,96,60,cnfgen -S 31126 randkxor -p 3 24 24,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand3xor_v32_e40_s1_sat.cnf,planted_randkxor,SAT,easy,32,160,60,cnfgen -S 31121 randkxor -p 3 32 40,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand3xor_v32_e40_s2_sat.cnf,planted_randkxor,SAT,easy,32,160,60,cnfgen -S 31127 randkxor -p 3 32 40,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand3xor_v48_e64_s1_sat.cnf,planted_randkxor,SAT,easy,48,256,60,cnfgen -S 31122 randkxor -p 3 48 64,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand3xor_v48_e64_s2_sat.cnf,planted_randkxor,SAT,easy,48,256,60,cnfgen -S 31128 randkxor -p 3 48 64,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand3xor_v64_e90_s1_sat.cnf,planted_randkxor,SAT,moderate,64,360,60,cnfgen -S 31123 randkxor -p 3 64 90,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand3xor_v64_e90_s2_sat.cnf,planted_randkxor,SAT,moderate,64,360,60,cnfgen -S 31129 randkxor -p 3 64 90,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand3xor_v96_e128_s1_sat.cnf,planted_randkxor,SAT,moderate,96,512,60,cnfgen -S 31124 randkxor -p 3 96 128,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand3xor_v96_e128_s2_sat.cnf,planted_randkxor,SAT,moderate,96,512,60,cnfgen -S 31130 randkxor -p 3 96 128,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand4cnf_v120_m900_s1_sat.cnf,planted_randkcnf,SAT,moderate,120,900,60,cnfgen -S 31056 randkcnf -p 4 120 900,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand4cnf_v120_m900_s2_sat.cnf,planted_randkcnf,SAT,moderate,120,900,60,cnfgen -S 31060 randkcnf -p 4 120 900,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand4cnf_v120_m900_s3_sat.cnf,planted_randkcnf,SAT,moderate,120,900,60,cnfgen -S 31064 randkcnf -p 4 120 900,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand4cnf_v180_m1440_s1_sat.cnf,planted_randkcnf,SAT,moderate,180,1440,60,cnfgen -S 31057 randkcnf -p 4 180 1440,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand4cnf_v180_m1440_s2_sat.cnf,planted_randkcnf,SAT,moderate,180,1440,60,cnfgen -S 31061 randkcnf -p 4 180 1440,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand4cnf_v180_m1440_s3_sat.cnf,planted_randkcnf,SAT,moderate,180,1440,60,cnfgen -S 31065 randkcnf -p 4 180 1440,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand4cnf_v40_m180_s1_sat.cnf,planted_randkcnf,SAT,easy,40,180,60,cnfgen -S 31054 randkcnf -p 4 40 180,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand4cnf_v40_m180_s2_sat.cnf,planted_randkcnf,SAT,easy,40,180,60,cnfgen -S 31058 randkcnf -p 4 40 180,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand4cnf_v40_m180_s3_sat.cnf,planted_randkcnf,SAT,easy,40,180,60,cnfgen -S 31062 randkcnf -p 4 40 180,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand4cnf_v80_m520_s1_sat.cnf,planted_randkcnf,SAT,moderate,80,520,60,cnfgen -S 31055 randkcnf -p 4 80 520,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand4cnf_v80_m520_s2_sat.cnf,planted_randkcnf,SAT,moderate,80,520,60,cnfgen -S 31059 randkcnf -p 4 80 520,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand4cnf_v80_m520_s3_sat.cnf,planted_randkcnf,SAT,moderate,80,520,60,cnfgen -S 31063 randkcnf -p 4 80 520,CNFgen planted random k-CNF
+cnfgen_cases,planted_rand4xor_v128_e120_s1_sat.cnf,planted_randkxor,SAT,stress,128,960,60,cnfgen -S 31136 randkxor -p 4 128 120,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand4xor_v128_e120_s2_sat.cnf,planted_randkxor,SAT,stress,128,960,60,cnfgen -S 31141 randkxor -p 4 128 120,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand4xor_v24_e18_s1_sat.cnf,planted_randkxor,SAT,easy,24,144,60,cnfgen -S 31132 randkxor -p 4 24 18,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand4xor_v24_e18_s2_sat.cnf,planted_randkxor,SAT,easy,24,144,60,cnfgen -S 31137 randkxor -p 4 24 18,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand4xor_v48_e36_s1_sat.cnf,planted_randkxor,SAT,easy,48,288,60,cnfgen -S 31133 randkxor -p 4 48 36,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand4xor_v48_e36_s2_sat.cnf,planted_randkxor,SAT,easy,48,288,60,cnfgen -S 31138 randkxor -p 4 48 36,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand4xor_v64_e56_s1_sat.cnf,planted_randkxor,SAT,moderate,64,448,60,cnfgen -S 31134 randkxor -p 4 64 56,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand4xor_v64_e56_s2_sat.cnf,planted_randkxor,SAT,moderate,64,448,60,cnfgen -S 31139 randkxor -p 4 64 56,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand4xor_v96_e90_s1_sat.cnf,planted_randkxor,SAT,moderate,96,720,60,cnfgen -S 31135 randkxor -p 4 96 90,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,planted_rand4xor_v96_e90_s2_sat.cnf,planted_randkxor,SAT,moderate,96,720,60,cnfgen -S 31140 randkxor -p 4 96 90,CNFgen planted random XOR encoded as CNF
+cnfgen_cases,ram_3_3_n5_sat.cnf,ramsey,SAT,easy,10,20,60,cnfgen -S 31178 ram 3 3 5,Ramsey principle
+cnfgen_cases,ram_3_3_n6_unsat.cnf,ramsey,UNSAT,easy,15,40,60,cnfgen -S 31179 ram 3 3 6,Ramsey principle
+cnfgen_cases,ram_3_3_n7_unsat.cnf,ramsey,UNSAT,moderate,21,70,60,cnfgen -S 31180 ram 3 3 7,Ramsey principle
+cnfgen_cases,ram_3_4_n10_unsat.cnf,ramsey,UNSAT,stress,45,330,60,cnfgen -S 31183 ram 3 4 10,Ramsey principle
+cnfgen_cases,ram_3_4_n8_sat.cnf,ramsey,SAT,moderate,28,126,60,cnfgen -S 31181 ram 3 4 8,Ramsey principle
+cnfgen_cases,ram_3_4_n9_unsat.cnf,ramsey,UNSAT,moderate,36,210,60,cnfgen -S 31182 ram 3 4 9,Ramsey principle
+cnfgen_cases,rphp_p10_r12_h12_sat.cnf,relativized_pigeonhole,SAT,moderate,276,1474,60,cnfgen -S 31159 rphp 10 12 12,relativized pigeonhole principle
+cnfgen_cases,rphp_p10_r8_h12_unsat.cnf,relativized_pigeonhole,UNSAT,moderate,184,794,60,cnfgen -S 31157 rphp 10 8 12,relativized pigeonhole principle
+cnfgen_cases,rphp_p12_r10_h12_unsat.cnf,relativized_pigeonhole,UNSAT,moderate,250,1342,60,cnfgen -S 31160 rphp 12 10 12,relativized pigeonhole principle
+cnfgen_cases,rphp_p8_r12_h10_sat.cnf,relativized_pigeonhole,SAT,moderate,228,1112,60,cnfgen -S 31156 rphp 8 12 10,relativized pigeonhole principle
+cnfgen_cases,rphp_p8_r14_h12_sat.cnf,relativized_pigeonhole,SAT,moderate,294,1618,60,cnfgen -S 31158 rphp 8 14 12,relativized pigeonhole principle
+cnfgen_cases,sanity_false_unsat.cnf,sanity,UNSAT,easy,0,1,60,cnfgen -S 31003 false,single empty clause
+cnfgen_cases,sanity_true_sat.cnf,sanity,SAT,easy,0,0,60,cnfgen -S 31002 true,empty true formula
+cnfgen_cases,shuffle_count_m7_p3_unsat.cnf,counting_transform,UNSAT,moderate,35,742,60,cnfgen -S 31223 count 7 3 -T shuffle,satisfiability-preserving CNFgen transformation
+cnfgen_cases,shuffle_kcolor_k3_complete4_unsat.cnf,graph_coloring_transform,UNSAT,moderate,12,34,60,cnfgen -S 31224 kcolor 3 complete 4 -T shuffle,satisfiability-preserving CNFgen transformation
+cnfgen_cases,shuffle_php_p7_h6_unsat.cnf,pigeonhole_transform,UNSAT,moderate,42,133,60,cnfgen -S 31218 php 7 6 -T shuffle,satisfiability-preserving CNFgen transformation
+cnfgen_cases,shuffle_ram_3_3_n6_unsat.cnf,ramsey_transform,UNSAT,moderate,15,40,60,cnfgen -S 31220 ram 3 3 6 -T shuffle,satisfiability-preserving CNFgen transformation
+cnfgen_cases,shuffle_tseitin_first_v20_d3_unsat.cnf,tseitin_transform,UNSAT,moderate,30,80,60,cnfgen -S 31228 tseitin first gnd 20 3 -T shuffle,satisfiability-preserving CNFgen transformation
+cnfgen_cases,shuffle_vdw_k3_n9_unsat.cnf,van_der_waerden_transform,UNSAT,moderate,9,32,60,cnfgen -S 31221 vdw 9 3 3 -T shuffle,satisfiability-preserving CNFgen transformation
+cnfgen_cases,stone4_path8_unsat.cnf,stone,UNSAT,moderate,31,68,60,cnfgen -S 31215 stone 4 path 8 --sparse 3,sparse stone formula
+cnfgen_cases,stone4_pyramid3_unsat.cnf,stone,UNSAT,moderate,34,121,60,cnfgen -S 31216 stone 4 pyramid 3 --sparse 3,sparse stone formula
+cnfgen_cases,stone5_tree3_unsat.cnf,stone,UNSAT,moderate,50,159,60,cnfgen -S 31217 stone 5 tree 3 --sparse 3,sparse stone formula
+cnfgen_cases,subgraph_grid2x2_in_k8_sat.cnf,subgraph,SAT,easy,32,164,60,cnfgen -S 31205 subgraph -G complete 8 -H grid 2 2,subgraph containment
+cnfgen_cases,subgraph_k4_in_k5_sat.cnf,subgraph,SAT,easy,20,74,60,cnfgen -S 31203 subgraph -G complete 5 -H complete 4,subgraph containment
+cnfgen_cases,subgraph_triangle_in_grid3x3_unsat.cnf,subgraph,UNSAT,easy,27,282,60,cnfgen -S 31204 subgraph -G grid 3 3 -H complete 3,subgraph containment
+cnfgen_cases,subsetcard_n10_unsat.cnf,subset_cardinality,UNSAT,moderate,41,92,60,cnfgen -S 31210 subsetcard 10,subset cardinality principle
+cnfgen_cases,subsetcard_n16_unsat.cnf,subset_cardinality,UNSAT,moderate,65,140,60,cnfgen -S 31211 subsetcard 16,subset cardinality principle
+cnfgen_cases,tseitin_first_v100_d4_unsat.cnf,tseitin,UNSAT,stress,200,800,60,cnfgen -S 31172 tseitin first gnd 100 4,Tseitin formula on random regular graph
+cnfgen_cases,tseitin_first_v20_d3_unsat.cnf,tseitin,UNSAT,easy,30,80,60,cnfgen -S 31162 tseitin first gnd 20 3,Tseitin formula on random regular graph
+cnfgen_cases,tseitin_first_v40_d3_unsat.cnf,tseitin,UNSAT,easy,60,160,60,cnfgen -S 31164 tseitin first gnd 40 3,Tseitin formula on random regular graph
+cnfgen_cases,tseitin_first_v60_d3_unsat.cnf,tseitin,UNSAT,moderate,90,240,60,cnfgen -S 31166 tseitin first gnd 60 3,Tseitin formula on random regular graph
+cnfgen_cases,tseitin_first_v64_d4_unsat.cnf,tseitin,UNSAT,moderate,128,512,60,cnfgen -S 31168 tseitin first gnd 64 4,Tseitin formula on random regular graph
+cnfgen_cases,tseitin_first_v80_d4_unsat.cnf,tseitin,UNSAT,moderate,160,640,60,cnfgen -S 31170 tseitin first gnd 80 4,Tseitin formula on random regular graph
+cnfgen_cases,tseitin_zero_v100_d4_sat.cnf,tseitin,SAT,stress,200,800,60,cnfgen -S 31171 tseitin zero gnd 100 4,Tseitin formula on random regular graph
+cnfgen_cases,tseitin_zero_v20_d3_sat.cnf,tseitin,SAT,easy,30,80,60,cnfgen -S 31161 tseitin zero gnd 20 3,Tseitin formula on random regular graph
+cnfgen_cases,tseitin_zero_v40_d3_sat.cnf,tseitin,SAT,easy,60,160,60,cnfgen -S 31163 tseitin zero gnd 40 3,Tseitin formula on random regular graph
+cnfgen_cases,tseitin_zero_v60_d3_sat.cnf,tseitin,SAT,moderate,90,240,60,cnfgen -S 31165 tseitin zero gnd 60 3,Tseitin formula on random regular graph
+cnfgen_cases,tseitin_zero_v64_d4_sat.cnf,tseitin,SAT,moderate,128,512,60,cnfgen -S 31167 tseitin zero gnd 64 4,Tseitin formula on random regular graph
+cnfgen_cases,tseitin_zero_v80_d4_sat.cnf,tseitin,SAT,moderate,160,640,60,cnfgen -S 31169 tseitin zero gnd 80 4,Tseitin formula on random regular graph
+cnfgen_cases,vdw_2color_k3_n16_unsat.cnf,van_der_waerden,UNSAT,moderate,16,112,60,cnfgen -S 31186 vdw 16 3 3,Van der Waerden principle
+cnfgen_cases,vdw_2color_k3_n8_sat.cnf,van_der_waerden,SAT,easy,8,24,60,cnfgen -S 31184 vdw 8 3 3,Van der Waerden principle
+cnfgen_cases,vdw_2color_k3_n9_unsat.cnf,van_der_waerden,UNSAT,easy,9,32,60,cnfgen -S 31185 vdw 9 3 3,Van der Waerden principle
+cnfgen_cases,vdw_2color_k4_n34_sat.cnf,van_der_waerden,SAT,moderate,34,352,60,cnfgen -S 31187 vdw 34 4 4,Van der Waerden principle
+cnfgen_cases,vdw_2color_k4_n35_unsat.cnf,van_der_waerden,UNSAT,stress,35,374,60,cnfgen -S 31188 vdw 35 4 4,Van der Waerden principle
+cnfgen_cases,xor2_parity_n5_unsat.cnf,parity_transform,UNSAT,moderate,20,200,60,cnfgen -S 31222 parity 5 -T xor 2,satisfiability-preserving CNFgen transformation
+cnfgen_cases,xor2_rand3cnf_v12_m42_planted_sat.cnf,planted_randkcnf_transform,SAT,moderate,24,336,60,cnfgen -S 31225 randkcnf -p 3 12 42 -T xor 2,satisfiability-preserving CNFgen transformation

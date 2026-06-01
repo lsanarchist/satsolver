@@ -1,0 +1,44 @@
+c description: Pebbling formula for Complete binary tree of height 4
+c generator: CNFgen (0.9.5)
+c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
+c url: https://massimolauria.net/cnfgen
+c random seed: 31214
+c command line: cnfgen -S 31214 -o cnfgen_regression_pack/cnfgen_cases/peb_tree4_unsat.cnf peb tree 4
+c
+c known_status: UNSAT
+c pack_family: pebbling
+c pack_level: easy
+c pack_notes: pebbling formula
+p cnf 31 32
+1 0
+2 0
+3 0
+4 0
+5 0
+6 0
+7 0
+8 0
+9 0
+10 0
+11 0
+12 0
+13 0
+14 0
+15 0
+16 0
+-1 -2 17 0
+-3 -4 18 0
+-5 -6 19 0
+-7 -8 20 0
+-9 -10 21 0
+-11 -12 22 0
+-13 -14 23 0
+-15 -16 24 0
+-17 -18 25 0
+-19 -20 26 0
+-21 -22 27 0
+-23 -24 28 0
+-25 -26 29 0
+-27 -28 30 0
+-29 -30 31 0
+-31 0

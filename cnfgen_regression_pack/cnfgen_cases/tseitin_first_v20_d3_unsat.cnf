@@ -1,0 +1,92 @@
+c description: Tseitin formula on Random 3-regular graph of 20 vertices, with odd charge
+c generator: CNFgen (0.9.5)
+c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
+c url: https://massimolauria.net/cnfgen
+c random seed: 31162
+c command line: cnfgen -S 31162 -o cnfgen_regression_pack/cnfgen_cases/tseitin_first_v20_d3_unsat.cnf tseitin first gnd 20 3
+c
+c known_status: UNSAT
+c pack_family: tseitin
+c pack_level: easy
+c pack_notes: Tseitin formula on random regular graph
+p cnf 30 80
+1 2 3 0
+1 -2 -3 0
+-1 2 -3 0
+-1 -2 3 0
+4 5 -6 0
+4 -5 6 0
+-4 5 6 0
+-4 -5 -6 0
+7 8 -9 0
+7 -8 9 0
+-7 8 9 0
+-7 -8 -9 0
+1 10 -11 0
+1 -10 11 0
+-1 10 11 0
+-1 -10 -11 0
+10 12 -13 0
+10 -12 13 0
+-10 12 13 0
+-10 -12 -13 0
+14 15 -16 0
+14 -15 16 0
+-14 15 16 0
+-14 -15 -16 0
+12 14 -17 0
+12 -14 17 0
+-12 14 17 0
+-12 -14 -17 0
+7 11 -18 0
+7 -11 18 0
+-7 11 18 0
+-7 -11 -18 0
+4 19 -20 0
+4 -19 20 0
+-4 19 20 0
+-4 -19 -20 0
+5 18 -21 0
+5 -18 21 0
+-5 18 21 0
+-5 -18 -21 0
+19 21 -22 0
+19 -21 22 0
+-19 21 22 0
+-19 -21 -22 0
+2 8 -23 0
+2 -8 23 0
+-2 8 23 0
+-2 -8 -23 0
+23 24 -25 0
+23 -24 25 0
+-23 24 25 0
+-23 -24 -25 0
+17 24 -26 0
+17 -24 26 0
+-17 24 26 0
+-17 -24 -26 0
+3 15 -27 0
+3 -15 27 0
+-3 15 27 0
+-3 -15 -27 0
+6 28 -29 0
+6 -28 29 0
+-6 28 29 0
+-6 -28 -29 0
+26 28 -30 0
+26 -28 30 0
+-26 28 30 0
+-26 -28 -30 0
+13 25 -29 0
+13 -25 29 0
+-13 25 29 0
+-13 -25 -29 0
+9 20 -22 0
+9 -20 22 0
+-9 20 22 0
+-9 -20 -22 0
+16 27 -30 0
+16 -27 30 0
+-16 27 30 0
+-16 -27 -30 0

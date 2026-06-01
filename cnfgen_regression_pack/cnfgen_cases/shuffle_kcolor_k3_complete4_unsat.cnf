@@ -1,0 +1,47 @@
+c description: Graph 3-Colorability of <cnfgen.graphs.Graph object at 0x7f65e0d9f770> (reshuffled)
+c generator: CNFgen (0.9.5)
+c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
+c url: https://massimolauria.net/cnfgen
+c transformation 1: Formula reshuffling
+c random seed: 31224
+c command line: cnfgen -S 31224 -o cnfgen_regression_pack/cnfgen_cases/shuffle_kcolor_k3_complete4_unsat.cnf kcolor 3 complete 4 -T shuffle
+c
+c known_status: UNSAT
+c pack_family: graph_coloring_transform
+c pack_level: moderate
+c pack_notes: satisfiability-preserving CNFgen transformation
+p cnf 12 34
+4 -9 0
+4 -2 0
+-8 -11 0
+-2 -11 0
+1 4 0
+1 -2 0
+-7 -12 0
+-9 5 0
+1 -9 0
+-12 -11 0
+-6 -11 0
+-12 5 0
+4 -7 0
+-6 -12 0
+-10 -8 0
+9 -3 -5 0
+-9 -2 0
+-4 7 12 0
+-7 -8 0
+1 -6 0
+-10 -7 0
+1 -10 0
+-10 3 0
+-2 -8 0
+-1 10 6 0
+-10 -6 0
+5 -11 0
+-6 5 0
+3 5 0
+3 -8 0
+-7 3 0
+2 8 11 0
+4 -12 0
+-9 3 0

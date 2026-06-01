@@ -1,0 +1,93 @@
+c description: Tseitin formula on Random 3-regular graph of 20 vertices, with odd charge (reshuffled)
+c generator: CNFgen (0.9.5)
+c copyright: (C) 2012-2026 Massimo Lauria <massimo.lauria@uniroma1.it>
+c url: https://massimolauria.net/cnfgen
+c transformation 1: Formula reshuffling
+c random seed: 31228
+c command line: cnfgen -S 31228 -o cnfgen_regression_pack/cnfgen_cases/shuffle_tseitin_first_v20_d3_unsat.cnf tseitin first gnd 20 3 -T shuffle
+c
+c known_status: UNSAT
+c pack_family: tseitin_transform
+c pack_level: moderate
+c pack_notes: satisfiability-preserving CNFgen transformation
+p cnf 30 80
+29 1 21 0
+-5 12 19 0
+-17 1 8 0
+20 -14 22 0
+18 -15 -24 0
+-2 13 -10 0
+17 -1 8 0
+7 -25 -14 0
+-6 29 -13 0
+2 13 10 0
+18 15 24 0
+-6 2 -20 0
+-29 -1 21 0
+21 -11 -22 0
+2 -13 -10 0
+-6 -29 13 0
+5 12 -19 0
+-28 26 -19 0
+6 2 20 0
+-7 -25 14 0
+10 -9 15 0
+-30 11 -3 0
+-18 15 -24 0
+-23 -26 -24 0
+4 9 -23 0
+-16 27 12 0
+-17 -30 -28 0
+-21 -11 22 0
+-10 9 15 0
+-16 7 -3 0
+6 -29 -13 0
+4 -5 18 0
+10 9 -15 0
+8 27 25 0
+29 -1 -21 0
+16 -7 -3 0
+-20 -14 -22 0
+17 30 -28 0
+-10 -9 -15 0
+-29 1 -21 0
+-6 -2 20 0
+-8 27 -25 0
+-16 -27 -12 0
+-23 26 24 0
+8 -27 -25 0
+-4 -9 -23 0
+-4 -5 -18 0
+23 -26 24 0
+-7 25 -14 0
+-18 -15 24 0
+5 -12 19 0
+-17 30 28 0
+17 1 -8 0
+16 7 3 0
+28 26 19 0
+21 11 22 0
+20 14 -22 0
+-21 11 -22 0
+-17 -1 -8 0
+6 29 13 0
+-16 -7 3 0
+-2 -13 10 0
+23 26 -24 0
+16 -27 12 0
+30 11 3 0
+17 -30 28 0
+28 -26 -19 0
+6 -2 -20 0
+16 27 -12 0
+4 -9 23 0
+-30 -11 3 0
+-28 -26 19 0
+7 25 14 0
+30 -11 -3 0
+-5 -12 -19 0
+-8 -27 25 0
+4 5 -18 0
+-20 14 22 0
+-4 9 23 0
+-4 5 18 0
