@@ -54,4 +54,6 @@ Full-CPU run for one CNF:
 python satsolver_fullcpu.py cnf_tests/assignment_safe/course_cnf_tests__large__test_6.cnf /tmp/sat_fullcpu.out --workers 16
 ```
 
+Use `--no-detectors` only when you want a pure CPU portfolio experiment on every formula, including structured UNSAT cases that the normal solver can prove immediately.
+
 `cnf_tests/assignment_safe/` contains only known SAT/UNSAT cases with at most 500 variables and 2000 clauses. `cnf_tests/stress_over_limits/` keeps larger valid stress cases separately.

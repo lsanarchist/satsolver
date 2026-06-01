@@ -171,10 +171,18 @@ def main(argv: list[str] | None = None) -> int:
         default=os.cpu_count() or 1,
         help="Number of parallel solver processes to run on the same CNF.",
     )
+    parser.set_defaults(use_detectors=True)
     parser.add_argument(
         "--use-detectors",
+        dest="use_detectors",
         action="store_true",
-        help="Run the same structured UNSAT detectors as satsolver.py before starting workers.",
+        help="Run the same structured UNSAT detectors as satsolver.py before starting workers. Enabled by default.",
+    )
+    parser.add_argument(
+        "--no-detectors",
+        dest="use_detectors",
+        action="store_false",
+        help="Disable structured UNSAT detectors and force the multiprocessing portfolio to handle every CNF.",
     )
     args = parser.parse_args(sys.argv[1:] if argv is None else argv)
 
