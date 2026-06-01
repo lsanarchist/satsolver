@@ -5,3 +5,13 @@ __pycache__/
 venv/
 *.out
 *.zip
+result.txt
+run_35/
+run_35_results/
+*_avg5.txt
+*_once.txt
+*_fullcpu_once.txt
+*_profile*.txt
+*.prof
+*.pstats
+run_35_results/
