@@ -71,8 +71,7 @@ def write_result(
 ) -> None:
     with open(path, "wb") as handle:
         if model is None:
-            handle.write(b"UNSAT\n")
+            handle.write(b"UNSAT")
             return
         handle.write(b"SAT\n")
         handle.write(format_model(model).encode("ascii"))
-        handle.write(b"\n")

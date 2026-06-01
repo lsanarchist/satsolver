@@ -1,0 +1,51 @@
+solver=/home/doomguy/Desktop/sat/satsolver/satsolver.py
+python=python
+cnf_dir=/home/doomguy/Desktop/sat/satsolver/cnf_tests/assignment_safe
+output_dir=/home/doomguy/Desktop/sat/satsolver/run_35_results
+
+case                                       status answer       time_s
+----                                       ------ ------       ------
+small/test_1.cnf                           OK     SAT          0.0262
+small/test_2.cnf                           OK     SAT          0.0496
+small/test_3.cnf                           OK     SAT          0.0254
+small/test_4.cnf                           OK     UNSAT        0.0298
+small/test_5.cnf                           OK     SAT          0.0324
+small/test_6.cnf                           OK     SAT          0.0295
+small/test_7.cnf                           OK     SAT          0.0359
+small/test_8.cnf                           OK     UNSAT        0.0276
+small/test_9.cnf                           OK     SAT          0.0294
+small/test_10.cnf                          OK     UNSAT        0.0295
+medium/test_1.cnf                          OK     UNSAT        0.0382
+medium/test_2.cnf                          OK     UNSAT        0.0309
+medium/test_3.cnf                          OK     UNSAT        0.5037
+medium/test_4.cnf                          OK     UNSAT        0.8279
+medium/test_5.cnf                          OK     UNSAT        0.0306
+medium/test_6.cnf                          OK     UNSAT        0.0294
+medium/test_7.cnf                          OK     UNSAT        0.0441
+medium/test_8.cnf                          OK     SAT          0.0391
+medium/test_9.cnf                          OK     SAT          0.0256
+medium/test_10.cnf                         OK     UNSAT        0.0313
+large/test_1.cnf                           OK     SAT          0.0469
+large/test_2.cnf                           OK     SAT          0.0484
+large/test_3.cnf                           OK     UNSAT        0.2922
+large/test_4.cnf                           OK     UNSAT        0.2893
+large/test_5.cnf                           OK     SAT          0.0483
+large/test_6.cnf                           OK     UNSAT        3.2584
+large/test_7.cnf                           OK     SAT          0.0344
+large/test_8.cnf                           OK     SAT          0.1227
+large/test_9.cnf                           OK     SAT          0.0351
+large/test_10.cnf                          OK     UNSAT        0.7768
+special/dense.cnf                          OK     UNSAT        0.1283
+special/easy.cnf                           OK     SAT          0.0381
+special/hard.cnf                           OK     UNSAT        2.4462
+special/pigeonhole.cnf                     OK     UNSAT        0.0423
+special/tseitin.cnf                        OK     UNSAT        0.0394
+
+summary:
+cases=35
+ok=35
+failed=0
+total_time_s=9.5631
+avg_time_s=0.2732
+report=/home/doomguy/Desktop/sat/satsolver/run_35_results/timing_35.txt
+outputs=/home/doomguy/Desktop/sat/satsolver/run_35_results/outputs
