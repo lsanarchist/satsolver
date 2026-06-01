@@ -1,45 +1,57 @@
-# SAT Solver
+# SAT Solver Assignment
 
-Benchmark-driven Python SAT solver with a submission CLI at `satsolver.py`.
+Minimal standard-library Python SAT solver prepared for the LPI SAT assignment.
 
-## Quick Start
+## Run
 
 ```bash
-python satsolver.py small/test_1.cnf /tmp/result.txt
-python tools/checker.py small/test_1.cnf /tmp/result.txt
-python tools/codex_verify.py
+python satsolver.py input.cnf output.txt
 ```
 
-## Repo Map
+The output file contains either:
 
-- `satsolver.py`: required `python satsolver.py input.cnf output.txt` entrypoint
-- `satsolver_core.py`: shared CDCL solver core
-- `satsolver_io.py`: shared DIMACS parsing and result-writing helpers
-- `satsolver_fast.py`: alternate comparison wrapper over the shared core
-- `satsolver_blaze.py`: legacy comparison solver
-- `satsolver_pysat.py`: optional external-library comparison wrapper
-- `benchmark_suite.py`: validated benchmark harness
-- `tools/checker.py`: SAT/UNSAT output validator
-- `tools/profile_solver.py`: solver profiler for hotspot cases
-- `tools/hotspot_compare.py`: same-day baseline-vs-candidate comparator
-- `tests/`: regression and tooling tests
-- `small/`, `medium/`, `large/`, `special/`, `satlib_subset/`, `satlib_more/`: benchmark inputs
+- `UNSAT`
+- `SAT` followed by one complete assignment line ending in `0`
 
-## Codex Workflow
+## Files
 
-- `AGENT.md`: master project contract for the repo-local autonomous queue
-- `.agent/`: state, task queue, runbook, handoff, decisions, worklog, and test gates
-- `AGENTS.md`: Codex-facing shim that should stay aligned with `AGENT.md`
-- `PLANS.md`: durable plan and execution log for queued autonomous tasks
-- `QUEUE_PROMPT.md`: stable repeated prompt for future queue-driven runs
-- `skills/autonomous-sat-maintenance/SKILL.md`: reusable repo-local skill for benchmark-driven solver work
-- `docs/codex/operator-guide.md`: operator instructions for future queued runs
-- `docs/codex/queued-task-template.md`: bridge doc that points operators to `QUEUE_PROMPT.md`
+- `satsolver.py`: command-line entry point required by the assignment
+- `satsolver_fullcpu.py`: optional full-CPU portfolio entry point for one CNF
+- `satsolver_core.py`: CDCL solver implementation
+- `satsolver_io.py`: DIMACS CNF parser and result writer
+- `algorithm_description.md`: short algorithm description to convert to PDF
+- `tools/checker.py`: local output validator
+- `benchmark_suite.py`: optional local benchmark/validation runner
+- `parallel_benchmark_suite.py`: optional throughput runner that runs many CLI cases concurrently
+- `cnf_tests/`: retained unique CNF tests with manifests
 
-## Verification Commands
+Keep `satsolver.py`, `satsolver_core.py`, and `satsolver_io.py` together; the CLI entry point imports the two helper modules.
 
-- Queue/control-plane check: `python tools/agent_queue_check.py`
-- Fast verification: `python tools/codex_verify.py`
-  Includes queue validation, unit tests, and smoke checks for both `satsolver.py` and `satsolver_fast.py`.
-- Exact-CLI benchmark verification: `python tools/codex_verify.py --benchmark-mode cli --repeat 2`
-- Full exact-CLI benchmark: `python benchmark_suite.py satsolver /tmp/bench_cli.txt small medium large special satlib_subset satlib_more --bruteforce-var-limit 16 --cli-script satsolver.py`
+## Local Checks
+
+Single case:
+
+```bash
+python satsolver.py cnf_tests/assignment_safe/course_cnf_tests__small__test_1.cnf /tmp/sat.out
+python tools/checker.py cnf_tests/assignment_safe/course_cnf_tests__small__test_1.cnf /tmp/sat.out
+```
+
+Assignment-safe suite:
+
+```bash
+python benchmark_suite.py satsolver /tmp/sat_bench.txt cnf_tests/assignment_safe --bruteforce-var-limit 16 --cli-script satsolver.py
+```
+
+CPU-throughput run:
+
+```bash
+python parallel_benchmark_suite.py /tmp/sat_parallel.txt cnf_tests/assignment_safe --repeat 1 --jobs 16 --cli-script satsolver.py
+```
+
+Full-CPU run for one CNF:
+
+```bash
+python satsolver_fullcpu.py cnf_tests/assignment_safe/course_cnf_tests__large__test_6.cnf /tmp/sat_fullcpu.out --workers 16
+```
+
+`cnf_tests/assignment_safe/` contains only known SAT/UNSAT cases with at most 500 variables and 2000 clauses. `cnf_tests/stress_over_limits/` keeps larger valid stress cases separately.

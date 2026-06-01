@@ -140,6 +140,7 @@ def benchmark_solver(
 
             for folder in folders:
                 paths = sorted(Path(folder).glob("*.cnf"))
+                folder_case_prefix = str(Path(folder)).replace("/", "_").replace("\\", "_")
                 print(f"[{folder}]", file=handle)
                 results = []
 
@@ -158,7 +159,7 @@ def benchmark_solver(
                         statuses = []
                         validations = []
                         for repeat_index in range(repeat):
-                            repeat_case_id = f"{folder}_{case_index}_r{repeat_index}"
+                            repeat_case_id = f"{folder_case_prefix}_{case_index}_r{repeat_index}"
                             if cli_mode:
                                 assert cli_script_path is not None
                                 status, validation, elapsed = run_case_via_cli(

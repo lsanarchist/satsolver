@@ -1,0 +1,68 @@
+solver=satsolver
+mode=cli
+cli_script=/home/doomguy/Desktop/sat/satsolver/satsolver.py
+python_executable=/usr/bin/python
+bruteforce_var_limit=16
+repeat=5
+representative_time=median_of_repeats
+
+[/tmp/satsolver_original_35/small]
+test_1.cnf: SAT ok=True validation='valid SAT' vars=19 clauses=26 time=0.0298s repeat_count=5 best=0.0233s avg=0.0311s median=0.0298s samples=[0.0233, 0.0268, 0.0386, 0.0368, 0.0298]
+test_10.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=22 clauses=174 time=0.0295s repeat_count=5 best=0.0270s avg=0.0313s median=0.0295s samples=[0.0270, 0.0284, 0.0305, 0.0295, 0.0410]
+test_2.cnf: SAT ok=True validation='valid SAT' vars=46 clauses=176 time=0.0313s repeat_count=5 best=0.0264s avg=0.0344s median=0.0313s samples=[0.0424, 0.0264, 0.0449, 0.0271, 0.0313]
+test_3.cnf: SAT ok=True validation='valid SAT' vars=41 clauses=150 time=0.0336s repeat_count=5 best=0.0295s avg=0.0370s median=0.0336s samples=[0.0402, 0.0516, 0.0295, 0.0301, 0.0336]
+test_4.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=30 clauses=167 time=0.0320s repeat_count=5 best=0.0291s avg=0.0334s median=0.0320s samples=[0.0335, 0.0320, 0.0291, 0.0305, 0.0419]
+test_5.cnf: SAT ok=True validation='valid SAT' vars=20 clauses=40 time=0.0279s repeat_count=5 best=0.0244s avg=0.0308s median=0.0279s samples=[0.0279, 0.0249, 0.0409, 0.0244, 0.0361]
+test_6.cnf: SAT ok=True validation='valid SAT' vars=42 clauses=70 time=0.0313s repeat_count=5 best=0.0286s avg=0.0315s median=0.0313s samples=[0.0361, 0.0298, 0.0286, 0.0317, 0.0313]
+test_7.cnf: SAT ok=True validation='valid SAT' vars=49 clauses=167 time=0.0296s repeat_count=5 best=0.0292s avg=0.0307s median=0.0296s samples=[0.0310, 0.0343, 0.0296, 0.0292, 0.0296]
+test_8.cnf: UNSAT ok=True validation='valid UNSAT (brute-force checked)' vars=14 clauses=68 time=0.0280s repeat_count=5 best=0.0266s avg=0.0326s median=0.0280s samples=[0.0280, 0.0274, 0.0365, 0.0266, 0.0444]
+test_9.cnf: SAT ok=True validation='valid SAT' vars=40 clauses=100 time=0.0357s repeat_count=5 best=0.0269s avg=0.0365s median=0.0357s samples=[0.0357, 0.0371, 0.0269, 0.0312, 0.0516]
+SUMMARY /tmp/satsolver_original_35/small: count=10 solved_correctly=10 sat=7 unsat=3 errors=0 repeat_count=5 total=0.3088s avg=0.0309s median=0.0306s max=0.0357s measured_total=1.6467s
+
+[/tmp/satsolver_original_35/medium]
+test_1.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=63 clauses=835 time=0.0357s repeat_count=5 best=0.0318s avg=0.0378s median=0.0357s samples=[0.0354, 0.0318, 0.0406, 0.0357, 0.0453]
+test_10.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=68 clauses=822 time=0.0399s repeat_count=5 best=0.0325s avg=0.0384s median=0.0399s samples=[0.0354, 0.0399, 0.0430, 0.0325, 0.0412]
+test_2.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=69 clauses=352 time=0.0317s repeat_count=5 best=0.0304s avg=0.0317s median=0.0317s samples=[0.0304, 0.0305, 0.0328, 0.0317, 0.0334]
+test_3.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=172 clauses=774 time=0.5140s repeat_count=5 best=0.4670s avg=0.5056s median=0.5140s samples=[0.5205, 0.5346, 0.5140, 0.4920, 0.4670]
+test_4.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=191 clauses=886 time=0.8727s repeat_count=5 best=0.7978s avg=0.8511s median=0.8727s samples=[0.7978, 0.8243, 0.8817, 0.8727, 0.8789]
+test_5.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=55 clauses=713 time=0.0408s repeat_count=5 best=0.0275s avg=0.0376s median=0.0408s samples=[0.0408, 0.0275, 0.0282, 0.0484, 0.0431]
+test_6.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=61 clauses=512 time=0.0287s repeat_count=5 best=0.0285s avg=0.0309s median=0.0287s samples=[0.0287, 0.0285, 0.0285, 0.0298, 0.0392]
+test_7.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=75 clauses=562 time=0.0314s repeat_count=5 best=0.0279s avg=0.0327s median=0.0314s samples=[0.0314, 0.0289, 0.0333, 0.0423, 0.0279]
+test_8.cnf: SAT ok=True validation='valid SAT' vars=130 clauses=333 time=0.0380s repeat_count=5 best=0.0269s avg=0.0354s median=0.0380s samples=[0.0406, 0.0270, 0.0443, 0.0269, 0.0380]
+test_9.cnf: SAT ok=True validation='valid SAT' vars=138 clauses=379 time=0.0307s repeat_count=5 best=0.0259s avg=0.0326s median=0.0307s samples=[0.0403, 0.0391, 0.0259, 0.0307, 0.0269]
+SUMMARY /tmp/satsolver_original_35/medium: count=10 solved_correctly=10 sat=2 unsat=8 errors=0 repeat_count=5 total=1.6636s avg=0.1664s median=0.0369s max=0.8727s measured_total=8.1695s
+
+[/tmp/satsolver_original_35/large]
+test_1.cnf: SAT ok=True validation='valid SAT' vars=373 clauses=811 time=0.0332s repeat_count=5 best=0.0310s avg=0.0331s median=0.0332s samples=[0.0336, 0.0352, 0.0310, 0.0332, 0.0328]
+test_10.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=229 clauses=1280 time=0.9021s repeat_count=5 best=0.8142s avg=0.8871s median=0.9021s samples=[0.9154, 0.8829, 0.9021, 0.9210, 0.8142]
+test_2.cnf: SAT ok=True validation='valid SAT' vars=319 clauses=573 time=0.0311s repeat_count=5 best=0.0306s avg=0.0345s median=0.0311s samples=[0.0479, 0.0306, 0.0317, 0.0310, 0.0311]
+test_3.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=227 clauses=1460 time=0.2800s repeat_count=5 best=0.2688s avg=0.2840s median=0.2800s samples=[0.3044, 0.2754, 0.2800, 0.2688, 0.2915]
+test_4.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=219 clauses=1363 time=0.2352s repeat_count=5 best=0.2298s avg=0.2467s median=0.2352s samples=[0.2298, 0.2708, 0.2315, 0.2664, 0.2352]
+test_5.cnf: SAT ok=True validation='valid SAT' vars=244 clauses=772 time=0.0307s repeat_count=5 best=0.0292s avg=0.0341s median=0.0307s samples=[0.0375, 0.0307, 0.0292, 0.0297, 0.0433]
+test_6.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=271 clauses=1393 time=3.6499s repeat_count=5 best=3.4386s avg=3.6243s median=3.6499s samples=[3.5177, 3.4386, 3.6499, 3.7107, 3.8047]
+test_7.cnf: SAT ok=True validation='valid SAT' vars=389 clauses=863 time=0.0464s repeat_count=5 best=0.0347s avg=0.0441s median=0.0464s samples=[0.0386, 0.0521, 0.0488, 0.0464, 0.0347]
+test_8.cnf: SAT ok=True validation='valid SAT' vars=298 clauses=1210 time=0.1359s repeat_count=5 best=0.1093s avg=0.1284s median=0.1359s samples=[0.1410, 0.1136, 0.1093, 0.1359, 0.1423]
+test_9.cnf: SAT ok=True validation='valid SAT' vars=365 clauses=969 time=0.0347s repeat_count=5 best=0.0329s avg=0.0403s median=0.0347s samples=[0.0347, 0.0483, 0.0329, 0.0514, 0.0343]
+SUMMARY /tmp/satsolver_original_35/large: count=10 solved_correctly=10 sat=6 unsat=4 errors=0 repeat_count=5 total=5.3792s avg=0.5379s median=0.0912s max=3.6499s measured_total=26.7839s
+
+[/tmp/satsolver_original_35/special]
+dense.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=200 clauses=1500 time=0.1302s repeat_count=5 best=0.1240s avg=0.1286s median=0.1302s samples=[0.1321, 0.1244, 0.1323, 0.1302, 0.1240]
+easy.cnf: SAT ok=True validation='valid SAT' vars=200 clauses=400 time=0.0277s repeat_count=5 best=0.0245s avg=0.0322s median=0.0277s samples=[0.0266, 0.0245, 0.0277, 0.0285, 0.0538]
+hard.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=200 clauses=850 time=2.6807s repeat_count=5 best=2.5573s avg=2.6532s median=2.6807s samples=[2.5573, 2.6807, 2.6883, 2.6359, 2.7039]
+pigeonhole.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=90 clauses=415 time=0.0241s repeat_count=5 best=0.0237s avg=0.0300s median=0.0241s samples=[0.0237, 0.0239, 0.0376, 0.0406, 0.0241]
+tseitin.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=40 clauses=160 time=0.0345s repeat_count=5 best=0.0241s avg=0.0327s median=0.0345s samples=[0.0383, 0.0265, 0.0345, 0.0241, 0.0402]
+SUMMARY /tmp/satsolver_original_35/special: count=5 solved_correctly=5 sat=1 unsat=4 errors=0 repeat_count=5 total=2.8972s avg=0.5794s median=0.0345s max=2.6807s measured_total=14.3837s
+
+[overall]
+total_cases=35 solved_correctly=35 sat=16 unsat=19 errors=0 repeat_count=5 total=10.2488s avg=0.2928s median=0.0336s max=3.6499s measured_total=50.9837s wall_clock=51.3867s
+slowest_cases:
+/tmp/satsolver_original_35/large/test_6.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=271 clauses=1393 time=3.6499s samples=[3.5177, 3.4386, 3.6499, 3.7107, 3.8047]
+/tmp/satsolver_original_35/special/hard.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=200 clauses=850 time=2.6807s samples=[2.5573, 2.6807, 2.6883, 2.6359, 2.7039]
+/tmp/satsolver_original_35/large/test_10.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=229 clauses=1280 time=0.9021s samples=[0.9154, 0.8829, 0.9021, 0.9210, 0.8142]
+/tmp/satsolver_original_35/medium/test_4.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=191 clauses=886 time=0.8727s samples=[0.7978, 0.8243, 0.8817, 0.8727, 0.8789]
+/tmp/satsolver_original_35/medium/test_3.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=172 clauses=774 time=0.5140s samples=[0.5205, 0.5346, 0.5140, 0.4920, 0.4670]
+/tmp/satsolver_original_35/large/test_3.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=227 clauses=1460 time=0.2800s samples=[0.3044, 0.2754, 0.2800, 0.2688, 0.2915]
+/tmp/satsolver_original_35/large/test_4.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=219 clauses=1363 time=0.2352s samples=[0.2298, 0.2708, 0.2315, 0.2664, 0.2352]
+/tmp/satsolver_original_35/large/test_8.cnf: SAT ok=True validation='valid SAT' vars=298 clauses=1210 time=0.1359s samples=[0.1410, 0.1136, 0.1093, 0.1359, 0.1423]
+/tmp/satsolver_original_35/special/dense.cnf: UNSAT ok=True validation='valid UNSAT (format checked)' vars=200 clauses=1500 time=0.1302s samples=[0.1321, 0.1244, 0.1323, 0.1302, 0.1240]
+/tmp/satsolver_original_35/large/test_7.cnf: SAT ok=True validation='valid SAT' vars=389 clauses=863 time=0.0464s samples=[0.0386, 0.0521, 0.0488, 0.0464, 0.0347]
