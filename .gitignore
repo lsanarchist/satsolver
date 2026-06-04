@@ -15,3 +15,4 @@ run_35_results/
 *.prof
 *.pstats
 run_35_results/
+*.pdf
